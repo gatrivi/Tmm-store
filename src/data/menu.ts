@@ -52,6 +52,7 @@ export interface MenuItemType {
 
   options: MenuOption[];
   available?: boolean;
+  badge?: string;
 }
 
 export const menuData: MenuItemType[] = [
@@ -63,6 +64,7 @@ export const menuData: MenuItemType[] = [
     nameRu: "Чорипан",
     nameDe: "Choripán",
     category: "choripan",
+    badge: "Más pedido",
     description: "El clásico de la casa: Chorizo mariposa bien doradito en pan francés, con nuestro chimichurri casero.",
     descriptionEn: "The house classic: Golden butterfly-cut pork sausage served on French bread, topped with our homemade chimichurri sauce.",
     descriptionPt: "O clássico da casa: Linguiça toscana dourada na chapa servida no pão francês com chimichurri caseiro.",

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { ShoppingCart, Plus, Minus, Trash2, Send, Globe, Clock, Share2 } from 'lucide-react';
+import { ShoppingCart, Plus, Minus, Trash2, Send, Globe, Clock, Share2, Flame } from 'lucide-react';
 import { useMenu } from '../context/MenuContext';
 import { useLanguage } from '../context/LanguageContext';
 import { resolveImagesForProduct } from '../utils/imageLoader';
@@ -8,6 +8,7 @@ import { startSession, trackPageView } from '../utils/analyticsTracker';
 import CheckoutModal from '../components/CheckoutModal';
 import ShareModal from '../components/ShareModal';
 import { GlobalFooter } from '../components/GlobalFooter';
+import { playAddToCartSound } from '../utils/sounds';
 
 export default function Storefront() {
   const { menuItems } = useMenu();
@@ -88,6 +89,7 @@ export default function Storefront() {
   };
 
   const addToCart = (item, option) => {
+    playAddToCartSound();
     setCart(prev => {
       const existing = prev.find(i => i.id === item.id && i.optionId === option.id);
       if (existing) {
@@ -137,9 +139,34 @@ export default function Storefront() {
       .filter(item => item.options.length > 0);
   }, [menuItems]);
 
-  // Safe fallback while context loads
+  // Skeleton loading state
   if (!menuItems || menuItems.length === 0) {
-    return <div className="flex justify-center items-center h-screen">Loading Menu...</div>;
+    return (
+      <div className="min-h-screen bg-gray-50 pb-24">
+        <header className="bg-black text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center">
+          <div className="h-6 w-40 bg-white/20 rounded animate-pulse" />
+          <div className="h-10 w-10 bg-white/20 rounded-full animate-pulse" />
+        </header>
+        <main className="max-w-5xl mx-auto p-4 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+                <div className="w-full h-48 bg-gray-200 animate-pulse" />
+                <div className="p-5 space-y-3">
+                  <div className="h-5 w-3/4 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-4 w-full bg-gray-200 rounded animate-pulse" />
+                  <div className="h-4 w-2/3 bg-gray-200 rounded animate-pulse" />
+                  <div className="space-y-2 pt-2">
+                    <div className="h-10 w-full bg-gray-100 rounded-lg animate-pulse" />
+                    <div className="h-10 w-full bg-gray-100 rounded-lg animate-pulse" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </main>
+      </div>
+    );
   }
 
   return (
@@ -231,7 +258,8 @@ export default function Storefront() {
                     <img
                       src={images[0]}
                       alt={getLocalizedName(item)}
-                      className="w-full h-48 object-cover"
+                      loading="lazy"
+                      className="w-full h-48 object-cover bg-gray-200"
                     />
                   ) : (
                     <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400">
@@ -241,7 +269,15 @@ export default function Storefront() {
 
                   <div className="p-5 flex flex-col flex-1 justify-between">
                     <div>
-                      <h3 className="text-xl font-bold mb-2">{getLocalizedName(item)}</h3>
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <h3 className="text-xl font-bold">{getLocalizedName(item)}</h3>
+                        {item.badge && (
+                          <span className="shrink-0 inline-flex items-center gap-1 bg-amber-100 text-amber-700 text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-wider">
+                            <Flame size={10} />
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
                       <p className="text-gray-500 text-sm mb-4 leading-relaxed line-clamp-3">
                         {getLocalizedDescription(item)}
                       </p>

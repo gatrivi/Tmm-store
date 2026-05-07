@@ -340,6 +340,20 @@ export function AdminMenuEditor() {
                 </div>
               </div>
 
+              {/* Badge */}
+              <div>
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">
+                  🏷️ Badge destacado
+                </label>
+                <input
+                  type="text"
+                  value={draft.badge || ''}
+                  onChange={(e) => setDraft({ ...draft, badge: e.target.value || undefined })}
+                  className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2.5 text-sm font-medium text-white outline-none focus:ring-2 focus:ring-brand-green/40 transition-shadow placeholder:text-gray-600"
+                  placeholder="Ej: Más pedido, Nuevo, Oferta..."
+                />
+              </div>
+
               {/* Name */}
               <div>
                 <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">
