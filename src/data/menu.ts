@@ -15,6 +15,7 @@ export interface MenuOption {
   labelRu?: string;
   labelDe?: string;
   price: number;
+  available?: boolean;
   suffix?: string;
   suffixEn?: string;
   suffixPt?: string;
@@ -50,6 +51,7 @@ export interface MenuItemType {
   imageOrder?: string[];   // Orden explícito de las imágenes
 
   options: MenuOption[];
+  available?: boolean;
 }
 
 export const menuData: MenuItemType[] = [

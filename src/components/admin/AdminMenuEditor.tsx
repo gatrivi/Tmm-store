@@ -315,11 +315,28 @@ export function AdminMenuEditor() {
           ) : draft ? (
             /* Item Editor */
             <div className="space-y-5">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-3xl">{getEmoji(draft.id)}</span>
-                <div>
-                  <h3 className="text-lg font-black text-white">{draft.name}</h3>
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{draft.category}</span>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{getEmoji(draft.id)}</span>
+                  <div>
+                    <h3 className="text-lg font-black text-white">{draft.name}</h3>
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{draft.category}</span>
+                  </div>
+                </div>
+                {/* Item Availability Toggle */}
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                    {draft.available !== false ? 'Disponible' : 'Agotado'}
+                  </span>
+                  <button
+                    onClick={() => setDraft({ ...draft, available: draft.available === false ? true : false })}
+                    className={`relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${draft.available !== false ? 'bg-brand-green' : 'bg-red-500/60'}`}
+                    aria-label="Toggle disponibilidad"
+                  >
+                    <span
+                      className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform transition-transform duration-200 ease-in-out ${draft.available !== false ? 'translate-x-4' : 'translate-x-0'}`}
+                    />
+                  </button>
                 </div>
               </div>
 
@@ -367,8 +384,11 @@ export function AdminMenuEditor() {
                           className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-white/3 transition-colors"
                         >
                           <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold text-white">{opt.label}</span>
+                            <span className={`text-sm font-bold ${opt.available === false ? 'text-gray-500 line-through' : 'text-white'}`}>{opt.label}</span>
                             <span className="text-sm font-black text-brand-green">${opt.price.toLocaleString()}</span>
+                            {opt.available === false && (
+                              <span className="text-[10px] font-bold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded">Agotado</span>
+                            )}
                           </div>
                           {isExpanded ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
                         </button>
@@ -384,6 +404,22 @@ export function AdminMenuEditor() {
                               className="overflow-hidden"
                             >
                               <div className="px-4 pb-4 pt-1 space-y-3 border-t border-white/5">
+                                {/* Option Availability */}
+                                <div className="flex items-center justify-between bg-white/3 rounded-lg px-3 py-2">
+                                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                                    Disponibilidad
+                                  </span>
+                                  <button
+                                    onClick={() => updateDraftOption(optIdx, o => ({ ...o, available: o.available === false ? true : false }))}
+                                    className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${opt.available !== false ? 'bg-brand-green' : 'bg-red-500/60'}`}
+                                    aria-label="Toggle disponibilidad opción"
+                                  >
+                                    <span
+                                      className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow transform transition-transform duration-200 ease-in-out ${opt.available !== false ? 'translate-x-4' : 'translate-x-0'}`}
+                                    />
+                                  </button>
+                                </div>
+
                                 {/* Label */}
                                 <div>
                                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 block">
