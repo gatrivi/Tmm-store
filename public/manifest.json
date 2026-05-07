@@ -1,0 +1,22 @@
+{
+  "name": "El Puestito del Tío",
+  "short_name": "El Puestito",
+  "description": "Pedí online en El Puestito del Tío. Choripanes, hamburguesas, bondiola y más.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#0d0d0d",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/favicon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

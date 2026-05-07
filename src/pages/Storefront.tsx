@@ -1,12 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { ShoppingCart, Plus, Minus, Trash2, Send, Lock, Globe, Clock, Share2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ShoppingCart, Plus, Minus, Trash2, Send, Globe, Clock, Share2 } from 'lucide-react';
 import { useMenu } from '../context/MenuContext';
 import { useLanguage } from '../context/LanguageContext';
 import { resolveImagesForProduct } from '../utils/imageLoader';
 import { loadBusinessHours, isBusinessOpen, getNextOpeningText } from '../utils/businessHours';
+import { startSession, trackPageView } from '../utils/analyticsTracker';
 import CheckoutModal from '../components/CheckoutModal';
 import ShareModal from '../components/ShareModal';
+import { GlobalFooter } from '../components/GlobalFooter';
 
 export default function Storefront() {
   const { menuItems } = useMenu();
@@ -39,6 +40,12 @@ export default function Storefront() {
   const [businessHours] = useState(() => loadBusinessHours());
   const isOpenNow = businessHours.enabled ? isBusinessOpen(businessHours) : true;
   const nextOpeningText = businessHours.enabled ? getNextOpeningText(businessHours) : '';
+
+  // Analytics tracking
+  useEffect(() => {
+    startSession();
+    trackPageView('/');
+  }, []);
 
   const t = {
     es: { cart: 'Tu pedido', empty: 'Tu carrito está vacío', total: 'Total', order: 'Confirmar pedido', add: 'Agregar', unavailable: 'No disponible', openNow: 'Abierto ahora', closed: 'Cerrado', address: '4045 Dorrego Ave', closedMsg: 'Momentaneamente cerrados', clear: 'Vaciar', qty: 'Cant' },
@@ -277,12 +284,8 @@ export default function Storefront() {
         </section>
       </main>
 
-      {/* Secret Admin Footer */}
-      <footer className="w-full text-center pb-8 pt-4 opacity-20 hover:opacity-100 transition-opacity">
-        <Link to="/admin" className="text-gray-500 hover:text-gray-800 inline-block p-4" aria-label="Admin Access">
-          <Lock size={16} />
-        </Link>
-      </footer>
+      {/* Footer */}
+      <GlobalFooter />
 
       {/* Cart Overlay */}
       {isCartOpen && (
@@ -377,6 +380,7 @@ export default function Storefront() {
         total={total}
         whatsappNumber={WHATSAPP_NUMBER}
         bankAlias={BANK_ALIAS}
+        onOrderSent={() => setCart([])}
       />
 
       {/* Share Modal */}

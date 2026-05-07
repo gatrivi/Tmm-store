@@ -9,7 +9,26 @@
  * panel de administración.
  */
 import { useRef, useCallback } from 'react';
-import { Instagram, MapPin, Clock } from 'lucide-react';
+import { MapPin, Clock } from 'lucide-react';
+
+/** Icono Instagram inline (lucide-react no incluye logos de marca en algunas versiones) */
+const InstagramIcon = ({ size = 20, className = '' }: { size?: number; className?: string }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
 import { useLanguage } from '../context/LanguageContext';
 import { useAdmin } from '../context/AdminContext';
 import { translations } from '../i18n/translations';
@@ -128,7 +147,7 @@ export function GlobalFooter() {
             aria-label="Instagram de El Puestito del Tío"
           >
             <div className="p-2.5 lg:p-3 rounded-full bg-brand-white/10 group-hover:bg-brand-green group-hover:text-brand-black transition-colors">
-              <Instagram size={20} className="lg:w-6 lg:h-6" />
+              <InstagramIcon size={20} className="lg:w-6 lg:h-6" />
             </div>
             <span className="text-sm lg:text-base font-medium text-gray-300 group-hover:text-brand-green transition-colors">@elpuestitodeltio</span>
           </a>
