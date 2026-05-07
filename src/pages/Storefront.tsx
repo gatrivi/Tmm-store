@@ -11,7 +11,7 @@ import { GlobalFooter } from '../components/GlobalFooter';
 import { playAddToCartSound } from '../utils/sounds';
 
 export default function Storefront() {
-  const { menuItems } = useMenu();
+  const { menuItems, siteSettings } = useMenu();
   const { language, setLanguage } = useLanguage();
 
   const [cart, setCart] = useState(() => {
@@ -32,8 +32,8 @@ export default function Storefront() {
     } catch { /* ignore */ }
   }, [cart]);
 
-  const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || "5491131844469";
-  const BANK_ALIAS = import.meta.env.VITE_BANK_ALIAS || "ELPUESTITOdeltio.MP";
+  const WHATSAPP_NUMBER = siteSettings.whatsappNumber || import.meta.env.VITE_WHATSAPP_NUMBER || "5491131844469";
+  const BANK_ALIAS = siteSettings.bankAlias || import.meta.env.VITE_BANK_ALIAS || "ELPUESTITOdeltio.MP";
 
   // Default language to 'es' if null (avoid blocking modal in this flow)
   const lang = language || 'es';

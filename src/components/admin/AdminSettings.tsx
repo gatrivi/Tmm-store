@@ -6,7 +6,7 @@
  * cierre de sesión y créditos.
  */
 import { useState } from 'react';
-import { LogOut, Shield, Code, RotateCcw, AlertTriangle, Trash2, DollarSign, RefreshCw, Wifi, WifiOff, Clock, CalendarCheck } from 'lucide-react';
+import { LogOut, Shield, Code, RotateCcw, AlertTriangle, Trash2, DollarSign, RefreshCw, Wifi, WifiOff, Clock, CalendarCheck, Phone } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 import { useMenu } from '../../context/MenuContext';
 import { clearAnalytics } from '../../utils/analyticsTracker';
@@ -351,6 +351,45 @@ export function AdminSettings() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Business Info */}
+      <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-6 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+            <Phone size={20} className="text-blue-400" />
+          </div>
+          <div>
+            <span className="text-sm font-black text-white block">Datos del negocio</span>
+            <span className="text-xs text-gray-400 font-medium">Teléfono y alias para pedidos. Se usan en lugar de las variables de entorno si están configurados.</span>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <div>
+            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 block">Número de WhatsApp</label>
+            <input
+              type="text"
+              value={siteSettings.whatsappNumber}
+              onChange={(e) => setSiteSettings(prev => ({ ...prev, whatsappNumber: e.target.value.replace(/\D/g, '') }))}
+              placeholder={import.meta.env.VITE_WHATSAPP_NUMBER || "5491131844469"}
+              className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2.5 text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/40 transition-shadow placeholder:text-gray-600"
+            />
+            <p className="text-[10px] text-gray-500 mt-1">Solo números, con código de país (ej: 5491131844469)</p>
+          </div>
+
+          <div>
+            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 block">Alias de pago</label>
+            <input
+              type="text"
+              value={siteSettings.bankAlias}
+              onChange={(e) => setSiteSettings(prev => ({ ...prev, bankAlias: e.target.value }))}
+              placeholder={import.meta.env.VITE_BANK_ALIAS || "ELPUESTITOdeltio.MP"}
+              className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2.5 text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/40 transition-shadow placeholder:text-gray-600"
+            />
+            <p className="text-[10px] text-gray-500 mt-1">Alias de Mercado Pago / CBU para transferencias</p>
+          </div>
+        </div>
       </div>
 
       {/* Reset textos */}

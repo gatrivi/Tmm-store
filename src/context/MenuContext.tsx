@@ -60,6 +60,8 @@ export interface SiteSettings {
   showUsdToggle: boolean;
   manualRate: number;     // Tasa manual fijada por el admin (0 = no usar)
   useManualRate: boolean; // Si true, usar manualRate en vez de la API
+  whatsappNumber: string;
+  bankAlias: string;
 }
 
 interface MenuContextProps {
@@ -96,7 +98,13 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.getItem(STORAGE_KEY_LAST_EDIT)
   );
   const [siteSettings, setSiteSettings] = useState<SiteSettings>(() =>
-    loadFromStorage(STORAGE_KEY_SETTINGS, { showUsdToggle: false, manualRate: 0, useManualRate: false })
+    loadFromStorage(STORAGE_KEY_SETTINGS, {
+      showUsdToggle: false,
+      manualRate: 0,
+      useManualRate: false,
+      whatsappNumber: '',
+      bankAlias: '',
+    })
   );
   const [usdRate, setUsdRate] = useState<number>(() => getUsdRateSync());
 

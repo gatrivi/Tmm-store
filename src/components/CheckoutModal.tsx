@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { X, MapPin, User, Phone, CreditCard, FileText, Truck, Store, Send, ClipboardList, CheckCircle, ArrowLeft, MessageCircle } from 'lucide-react';
+import { X, MapPin, User, Phone, CreditCard, FileText, Truck, Store, Send, ClipboardList, CheckCircle, ArrowLeft, MessageCircle, Copy, Check } from 'lucide-react';
+import { copyToClipboard } from '../utils/clipboard';
 
 export interface CheckoutData {
   orderId: string;
@@ -45,6 +46,12 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'transfer' | 'mercadopago'>('cash');
   const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const showCopied = (field: string) => {
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const orderId = useMemo(() => generateOrderId(), [isOpen]);
@@ -77,7 +84,12 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     setStep('confirm');
   };
 
-  const handleSendWhatsApp = () => {
+  const handleSendWhatsApp = async () => {
+    if (paymentMethod === 'transfer') {
+      await copyToClipboard(bankAlias);
+      showCopied('alias-auto');
+    }
+
     const paymentLabel = {
       cash: 'Efectivo',
       transfer: 'Transferencia bancaria',
@@ -272,9 +284,22 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   <span className="font-bold text-gray-900">${(item.price * item.qty).toLocaleString('es-AR')}</span>
                 </div>
               ))}
-              <div className="border-t border-gray-200 pt-2 flex justify-between text-base font-black text-gray-900">
+              <div className="border-t border-gray-200 pt-2 flex justify-between items-center text-base font-black text-gray-900">
                 <span>Total</span>
-                <span>${total.toLocaleString('es-AR')}</span>
+                <div className="flex items-center gap-2">
+                  <span>${total.toLocaleString('es-AR')}</span>
+                  <button
+                    onClick={async () => { await copyToClipboard(`$${total.toLocaleString('es-AR')}`); showCopied('total'); }}
+                    className="p-1 hover:bg-gray-200 rounded transition"
+                    title="Copiar total"
+                  >
+                    {copiedField === 'total' ? (
+                      <Check size={14} className="text-green-600" />
+                    ) : (
+                      <Copy size={14} className="text-gray-500" />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -325,10 +350,29 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   <span className="font-bold text-gray-900 text-right max-w-[60%]">{address}</span>
                 </div>
               )}
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="text-gray-500">Pago</span>
                 <span className="font-bold text-gray-900">{paymentLabel}</span>
               </div>
+              {paymentMethod === 'transfer' && (
+                <div className="flex justify-between items-center bg-blue-50 rounded-lg px-3 py-2">
+                  <span className="text-gray-500 text-xs">Alias</span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-black text-blue-700">{bankAlias}</span>
+                    <button
+                      onClick={async () => { await copyToClipboard(bankAlias); showCopied('alias'); }}
+                      className="p-1 hover:bg-blue-100 rounded transition"
+                      title="Copiar alias"
+                    >
+                      {copiedField === 'alias' || copiedField === 'alias-auto' ? (
+                        <Check size={14} className="text-green-600" />
+                      ) : (
+                        <Copy size={14} className="text-blue-600" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
               {notes && (
                 <div className="pt-2 border-t border-gray-200">
                   <span className="text-gray-500 block text-xs mb-1">Notas</span>
@@ -354,6 +398,11 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
 
             {/* Actions */}
             <div className="space-y-3">
+              {paymentMethod === 'transfer' && (
+                <p className="text-xs text-center text-blue-600 font-medium">
+                  Al enviar, el alias se copiará automáticamente al portapapeles.
+                </p>
+              )}
               <button
                 onClick={handleSendWhatsApp}
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg"
