@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
-import { X, MapPin, User, Phone, CreditCard, FileText, Truck, Store, Send, ClipboardList, CheckCircle, ArrowLeft, MessageCircle, Copy, Check } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { X, MapPin, User, Phone, CreditCard, FileText, Truck, Store, Send, ClipboardList, CheckCircle, ArrowLeft, MessageCircle, Copy, Check, AlertTriangle } from 'lucide-react';
 import { copyToClipboard } from '../utils/clipboard';
+import { buildWhatsAppMessage } from '../utils/whatsappMessage';
 
 export interface CheckoutData {
   orderId: string;
@@ -47,14 +48,15 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [popupBlocked, setPopupBlocked] = useState(false);
+  const orderIdRef = useRef<string>(generateOrderId());
 
   const showCopied = (field: string) => {
     setCopiedField(field);
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const orderId = useMemo(() => generateOrderId(), [isOpen]);
+  const orderId = orderIdRef.current;
 
   if (!isOpen) return null;
 
@@ -67,14 +69,21 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     setPaymentMethod('cash');
     setNotes('');
     setErrors({});
+    setPopupBlocked(false);
     onClose();
   };
+
+  // Regenerar orderId cuando el modal se abre
+  if (isOpen && !orderIdRef.current) {
+    orderIdRef.current = generateOrderId();
+  }
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
     if (!name.trim()) newErrors.name = 'Ingresá tu nombre';
     if (!phone.trim()) newErrors.phone = 'Ingresá tu teléfono';
     if (deliveryType === 'delivery' && !address.trim()) newErrors.address = 'Ingresá la dirección de entrega';
+    if (paymentMethod === 'transfer' && !bankAlias.trim()) newErrors.bankAlias = 'No hay alias de pago configurado. Elegí otro método o contactá al local.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -85,49 +94,41 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   };
 
   const handleSendWhatsApp = async () => {
-    if (paymentMethod === 'transfer') {
-      await copyToClipboard(bankAlias);
-      showCopied('alias-auto');
-    }
-
     const paymentLabel = {
       cash: 'Efectivo',
       transfer: 'Transferencia bancaria',
       mercadopago: 'Mercado Pago',
     }[paymentMethod];
 
-    let message = `🛒 *Pedido #${orderId}*\n`;
-    message += `━━━━━━━━━━━━━━━━━━\n\n`;
-
-    message += `👤 *Cliente:* ${name.trim()}\n`;
-    message += `📱 *Teléfono:* ${phone.trim()}\n`;
-    message += `🚚 *Entrega:* ${deliveryType === 'pickup' ? 'Retiro en local' : 'Delivery'}\n`;
-    if (deliveryType === 'delivery') {
-      message += `📍 *Dirección:* ${address.trim()}\n`;
-    }
-    message += `💳 *Pago:* ${paymentLabel}\n`;
-    message += `\n━━━━━━━━━━━━━━━━━━\n`;
-    message += `*Detalle del pedido:*\n\n`;
-
-    cart.forEach(item => {
-      message += `• ${item.qty}x ${item.name} (${item.optionLabel}) — $${(item.price * item.qty).toLocaleString('es-AR')}\n`;
+    const message = buildWhatsAppMessage({
+      orderId,
+      name,
+      phone,
+      deliveryType,
+      address,
+      paymentMethod,
+      paymentLabel,
+      bankAlias,
+      notes,
+      cart,
+      total,
     });
 
-    message += `\n*Total: $${total.toLocaleString('es-AR')}*\n`;
-    message += `━━━━━━━━━━━━━━━━━━\n`;
-
     if (paymentMethod === 'transfer') {
-      message += `\n🏦 Alias para transferencia: *${bankAlias}*\n`;
+      await copyToClipboard(bankAlias);
+      showCopied('alias-auto');
     }
-
-    if (notes.trim()) {
-      message += `\n📝 *Notas:* ${notes.trim()}\n`;
-    }
-
-    message += `\n¡Gracias por elegirnos! 🙌`;
 
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/${whatsappNumber}?text=${encoded}`, '_blank');
+    const win = window.open(`https://wa.me/${whatsappNumber}?text=${encoded}`, '_blank');
+
+    if (!win || win.closed || typeof win.closed === 'undefined') {
+      setPopupBlocked(true);
+      await copyToClipboard(message);
+      return;
+    }
+
+    setPopupBlocked(false);
     if (onOrderSent) onOrderSent();
     resetAndClose();
   };
@@ -256,9 +257,10 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               </div>
               {paymentMethod === 'transfer' && (
                 <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs text-blue-700 font-medium">
-                  Alias: <span className="font-black">{bankAlias}</span>
+                  Alias: <span className="font-black">{bankAlias || 'No configurado'}</span>
                 </div>
               )}
+              {errors.bankAlias && <span className="text-xs text-red-500 mt-1 block">{errors.bankAlias}</span>}
             </div>
 
             {/* Notes */}
@@ -398,7 +400,18 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
 
             {/* Actions */}
             <div className="space-y-3">
-              {paymentMethod === 'transfer' && (
+              {popupBlocked && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-2">
+                  <div className="flex items-center gap-2 text-amber-700 text-sm font-bold">
+                    <AlertTriangle size={16} />
+                    <span>Pop-up bloqueado</span>
+                  </div>
+                  <p className="text-xs text-amber-600">
+                    Tu navegador bloqueó WhatsApp. El mensaje del pedido fue copiado al portapapeles. Abrí WhatsApp manualmente y pegalo.
+                  </p>
+                </div>
+              )}
+              {paymentMethod === 'transfer' && !popupBlocked && (
                 <p className="text-xs text-center text-blue-600 font-medium">
                   Al enviar, el alias se copiará automáticamente al portapapeles.
                 </p>

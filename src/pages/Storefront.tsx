@@ -25,6 +25,21 @@ export default function Storefront() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
 
+  // Validate cart against current menu on load and when menu changes
+  useEffect(() => {
+    if (!menuItems || menuItems.length === 0) return;
+    setCart(prev => {
+      const valid = prev.filter(cartItem => {
+        const item = menuItems.find(m => m.id === cartItem.id);
+        if (!item || item.available === false) return false;
+        const option = item.options.find(o => o.id === cartItem.optionId);
+        if (!option || option.available === false) return false;
+        return true;
+      });
+      return valid;
+    });
+  }, [menuItems]);
+
   // Persist cart to localStorage
   useEffect(() => {
     try {
@@ -32,8 +47,8 @@ export default function Storefront() {
     } catch { /* ignore */ }
   }, [cart]);
 
-  const WHATSAPP_NUMBER = siteSettings.whatsappNumber || import.meta.env.VITE_WHATSAPP_NUMBER || "5491131844469";
-  const BANK_ALIAS = siteSettings.bankAlias || import.meta.env.VITE_BANK_ALIAS || "ELPUESTITOdeltio.MP";
+  const WHATSAPP_NUMBER = siteSettings.whatsappNumber || import.meta.env.VITE_WHATSAPP_NUMBER || '';
+  const BANK_ALIAS = siteSettings.bankAlias || import.meta.env.VITE_BANK_ALIAS || '';
 
   // Default language to 'es' if null (avoid blocking modal in this flow)
   const lang = language || 'es';
@@ -391,12 +406,12 @@ export default function Storefront() {
                 <span>${total.toLocaleString('es-AR')}</span>
               </div>
               <button
-                disabled={cart.length === 0}
+                disabled={cart.length === 0 || !isOpenNow}
                 onClick={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }}
                 className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg"
               >
                 <Send size={20} />
-                {isOpenNow ? t.order : `${t.order} (${t.closed})`}
+                {isOpenNow ? t.order : t.closed}
               </button>
               {!isOpenNow && cart.length > 0 && (
                 <p className="text-xs text-center text-red-500 font-medium mt-2">
