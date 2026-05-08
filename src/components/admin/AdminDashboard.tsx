@@ -5,10 +5,16 @@
  * en localStorage: visitas por hora/día/mes, idioma más usado,
  * tiempo de sesión, y estado de la sesión actual del usuario.
  *
+ * DEMO MODE: Cuando se activa, genera datos sintéticos realistas
+ * para que el dashboard pueda apreciarse sin tráfico real.
+ *
  * Las métricas se refrescan automáticamente cada 30 segundos.
  */
 import { useState, useEffect, useCallback } from 'react';
-import { Wifi, Clock, Eye, Globe, TrendingUp, RefreshCw } from 'lucide-react';
+import {
+  Wifi, Clock, Eye, Globe, TrendingUp, RefreshCw,
+  Sparkles, ShoppingBag, DollarSign, Trophy,
+} from 'lucide-react';
 import {
   getVisitsTodayByHour,
   getVisitsLast7Days,
@@ -17,7 +23,13 @@ import {
   getTotalVisitsAll,
   getAverageSessionTime,
   getTopLanguage,
+  setDemoMode,
+  isDemoMode,
+  getDemoOrdersToday,
+  getDemoRevenueToday,
+  getDemoTopProducts,
 } from '../../utils/analyticsTracker';
+import { useMenu } from '../../context/MenuContext';
 
 type TimeFilter = 'today' | 'week' | 'month';
 
@@ -34,6 +46,8 @@ const BAR_BOTTOM = 180;
 const BAR_RANGE = BAR_BOTTOM - BAR_TOP;
 
 export function AdminDashboard() {
+  const { setSiteSettings } = useMenu();
+  const [demo, setDemo] = useState(() => isDemoMode());
   const [filter, setFilter] = useState<TimeFilter>('today');
   const [chartData, setChartData] = useState<number[]>(getVisitsTodayByHour);
 
@@ -42,6 +56,15 @@ export function AdminDashboard() {
   const [totalAll, setTotalAll] = useState(getTotalVisitsAll);
   const [sessionTime, setSessionTime] = useState(getAverageSessionTime);
   const [topLang, setTopLang] = useState(getTopLanguage);
+  const [ordersToday, setOrdersToday] = useState(getDemoOrdersToday);
+  const [revenueToday, setRevenueToday] = useState(getDemoRevenueToday);
+  const [topProducts, setTopProducts] = useState(getDemoTopProducts);
+
+  // Sincronizar demoMode con localStorage + siteSettings
+  useEffect(() => {
+    setDemoMode(demo);
+    setSiteSettings(prev => ({ ...prev, demoMode: demo }));
+  }, [demo, setSiteSettings]);
 
   // Auto-refresh de todas las métricas cada 30 segundos
   useEffect(() => {
@@ -50,13 +73,18 @@ export function AdminDashboard() {
       setTotalToday(getTotalVisitsToday());
       setTotalAll(getTotalVisitsAll());
       setTopLang(getTopLanguage());
+      if (demo) {
+        setOrdersToday(getDemoOrdersToday());
+        setRevenueToday(getDemoRevenueToday());
+        setTopProducts(getDemoTopProducts());
+      }
       // Refrescar gráfico según filtro actual
       if (filter === 'today') setChartData(getVisitsTodayByHour());
       else if (filter === 'week') setChartData(getVisitsLast7Days());
       else setChartData(getVisitsLast30Days());
     }, 30000);
     return () => clearInterval(interval);
-  }, [filter]);
+  }, [filter, demo]);
 
   // Cambio de filtro del gráfico
   const handleFilterChange = useCallback((newFilter: TimeFilter) => {
@@ -72,8 +100,13 @@ export function AdminDashboard() {
     setTotalAll(getTotalVisitsAll());
     setSessionTime(getAverageSessionTime());
     setTopLang(getTopLanguage());
+    if (demo) {
+      setOrdersToday(getDemoOrdersToday());
+      setRevenueToday(getDemoRevenueToday());
+      setTopProducts(getDemoTopProducts());
+    }
     handleFilterChange(filter);
-  }, [filter, handleFilterChange]);
+  }, [filter, handleFilterChange, demo]);
 
   const maxValue = Math.max(...chartData, 1);
 
@@ -96,20 +129,52 @@ export function AdminDashboard() {
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div>
           <h2 className="text-2xl md:text-3xl font-black text-white mb-1">Dashboard</h2>
-          <p className="text-xs sm:text-sm text-gray-400 font-medium">Resumen de actividad del sitio — datos reales</p>
+          <p className="text-xs sm:text-sm text-gray-400 font-medium">
+            {demo ? 'Resumen con datos de demostración' : 'Resumen de actividad del sitio — datos reales'}
+          </p>
         </div>
-        <button
-          onClick={handleRefresh}
-          className="p-2.5 rounded-xl bg-white/6 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all shrink-0"
-          title="Refrescar métricas"
-        >
-          <RefreshCw size={18} />
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Demo Mode Toggle */}
+          <button
+            onClick={() => setDemo(prev => !prev)}
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all border ${
+              demo
+                ? 'bg-amber-500/20 border-amber-500/40 text-amber-300 hover:bg-amber-500/30'
+                : 'bg-white/6 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'
+            }`}
+            title={demo ? 'Desactivar modo demo' : 'Activar modo demo'}
+          >
+            <Sparkles size={16} />
+            {demo ? 'Demo ON' : 'Demo OFF'}
+          </button>
+          <button
+            onClick={handleRefresh}
+            className="p-2.5 rounded-xl bg-white/6 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all shrink-0"
+            title="Refrescar métricas"
+          >
+            <RefreshCw size={18} />
+          </button>
+        </div>
       </div>
 
-      {/* Row 1: Stats Cards — alturas uniformes, 2 cols en mobile */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-        {/* Tu sesión (valor fijo: 1 — no hay backend para tracking real) */}
+      {/* Demo Banner */}
+      {demo && (
+        <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0">
+            <Sparkles size={20} className="text-amber-400" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-amber-300">Modo demostración activado</p>
+            <p className="text-xs text-amber-300/70">
+              Los datos que ves son sintéticos y se regeneran automáticamente. Sirven para apreciar el dashboard sin tráfico real.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Row 1: Stats Cards */}
+      <div className={`grid gap-3 md:gap-4 ${demo ? 'grid-cols-2 lg:grid-cols-6' : 'grid-cols-2 lg:grid-cols-4'}`}>
+        {/* Tu sesión */}
         <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center relative overflow-hidden">
           <div className="absolute top-3 right-3 flex items-center gap-1.5">
             <span className="relative flex h-2.5 w-2.5">
@@ -143,6 +208,28 @@ export function AdminDashboard() {
           <span className="text-lg md:text-xl font-black text-white">{topLang}</span>
           <span className="text-[10px] md:text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider text-center">Idioma top</span>
         </div>
+
+        {/* Demo: Pedidos Hoy */}
+        {demo && (
+          <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center relative overflow-hidden">
+            <div className="absolute top-3 right-3 text-[10px] font-bold text-amber-400 uppercase tracking-wider">Demo</div>
+            <ShoppingBag size={24} className="text-amber-400 mb-2" />
+            <span className="text-3xl md:text-4xl font-black text-white">{ordersToday}</span>
+            <span className="text-[10px] md:text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider text-center">Pedidos hoy</span>
+          </div>
+        )}
+
+        {/* Demo: Ingresos Hoy */}
+        {demo && (
+          <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center relative overflow-hidden">
+            <div className="absolute top-3 right-3 text-[10px] font-bold text-amber-400 uppercase tracking-wider">Demo</div>
+            <DollarSign size={24} className="text-amber-400 mb-2" />
+            <span className="text-2xl md:text-3xl font-black text-white">
+              ${revenueToday.toLocaleString()}
+            </span>
+            <span className="text-[10px] md:text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider text-center">Ingresos hoy</span>
+          </div>
+        )}
       </div>
 
       {/* Visitas Totales */}
@@ -250,6 +337,46 @@ export function AdminDashboard() {
           )}
         </div>
       </div>
+
+      {/* Demo: Productos más vendidos */}
+      {demo && (
+        <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+              <Trophy size={20} className="text-amber-400" />
+            </div>
+            <div>
+              <h3 className="text-base md:text-lg font-black text-white">Productos más pedidos</h3>
+              <p className="text-[10px] md:text-xs text-gray-400 font-medium">Ranking simulado de popularidad</p>
+            </div>
+          </div>
+          <div className="space-y-2">
+            {topProducts.map((product, index) => (
+              <div
+                key={product.name}
+                className="flex items-center gap-3 bg-white/4 rounded-xl px-4 py-3"
+              >
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${
+                  index === 0 ? 'bg-amber-500 text-white' :
+                  index === 1 ? 'bg-gray-400 text-white' :
+                  index === 2 ? 'bg-orange-600 text-white' :
+                  'bg-white/10 text-gray-400'
+                }`}>
+                  {index + 1}
+                </span>
+                <span className="flex-1 text-sm font-bold text-white">{product.name}</span>
+                <span className="text-xs font-bold text-gray-400">{product.count} pedidos</span>
+                <div className="w-24 h-2 bg-white/10 rounded-full overflow-hidden hidden sm:block">
+                  <div
+                    className="h-full bg-amber-400/70 rounded-full"
+                    style={{ width: `${(product.count / topProducts[0].count) * 100}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

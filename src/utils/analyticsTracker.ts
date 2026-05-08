@@ -6,11 +6,15 @@
  *
  * Los eventos se almacenan como un array en localStorage con un
  * límite de 10,000 eventos. Los más antiguos se eliminan automáticamente.
+ *
+ * DEMO MODE: Cuando se activa, genera datos sintéticos realistas
+ * para que el dashboard pueda apreciarse sin tráfico real.
  */
 
 const STORAGE_KEY = 'elpuestito_analytics';
 const MAX_EVENTS = 10_000;
 const SESSION_KEY = 'elpuestito_session_start';
+const DEMO_KEY = 'elpuestito_demo_mode';
 
 export interface AnalyticsEvent {
   type: 'page_view' | 'language_select';
@@ -19,8 +23,94 @@ export interface AnalyticsEvent {
   path?: string;
 }
 
-/** Lee todos los eventos almacenados */
+// ─── Demo Mode ─────────────────────────────────────────────────
+
+export function setDemoMode(enabled: boolean): void {
+  localStorage.setItem(DEMO_KEY, JSON.stringify(enabled));
+}
+
+export function isDemoMode(): boolean {
+  try {
+    return JSON.parse(localStorage.getItem(DEMO_KEY) || 'false');
+  } catch {
+    return false;
+  }
+}
+
+/** Genera eventos sintéticos realistas para el modo demo */
+function generateDemoEvents(): AnalyticsEvent[] {
+  const events: AnalyticsEvent[] = [];
+  const now = Date.now();
+  const dayMs = 86_400_000;
+
+  // Distribución de idiomas realista
+  const langPool = [
+    ...Array(70).fill('es'),
+    ...Array(15).fill('en'),
+    ...Array(10).fill('pt'),
+    ...Array(3).fill('ru'),
+    ...Array(2).fill('de'),
+  ];
+
+  for (let dayOffset = 29; dayOffset >= 0; dayOffset--) {
+    const dayBase = now - dayOffset * dayMs;
+    const isWeekend = new Date(dayBase).getDay() % 6 === 0;
+
+    // Base de visitas por día: 80-250, fines de semana un 40% más
+    let dailyVisits = 80 + Math.floor(Math.random() * 170);
+    if (isWeekend) dailyVisits = Math.floor(dailyVisits * 1.4);
+
+    // Horarios pico: 11-14h (almuerzo) y 19-23h (cena)
+    const hourWeights = new Array(24).fill(0).map((_, h) => {
+      if (h >= 11 && h <= 14) return 3.5;
+      if (h >= 19 && h <= 23) return 4.0;
+      if (h >= 8 && h <= 10) return 1.5;
+      if (h >= 15 && h <= 18) return 1.2;
+      if (h >= 0 && h <= 7) return 0.2;
+      return 1.0;
+    });
+    const totalWeight = hourWeights.reduce((a, b) => a + b, 0);
+
+    for (let v = 0; v < dailyVisits; v++) {
+      // Elegir hora ponderada
+      let r = Math.random() * totalWeight;
+      let hour = 0;
+      for (let h = 0; h < 24; h++) {
+        r -= hourWeights[h];
+        if (r <= 0) {
+          hour = h;
+          break;
+        }
+      }
+      const minute = Math.floor(Math.random() * 60);
+      const second = Math.floor(Math.random() * 60);
+      const timestamp = dayBase + hour * 3_600_000 + minute * 60_000 + second * 1_000;
+
+      events.push({
+        type: 'page_view',
+        timestamp,
+        path: '/',
+      });
+
+      // ~30% de los visitantes cambian de idioma
+      if (Math.random() < 0.3) {
+        events.push({
+          type: 'language_select',
+          timestamp: timestamp + Math.floor(Math.random() * 30_000),
+          language: langPool[Math.floor(Math.random() * langPool.length)],
+        });
+      }
+    }
+  }
+
+  return events.sort((a, b) => a.timestamp - b.timestamp);
+}
+
+/** Lee todos los eventos almacenados (o demo si está activo) */
 function getEvents(): AnalyticsEvent[] {
+  if (isDemoMode()) {
+    return generateDemoEvents();
+  }
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw) as AnalyticsEvent[];
@@ -149,6 +239,10 @@ export function getTotalVisitsAll(): number {
 
 /** Tiempo promedio de sesión (basado en la sesión actual como referencia) */
 export function getAverageSessionTime(): string {
+  if (isDemoMode()) {
+    // En demo mostramos un valor fijo realista
+    return '4m 32s';
+  }
   const sessionStart = sessionStorage.getItem(SESSION_KEY);
   if (!sessionStart) return '0s';
   const elapsed = Date.now() - parseInt(sessionStart, 10);
@@ -179,6 +273,40 @@ export function getTopLanguage(): string {
   };
   const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
   return langNames[top[0]] || top[0];
+}
+
+// ─── Métricas simuladas de Demo ────────────────────────────────
+
+/** Pedidos simulados de hoy (basado en visitas con tasa de conversión) */
+export function getDemoOrdersToday(): number {
+  const visits = getTotalVisitsToday();
+  // Tasa de conversión 8-15%
+  const rate = 0.08 + Math.random() * 0.07;
+  return Math.max(1, Math.round(visits * rate));
+}
+
+/** Ingresos simulados de hoy (basado en pedidos × ticket promedio) */
+export function getDemoRevenueToday(): number {
+  const orders = getDemoOrdersToday();
+  // Ticket promedio ARS 8500-15000
+  const avgTicket = 8500 + Math.floor(Math.random() * 6500);
+  return orders * avgTicket;
+}
+
+/** Productos más "vendidos" en demo */
+export function getDemoTopProducts(): { name: string; count: number }[] {
+  const products = [
+    'Hamburguesa Clásica', 'Choripán Completo', 'Bondiola Popito',
+    'Papas Fritas', 'Hamburguesa Veggie', 'Bife de Chorizo',
+    'Hamburguesa Doble', 'Choripán Simple',
+  ];
+  return products
+    .map(name => ({
+      name,
+      count: Math.floor(Math.random() * 40) + 5,
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 4);
 }
 
 /** Limpia todos los datos de analytics */
