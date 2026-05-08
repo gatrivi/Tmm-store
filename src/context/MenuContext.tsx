@@ -62,6 +62,17 @@ export interface SiteSettings {
   useManualRate: boolean; // Si true, usar manualRate en vez de la API
   whatsappNumber: string;
   bankAlias: string;
+  // Branding
+  brandName: string;
+  brandColor: string;
+  brandColorDark: string;
+  brandColorLight: string;
+  brandAccent: string;
+  brandTextColor: string;
+  brandFont: string;
+  brandAddress: string;
+  brandInstagram: string;
+  brandGoogleMaps: string;
 }
 
 interface MenuContextProps {
@@ -104,6 +115,16 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       useManualRate: false,
       whatsappNumber: '',
       bankAlias: '',
+      brandName: '',
+      brandColor: '#cc333f',
+      brandColorDark: '#6a4a3c',
+      brandColorLight: '#fdf6e3',
+      brandAccent: '#edc951',
+      brandTextColor: '#3d2b1f',
+      brandFont: 'system-ui',
+      brandAddress: '',
+      brandInstagram: '',
+      brandGoogleMaps: '',
     })
   );
   const [usdRate, setUsdRate] = useState<number>(() => getUsdRateSync());

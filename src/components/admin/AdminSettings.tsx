@@ -12,6 +12,7 @@ import { useMenu } from '../../context/MenuContext';
 import { clearAnalytics } from '../../utils/analyticsTracker';
 import { getUsdRate, checkApiStatus } from '../../utils/dollarRate';
 import { loadBusinessHours, saveBusinessHours, isBusinessOpen, getNextOpeningText, type BusinessHoursSchedule } from '../../utils/businessHours';
+import { AdminBranding } from './AdminBranding';
 
 const LANG_OPTIONS = [
   { code: undefined, label: '🌐 Todos', shortLabel: 'Todos' },
@@ -352,6 +353,9 @@ export function AdminSettings() {
           </div>
         )}
       </div>
+
+      {/* Branding */}
+      <AdminBranding />
 
       {/* Business Info */}
       <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-6 space-y-4">

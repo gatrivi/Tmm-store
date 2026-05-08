@@ -57,6 +57,17 @@ export default function Storefront() {
   const isOpenNow = businessHours.enabled ? isBusinessOpen(businessHours) : true;
   const nextOpeningText = businessHours.enabled ? getNextOpeningText(businessHours) : '';
 
+  // Apply branding CSS variables
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty('--brand-color', siteSettings.brandColor);
+    root.style.setProperty('--brand-color-dark', siteSettings.brandColorDark);
+    root.style.setProperty('--brand-color-light', siteSettings.brandColorLight);
+    root.style.setProperty('--brand-accent', siteSettings.brandAccent);
+    root.style.setProperty('--brand-text', siteSettings.brandTextColor);
+    root.style.setProperty('--brand-font', siteSettings.brandFont);
+  }, [siteSettings]);
+
   // Analytics tracking
   useEffect(() => {
     startSession();
@@ -189,7 +200,7 @@ export default function Storefront() {
       {/* Header */}
       <header className="bg-black text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center">
         <div>
-          <h1 className="text-xl md:text-2xl font-black tracking-tight">El Puestito del Tío</h1>
+          <h1 className="text-xl md:text-2xl font-black tracking-tight">{siteSettings.brandName || 'Tu Negocio'}</h1>
           <div className="flex items-center gap-2 mt-0.5">
             {businessHours.enabled ? (
               <span className={`inline-flex items-center gap-1 text-[10px] md:text-xs font-bold px-2 py-0.5 rounded-full ${isOpenNow ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
@@ -336,7 +347,12 @@ export default function Storefront() {
       </main>
 
       {/* Footer */}
-      <GlobalFooter />
+      <GlobalFooter
+        brandName={siteSettings.brandName}
+        address={siteSettings.brandAddress}
+        instagram={siteSettings.brandInstagram}
+        googleMaps={siteSettings.brandGoogleMaps}
+      />
 
       {/* Cart Overlay */}
       {isCartOpen && (

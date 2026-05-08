@@ -39,10 +39,14 @@ import { translations } from '../i18n/translations';
  *
  * @returns {JSX.Element} Elemento que representa el pie de página.
  */
-export function GlobalFooter() {
+export function GlobalFooter({ brandName, address, instagram, googleMaps }: GlobalFooterProps) {
   const { language } = useLanguage();
   const { triggerLogin } = useAdmin();
   const t = translations[language || 'es'].menuPage;
+  const displayName = brandName || 'Tu Negocio';
+  const displayAddress = address || t.footerAddress;
+  const displayInstagram = instagram || '';
+  const displayMaps = googleMaps || '';
 
   // ---- Lógica del patrón secreto ----
   // Usamos useRef para evitar re-renders innecesarios al trackear clicks.
@@ -107,30 +111,38 @@ export function GlobalFooter() {
             role="presentation"
           />
           <div className="flex flex-col items-center md:items-start w-full">
-            <img 
-              src="/titulo-blanco.png" 
-              alt="El Puestito del Tío" 
-              className="w-[280px] md:w-[320px] h-auto object-contain md:-mt-4"
-            />
+            <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight md:-mt-2">
+              {displayName}
+            </h2>
             <div className="w-full max-w-[200px] h-px bg-brand-white/10 md:hidden mt-4 mx-auto rounded-full" />
           </div>
         </div>
 
         <div className="flex flex-col items-start gap-3 lg:gap-4">
           <h4 className="text-lg lg:text-xl font-bold mb-1 lg:mb-2">{t.footerFindUs}</h4>
-          <a 
-            href="https://maps.app.goo.gl/efJEtZtEkHLq67Hq6" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="flex items-start gap-3 group hover:text-brand-green transition-colors"
-            title="Abrir en Google Maps"
-          >
-            <MapPin size={20} className="shrink-0 mt-0.5 text-brand-green group-hover:text-brand-white transition-colors lg:w-6 lg:h-6" />
-            <span 
-              className="text-sm lg:text-base font-medium text-gray-300 group-hover:text-brand-green transition-colors leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: t.footerAddress }}
-            />
-          </a>
+          {displayMaps ? (
+            <a 
+              href={displayMaps}
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-start gap-3 group hover:text-brand-green transition-colors"
+              title="Abrir en Google Maps"
+            >
+              <MapPin size={20} className="shrink-0 mt-0.5 text-brand-green group-hover:text-brand-white transition-colors lg:w-6 lg:h-6" />
+              <span 
+                className="text-sm lg:text-base font-medium text-gray-300 group-hover:text-brand-green transition-colors leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: displayAddress.replace(/\n/g, '<br/>') }}
+              />
+            </a>
+          ) : (
+            <div className="flex items-start gap-3">
+              <MapPin size={20} className="shrink-0 mt-0.5 text-brand-green lg:w-6 lg:h-6" />
+              <span 
+                className="text-sm lg:text-base font-medium text-gray-300 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: displayAddress.replace(/\n/g, '<br/>') }}
+              />
+            </div>
+          )}
           <div className="flex items-center gap-3 mt-2 lg:mt-3">
             <Clock size={20} className="shrink-0 text-brand-green lg:w-6 lg:h-6" />
             <span className="text-sm lg:text-base font-medium text-gray-300">{t.footerHours}</span>
@@ -139,18 +151,20 @@ export function GlobalFooter() {
 
         <div className="flex flex-col items-start gap-4 lg:gap-5">
           <h4 className="text-lg lg:text-xl font-bold mb-1 lg:mb-2">{t.footerFollowUs}</h4>
-          <a 
-            href="https://www.instagram.com/elpuestitodeltio/" 
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-3 hover:text-brand-green transition-colors"
-            aria-label="Instagram de El Puestito del Tío"
-          >
-            <div className="p-2.5 lg:p-3 rounded-full bg-brand-white/10 group-hover:bg-brand-green group-hover:text-brand-black transition-colors">
-              <InstagramIcon size={20} className="lg:w-6 lg:h-6" />
-            </div>
-            <span className="text-sm lg:text-base font-medium text-gray-300 group-hover:text-brand-green transition-colors">@elpuestitodeltio</span>
-          </a>
+          {displayInstagram && (
+            <a 
+              href={`https://www.instagram.com/${displayInstagram}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-3 hover:text-brand-green transition-colors"
+              aria-label={`Instagram de ${displayName}`}
+            >
+              <div className="p-2.5 lg:p-3 rounded-full bg-brand-white/10 group-hover:bg-brand-green group-hover:text-brand-black transition-colors">
+                <InstagramIcon size={20} className="lg:w-6 lg:h-6" />
+              </div>
+              <span className="text-sm lg:text-base font-medium text-gray-300 group-hover:text-brand-green transition-colors">@{displayInstagram}</span>
+            </a>
+          )}
         </div>
 
       </div>
