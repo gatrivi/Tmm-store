@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Palette, MapPin, ExternalLink, Type, Check } from 'lucide-react';
+import { Palette, MapPin, ExternalLink, Type, Check, Upload, X, ImageIcon } from 'lucide-react';
 import { useMenu } from '../../context/MenuContext';
 import { PRESET_PALETTES } from '../../utils/palettes';
 
@@ -32,6 +32,56 @@ export function AdminBranding() {
     setSiteSettings(prev => ({ ...prev, [field]: value }));
   };
 
+  const compressLogo = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const MAX_SIZE = 512;
+
+          if (width > height && width > MAX_SIZE) {
+            height *= MAX_SIZE / width;
+            width = MAX_SIZE;
+          } else if (height > MAX_SIZE) {
+            width *= MAX_SIZE / height;
+            height = MAX_SIZE;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return reject('No context');
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/webp', 0.85));
+        };
+        img.onerror = reject;
+        if (typeof e.target?.result === 'string') img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const base64 = await compressLogo(file);
+      setSiteSettings(prev => ({ ...prev, brandLogo: base64 }));
+    } catch {
+      alert('Error al procesar el logo');
+    }
+    e.target.value = '';
+  };
+
+  const removeLogo = () => {
+    setSiteSettings(prev => ({ ...prev, brandLogo: undefined }));
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -54,6 +104,45 @@ export function AdminBranding() {
           placeholder="Ej: El Puestito del Tío"
           className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2.5 text-sm font-medium text-white outline-none focus:ring-2 focus:ring-pink-500/40 transition-shadow placeholder:text-gray-600"
         />
+      </div>
+
+      {/* Logo */}
+      <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-6 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+            <ImageIcon size={20} className="text-blue-400" />
+          </div>
+          <span className="text-sm font-black text-white">Logo del negocio</span>
+        </div>
+
+        {siteSettings.brandLogo ? (
+          <div className="relative inline-block">
+            <img
+              src={siteSettings.brandLogo}
+              alt="Logo preview"
+              className="max-h-32 max-w-full rounded-lg border border-white/10 object-contain bg-white/5"
+            />
+            <button
+              onClick={removeLogo}
+              className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600 transition shadow-lg"
+              title="Eliminar logo"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        ) : (
+          <label className="flex flex-col items-center justify-center gap-2 w-full h-28 rounded-xl border-2 border-dashed border-white/10 bg-white/4 hover:bg-white/8 hover:border-white/20 transition cursor-pointer">
+            <Upload size={24} className="text-gray-500" />
+            <span className="text-xs font-medium text-gray-500">Subir logo (PNG, JPG, SVG)</span>
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/jpg,image/svg+xml"
+              onChange={handleLogoUpload}
+              className="hidden"
+            />
+          </label>
+        )}
+        <p className="text-[10px] text-gray-500">Se comprime automáticamente. Si no subís nada, se muestra el nombre como texto.</p>
       </div>
 
       {/* Palettes */}
@@ -195,7 +284,11 @@ export function AdminBranding() {
           style={{ backgroundColor: siteSettings.brandColorLight, color: siteSettings.brandTextColor, fontFamily: siteSettings.brandFont }}
         >
           <div className="p-4 flex items-center justify-between" style={{ backgroundColor: siteSettings.brandColorDark, color: '#fff' }}>
-            <span className="font-black text-sm">{siteSettings.brandName || 'Tu Negocio'}</span>
+            {siteSettings.brandLogo ? (
+              <img src={siteSettings.brandLogo} alt="Logo" className="h-6 object-contain" />
+            ) : (
+              <span className="font-black text-sm">{siteSettings.brandName || 'Tu Negocio'}</span>
+            )}
             <div className="flex gap-1.5">
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: siteSettings.brandColor }} />
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: siteSettings.brandAccent }} />

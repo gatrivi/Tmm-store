@@ -73,6 +73,7 @@ export interface SiteSettings {
   brandAddress: string;
   brandInstagram: string;
   brandGoogleMaps: string;
+  brandLogo?: string;
 }
 
 interface MenuContextProps {
@@ -125,6 +126,7 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       brandAddress: '',
       brandInstagram: '',
       brandGoogleMaps: '',
+      brandLogo: undefined,
     })
   );
   const [usdRate, setUsdRate] = useState<number>(() => getUsdRateSync());

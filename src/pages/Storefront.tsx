@@ -199,8 +199,12 @@ export default function Storefront() {
     <div className="min-h-screen bg-gray-50 pb-24 font-sans text-gray-900">
       {/* Header */}
       <header className="bg-black text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center">
-        <div>
-          <h1 className="text-xl md:text-2xl font-black tracking-tight">{siteSettings.brandName || 'Tu Negocio'}</h1>
+        <div className="flex items-center gap-3">
+          {siteSettings.brandLogo ? (
+            <img src={siteSettings.brandLogo} alt={siteSettings.brandName || 'Logo'} className="h-8 md:h-10 object-contain" />
+          ) : (
+            <h1 className="text-xl md:text-2xl font-black tracking-tight">{siteSettings.brandName || 'Tu Negocio'}</h1>
+          )}
           <div className="flex items-center gap-2 mt-0.5">
             {businessHours.enabled ? (
               <span className={`inline-flex items-center gap-1 text-[10px] md:text-xs font-bold px-2 py-0.5 rounded-full ${isOpenNow ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>

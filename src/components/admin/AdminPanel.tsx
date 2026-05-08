@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, UtensilsCrossed, Image, Images, Settings, LogOut, Menu, X } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
+import { useMenu } from '../../context/MenuContext';
 import { AdminDashboard } from './AdminDashboard';
 import { AdminMenuEditor } from './AdminMenuEditor';
 import { AdminImageEditor } from './AdminImageEditor';
@@ -26,6 +27,7 @@ const NAV_ITEMS: { id: Section; label: string; Icon: typeof LayoutDashboard }[] 
 
 export function AdminPanel() {
   const { showPanel, logout } = useAdmin();
+  const { siteSettings } = useMenu();
   const [section, setSection] = useState<Section>('dashboard');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -61,7 +63,7 @@ export function AdminPanel() {
           <aside className="hidden lg:flex flex-col w-64 bg-white/3 border-r border-white/5 p-4">
             {/* Logo */}
             <div className="flex items-center gap-3 px-2 py-3 mb-6">
-              <img src="/titulo-blanco.png" alt="El Puestito" className="w-32 h-auto object-contain" />
+              <img src={siteSettings.brandLogo || '/titulo-blanco.png'} alt={siteSettings.brandName || 'El Puestito'} className="w-32 h-auto object-contain" />
             </div>
 
             {/* Nav */}
@@ -111,7 +113,7 @@ export function AdminPanel() {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-center justify-between px-2 py-3 mb-6">
-                    <img src="/titulo-blanco.png" alt="El Puestito" className="w-28 h-auto object-contain" />
+                    <img src={siteSettings.brandLogo || '/titulo-blanco.png'} alt={siteSettings.brandName || 'El Puestito'} className="w-28 h-auto object-contain" />
                     <button onClick={() => setMobileMenuOpen(false)} aria-label="Cerrar menú" className="text-gray-400 hover:text-white p-1">
                       <X size={20} />
                     </button>
