@@ -466,12 +466,6 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   <p className="text-xs text-red-600">{mpError}</p>
                 </div>
               )}
-              {paymentMethod === 'transfer' && !popupBlocked && (
-                <p className="text-xs text-center text-blue-600 font-medium">
-                  Al enviar, el alias se copiará automáticamente al portapapeles.
-                </p>
-              )}
-
               {paymentMethod === 'mercadopago' ? (
                 <button
                   onClick={handlePayWithMP}
@@ -490,6 +484,27 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   Abrir WhatsApp y enviar pedido
                 </button>
               )}
+
+              {/* Quick copy buttons for transfer payments */}
+              {paymentMethod === 'transfer' && (
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={async () => { await copyToClipboard(`$${total.toLocaleString('es-AR')}`); showCopied('total-btn'); }}
+                    className="flex items-center justify-center gap-2 py-3 bg-blue-50 border border-blue-200 text-blue-700 font-bold text-xs rounded-xl hover:bg-blue-100 transition"
+                  >
+                    {copiedField === 'total-btn' ? <Check size={14} /> : <Copy size={14} />}
+                    Copiar total
+                  </button>
+                  <button
+                    onClick={async () => { await copyToClipboard(bankAlias); showCopied('alias-btn'); }}
+                    className="flex items-center justify-center gap-2 py-3 bg-blue-50 border border-blue-200 text-blue-700 font-bold text-xs rounded-xl hover:bg-blue-100 transition"
+                  >
+                    {copiedField === 'alias-btn' ? <Check size={14} /> : <Copy size={14} />}
+                    Copiar alias
+                  </button>
+                </div>
+              )}
+
               <button
                 onClick={() => setStep('form')}
                 className="w-full flex items-center justify-center gap-2 py-3 text-gray-500 font-bold text-sm hover:text-gray-800 transition"
