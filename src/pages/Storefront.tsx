@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { ShoppingCart, Plus, Minus, Trash2, Send, Globe, Clock, Share2, Flame } from 'lucide-react';
+import { ShoppingCart, Plus, Minus, Trash2, Send, Globe, Clock, Share2, Flame, CheckCircle, MessageCircle } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { useMenu } from '../context/MenuContext';
 import { useLanguage } from '../context/LanguageContext';
 import { resolveImagesForProduct } from '../utils/imageLoader';
@@ -24,6 +25,33 @@ export default function Storefront() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
+
+  // Detectar retorno de MercadoPago
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [mpSuccess, setMpSuccess] = useState(false);
+  const [mpPendingOrder, setMpPendingOrder] = useState<{ orderId: string; total: number } | null>(null);
+
+  useEffect(() => {
+    const status = searchParams.get('mp_status');
+    const ref = searchParams.get('mp_ref');
+    if (status === 'approved') {
+      const pendingRaw = sessionStorage.getItem('elpuestito_mp_pending');
+      if (pendingRaw) {
+        try {
+          const pending = JSON.parse(pendingRaw);
+          if (pending.orderId && (!ref || pending.orderId === ref)) {
+            setMpSuccess(true);
+            setMpPendingOrder(pending);
+          }
+        } catch { /* ignore */ }
+      }
+      // Limpiar query params de la URL sin recargar
+      setSearchParams({}, { replace: true });
+    } else if (status === 'failure' || status === 'pending') {
+      // Limpiar params
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   // Validate cart against current menu on load and when menu changes
   useEffect(() => {
@@ -197,8 +225,36 @@ export default function Storefront() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24 font-sans text-gray-900">
+      {/* MercadoPago Success Banner */}
+      {mpSuccess && mpPendingOrder && (
+        <div className="fixed inset-x-0 top-0 z-50 bg-sky-500 text-white px-4 py-4 shadow-lg">
+          <div className="max-w-lg mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div className="flex items-center gap-3">
+              <CheckCircle size={24} className="shrink-0" />
+              <div>
+                <p className="font-bold text-sm">¡Pago aprobado! 🎉</p>
+                <p className="text-xs text-sky-100">
+                  Tu pedido #{mpPendingOrder.orderId} por ${mpPendingOrder.total.toLocaleString('es-AR')} fue pagado.
+                </p>
+              </div>
+            </div>
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                `Hola, acabo de pagar mi pedido #${mpPendingOrder.orderId} por MercadoPago. Total: $${mpPendingOrder.total.toLocaleString('es-AR')}.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 flex items-center gap-2 bg-white text-sky-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-sky-50 transition"
+            >
+              <MessageCircle size={16} />
+              Confirmar por WhatsApp
+            </a>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
-      <header className="bg-black text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center">
+      <header className={`bg-black text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center ${mpSuccess ? 'mt-[88px] sm:mt-[72px]' : ''}`}>
         <div className="flex items-center gap-3">
           {siteSettings.brandLogo ? (
             <img src={siteSettings.brandLogo} alt={siteSettings.brandName || 'Logo'} className="h-8 md:h-10 object-contain" />
@@ -451,6 +507,7 @@ export default function Storefront() {
         total={total}
         whatsappNumber={WHATSAPP_NUMBER}
         bankAlias={BANK_ALIAS}
+        mpEnabled={siteSettings.mpEnabled}
         onOrderSent={() => setCart([])}
       />
 

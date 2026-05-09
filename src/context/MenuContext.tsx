@@ -75,6 +75,7 @@ export interface SiteSettings {
   brandGoogleMaps: string;
   brandLogo?: string;
   demoMode: boolean;
+  mpEnabled: boolean;
 }
 
 interface MenuContextProps {
@@ -129,6 +130,7 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       brandGoogleMaps: '',
       brandLogo: undefined,
       demoMode: false,
+      mpEnabled: false,
     })
   );
   const [usdRate, setUsdRate] = useState<number>(() => getUsdRateSync());

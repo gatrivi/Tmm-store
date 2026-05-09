@@ -6,7 +6,7 @@
  * cierre de sesión y créditos.
  */
 import { useState } from 'react';
-import { LogOut, Shield, Code, RotateCcw, AlertTriangle, Trash2, DollarSign, RefreshCw, Wifi, WifiOff, Clock, CalendarCheck, Phone } from 'lucide-react';
+import { LogOut, Shield, Code, RotateCcw, AlertTriangle, Trash2, DollarSign, RefreshCw, Wifi, WifiOff, Clock, CalendarCheck, Phone, CreditCard } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 import { useMenu } from '../../context/MenuContext';
 import { clearAnalytics } from '../../utils/analyticsTracker';
@@ -124,6 +124,45 @@ export function AdminSettings() {
             </span>
           )}
         </div>
+      </div>
+
+      {/* Toggle MercadoPago */}
+      <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-6 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-sky-500/20 flex items-center justify-center">
+            <CreditCard size={20} className="text-sky-400" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <span className="text-sm font-black text-white block">MercadoPago</span>
+            <span className="text-xs text-gray-400 font-medium">Permitir pagos con tarjeta, débito y saldo MP vía Checkout Pro.</span>
+          </div>
+          <button
+            onClick={() => setSiteSettings(prev => ({ ...prev, mpEnabled: !prev.mpEnabled }))}
+            aria-label="Alternar MercadoPago"
+            className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+              siteSettings.mpEnabled ? 'bg-sky-500' : 'bg-white/20'
+            }`}
+          >
+            <span
+              className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-white shadow transform transition-transform duration-200 ease-in-out ${
+                siteSettings.mpEnabled ? 'translate-x-5' : 'translate-x-0'
+              }`}
+            />
+          </button>
+        </div>
+
+        {siteSettings.mpEnabled && (
+          <div className="border-t border-white/5 pt-4 space-y-3">
+            <div className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-xs font-bold bg-sky-500/10 border border-sky-500/20 text-sky-300`}>
+              <Wifi size={14} />
+              <span>🔗 Checkout Pro activado. El cliente podrá pagar online y volverá automáticamente a la tienda.</span>
+            </div>
+            <p className="text-[10px] text-gray-500 font-medium">
+              Requiere configurar <code className="bg-white/10 px-1 py-0.5 rounded text-gray-300">MP_ACCESS_TOKEN</code> en las variables de entorno de Vercel.
+              Si no está configurado, el botón de pago mostrará un error al cliente.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Toggle USD */}

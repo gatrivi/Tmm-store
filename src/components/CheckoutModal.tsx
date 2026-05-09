@@ -3,6 +3,7 @@ import { X, MapPin, User, Phone, CreditCard, FileText, Truck, Store, Send, Clipb
 import { copyToClipboard } from '../utils/clipboard';
 import { buildWhatsAppMessage } from '../utils/whatsappMessage';
 
+
 export interface CheckoutData {
   orderId: string;
   name: string;
@@ -27,6 +28,7 @@ interface CheckoutModalProps {
   whatsappNumber: string;
   bankAlias: string;
   onOrderSent?: () => void;
+  mpEnabled?: boolean;
 }
 
 const generateOrderId = (): string => {
@@ -38,7 +40,7 @@ const generateOrderId = (): string => {
   return id;
 };
 
-export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNumber, bankAlias, onOrderSent }: CheckoutModalProps) {
+export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNumber, bankAlias, onOrderSent, mpEnabled }: CheckoutModalProps) {
   const [step, setStep] = useState<'form' | 'confirm'>('form');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -49,6 +51,8 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [popupBlocked, setPopupBlocked] = useState(false);
+  const [mpLoading, setMpLoading] = useState(false);
+  const [mpError, setMpError] = useState<string | null>(null);
   const orderIdRef = useRef<string>(generateOrderId());
 
   const showCopied = (field: string) => {
@@ -131,6 +135,43 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     setPopupBlocked(false);
     if (onOrderSent) onOrderSent();
     resetAndClose();
+  };
+
+  const handlePayWithMP = async () => {
+    setMpLoading(true);
+    setMpError(null);
+    try {
+      const items = cart.map(item => ({
+        title: `${item.name} (${item.optionLabel})`,
+        quantity: item.qty,
+        unit_price: item.price,
+        currency_id: 'ARS',
+      }));
+
+      const res = await fetch('/api/create-preference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items,
+          payer: { name, phone },
+          external_reference: orderId,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Error al crear la preferencia de pago');
+      }
+
+      // Guardar en sessionStorage que tenemos un pedido pendiente de MP
+      sessionStorage.setItem('elpuestito_mp_pending', JSON.stringify({ orderId, total }));
+
+      // Redirigir a MercadoPago
+      window.location.href = data.init_point;
+    } catch (err) {
+      setMpLoading(false);
+      setMpError(err instanceof Error ? err.message : 'Error desconocido');
+    }
   };
 
   const paymentLabel = {
@@ -240,11 +281,11 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                 <CreditCard size={12} /> Método de pago
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className={`grid gap-2 ${mpEnabled ? 'grid-cols-3' : 'grid-cols-2'}`}>
                 {[
                   { id: 'cash' as const, label: 'Efectivo' },
                   { id: 'transfer' as const, label: 'Transferencia' },
-                  { id: 'mercadopago' as const, label: 'Mercado Pago' },
+                  ...(mpEnabled ? [{ id: 'mercadopago' as const, label: 'Mercado Pago' }] : []),
                 ].map((opt) => (
                   <button
                     key={opt.id}
@@ -258,6 +299,11 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               {paymentMethod === 'transfer' && (
                 <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs text-blue-700 font-medium">
                   Alias: <span className="font-black">{bankAlias || 'No configurado'}</span>
+                </div>
+              )}
+              {paymentMethod === 'mercadopago' && (
+                <div className="mt-2 bg-sky-50 border border-sky-200 rounded-lg px-3 py-2 text-xs text-sky-700 font-medium">
+                  Pagá con tarjeta, débito o saldo MP. Serás redirigido para completar el pago.
                 </div>
               )}
               {errors.bankAlias && <span className="text-xs text-red-500 mt-1 block">{errors.bankAlias}</span>}
@@ -411,18 +457,39 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   </p>
                 </div>
               )}
+              {mpError && (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 space-y-2">
+                  <div className="flex items-center gap-2 text-red-700 text-sm font-bold">
+                    <AlertTriangle size={16} />
+                    <span>Error de MercadoPago</span>
+                  </div>
+                  <p className="text-xs text-red-600">{mpError}</p>
+                </div>
+              )}
               {paymentMethod === 'transfer' && !popupBlocked && (
                 <p className="text-xs text-center text-blue-600 font-medium">
                   Al enviar, el alias se copiará automáticamente al portapapeles.
                 </p>
               )}
-              <button
-                onClick={handleSendWhatsApp}
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg"
-              >
-                <MessageCircle size={20} />
-                Abrir WhatsApp y enviar pedido
-              </button>
+
+              {paymentMethod === 'mercadopago' ? (
+                <button
+                  onClick={handlePayWithMP}
+                  disabled={mpLoading}
+                  className="w-full bg-sky-500 hover:bg-sky-600 disabled:bg-sky-300 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg"
+                >
+                  <CreditCard size={20} />
+                  {mpLoading ? 'Conectando con MercadoPago...' : 'Pagar con MercadoPago'}
+                </button>
+              ) : (
+                <button
+                  onClick={handleSendWhatsApp}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg"
+                >
+                  <MessageCircle size={20} />
+                  Abrir WhatsApp y enviar pedido
+                </button>
+              )}
               <button
                 onClick={() => setStep('form')}
                 className="w-full flex items-center justify-center gap-2 py-3 text-gray-500 font-bold text-sm hover:text-gray-800 transition"
