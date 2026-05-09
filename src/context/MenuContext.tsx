@@ -111,8 +111,8 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [lastEditTimestamp, setLastEditTimestamp] = useState<string | null>(() =>
     localStorage.getItem(STORAGE_KEY_LAST_EDIT)
   );
-  const [siteSettings, setSiteSettings] = useState<SiteSettings>(() =>
-    loadFromStorage(STORAGE_KEY_SETTINGS, {
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>(() => {
+    const fallback: SiteSettings = {
       showUsdToggle: false,
       manualRate: 0,
       useManualRate: false,
@@ -131,8 +131,10 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       brandLogo: undefined,
       demoMode: false,
       mpEnabled: true,
-    })
-  );
+    };
+    const saved = loadFromStorage<Partial<SiteSettings>>(STORAGE_KEY_SETTINGS, {});
+    return { ...fallback, ...saved };
+  });
   const [usdRate, setUsdRate] = useState<number>(() => getUsdRateSync());
 
   // Cargar cotización actual al montar (async)
