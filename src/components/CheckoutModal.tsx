@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { X, MapPin, User, Phone, CreditCard, FileText, Truck, Store, Send, ClipboardList, CheckCircle, ArrowLeft, MessageCircle, Copy, Check, AlertTriangle } from 'lucide-react';
 import { copyToClipboard } from '../utils/clipboard';
 import { buildWhatsAppMessage } from '../utils/whatsappMessage';
@@ -62,10 +62,17 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
 
   const orderId = orderIdRef.current;
 
-  if (!isOpen) return null;
+  // Reset step to form whenever modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setStep('form');
+      setPopupBlocked(false);
+      setMpError(null);
+      setMpLoading(false);
+    }
+  }, [isOpen]);
 
   const resetAndClose = () => {
-    setStep('form');
     setName('');
     setPhone('');
     setDeliveryType('pickup');
@@ -74,6 +81,8 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     setNotes('');
     setErrors({});
     setPopupBlocked(false);
+    setMpError(null);
+    setMpLoading(false);
     onClose();
   };
 

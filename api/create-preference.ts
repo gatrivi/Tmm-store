@@ -71,7 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           quantity: item.quantity,
           unit_price: item.unit_price,
           currency_id: item.currency_id || 'ARS',
-        })) as any,
+        })) as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         payer: payer
           ? {
               name: payer.name,
