@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, MapPin, User, Phone, CreditCard, FileText, Truck, Store, Send, ClipboardList, CheckCircle, ArrowLeft, MessageCircle, Copy, Check, AlertTriangle } from 'lucide-react';
 import { copyToClipboard } from '../utils/clipboard';
 import { buildWhatsAppMessage } from '../utils/whatsappMessage';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../i18n/translations';
 
 
 export interface CheckoutData {
@@ -41,6 +43,10 @@ const generateOrderId = (): string => {
 };
 
 export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNumber, bankAlias, onOrderSent, mpEnabled }: CheckoutModalProps) {
+  const { language } = useLanguage();
+  const lang = language || 'es';
+  const t = translations[lang].checkout;
+
   const [step, setStep] = useState<'form' | 'confirm'>('form');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -93,10 +99,10 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
-    if (!name.trim()) newErrors.name = 'Ingresá tu nombre';
-    if (!phone.trim()) newErrors.phone = 'Ingresá tu teléfono';
-    if (deliveryType === 'delivery' && !address.trim()) newErrors.address = 'Ingresá la dirección de entrega';
-    if (paymentMethod === 'transfer' && !bankAlias.trim()) newErrors.bankAlias = 'No hay alias de pago configurado. Elegí otro método o contactá al local.';
+    if (!name.trim()) newErrors.name = t.nameError;
+    if (!phone.trim()) newErrors.phone = t.phoneError;
+    if (deliveryType === 'delivery' && !address.trim()) newErrors.address = t.addressError;
+    if (paymentMethod === 'transfer' && !bankAlias.trim()) newErrors.bankAlias = t.aliasError;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -108,9 +114,9 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
 
   const handleSendWhatsApp = async () => {
     const paymentLabel = {
-      cash: 'Efectivo',
-      transfer: 'Transferencia bancaria',
-      mercadopago: 'Mercado Pago',
+      cash: t.cash,
+      transfer: t.transfer,
+      mercadopago: t.mp,
     }[paymentMethod];
 
     const message = buildWhatsAppMessage({
@@ -184,9 +190,9 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   };
 
   const paymentLabel = {
-    cash: 'Efectivo',
-    transfer: 'Transferencia bancaria',
-    mercadopago: 'Mercado Pago',
+    cash: t.cash,
+    transfer: t.transfer,
+    mercadopago: t.mp,
   }[paymentMethod];
 
   return (
@@ -201,7 +207,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               <ClipboardList size={20} className="text-green-600" />
             )}
             <h2 className="text-lg font-black text-gray-900">
-              {step === 'confirm' ? 'Pedido listo' : 'Confirmar pedido'}
+              {step === 'confirm' ? t.ready : t.title}
             </h2>
           </div>
           <button onClick={resetAndClose} className="p-2 hover:bg-gray-100 rounded-full transition">
@@ -213,20 +219,20 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
           <div className="p-6 space-y-5">
             {/* Order ID */}
             <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 flex items-center justify-between">
-              <span className="text-xs font-bold text-green-700 uppercase tracking-wider">Número de pedido</span>
+              <span className="text-xs font-bold text-green-700 uppercase tracking-wider">{t.orderNumber}</span>
               <span className="text-lg font-black text-green-700">#{orderId}</span>
             </div>
 
             {/* Name */}
             <div>
               <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
-                <User size={12} /> Nombre completo
+                <User size={12} /> {t.nameLabel}
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => { setName(e.target.value); if (errors.name) setErrors(p => { const n = { ...p }; delete n.name; return n; }); }}
-                placeholder="Ej: Juan Pérez"
+                placeholder={t.namePlaceholder}
                 className={`w-full bg-gray-50 border rounded-xl px-4 py-2.5 text-sm font-medium text-gray-900 outline-none focus:ring-2 transition-shadow placeholder:text-gray-400 ${errors.name ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-green-200'}`}
               />
               {errors.name && <span className="text-xs text-red-500 mt-1 block">{errors.name}</span>}
@@ -235,13 +241,13 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
             {/* Phone */}
             <div>
               <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
-                <Phone size={12} /> Teléfono
+                <Phone size={12} /> {t.phoneLabel}
               </label>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => { setPhone(e.target.value); if (errors.phone) setErrors(p => { const n = { ...p }; delete n.phone; return n; }); }}
-                placeholder="Ej: 11 3184-4469"
+                placeholder={t.phonePlaceholder}
                 className={`w-full bg-gray-50 border rounded-xl px-4 py-2.5 text-sm font-medium text-gray-900 outline-none focus:ring-2 transition-shadow placeholder:text-gray-400 ${errors.phone ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-green-200'}`}
               />
               {errors.phone && <span className="text-xs text-red-500 mt-1 block">{errors.phone}</span>}
@@ -250,20 +256,20 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
             {/* Delivery Type */}
             <div>
               <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                <Truck size={12} /> Tipo de entrega
+                <Truck size={12} /> {t.deliveryType}
               </label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => setDeliveryType('pickup')}
                   className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-bold transition-all ${deliveryType === 'pickup' ? 'bg-green-600 text-white border-green-600 shadow-lg shadow-green-200' : 'bg-white text-gray-600 border-gray-200 hover:border-green-300'}`}
                 >
-                  <Store size={16} /> Retiro en local
+                  <Store size={16} /> {t.pickup}
                 </button>
                 <button
                   onClick={() => setDeliveryType('delivery')}
                   className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-bold transition-all ${deliveryType === 'delivery' ? 'bg-green-600 text-white border-green-600 shadow-lg shadow-green-200' : 'bg-white text-gray-600 border-gray-200 hover:border-green-300'}`}
                 >
-                  <MapPin size={16} /> Delivery
+                  <MapPin size={16} /> {t.delivery}
                 </button>
               </div>
             </div>
@@ -272,13 +278,13 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
             {deliveryType === 'delivery' && (
               <div>
                 <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
-                  <MapPin size={12} /> Dirección de entrega
+                  <MapPin size={12} /> {t.addressLabel}
                 </label>
                 <input
                   type="text"
                   value={address}
                   onChange={(e) => { setAddress(e.target.value); if (errors.address) setErrors(p => { const n = { ...p }; delete n.address; return n; }); }}
-                  placeholder="Ej: Dorrego 4045, Palermo"
+                  placeholder={t.addressPlaceholder}
                   className={`w-full bg-gray-50 border rounded-xl px-4 py-2.5 text-sm font-medium text-gray-900 outline-none focus:ring-2 transition-shadow placeholder:text-gray-400 ${errors.address ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-green-200'}`}
                 />
                 {errors.address && <span className="text-xs text-red-500 mt-1 block">{errors.address}</span>}
@@ -288,13 +294,13 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
             {/* Payment Method */}
             <div>
               <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                <CreditCard size={12} /> Método de pago
+                <CreditCard size={12} /> {t.paymentMethod}
               </label>
               <div className={`grid gap-2 ${mpEnabled ? 'grid-cols-3' : 'grid-cols-2'}`}>
                 {[
-                  { id: 'cash' as const, label: 'Efectivo' },
-                  { id: 'transfer' as const, label: 'Transferencia' },
-                  ...(mpEnabled ? [{ id: 'mercadopago' as const, label: 'Mercado Pago' }] : []),
+                  { id: 'cash' as const, label: t.cash },
+                  { id: 'transfer' as const, label: t.transfer },
+                  ...(mpEnabled ? [{ id: 'mercadopago' as const, label: t.mp }] : []),
                 ].map((opt) => (
                   <button
                     key={opt.id}
@@ -307,12 +313,12 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               </div>
               {paymentMethod === 'transfer' && (
                 <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs text-blue-700 font-medium">
-                  Alias: <span className="font-black">{bankAlias || 'No configurado'}</span>
+                  {t.aliasLabel}: <span className="font-black">{bankAlias || 'No configurado'}</span>
                 </div>
               )}
               {paymentMethod === 'mercadopago' && (
                 <div className="mt-2 bg-sky-50 border border-sky-200 rounded-lg px-3 py-2 text-xs text-sky-700 font-medium">
-                  Pagá con tarjeta, débito o saldo MP. Serás redirigido para completar el pago.
+                  {t.mpDescription}
                 </div>
               )}
               {errors.bankAlias && <span className="text-xs text-red-500 mt-1 block">{errors.bankAlias}</span>}
@@ -321,20 +327,20 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
             {/* Notes */}
             <div>
               <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
-                <FileText size={12} /> Notas / Adicionales
+                <FileText size={12} /> {t.notesLabel}
               </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
-                placeholder="Ej: Timbre roto, llamar al llegar..."
+                placeholder={t.notesPlaceholder}
                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-900 outline-none focus:ring-2 focus:ring-green-200 transition-shadow resize-none placeholder:text-gray-400"
               />
             </div>
 
             {/* Order Summary */}
             <div className="bg-gray-50 rounded-xl p-4 space-y-2">
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Resumen</span>
+              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">{t.summary}</span>
               {cart.map((item, idx) => (
                 <div key={idx} className="flex justify-between text-sm">
                   <span className="text-gray-700">{item.qty}x {item.name} ({item.optionLabel})</span>
@@ -342,13 +348,13 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 </div>
               ))}
               <div className="border-t border-gray-200 pt-2 flex justify-between items-center text-base font-black text-gray-900">
-                <span>Total</span>
+                <span>{t.total}</span>
                 <div className="flex items-center gap-2">
                   <span>${total.toLocaleString('es-AR')}</span>
                   <button
                     onClick={async () => { await copyToClipboard(`$${total.toLocaleString('es-AR')}`); showCopied('total'); }}
                     className="p-1 hover:bg-gray-200 rounded transition"
-                    title="Copiar total"
+                    title={t.copyTotal}
                   >
                     {copiedField === 'total' ? (
                       <Check size={14} className="text-green-600" />
@@ -366,7 +372,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl flex justify-center items-center gap-2 transition shadow-lg shadow-green-200"
             >
               <Send size={18} />
-              Revisar y enviar pedido
+              {t.submit}
             </button>
           </div>
         ) : (
@@ -377,49 +383,49 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-3">
                 <CheckCircle size={32} className="text-green-600" />
               </div>
-              <h3 className="text-xl font-black text-gray-900">¡Tu pedido está listo!</h3>
-              <p className="text-sm text-gray-500 mt-1">Revisá los datos y envialos por WhatsApp</p>
+              <h3 className="text-xl font-black text-gray-900">{t.successTitle}</h3>
+              <p className="text-sm text-gray-500 mt-1">{t.successSubtitle}</p>
             </div>
 
             {/* Order ID */}
             <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 flex items-center justify-between">
-              <span className="text-xs font-bold text-green-700 uppercase tracking-wider">Pedido</span>
+              <span className="text-xs font-bold text-green-700 uppercase tracking-wider">{t.orderNumber}</span>
               <span className="text-lg font-black text-green-700">#{orderId}</span>
             </div>
 
             {/* Data Summary */}
             <div className="bg-gray-50 rounded-xl p-4 space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-500">Cliente</span>
+                <span className="text-gray-500">{t.client}</span>
                 <span className="font-bold text-gray-900">{name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Teléfono</span>
+                <span className="text-gray-500">{t.phoneLabel}</span>
                 <span className="font-bold text-gray-900">{phone}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Entrega</span>
-                <span className="font-bold text-gray-900">{deliveryType === 'pickup' ? 'Retiro en local' : 'Delivery'}</span>
+                <span className="text-gray-500">{t.deliveryLabel}</span>
+                <span className="font-bold text-gray-900">{deliveryType === 'pickup' ? t.pickup : t.delivery}</span>
               </div>
               {deliveryType === 'delivery' && (
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Dirección</span>
+                  <span className="text-gray-500">{t.addressLabel}</span>
                   <span className="font-bold text-gray-900 text-right max-w-[60%]">{address}</span>
                 </div>
               )}
               <div className="flex justify-between items-center">
-                <span className="text-gray-500">Pago</span>
+                <span className="text-gray-500">{t.paymentLabel}</span>
                 <span className="font-bold text-gray-900">{paymentLabel}</span>
               </div>
               {paymentMethod === 'transfer' && (
                 <div className="flex justify-between items-center bg-blue-50 rounded-lg px-3 py-2">
-                  <span className="text-gray-500 text-xs">Alias</span>
+                  <span className="text-gray-500 text-xs">{t.aliasLabel}</span>
                   <div className="flex items-center gap-2">
                     <span className="font-black text-blue-700">{bankAlias}</span>
                     <button
                       onClick={async () => { await copyToClipboard(bankAlias); showCopied('alias'); }}
                       className="p-1 hover:bg-blue-100 rounded transition"
-                      title="Copiar alias"
+                      title={t.copyAlias}
                     >
                       {copiedField === 'alias' || copiedField === 'alias-auto' ? (
                         <Check size={14} className="text-green-600" />
@@ -432,7 +438,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               )}
               {notes && (
                 <div className="pt-2 border-t border-gray-200">
-                  <span className="text-gray-500 block text-xs mb-1">Notas</span>
+                  <span className="text-gray-500 block text-xs mb-1">{t.notesLabel}</span>
                   <span className="font-medium text-gray-800">{notes}</span>
                 </div>
               )}
@@ -440,7 +446,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
 
             {/* Cart Summary */}
             <div className="bg-gray-50 rounded-xl p-4 space-y-2">
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Detalle</span>
+              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">{t.detail}</span>
               {cart.map((item, idx) => (
                 <div key={idx} className="flex justify-between text-sm">
                   <span className="text-gray-700">{item.qty}x {item.name} ({item.optionLabel})</span>
@@ -448,7 +454,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 </div>
               ))}
               <div className="border-t border-gray-200 pt-2 flex justify-between text-base font-black text-gray-900">
-                <span>Total</span>
+                <span>{t.total}</span>
                 <span>${total.toLocaleString('es-AR')}</span>
               </div>
             </div>
@@ -459,10 +465,10 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-2">
                   <div className="flex items-center gap-2 text-amber-700 text-sm font-bold">
                     <AlertTriangle size={16} />
-                    <span>Pop-up bloqueado</span>
+                    <span>{t.popupBlocked}</span>
                   </div>
                   <p className="text-xs text-amber-600">
-                    Tu navegador bloqueó WhatsApp. El mensaje del pedido fue copiado al portapapeles. Abrí WhatsApp manualmente y pegalo.
+                    {t.popupBlockedDesc}
                   </p>
                 </div>
               )}
@@ -470,7 +476,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 <div className="bg-red-50 border border-red-200 rounded-xl p-4 space-y-2">
                   <div className="flex items-center gap-2 text-red-700 text-sm font-bold">
                     <AlertTriangle size={16} />
-                    <span>Error de MercadoPago</span>
+                    <span>{t.mpError}</span>
                   </div>
                   <p className="text-xs text-red-600">{mpError}</p>
                 </div>
@@ -482,7 +488,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   className="w-full bg-sky-500 hover:bg-sky-600 disabled:bg-sky-300 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg"
                 >
                   <CreditCard size={20} />
-                  {mpLoading ? 'Conectando con MercadoPago...' : 'Pagar con MercadoPago'}
+                  {mpLoading ? t.mpLoading : t.mpPay}
                 </button>
               ) : (
                 <button
@@ -490,7 +496,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg"
                 >
                   <MessageCircle size={20} />
-                  Abrir WhatsApp y enviar pedido
+                  {t.whatsappSend}
                 </button>
               )}
 
@@ -502,14 +508,14 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                     className="flex items-center justify-center gap-2 py-3 bg-blue-50 border border-blue-200 text-blue-700 font-bold text-xs rounded-xl hover:bg-blue-100 transition"
                   >
                     {copiedField === 'total-btn' ? <Check size={14} /> : <Copy size={14} />}
-                    Copiar total
+                    {t.copyTotal}
                   </button>
                   <button
                     onClick={async () => { await copyToClipboard(bankAlias); showCopied('alias-btn'); }}
                     className="flex items-center justify-center gap-2 py-3 bg-blue-50 border border-blue-200 text-blue-700 font-bold text-xs rounded-xl hover:bg-blue-100 transition"
                   >
                     {copiedField === 'alias-btn' ? <Check size={14} /> : <Copy size={14} />}
-                    Copiar alias
+                    {t.copyAlias}
                   </button>
                 </div>
               )}
@@ -519,7 +525,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 className="w-full flex items-center justify-center gap-2 py-3 text-gray-500 font-bold text-sm hover:text-gray-800 transition"
               >
                 <ArrowLeft size={16} />
-                Volver a editar datos
+                {t.back}
               </button>
             </div>
           </div>

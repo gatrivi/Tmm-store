@@ -33,6 +33,13 @@ import { useLanguage } from '../context/LanguageContext';
 import { useAdmin } from '../context/AdminContext';
 import { translations } from '../i18n/translations';
 
+interface GlobalFooterProps {
+  brandName?: string;
+  address?: string;
+  instagram?: string;
+  googleMaps?: string;
+}
+
 /**
  * Renderiza el pie de página global asegurando que la información de la marca, 
  * dirección y redes sociales se muestre consistentemente en toda la app.

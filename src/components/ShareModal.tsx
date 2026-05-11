@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { X, Copy, Check } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { useMenu } from '../context/MenuContext';
+import { translations } from '../i18n/translations';
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -7,6 +10,11 @@ interface ShareModalProps {
 }
 
 export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
+  const { language } = useLanguage();
+  const { siteSettings } = useMenu();
+  const lang = language || 'es';
+  const t = translations[lang].share;
+
   const [copied, setCopied] = useState(false);
   const url = typeof window !== 'undefined' ? window.location.origin : '';
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`;
@@ -32,11 +40,12 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
   };
 
   const handleShare = async () => {
+    const brandName = siteSettings.brandName || 'Tu Negocio';
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'El Puestito del Tío',
-          text: 'Mirá el menú de El Puestito del Tío',
+          title: brandName,
+          text: `${t.text} ${brandName}`,
           url,
         });
       } catch {
@@ -49,7 +58,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         <div className="p-4 border-b flex justify-between items-center bg-gray-50">
-          <h2 className="text-lg font-black text-gray-900">Compartir tienda</h2>
+          <h2 className="text-lg font-black text-gray-900">{t.title}</h2>
           <button onClick={onClose} className="p-1 hover:bg-gray-200 rounded-full transition">
             <X size={18} className="text-gray-500" />
           </button>
@@ -74,7 +83,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
               className="flex items-center gap-1.5 px-3 py-1.5 bg-black text-white text-xs font-bold rounded-lg hover:bg-gray-800 transition"
             >
               {copied ? <Check size={14} /> : <Copy size={14} />}
-              {copied ? 'Copiado' : 'Copiar'}
+              {copied ? t.copied : t.copy}
             </button>
           </div>
 
@@ -84,7 +93,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
               onClick={handleShare}
               className="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition shadow-md"
             >
-              Compartir enlace
+              {t.nativeButton}
             </button>
           )}
         </div>

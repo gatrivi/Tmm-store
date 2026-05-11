@@ -10,6 +10,7 @@ import CheckoutModal from '../components/CheckoutModal';
 import ShareModal from '../components/ShareModal';
 import { GlobalFooter } from '../components/GlobalFooter';
 import { playAddToCartSound } from '../utils/sounds';
+import { translations } from '../i18n/translations';
 
 export default function Storefront() {
   const { menuItems, siteSettings } = useMenu();
@@ -83,7 +84,7 @@ export default function Storefront() {
 
   const [businessHours] = useState(() => loadBusinessHours());
   const isOpenNow = businessHours.enabled ? isBusinessOpen(businessHours) : true;
-  const nextOpeningText = businessHours.enabled ? getNextOpeningText(businessHours) : '';
+  const nextOpeningText = businessHours.enabled ? getNextOpeningText(businessHours, lang) : '';
 
   // Apply branding CSS variables
   useEffect(() => {
@@ -102,13 +103,7 @@ export default function Storefront() {
     trackPageView('/');
   }, []);
 
-  const t = {
-    es: { cart: 'Tu pedido', empty: 'Tu carrito está vacío', total: 'Total', order: 'Confirmar pedido', add: 'Agregar', unavailable: 'No disponible', openNow: 'Abierto ahora', closed: 'Cerrado', address: '4045 Dorrego Ave', closedMsg: 'Momentaneamente cerrados', clear: 'Vaciar', qty: 'Cant' },
-    en: { cart: 'Your Order', empty: 'Your cart is empty', total: 'Total', order: 'Confirm order', add: 'Add', unavailable: 'Unavailable', openNow: 'Open now', closed: 'Closed', address: '4045 Dorrego Ave', closedMsg: 'Currently closed', clear: 'Clear', qty: 'Qty' },
-    pt: { cart: 'Seu pedido', empty: 'Seu carrinho está vazio', total: 'Total', order: 'Confirmar pedido', add: 'Adicionar', unavailable: 'Indisponível', openNow: 'Aberto agora', closed: 'Fechado', address: '4045 Dorrego Ave', closedMsg: 'Fechado no momento', clear: 'Esvaziar', qty: 'Qtd' },
-    ru: { cart: 'Ваш заказ', empty: 'Корзина пуста', total: 'Итого', order: 'Подтвердить заказ', add: 'Добавить', unavailable: 'Недоступно', openNow: 'Открыто', closed: 'Закрыто', address: '4045 Dorrego Ave', closedMsg: 'В данный момент закрыто', clear: 'Очистить', qty: 'Кол' },
-    de: { cart: 'Ihre Bestellung', empty: 'Ihr Warenkorb ist leer', total: 'Gesamt', order: 'Bestellung bestätigen', add: 'Hinzufügen', unavailable: 'Nicht verfügbar', openNow: 'Jetzt geöffnet', closed: 'Geschlossen', address: '4045 Dorrego Ave', closedMsg: 'Momentan geschlossen', clear: 'Leeren', qty: 'Menge' },
-  }[lang];
+  const t = translations[lang].storefront;
 
   const getLocalizedName = (item) => {
     if (lang === 'en' && item.nameEn) return item.nameEn;
@@ -268,7 +263,7 @@ export default function Storefront() {
                 {isOpenNow ? t.openNow : t.closed}
               </span>
             ) : null}
-            <span className="text-xs md:text-sm text-gray-300">{t.address}</span>
+            <span className="text-xs md:text-sm text-gray-300">{siteSettings.brandAddress || t.addressDefault}</span>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -300,7 +295,7 @@ export default function Storefront() {
           <button
             onClick={() => setIsShareOpen(true)}
             className="p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition"
-            aria-label="Compartir"
+            aria-label={t.share}
           >
             <Share2 size={20} />
           </button>

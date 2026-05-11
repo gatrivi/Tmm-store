@@ -1,3 +1,5 @@
+import { translations } from '../i18n/translations';
+
 export interface BusinessHoursSchedule {
   enabled: boolean;
   openTime: string; // "HH:mm"
@@ -63,10 +65,10 @@ export function isBusinessOpen(hours: BusinessHoursSchedule): boolean {
 /**
  * Devuelve un texto descriptivo del próximo horario de apertura.
  */
-export function getNextOpeningText(hours: BusinessHoursSchedule): string {
+export function getNextOpeningText(hours: BusinessHoursSchedule, lang: string = 'es'): string {
   if (!hours.enabled || hours.daysOpen.length === 0) return '';
 
-  const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+  const t = translations[lang as keyof typeof translations].businessHours;
   const now = new Date();
   const today = now.getDay();
 
@@ -74,10 +76,11 @@ export function getNextOpeningText(hours: BusinessHoursSchedule): string {
   for (let i = 1; i <= 7; i++) {
     const checkDay = (today + i) % 7;
     if (hours.daysOpen.includes(checkDay)) {
-      const dayLabel = i === 1 ? 'Mañana' : dayNames[checkDay];
-      return `Abrimos ${dayLabel} a las ${hours.openTime}hs`;
+      const dayLabel = i === 1 ? t.tomorrow : t.days[checkDay];
+      return `${t.nextOpening} ${dayLabel} ${t.at} ${hours.openTime}hs`;
     }
   }
 
   return '';
 }
+
