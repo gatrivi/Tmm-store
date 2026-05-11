@@ -81,6 +81,7 @@ export interface SiteSettings {
 interface MenuContextProps {
   menuItems: MenuItemType[];
   updateMenuItem: (index: number, updated: MenuItemType) => void;
+  deleteMenuItem: (index: number) => void;
   setMenuItems: React.Dispatch<React.SetStateAction<MenuItemType[]>>;
   extrasData: ExtraItem[];
   updateExtraItem: (index: number, updated: ExtraItem) => void;
@@ -163,6 +164,13 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       next[index] = updated;
       return next;
     });
+    const ts = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEY_LAST_EDIT, ts);
+    setLastEditTimestamp(ts);
+  }, []);
+
+  const deleteMenuItem = useCallback((index: number) => {
+    setMenuItems(prev => prev.filter((_, i) => i !== index));
     const ts = new Date().toISOString();
     localStorage.setItem(STORAGE_KEY_LAST_EDIT, ts);
     setLastEditTimestamp(ts);
@@ -257,7 +265,7 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
     : usdRate;
 
   return (
-    <MenuContext.Provider value={{ menuItems, updateMenuItem, setMenuItems, extrasData, updateExtraItem, setExtrasData, resetToDefaults, resetTextsOnly, lastEditTimestamp, siteSettings, setSiteSettings, usdRate: effectiveRate, setUsdRate }}>
+    <MenuContext.Provider value={{ menuItems, updateMenuItem, deleteMenuItem, setMenuItems, extrasData, updateExtraItem, setExtrasData, resetToDefaults, resetTextsOnly, lastEditTimestamp, siteSettings, setSiteSettings, usdRate: effectiveRate, setUsdRate }}>
       {children}
     </MenuContext.Provider>
   );

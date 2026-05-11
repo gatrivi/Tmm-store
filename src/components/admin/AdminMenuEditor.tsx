@@ -8,7 +8,7 @@
  */
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Save, RotateCcw, Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { Save, RotateCcw, Check, ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
 import { useMenu, type ExtraItem } from '../../context/MenuContext';
 import type { MenuItemType, MenuOption } from '../../data/menu';
 
@@ -23,14 +23,18 @@ const LANG_OPTIONS: { code: EditLang; flag: string; label: string }[] = [
 ];
 
 const getEmoji = (id: string): string => {
-  if (id === 'bebidas') return '🥤';
-  if (id === 'bondiola-popito') return '🥪';
-  if (id.includes('choripan')) return '🌭';
-  if (id.includes('hamburguesa')) return '🍔';
-  if (id.includes('bondiola')) return '🐖';
-  if (id.includes('bife')) return '🥩';
-  if (id.includes('veggie')) return '🌱';
-  if (id.includes('papas')) return '🍟';
+  const lower = id.toLowerCase();
+  if (lower === 'bebidas') return '🥤';
+  if (lower === 'bondiola-popito') return '🥪';
+  if (lower.includes('choripan')) return '🌭';
+  if (lower.includes('hamburguesa')) return '🍔';
+  if (lower.includes('bondiola')) return '🐖';
+  if (lower.includes('bife')) return '🥩';
+  if (lower.includes('veggie') || lower.includes('vegan')) return '🌱';
+  if (lower.includes('papas')) return '🍟';
+  if (lower.includes('pizza')) return '🍕';
+  if (lower.includes('pasta')) return '🍝';
+  if (lower.includes('postre') || lower.includes('cake')) return '🍰';
   return '🍽️';
 };
 
@@ -136,11 +140,11 @@ function deepClone<T>(obj: T): T {
 }
 
 export function AdminMenuEditor() {
-  const { menuItems, updateMenuItem, extrasData, updateExtraItem } = useMenu();
+  const { menuItems, setMenuItems, updateMenuItem, deleteMenuItem, extrasData, updateExtraItem } = useMenu();
   const [selectedLang, setSelectedLang] = useState<EditLang>('es');
   const [selectedItemIndex, setSelectedItemIndex] = useState<number>(0);
   const [editingExtras, setEditingExtras] = useState(false);
-  const [draft, setDraft] = useState<MenuItemType | null>(() => deepClone(menuItems[0]));
+  const [draft, setDraft] = useState<MenuItemType | null>(() => menuItems.length > 0 ? deepClone(menuItems[0]) : null);
   const [extrasDraft, setExtrasDraft] = useState<ExtraItem[]>(() => deepClone(extrasData));
   const [toast, setToast] = useState<string | null>(null);
   const [expandedOptions, setExpandedOptions] = useState<Set<number>>(new Set([0]));
@@ -178,10 +182,41 @@ export function AdminMenuEditor() {
       setExtrasDraft(deepClone(extrasData));
       showToast('↩️ Cambios descartados');
     } else {
-      setDraft(deepClone(menuItems[selectedItemIndex]));
+      setDraft(menuItems[selectedItemIndex] ? deepClone(menuItems[selectedItemIndex]) : null);
       showToast('↩️ Cambios descartados');
     }
   }, [editingExtras, extrasData, menuItems, selectedItemIndex, showToast]);
+
+  const handleAddNewItem = useCallback(() => {
+    const newId = `item-${Date.now()}`;
+    const newItem: MenuItemType = {
+      id: newId,
+      name: 'Nuevo Producto',
+      description: 'Descripción del producto...',
+      category: 'General',
+      available: true,
+      options: [
+        { id: `${newId}-opt-1`, label: 'Simple', price: 0, available: true }
+      ],
+      images: []
+    };
+    
+    setMenuItems(prev => [...prev, newItem]);
+    setSelectedItemIndex(menuItems.length);
+    setDraft(deepClone(newItem));
+    setEditingExtras(false);
+    showToast('✨ Producto creado. No olvides guardar.');
+  }, [menuItems.length, setMenuItems, showToast]);
+
+  const handleDeleteItem = useCallback(() => {
+    if (!draft) return;
+    if (window.confirm(`¿Estás seguro de eliminar "${draft.name}"?`)) {
+      deleteMenuItem(selectedItemIndex);
+      setSelectedItemIndex(0);
+      setDraft(menuItems[0] ? deepClone(menuItems[0]) : null);
+      showToast('🗑️ Producto eliminado');
+    }
+  }, [deleteMenuItem, draft, menuItems, selectedItemIndex, showToast]);
 
   const updateDraftOption = useCallback((optIndex: number, updater: (opt: MenuOption) => MenuOption) => {
     if (!draft) return;
@@ -199,6 +234,20 @@ export function AdminMenuEditor() {
       return next;
     });
   }, []);
+
+  const handleAddOption = useCallback(() => {
+    if (!draft) return;
+    const optId = `${draft.id}-opt-${draft.options.length + 1}`;
+    const newOpt: MenuOption = { id: optId, label: 'Nueva Opción', price: 0, available: true };
+    setDraft({ ...draft, options: [...draft.options, newOpt] });
+    setExpandedOptions(prev => new Set(prev).add(draft.options.length));
+  }, [draft]);
+
+  const handleDeleteOption = useCallback((idx: number) => {
+    if (!draft || draft.options.length <= 1) return;
+    const newOpts = draft.options.filter((_, i) => i !== idx);
+    setDraft({ ...draft, options: newOpts });
+  }, [draft]);
 
   return (
     <div className="space-y-6 relative">
@@ -218,9 +267,18 @@ export function AdminMenuEditor() {
       </AnimatePresence>
 
       {/* Header */}
-      <div>
-        <h2 className="text-2xl md:text-3xl font-black text-white mb-1">Editor de Menú</h2>
-        <p className="text-sm text-gray-400 font-medium">Modificá precios, descripciones y opciones de cada plato</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-black text-white mb-1">Editor de Menú</h2>
+          <p className="text-sm text-gray-400 font-medium">Modificá precios, descripciones y opciones de cada plato</p>
+        </div>
+        <button
+          onClick={handleAddNewItem}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-green text-white font-bold text-sm rounded-xl hover:brightness-110 transition-all shadow-lg shadow-brand-green/20"
+        >
+          <Plus size={18} />
+          Nuevo Producto
+        </button>
       </div>
 
       {/* Language Selector */}
@@ -323,21 +381,45 @@ export function AdminMenuEditor() {
                     <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{draft.category}</span>
                   </div>
                 </div>
-                {/* Item Availability Toggle */}
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
-                    {draft.available !== false ? 'Disponible' : 'Agotado'}
-                  </span>
+                <div className="flex items-center gap-4">
+                  {/* Delete Button */}
                   <button
-                    onClick={() => setDraft({ ...draft, available: draft.available === false ? true : false })}
-                    className={`relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${draft.available !== false ? 'bg-brand-green' : 'bg-red-500/60'}`}
-                    aria-label="Toggle disponibilidad"
+                    onClick={handleDeleteItem}
+                    className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                    title="Eliminar producto"
                   >
-                    <span
-                      className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform transition-transform duration-200 ease-in-out ${draft.available !== false ? 'translate-x-4' : 'translate-x-0'}`}
-                    />
+                    <Trash2 size={20} />
                   </button>
+                  {/* Item Availability Toggle */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider hidden sm:inline">
+                      {draft.available !== false ? 'Disponible' : 'Agotado'}
+                    </span>
+                    <button
+                      onClick={() => setDraft({ ...draft, available: draft.available === false ? true : false })}
+                      className={`relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${draft.available !== false ? 'bg-brand-green' : 'bg-red-500/60'}`}
+                      aria-label="Toggle disponibilidad"
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform transition-transform duration-200 ease-in-out ${draft.available !== false ? 'translate-x-4' : 'translate-x-0'}`}
+                      />
+                    </button>
+                  </div>
                 </div>
+              </div>
+
+              {/* Category */}
+              <div>
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">
+                  📂 Categoría
+                </label>
+                <input
+                  type="text"
+                  value={draft.category || ''}
+                  onChange={(e) => setDraft({ ...draft, category: e.target.value })}
+                  className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2.5 text-sm font-medium text-white outline-none focus:ring-2 focus:ring-brand-green/40 transition-shadow placeholder:text-gray-600"
+                  placeholder="Ej: Hamburguesas, Bebidas, Postres..."
+                />
               </div>
 
               {/* Badge */}
@@ -384,28 +466,47 @@ export function AdminMenuEditor() {
 
               {/* Options */}
               <div>
-                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2 block">
-                  Opciones / Variaciones
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
+                    Opciones / Variaciones
+                  </label>
+                  <button
+                    onClick={handleAddOption}
+                    className="text-[10px] font-bold text-brand-green hover:underline flex items-center gap-1"
+                  >
+                    <Plus size={10} /> Añadir Variación
+                  </button>
+                </div>
                 <div className="space-y-2">
                   {draft.options.map((opt, optIdx) => {
                     const isExpanded = expandedOptions.has(optIdx);
                     return (
-                      <div key={opt.id} className="bg-white/4 rounded-xl border border-white/5 overflow-hidden">
+                      <div key={optIdx} className="bg-white/4 rounded-xl border border-white/5 overflow-hidden">
                         {/* Option Header */}
-                        <button
-                          onClick={() => toggleOptionExpand(optIdx)}
-                          className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-white/3 transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className={`text-sm font-bold ${opt.available === false ? 'text-gray-500 line-through' : 'text-white'}`}>{opt.label}</span>
-                            <span className="text-sm font-black text-brand-green">${opt.price.toLocaleString()}</span>
-                            {opt.available === false && (
-                              <span className="text-[10px] font-bold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded">Agotado</span>
-                            )}
-                          </div>
-                          {isExpanded ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
-                        </button>
+                        <div className="flex items-center">
+                          <button
+                            onClick={() => toggleOptionExpand(optIdx)}
+                            className="flex-1 flex items-center justify-between px-4 py-3 text-left hover:bg-white/3 transition-colors"
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className={`text-sm font-bold ${opt.available === false ? 'text-gray-500 line-through' : 'text-white'}`}>{opt.label}</span>
+                              <span className="text-sm font-black text-brand-green">${opt.price.toLocaleString()}</span>
+                              {opt.available === false && (
+                                <span className="text-[10px] font-bold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded">Agotado</span>
+                              )}
+                            </div>
+                            {isExpanded ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
+                          </button>
+                          {draft.options.length > 1 && (
+                            <button
+                              onClick={() => handleDeleteOption(optIdx)}
+                              className="p-3 text-gray-500 hover:text-red-500"
+                              title="Eliminar variación"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          )}
+                        </div>
 
                         {/* Option Body */}
                         <AnimatePresence>
@@ -513,25 +614,38 @@ export function AdminMenuEditor() {
                 </div>
               </div>
             </div>
-          ) : null}
+          ) : (
+            <div className="h-full flex flex-col items-center justify-center py-20 text-center">
+              <Plus size={48} className="text-gray-600 mb-4 opacity-20" />
+              <p className="text-gray-400 font-medium">No hay productos seleccionados</p>
+              <button
+                onClick={handleAddNewItem}
+                className="mt-4 text-brand-green font-bold hover:underline"
+              >
+                Crear el primer producto
+              </button>
+            </div>
+          )}
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-3 mt-6 pt-4 border-t border-white/5">
-            <button
-              onClick={handleSave}
-              className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-green text-white font-bold text-sm rounded-xl hover:brightness-110 active:scale-[0.97] transition-all shadow-lg shadow-brand-green/20"
-            >
-              <Save size={16} />
-              Guardar Cambios
-            </button>
-            <button
-              onClick={handleDiscard}
-              className="flex items-center justify-center gap-2 py-3 px-5 bg-white/6 text-gray-300 font-bold text-sm rounded-xl hover:bg-white/10 transition-all border border-white/10"
-            >
-              <RotateCcw size={16} />
-              <span className="hidden sm:inline">Descartar</span>
-            </button>
-          </div>
+          {draft && (
+            <div className="flex items-center gap-3 mt-6 pt-4 border-t border-white/5">
+              <button
+                onClick={handleSave}
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-green text-white font-bold text-sm rounded-xl hover:brightness-110 active:scale-[0.97] transition-all shadow-lg shadow-brand-green/20"
+              >
+                <Save size={16} />
+                Guardar Cambios
+              </button>
+              <button
+                onClick={handleDiscard}
+                className="flex items-center justify-center gap-2 py-3 px-5 bg-white/6 text-gray-300 font-bold text-sm rounded-xl hover:bg-white/10 transition-all border border-white/10"
+              >
+                <RotateCcw size={16} />
+                <span className="hidden sm:inline">Descartar</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

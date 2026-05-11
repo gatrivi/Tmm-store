@@ -169,9 +169,12 @@ export function GlobalFooter({ brandName, address, instagram, googleMaps }: Glob
 
       </div>
       
-      <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-brand-white/10 flex flex-col items-center">
+      <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-brand-white/10 flex flex-col items-center gap-2">
         <div className="text-xs font-medium text-gray-400">
           {t.footerRights}
+        </div>
+        <div className="text-[10px] font-black text-brand-green/40 tracking-widest uppercase">
+          v1.1.0
         </div>
       </div>
     </div>
