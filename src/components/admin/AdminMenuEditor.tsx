@@ -140,14 +140,15 @@ function deepClone<T>(obj: T): T {
 }
 
 export function AdminMenuEditor() {
-  const { menuItems, setMenuItems, updateMenuItem, deleteMenuItem, extrasData, updateExtraItem } = useMenu();
+  const { menuItems, addMenuItem, updateMenuItem, deleteMenuItem, extrasData, updateExtraItem, saveToGlobal, isLoading: contextLoading } = useMenu();
   const [selectedLang, setSelectedLang] = useState<EditLang>('es');
   const [selectedItemIndex, setSelectedItemIndex] = useState<number>(0);
   const [editingExtras, setEditingExtras] = useState(false);
   const [draft, setDraft] = useState<MenuItemType | null>(() => menuItems.length > 0 ? deepClone(menuItems[0]) : null);
   const [extrasDraft, setExtrasDraft] = useState<ExtraItem[]>(() => deepClone(extrasData));
-  const [toast, setToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [expandedOptions, setExpandedOptions] = useState<Set<number>>(new Set([0]));
+  const [isSaving, setIsSaving] = useState(false);
 
   /** Seleccionar un plato del listado (draft se inicializa en el event handler) */
   const selectItem = useCallback((index: number) => {
@@ -162,20 +163,34 @@ export function AdminMenuEditor() {
     setExtrasDraft(deepClone(extrasData));
   }, [extrasData]);
 
-  const showToast = useCallback((message: string) => {
-    setToast(message);
+  const showToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   }, []);
 
-  const handleSave = useCallback(() => {
-    if (editingExtras) {
-      extrasDraft.forEach((extra, i) => updateExtraItem(i, extra));
-      showToast('✅ Extras guardados exitosamente');
-    } else if (draft) {
-      updateMenuItem(selectedItemIndex, draft);
-      showToast('✅ Cambios guardados exitosamente');
+  const handleSave = useCallback(async () => {
+    setIsSaving(true);
+    try {
+      // 1. Update local context state first
+      if (editingExtras) {
+        extrasDraft.forEach((extra, i) => updateExtraItem(i, extra));
+      } else if (draft) {
+        updateMenuItem(selectedItemIndex, draft);
+      }
+
+      // 2. Push everything to Supabase
+      // Note: We use a small timeout to ensure the state update above is processed before we read it in saveToGlobal
+      // Alternatively, we could pass the draft to saveToGlobal, but saveToGlobal is designed to push the full current state.
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await saveToGlobal();
+      
+      showToast('✅ Cambios guardados globalmente');
+    } catch {
+      showToast('❌ Error al guardar en la nube', 'error');
+    } finally {
+      setIsSaving(false);
     }
-  }, [editingExtras, extrasDraft, draft, selectedItemIndex, updateMenuItem, updateExtraItem, showToast]);
+  }, [editingExtras, extrasDraft, draft, selectedItemIndex, updateMenuItem, updateExtraItem, saveToGlobal, showToast]);
 
   const handleDiscard = useCallback(() => {
     if (editingExtras) {
@@ -193,7 +208,7 @@ export function AdminMenuEditor() {
       id: newId,
       name: 'Nuevo Producto',
       description: 'Descripción del producto...',
-      category: 'General',
+      category: 'general' as MenuItemType['category'],
       available: true,
       options: [
         { id: `${newId}-opt-1`, label: 'Simple', price: 0, available: true }
@@ -201,20 +216,22 @@ export function AdminMenuEditor() {
       images: []
     };
     
-    setMenuItems(prev => [...prev, newItem]);
+    addMenuItem(newItem);
     setSelectedItemIndex(menuItems.length);
     setDraft(deepClone(newItem));
     setEditingExtras(false);
-    showToast('✨ Producto creado. No olvides guardar.');
-  }, [menuItems.length, setMenuItems, showToast]);
+    showToast('✨ Producto creado. No olvides guardar para publicar.');
+  }, [addMenuItem, menuItems.length, showToast]);
 
   const handleDeleteItem = useCallback(() => {
     if (!draft) return;
     if (window.confirm(`¿Estás seguro de eliminar "${draft.name}"?`)) {
       deleteMenuItem(selectedItemIndex);
-      setSelectedItemIndex(0);
-      setDraft(menuItems[0] ? deepClone(menuItems[0]) : null);
-      showToast('🗑️ Producto eliminado');
+      const nextIndex = Math.max(0, selectedItemIndex - 1);
+      setSelectedItemIndex(nextIndex);
+      const nextItem = menuItems.filter((_, i) => i !== selectedItemIndex)[nextIndex];
+      setDraft(nextItem ? deepClone(nextItem) : null);
+      showToast('🗑️ Producto eliminado localmente. Guardá para confirmar.');
     }
   }, [deleteMenuItem, draft, menuItems, selectedItemIndex, showToast]);
 
@@ -249,6 +266,15 @@ export function AdminMenuEditor() {
     setDraft({ ...draft, options: newOpts });
   }, [draft]);
 
+  if (contextLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-white gap-4">
+        <div className="w-10 h-10 border-4 border-brand-green border-t-transparent rounded-full animate-spin" />
+        <p className="font-bold animate-pulse">Cargando menú desde la nube...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 relative">
       {/* Toast */}
@@ -258,10 +284,12 @@ export function AdminMenuEditor() {
             initial={{ opacity: 0, y: -20, x: '-50%' }}
             animate={{ opacity: 1, y: 0, x: '-50%' }}
             exit={{ opacity: 0, y: -20, x: '-50%' }}
-            className="fixed top-6 left-1/2 z-10010 bg-brand-green text-white text-sm font-bold px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2"
+            className={`fixed top-6 left-1/2 z-10010 text-white text-sm font-bold px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2 ${
+              toast.type === 'error' ? 'bg-red-500' : 'bg-brand-green'
+            }`}
           >
-            <Check size={16} />
-            {toast}
+            {toast.type === 'success' ? <Check size={16} /> : <RotateCcw size={16} />}
+            {toast.message}
           </motion.div>
         )}
       </AnimatePresence>
@@ -270,7 +298,7 @@ export function AdminMenuEditor() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl md:text-3xl font-black text-white mb-1">Editor de Menú</h2>
-          <p className="text-sm text-gray-400 font-medium">Modificá precios, descripciones y opciones de cada plato</p>
+          <p className="text-sm text-gray-400 font-medium">Modificá precios, descripciones y opciones globalmente</p>
         </div>
         <button
           onClick={handleAddNewItem}
@@ -280,6 +308,7 @@ export function AdminMenuEditor() {
           Nuevo Producto
         </button>
       </div>
+
 
       {/* Language Selector */}
       <div className="flex items-center gap-1.5 bg-white/6 backdrop-blur-sm border border-white/10 rounded-xl p-1.5">
@@ -632,14 +661,20 @@ export function AdminMenuEditor() {
             <div className="flex items-center gap-3 mt-6 pt-4 border-t border-white/5">
               <button
                 onClick={handleSave}
-                className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-green text-white font-bold text-sm rounded-xl hover:brightness-110 active:scale-[0.97] transition-all shadow-lg shadow-brand-green/20"
+                disabled={isSaving}
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-green text-white font-bold text-sm rounded-xl hover:brightness-110 active:scale-[0.97] transition-all shadow-lg shadow-brand-green/20 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Save size={16} />
-                Guardar Cambios
+                {isSaving ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Save size={16} />
+                )}
+                {isSaving ? 'Guardando...' : 'Guardar Cambios'}
               </button>
               <button
                 onClick={handleDiscard}
-                className="flex items-center justify-center gap-2 py-3 px-5 bg-white/6 text-gray-300 font-bold text-sm rounded-xl hover:bg-white/10 transition-all border border-white/10"
+                disabled={isSaving}
+                className="flex items-center justify-center gap-2 py-3 px-5 bg-white/6 text-gray-300 font-bold text-sm rounded-xl hover:bg-white/10 transition-all border border-white/10 disabled:opacity-50"
               >
                 <RotateCcw size={16} />
                 <span className="hidden sm:inline">Descartar</span>

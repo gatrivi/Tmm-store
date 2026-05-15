@@ -11,9 +11,10 @@
  * Las métricas se refrescan automáticamente cada 30 segundos.
  */
 import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import {
   Wifi, Clock, Eye, Globe, TrendingUp, RefreshCw,
-  Sparkles, ShoppingBag, DollarSign, Trophy,
+  Sparkles, ShoppingBag, DollarSign, Trophy, MessageCircle,
 } from 'lucide-react';
 import {
   getVisitsTodayByHour,
@@ -175,65 +176,123 @@ export function AdminDashboard() {
       {/* Row 1: Stats Cards */}
       <div className={`grid gap-3 md:gap-4 ${demo ? 'grid-cols-2 lg:grid-cols-6' : 'grid-cols-2 lg:grid-cols-4'}`}>
         {/* Tu sesión */}
-        <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center relative overflow-hidden">
-          <div className="absolute top-3 right-3 flex items-center gap-1.5">
-            <span className="relative flex h-2.5 w-2.5">
+        <motion.div 
+          whileHover={{ y: -4, backgroundColor: 'rgba(255,255,255,0.08)' }}
+          className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center relative overflow-hidden transition-colors"
+        >
+          <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-green-500/10 px-2 py-0.5 rounded-full border border-green-500/20">
+            <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
             </span>
-            <span className="text-[10px] font-bold text-green-400 uppercase tracking-wider">En vivo</span>
+            <span className="text-[9px] font-black text-green-400 uppercase tracking-widest">En vivo</span>
           </div>
           <Wifi size={24} className="text-brand-green mb-2" />
           <span className="text-3xl md:text-4xl font-black text-white">1</span>
           <span className="text-[10px] md:text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider text-center">Tu sesión</span>
-        </div>
+        </motion.div>
 
         {/* Visitas Hoy */}
-        <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center">
+        <motion.div 
+          whileHover={{ y: -4, backgroundColor: 'rgba(255,255,255,0.08)' }}
+          className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center transition-colors"
+        >
           <Eye size={24} className="text-brand-green mb-2" />
           <span className="text-3xl md:text-4xl font-black text-white">{totalToday}</span>
           <span className="text-[10px] md:text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider text-center">Visitas hoy</span>
-        </div>
+        </motion.div>
 
         {/* Sesión Actual */}
-        <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center">
+        <motion.div 
+          whileHover={{ y: -4, backgroundColor: 'rgba(255,255,255,0.08)' }}
+          className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center transition-colors"
+        >
           <Clock size={24} className="text-brand-green mb-2" />
           <span className="text-2xl md:text-3xl font-black text-white">{sessionTime}</span>
           <span className="text-[10px] md:text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider text-center">Sesión actual</span>
-        </div>
+        </motion.div>
 
         {/* Idioma Más Usado */}
-        <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center">
+        <motion.div 
+          whileHover={{ y: -4, backgroundColor: 'rgba(255,255,255,0.08)' }}
+          className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center transition-colors"
+        >
           <Globe size={24} className="text-brand-green mb-2" />
           <span className="text-lg md:text-xl font-black text-white">{topLang}</span>
           <span className="text-[10px] md:text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider text-center">Idioma top</span>
-        </div>
+        </motion.div>
 
         {/* Demo: Pedidos Hoy */}
         {demo && (
-          <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center relative overflow-hidden">
+          <motion.div 
+            whileHover={{ y: -4, backgroundColor: 'rgba(255,255,255,0.08)' }}
+            className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center relative overflow-hidden transition-colors"
+          >
             <div className="absolute top-3 right-3 text-[10px] font-bold text-amber-400 uppercase tracking-wider">Demo</div>
             <ShoppingBag size={24} className="text-amber-400 mb-2" />
             <span className="text-3xl md:text-4xl font-black text-white">{ordersToday}</span>
             <span className="text-[10px] md:text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider text-center">Pedidos hoy</span>
-          </div>
+          </motion.div>
         )}
 
         {/* Demo: Ingresos Hoy */}
         {demo && (
-          <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center relative overflow-hidden">
+          <motion.div 
+            whileHover={{ y: -4, backgroundColor: 'rgba(255,255,255,0.08)' }}
+            className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 min-h-[130px] md:min-h-[140px] flex flex-col items-center justify-center relative overflow-hidden transition-colors"
+          >
             <div className="absolute top-3 right-3 text-[10px] font-bold text-amber-400 uppercase tracking-wider">Demo</div>
             <DollarSign size={24} className="text-amber-400 mb-2" />
             <span className="text-2xl md:text-3xl font-black text-white">
               ${revenueToday.toLocaleString()}
             </span>
             <span className="text-[10px] md:text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider text-center">Ingresos hoy</span>
-          </div>
+          </motion.div>
         )}
       </div>
 
+      {/* Quick Actions for the SME Owner */}
+      <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-6">
+        <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Acciones Rápidas</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button
+            onClick={async () => {
+              await navigator.clipboard.writeText(window.location.origin);
+              alert('¡Link de la tienda copiado!');
+            }}
+            className="flex items-center gap-3 p-4 bg-white/4 hover:bg-white/8 border border-white/10 rounded-xl transition-all text-left"
+          >
+            <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center shrink-0">
+              <Eye size={20} className="text-blue-400" />
+            </div>
+            <div>
+              <span className="text-sm font-bold text-white block">Copiar link de tienda</span>
+              <span className="text-[10px] text-gray-500">Compartí tu URL con clientes</span>
+            </div>
+          </button>
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(`¡Hola! Te comparto nuestro menú digital actualizado: ${window.location.origin}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-4 bg-white/4 hover:bg-white/8 border border-white/10 rounded-xl transition-all text-left"
+          >
+            <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center shrink-0">
+              <MessageCircle size={20} className="text-green-400" />
+            </div>
+            <div>
+              <span className="text-sm font-bold text-white block">Difundir por WhatsApp</span>
+              <span className="text-[10px] text-gray-500">Enviá tu menú a tus contactos</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
       {/* Visitas Totales */}
-      <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 flex items-center gap-4">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-5 flex items-center gap-4"
+      >
         <div className="w-10 h-10 rounded-xl bg-brand-green/20 flex items-center justify-center shrink-0">
           <TrendingUp size={20} className="text-brand-green" />
         </div>
@@ -241,7 +300,7 @@ export function AdminDashboard() {
           <span className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider block">Visitas totales registradas</span>
           <span className="text-lg font-black text-white">{totalAll.toLocaleString()}</span>
         </div>
-      </div>
+      </motion.div>
 
       {/* Chart: Tráfico */}
       <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-6">
@@ -307,17 +366,18 @@ export function AdminDashboard() {
 
                 return (
                   <g key={`bar-${index}`}>
-                    <rect
+                    <motion.rect
+                      initial={{ height: 0, y: BAR_BOTTOM }}
+                      animate={{ height: Math.max(barHeight, 0), y: y }}
+                      transition={{ type: 'spring', stiffness: 100, damping: 15, delay: index * 0.02 }}
                       x={x}
-                      y={y}
                       width={barWidth}
-                      height={Math.max(barHeight, 0)}
                       rx={Math.min(4, barWidth / 2)}
                       fill={value > 0 ? "rgba(138,154,134,0.7)" : "rgba(138,154,134,0.15)"}
                       className="hover:fill-[rgba(138,154,134,1)] transition-colors"
                     >
                       <title>{`${getBarLabel(index)}: ${value} visitas`}</title>
-                    </rect>
+                    </motion.rect>
                     {index % labelStep === 0 && (
                       <text
                         x={x + barWidth / 2}

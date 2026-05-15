@@ -11,14 +11,25 @@
  * para restaurar los datos originales de `menuData`.
  */
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { menuData, type MenuItemType } from '../data/menu';
+import { type MenuItemType } from '../data/menu';
+import { magdalenaData } from '../data/magdalena';
 import { getUsdRate, getUsdRateSync } from '../utils/dollarRate';
+import { supabase } from '../utils/supabaseClient';
+
+/** Store Identification for isolation (Branch Magdalena) */
+const STORE_ID = 'magdalena';
 
 /** Keys de localStorage */
-const STORAGE_KEY_MENU = 'elpuestito_admin_menu';
-const STORAGE_KEY_EXTRAS = 'elpuestito_admin_extras';
-const STORAGE_KEY_LAST_EDIT = 'elpuestito_admin_last_edit';
-const STORAGE_KEY_SETTINGS = 'elpuestito_admin_settings';
+const STORAGE_KEY_MENU = `${STORE_ID}_admin_menu`;
+const STORAGE_KEY_EXTRAS = `${STORE_ID}_admin_extras`;
+const STORAGE_KEY_LAST_EDIT = `${STORE_ID}_admin_last_edit`;
+const STORAGE_KEY_SETTINGS = `${STORE_ID}_admin_settings`;
+
+/** Supabase Table name */
+const SUPABASE_TABLE = 'store_data';
+
+/** Helper to prefix keys for Supabase */
+const getGlobalKey = (key: string) => `${STORE_ID}_${key}`;
 
 /**
  * Interfaz para los extras hardcodeados que aparecen en SimplifiedMenu.
@@ -80,6 +91,7 @@ export interface SiteSettings {
 
 interface MenuContextProps {
   menuItems: MenuItemType[];
+  addMenuItem: (item: MenuItemType) => void;
   updateMenuItem: (index: number, updated: MenuItemType) => void;
   deleteMenuItem: (index: number) => void;
   setMenuItems: React.Dispatch<React.SetStateAction<MenuItemType[]>>;
@@ -98,13 +110,17 @@ interface MenuContextProps {
   /** Cotización actual del dólar blue */
   usdRate: number;
   setUsdRate: React.Dispatch<React.SetStateAction<number>>;
+  /** Persiste los cambios actuales a Supabase */
+  saveToGlobal: () => Promise<void>;
+  /** Indica si está cargando desde Supabase */
+  isLoading: boolean;
 }
 
 const MenuContext = createContext<MenuContextProps | undefined>(undefined);
 
 export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [menuItems, setMenuItems] = useState<MenuItemType[]>(() =>
-    loadFromStorage(STORAGE_KEY_MENU, menuData)
+    loadFromStorage(STORAGE_KEY_MENU, magdalenaData)
   );
   const [extrasData, setExtrasData] = useState<ExtraItem[]>(() =>
     loadFromStorage(STORAGE_KEY_EXTRAS, initialExtras)
@@ -117,16 +133,16 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showUsdToggle: false,
       manualRate: 0,
       useManualRate: false,
-      whatsappNumber: '',
-      bankAlias: '',
-      brandName: '',
-      brandColor: '#cc333f',
-      brandColorDark: '#6a4a3c',
-      brandColorLight: '#fdf6e3',
-      brandAccent: '#edc951',
+      whatsappNumber: '1165631860',
+      bankAlias: 'LA.MAGDALENA.MP',
+      brandName: 'La Magdalena',
+      brandColor: '#8b4513', // SaddleBrown (Artesanal)
+      brandColorDark: '#5d2e0a',
+      brandColorLight: '#fff9f0',
+      brandAccent: '#d2691e', // Chocolate
       brandTextColor: '#3d2b1f',
-      brandFont: 'system-ui',
-      brandAddress: '',
+      brandFont: 'Georgia, serif',
+      brandAddress: 'Tu Barrio',
       brandInstagram: '',
       brandGoogleMaps: '',
       brandLogo: undefined,
@@ -137,6 +153,37 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { ...fallback, ...saved };
   });
   const [usdRate, setUsdRate] = useState<number>(() => getUsdRateSync());
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Cargar datos de Supabase al montar
+  useEffect(() => {
+    const fetchGlobalData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from(SUPABASE_TABLE)
+          .select('key, value')
+          .in('key', [getGlobalKey('menu_items'), getGlobalKey('extras_data'), getGlobalKey('site_settings')]);
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          const globalMenu = data.find(d => d.key === getGlobalKey('menu_items'))?.value;
+          const globalExtras = data.find(d => d.key === getGlobalKey('extras_data'))?.value;
+          const globalSettings = data.find(d => d.key === getGlobalKey('site_settings'))?.value;
+
+          if (globalMenu) setMenuItems(globalMenu);
+          if (globalExtras) setExtrasData(globalExtras);
+          if (globalSettings) setSiteSettings(prev => ({ ...prev, ...globalSettings }));
+        }
+      } catch (err) {
+        console.error('Error fetching from Supabase:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchGlobalData();
+  }, []);
 
   // Cargar cotización actual al montar (async)
   useEffect(() => {
@@ -157,6 +204,32 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(siteSettings));
   }, [siteSettings]);
+
+  const saveToGlobal = async () => {
+    try {
+      const updates = [
+        { key: getGlobalKey('menu_items'), value: menuItems },
+        { key: getGlobalKey('extras_data'), value: extrasData },
+        { key: getGlobalKey('site_settings'), value: siteSettings }
+      ];
+
+      const { error } = await supabase
+        .from(SUPABASE_TABLE)
+        .upsert(updates, { onConflict: 'key' });
+
+      if (error) throw error;
+    } catch (err) {
+      console.error('Error saving to Supabase:', err);
+      throw err;
+    }
+  };
+
+  const addMenuItem = useCallback((newItem: MenuItemType) => {
+    setMenuItems(prev => [...prev, newItem]);
+    const ts = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEY_LAST_EDIT, ts);
+    setLastEditTimestamp(ts);
+  }, []);
 
   const updateMenuItem = useCallback((index: number, updated: MenuItemType) => {
     setMenuItems(prev => {
@@ -188,7 +261,7 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const resetToDefaults = useCallback(() => {
-    const freshMenu = JSON.parse(JSON.stringify(menuData));
+    const freshMenu = JSON.parse(JSON.stringify(magdalenaData));
     const freshExtras = JSON.parse(JSON.stringify(initialExtras));
     setMenuItems(freshMenu);
     setExtrasData(freshExtras);
@@ -200,7 +273,7 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const resetTextsOnly = useCallback((targetLang?: string) => {
     setMenuItems(prev => prev.map((item, i) => {
-      const original = menuData[i];
+      const original = magdalenaData[i];
       if (!original) return item;
 
       const updated = { ...item };
@@ -265,11 +338,12 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
     : usdRate;
 
   return (
-    <MenuContext.Provider value={{ menuItems, updateMenuItem, deleteMenuItem, setMenuItems, extrasData, updateExtraItem, setExtrasData, resetToDefaults, resetTextsOnly, lastEditTimestamp, siteSettings, setSiteSettings, usdRate: effectiveRate, setUsdRate }}>
+    <MenuContext.Provider value={{ menuItems, addMenuItem, updateMenuItem, deleteMenuItem, setMenuItems, extrasData, updateExtraItem, setExtrasData, resetToDefaults, resetTextsOnly, lastEditTimestamp, siteSettings, setSiteSettings, usdRate: effectiveRate, setUsdRate, saveToGlobal, isLoading }}>
       {children}
     </MenuContext.Provider>
   );
 };
+
 
 export const useMenu = () => {
   const context = useContext(MenuContext);

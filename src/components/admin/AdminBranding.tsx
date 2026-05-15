@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Palette, MapPin, ExternalLink, Type, Check, Upload, X, ImageIcon } from 'lucide-react';
 import { useMenu } from '../../context/MenuContext';
 import { PRESET_PALETTES } from '../../utils/palettes';
@@ -297,12 +298,14 @@ export function AdminBranding() {
           <div className="p-4 space-y-2">
             <div className="h-3 w-3/4 rounded" style={{ backgroundColor: siteSettings.brandColor + '20' }} />
             <div className="h-3 w-1/2 rounded" style={{ backgroundColor: siteSettings.brandColor + '20' }} />
-            <button
-              className="mt-2 px-4 py-1.5 rounded-lg text-xs font-bold text-white"
+            <motion.button
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              className="mt-2 px-4 py-1.5 rounded-lg text-xs font-bold text-white shadow-lg"
               style={{ backgroundColor: siteSettings.brandColor }}
             >
               Confirmar pedido
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>

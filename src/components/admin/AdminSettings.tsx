@@ -35,7 +35,7 @@ const DAYS = [
 
 export function AdminSettings() {
   const { logout } = useAdmin();
-  const { resetTextsOnly, lastEditTimestamp, siteSettings, setSiteSettings, usdRate, setUsdRate } = useMenu();
+  const { resetTextsOnly, lastEditTimestamp, siteSettings, setSiteSettings, usdRate, setUsdRate, saveToGlobal } = useMenu();
   const [confirmReset, setConfirmReset] = useState(false);
   const [confirmClearAnalytics, setConfirmClearAnalytics] = useState(false);
   const [selectedLang, setSelectedLang] = useState<string | undefined>(undefined);
@@ -44,6 +44,25 @@ export function AdminSettings() {
   const [checkingApi, setCheckingApi] = useState(false);
   const [manualRateInput, setManualRateInput] = useState(siteSettings.manualRate > 0 ? String(siteSettings.manualRate) : '');
   const [businessHours, setBusinessHours] = useState<BusinessHoursSchedule>(() => loadBusinessHours());
+  const [isSaving, setIsSaving] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const handleGlobalSave = async () => {
+    setIsSaving(true);
+    try {
+      await saveToGlobal();
+      showToast('✅ Configuración guardada globalmente');
+    } catch {
+      showToast('❌ Error al sincronizar con la nube', 'error');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleReset = () => {
     resetTextsOnly(selectedLang);
@@ -93,11 +112,34 @@ export function AdminSettings() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-[10010] text-white text-sm font-bold px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2 ${
+          toast.type === 'error' ? 'bg-red-500' : 'bg-brand-green'
+        }`}>
+          <span>{toast.message}</span>
+        </div>
+      )}
+
       {/* Header */}
-      <div>
-        <h2 className="text-2xl md:text-3xl font-black text-white mb-1">Configuración</h2>
-        <p className="text-sm text-gray-400 font-medium">Información de sesión y opciones</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-black text-white mb-1">Configuración</h2>
+          <p className="text-sm text-gray-400 font-medium">Información de sesión y opciones globales</p>
+        </div>
+        <button
+          onClick={handleGlobalSave}
+          disabled={isSaving}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-green text-white font-bold text-sm rounded-xl hover:brightness-110 transition-all shadow-lg shadow-brand-green/20 disabled:opacity-50"
+        >
+          {isSaving ? (
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <RefreshCw size={18} />
+          )}
+          {isSaving ? 'Sincronizando...' : 'Guardar en la Nube'}
+        </button>
       </div>
 
       {/* Session Info */}
@@ -431,6 +473,44 @@ export function AdminSettings() {
               className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2.5 text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/40 transition-shadow placeholder:text-gray-600"
             />
             <p className="text-[10px] text-gray-500 mt-1">Alias de Mercado Pago / CBU para transferencias</p>
+          </div>
+        </div>
+      </div>
+
+      {/* QR Code Difussion */}
+      <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-6 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
+            <CalendarCheck size={20} className="text-orange-400" />
+          </div>
+          <div>
+            <span className="text-sm font-black text-white block">Difusión (Código QR)</span>
+            <span className="text-xs text-gray-400 font-medium">Generá un código QR para que tus clientes accedan directamente a tu tienda.</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center gap-6 pt-2">
+          <div className="bg-white p-3 rounded-2xl shadow-xl shadow-orange-500/10">
+            <img 
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.origin)}`} 
+              alt="QR Code Store" 
+              className="w-32 h-32 md:w-40 md:h-40"
+            />
+          </div>
+          <div className="flex-1 space-y-3 text-center sm:text-left">
+            <p className="text-xs text-gray-400 leading-relaxed">
+              Escaneá este código para probar la tienda desde otro dispositivo o imprimilo para colocarlo en tus mesas y vidriera.
+            </p>
+            <a 
+              href={`https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=${encodeURIComponent(window.location.origin)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              download="QR_Tienda.png"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white font-bold text-xs rounded-xl hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20"
+            >
+              <RefreshCw size={14} />
+              Descargar QR (Alta Calidad)
+            </a>
           </div>
         </div>
       </div>

@@ -1,11 +1,11 @@
 {
-  "name": "El Puestito del Tío",
-  "short_name": "El Puestito",
-  "description": "Pedí online en El Puestito del Tío. Choripanes, hamburguesas, bondiola y más.",
+  "name": "La Magdalena — Panadería & Confitería",
+  "short_name": "La Magdalena",
+  "description": "Facturas, empanadas y sándwiches artesanales.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d0d0d",
-  "theme_color": "#0d0d0d",
+  "background_color": "#8b4513",
+  "theme_color": "#8b4513",
   "orientation": "portrait",
   "icons": [
     {

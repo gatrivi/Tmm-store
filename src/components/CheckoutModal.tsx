@@ -25,6 +25,7 @@ interface CheckoutModalProps {
     optionLabel: string;
     price: number;
     qty: number;
+    itemNotes?: string;
   }>;
   total: number;
   whatsappNumber: string;
@@ -54,6 +55,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   const [address, setAddress] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'transfer' | 'mercadopago'>('cash');
   const [notes, setNotes] = useState('');
+  const [tip, setTip] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [popupBlocked, setPopupBlocked] = useState(false);
@@ -85,6 +87,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     setAddress('');
     setPaymentMethod('cash');
     setNotes('');
+    setTip(0);
     setErrors({});
     setPopupBlocked(false);
     setMpError(null);
@@ -131,6 +134,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
       notes,
       cart,
       total,
+      tip,
     });
 
     if (paymentMethod === 'transfer') {
@@ -162,6 +166,14 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
         unit_price: item.price,
         currency_id: 'ARS',
       }));
+      if (tip > 0) {
+        items.push({
+          title: 'Propina',
+          quantity: 1,
+          unit_price: tip,
+          currency_id: 'ARS',
+        });
+      }
 
       const res = await fetch('/api/create-preference', {
         method: 'POST',
@@ -338,21 +350,48 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               />
             </div>
 
+            {/* Tip */}
+            <div>
+              <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                💰 {t.tipLabel}
+              </label>
+              <div className="grid grid-cols-4 gap-2">
+                {[0, Math.round(total * 0.1), Math.round(total * 0.15), Math.round(total * 0.2)].map((amount, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setTip(amount)}
+                    className={`py-2 rounded-xl border text-xs font-bold transition-all ${tip === amount ? 'bg-green-600 text-white border-green-600 shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-green-300'}`}
+                  >
+                    {amount === 0 ? t.noTip : `$${amount.toLocaleString('es-AR')}`}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Order Summary */}
             <div className="bg-gray-50 rounded-xl p-4 space-y-2">
               <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">{t.summary}</span>
               {cart.map((item, idx) => (
                 <div key={idx} className="flex justify-between text-sm">
-                  <span className="text-gray-700">{item.qty}x {item.name} ({item.optionLabel})</span>
+                  <span className="text-gray-700">
+                    {item.qty}x {item.name} ({item.optionLabel})
+                    {item.itemNotes && <span className="block text-[10px] text-amber-600 mt-0.5">📝 {item.itemNotes}</span>}
+                  </span>
                   <span className="font-bold text-gray-900">${(item.price * item.qty).toLocaleString('es-AR')}</span>
                 </div>
               ))}
+              {tip > 0 && (
+                <div className="flex justify-between text-sm text-green-700">
+                  <span>{t.tipLabel}</span>
+                  <span className="font-bold">${tip.toLocaleString('es-AR')}</span>
+                </div>
+              )}
               <div className="border-t border-gray-200 pt-2 flex justify-between items-center text-base font-black text-gray-900">
                 <span>{t.total}</span>
                 <div className="flex items-center gap-2">
-                  <span>${total.toLocaleString('es-AR')}</span>
+                  <span>${(total + tip).toLocaleString('es-AR')}</span>
                   <button
-                    onClick={async () => { await copyToClipboard(`$${total.toLocaleString('es-AR')}`); showCopied('total'); }}
+                    onClick={async () => { await copyToClipboard(`$${(total + tip).toLocaleString('es-AR')}`); showCopied('total'); }}
                     className="p-1 hover:bg-gray-200 rounded transition"
                     title={t.copyTotal}
                   >
@@ -449,13 +488,22 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">{t.detail}</span>
               {cart.map((item, idx) => (
                 <div key={idx} className="flex justify-between text-sm">
-                  <span className="text-gray-700">{item.qty}x {item.name} ({item.optionLabel})</span>
+                  <span className="text-gray-700">
+                    {item.qty}x {item.name} ({item.optionLabel})
+                    {item.itemNotes && <span className="block text-[10px] text-amber-600 mt-0.5">📝 {item.itemNotes}</span>}
+                  </span>
                   <span className="font-bold text-gray-900">${(item.price * item.qty).toLocaleString('es-AR')}</span>
                 </div>
               ))}
+              {tip > 0 && (
+                <div className="flex justify-between text-sm text-green-700">
+                  <span>{t.tipLabel}</span>
+                  <span className="font-bold">${tip.toLocaleString('es-AR')}</span>
+                </div>
+              )}
               <div className="border-t border-gray-200 pt-2 flex justify-between text-base font-black text-gray-900">
                 <span>{t.total}</span>
-                <span>${total.toLocaleString('es-AR')}</span>
+                <span>${(total + tip).toLocaleString('es-AR')}</span>
               </div>
             </div>
 
@@ -504,7 +552,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               {paymentMethod === 'transfer' && (
                 <div className="grid grid-cols-2 gap-2">
                   <button
-                    onClick={async () => { await copyToClipboard(`$${total.toLocaleString('es-AR')}`); showCopied('total-btn'); }}
+                    onClick={async () => { await copyToClipboard(`$${(total + tip).toLocaleString('es-AR')}`); showCopied('total-btn'); }}
                     className="flex items-center justify-center gap-2 py-3 bg-blue-50 border border-blue-200 text-blue-700 font-bold text-xs rounded-xl hover:bg-blue-100 transition"
                   >
                     {copiedField === 'total-btn' ? <Check size={14} /> : <Copy size={14} />}

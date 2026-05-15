@@ -23,10 +23,11 @@ export function buildWhatsAppMessage(params: {
   paymentLabel: string;
   bankAlias: string;
   notes: string;
-  cart: Array<{ qty: number; name: string; optionLabel: string; price: number }>;
+  cart: Array<{ qty: number; name: string; optionLabel: string; price: number; itemNotes?: string }>;
   total: number;
+  tip: number;
 }): string {
-  const { orderId, name, phone, deliveryType, address, paymentMethod, paymentLabel, bankAlias, notes, cart, total } = params;
+  const { orderId, name, phone, deliveryType, address, paymentMethod, paymentLabel, bankAlias, notes, cart, total, tip } = params;
 
   let message = `🛒 *Pedido #${orderId}*\n`;
   message += `━━━━━━━━━━━━━━━━━━\n\n`;
@@ -42,10 +43,18 @@ export function buildWhatsAppMessage(params: {
   message += `*Detalle del pedido:*\n\n`;
 
   cart.forEach(item => {
-    message += `• ${item.qty}x ${sanitizeWaText(item.name)} (${sanitizeWaText(item.optionLabel)}) — $${(item.price * item.qty).toLocaleString('es-AR')}\n`;
+    message += `• ${item.qty}x ${sanitizeWaText(item.name)} (${sanitizeWaText(item.optionLabel)}) — $${(item.price * item.qty).toLocaleString('es-AR')}`;
+    if (item.itemNotes) {
+      message += `\n  📝 ${sanitizeWaText(item.itemNotes)}`;
+    }
+    message += `\n`;
   });
 
-  message += `\n*Total: $${total.toLocaleString('es-AR')}*\n`;
+  if (tip > 0) {
+    message += `\n💰 *Propina:* $${tip.toLocaleString('es-AR')}\n`;
+  }
+
+  message += `\n*Total: $${(total + tip).toLocaleString('es-AR')}*\n`;
   message += `━━━━━━━━━━━━━━━━━━\n`;
 
   if (paymentMethod === 'transfer' && bankAlias) {
