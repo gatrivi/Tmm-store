@@ -145,7 +145,18 @@ Cada negocio personaliza su identidad visual sin tocar código:
 
 ## 📸 Screenshots
 
-*(Agregar acá: vista del menú, carrito, checkout, panel de admin, dashboard)*
+Capturas recomendadas para portfolio / README (guardar en `docs/screenshots/`):
+
+| # | Vista | Archivo sugerido |
+|---|--------|------------------|
+| 1 | Menú / hero | `01-storefront.png` |
+| 2 | Detalle producto + carrito | `02-cart.png` |
+| 3 | Checkout (review) | `03-checkout.png` |
+| 4 | Admin — editor de menú | `04-admin-menu.png` |
+| 5 | Admin — dashboard (Demo ON) | `05-admin-dashboard.png` |
+| 6 | Branding / paleta | `06-admin-branding.png` |
+
+Guía de presentación en vivo: [DEMO.md](./DEMO.md)
 
 ---
 

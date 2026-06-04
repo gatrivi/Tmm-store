@@ -1,100 +1,83 @@
-# 🍕 Pizzería Trufi — Menú SPA
+# Trufi — Pedidos online para negocios de comida
 
-Aplicación web estática para visualizar el menú de una pizzería, armar un carrito y generar un pedido vía WhatsApp con alias de transferencia.
+White-label ordering app (estilo PedidoDirecto): menú digital, carrito, checkout multi-paso, WhatsApp, MercadoPago y panel de administración con branding.
+
+**Demo en vivo:** ver [DEMO.md](./DEMO.md) · Detalle técnico: [PORTFOLIO.md](./PORTFOLIO.md)
 
 ---
 
-## 🚀 Stack Tecnológico
+## Stack
 
 | Tecnología | Versión |
 |------------|---------|
-| React      | 19      |
-| Vite       | 6       |
+| React | 19 |
+| Vite | 6 |
 | TypeScript | JSX/TSX |
-| Tailwind CSS | 4     |
+| Tailwind CSS | 4 |
+| Deploy | Vercel (+ serverless MP) |
 
 ---
 
-## 📦 Instalación Local
-
-### Requisitos previos
-
-- **Node.js** >= 18
-- **npm** >= 9 (incluido con Node.js)
-
-### Pasos
+## Instalación
 
 ```bash
-# 1. Clonar el repositorio
 git clone https://github.com/gatrivi/Tmm-store.git
 cd Tmm-store
-
-# 2. Instalar dependencias
 npm install
-
-# 3. Iniciar servidor de desarrollo
+cp .env.example .env   # opcional: admin, WhatsApp, MP
 npm run dev
 ```
 
-La aplicación estará disponible en `http://localhost:5173`.
+- **Tienda:** `http://localhost:5173/`
+- **Admin:** `http://localhost:5173/admin`
 
 ---
 
-## 🛠️ Scripts disponibles
+## Scripts
 
-| Script        | Descripción                              |
-|---------------|------------------------------------------|
-| `npm run dev` | Servidor de desarrollo con HMR           |
-| `npm run build` | Build de producción en `/dist`         |
-| `npm run preview` | Previsualiza el build de producción    |
-| `npm run lint` | Ejecuta ESLint sobre el proyecto        |
-
----
-
-## 🎨 Favicon
-
-El favicon se encuentra en:
-
-```
-public/favicon.jpg
-```
-
-Referenciado en `index.html`:
-
-```html
-<link rel="icon" type="image/svg+xml" href="/favicon.jpg" />
-```
-
-Para cambiarlo, reemplazá el archivo en `public/` y actualizá el `href` si es necesario.
+| Script | Descripción |
+|--------|-------------|
+| `npm run dev` | Desarrollo con HMR |
+| `npm run build` | Build en `/dist` |
+| `npm run preview` | Preview del build |
+| `npm run lint` | ESLint |
 
 ---
 
-## 📁 Estructura del proyecto
+## Variables de entorno
+
+| Variable | Uso |
+|----------|-----|
+| `VITE_ADMIN_USER_HASH` | Hash SHA-256 del usuario admin |
+| `VITE_ADMIN_PASS_HASH` | Hash SHA-256 de la contraseña admin |
+| `VITE_WHATSAPP_NUMBER` | Número para pedidos (sin +) |
+| `VITE_BANK_ALIAS` | Alias de transferencia por defecto |
+| `MP_ACCESS_TOKEN` | MercadoPago (solo serverless en Vercel) |
+
+---
+
+## Estructura
 
 ```
-├── public/
-│   └── favicon.jpg
+├── api/                 # Vercel Functions (MercadoPago)
+├── public/              # Imágenes, hero, favicon
 ├── src/
-│   ├── components/
-│   ├── App.tsx          ← Lógica principal y UI
-│   ├── menu.json        ← Datos estáticos del menú
-│   ├── main.jsx         ← Punto de entrada
-│   └── index.css        ← Tailwind directives
-├── index.html
-├── package.json
-├── vite.config.js
-└── README.md
+│   ├── components/      # UI tienda + admin
+│   ├── context/         # Menú, idioma, auth
+│   ├── data/menu.ts     # Menú seed (editable desde admin)
+│   └── pages/           # Storefront, Admin, 404
+├── DEMO.md              # Guía para mostrar el demo
+└── PORTFOLIO.md         # Narrativa portfolio
 ```
 
 ---
 
-## 📝 Notas
+## Notas
 
-- Los datos del menú son **100% estáticos** (`src/menu.json`). No requiere backend ni APIs externas.
-- El estado del carrito se maneja con `useState` de React.
-- El diseño utiliza **Tailwind CSS** en modo oscuro y minimalista.
-- El botón de WhatsApp genera un enlace `wa.me` con el resumen del pedido y el total en ARS.
+- Menú y settings del admin persisten en **localStorage** (por navegador).
+- MercadoPago requiere deploy en Vercel con `MP_ACCESS_TOKEN`.
+- El dashboard admin incluye **Modo Demo** con métricas sintéticas para presentaciones.
 
 ---
 
-Hecho con ❤️ y pragmatismo.
+Desarrollado por **DevSalz** · Hecho con pragmatismo.

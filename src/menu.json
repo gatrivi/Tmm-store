@@ -1,8 +1,0 @@
-[
-  { "id": 1, "name": "Muzzarella", "type": "Tradicional", "price": 5500 },
-  { "id": 2, "name": "Napolitana", "type": "Tradicional", "price": 6200 },
-  { "id": 3, "name": "Fugazzeta", "type": "Tradicional", "price": 6500 },
-  { "id": 4, "name": "Calabresa", "type": "Tradicional", "price": 6800 },
-  { "id": 5, "name": "Margarita", "type": "Masa Madre", "price": 7200 },
-  { "id": 6, "name": "Pepperoni", "type": "Masa Madre", "price": 7500 }
-]
