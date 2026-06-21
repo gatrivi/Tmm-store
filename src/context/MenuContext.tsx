@@ -10,15 +10,23 @@
  * sobrevivan a recargas de página. Se expone una función `resetToDefaults`
  * para restaurar los datos originales de `menuData`.
  */
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { menuData, type MenuItemType } from '../data/menu';
 import { getUsdRate, getUsdRateSync } from '../utils/dollarRate';
+import type { Promotion } from '../types/promotion';
+import { isFirebaseConfigured } from '../lib/firebase';
+import { loadTenantData, saveTenantSnapshot } from '../services/tenantService';
+import { parsePlan } from '../config/plans';
+import type { MenuCategory } from '../types/menuCategory';
+import { getInitialMenuCategories } from '../utils/menuImport';
 
 /** Keys de localStorage */
 const STORAGE_KEY_MENU = 'elpuestito_admin_menu';
+const STORAGE_KEY_CATEGORIES = 'elpuestito_admin_categories';
 const STORAGE_KEY_EXTRAS = 'elpuestito_admin_extras';
 const STORAGE_KEY_LAST_EDIT = 'elpuestito_admin_last_edit';
 const STORAGE_KEY_SETTINGS = 'elpuestito_admin_settings';
+const STORAGE_KEY_PROMOTIONS = 'elpuestito_admin_promotions';
 
 /**
  * Interfaz para los extras hardcodeados que aparecen en SimplifiedMenu.
@@ -76,6 +84,10 @@ export interface SiteSettings {
   brandLogo?: string;
   demoMode: boolean;
   mpEnabled: boolean;
+  /** Play sound in admin when a new order arrives */
+  orderSoundEnabled: boolean;
+  /** Auto-open print dialog for new orders (thermal) */
+  autoPrintOnNewOrder: boolean;
 }
 
 interface MenuContextProps {
@@ -83,6 +95,8 @@ interface MenuContextProps {
   updateMenuItem: (index: number, updated: MenuItemType) => void;
   deleteMenuItem: (index: number) => void;
   setMenuItems: React.Dispatch<React.SetStateAction<MenuItemType[]>>;
+  menuCategories: MenuCategory[];
+  setMenuCategories: React.Dispatch<React.SetStateAction<MenuCategory[]>>;
   extrasData: ExtraItem[];
   updateExtraItem: (index: number, updated: ExtraItem) => void;
   setExtrasData: React.Dispatch<React.SetStateAction<ExtraItem[]>>;
@@ -98,13 +112,36 @@ interface MenuContextProps {
   /** Cotización actual del dólar blue */
   usdRate: number;
   setUsdRate: React.Dispatch<React.SetStateAction<number>>;
+  /** Promociones / cupones */
+  promotions: Promotion[];
+  setPromotions: React.Dispatch<React.SetStateAction<Promotion[]>>;
+  /** Sync remoto activo */
+  cloudSyncEnabled: boolean;
+  /** loading | synced | offline | error */
+  cloudSyncStatus: 'loading' | 'synced' | 'offline' | 'error';
+  tenantId: string;
 }
 
 const MenuContext = createContext<MenuContextProps | undefined>(undefined);
 
+function resolveTenantId(): string {
+  const fromEnv = import.meta.env.VITE_TENANT_ID as string | undefined;
+  if (fromEnv?.trim()) return fromEnv.trim();
+  const slugMatch = window.location.pathname.match(/^\/s\/([^/]+)/);
+  if (slugMatch?.[1]) return slugMatch[1];
+  return 'default';
+}
+
 export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const tenantId = resolveTenantId();
+  const cloudSyncEnabled = isFirebaseConfigured();
+  const hydratedFromCloud = useRef(false);
+
   const [menuItems, setMenuItems] = useState<MenuItemType[]>(() =>
     loadFromStorage(STORAGE_KEY_MENU, menuData)
+  );
+  const [menuCategories, setMenuCategories] = useState<MenuCategory[]>(() =>
+    loadFromStorage(STORAGE_KEY_CATEGORIES, getInitialMenuCategories())
   );
   const [extrasData, setExtrasData] = useState<ExtraItem[]>(() =>
     loadFromStorage(STORAGE_KEY_EXTRAS, initialExtras)
@@ -132,21 +169,98 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       brandLogo: undefined,
       demoMode: false,
       mpEnabled: true,
+      orderSoundEnabled: true,
+      autoPrintOnNewOrder: false,
     };
     const saved = loadFromStorage<Partial<SiteSettings>>(STORAGE_KEY_SETTINGS, {});
     return { ...fallback, ...saved };
   });
   const [usdRate, setUsdRate] = useState<number>(() => getUsdRateSync());
+  const [promotions, setPromotions] = useState<Promotion[]>(() =>
+    loadFromStorage<Promotion[]>(STORAGE_KEY_PROMOTIONS, [])
+  );
+  const [cloudSyncStatus, setCloudSyncStatus] = useState<'loading' | 'synced' | 'offline' | 'error'>(() =>
+    cloudSyncEnabled ? 'loading' : 'offline',
+  );
 
   // Cargar cotización actual al montar (async)
   useEffect(() => {
     getUsdRate().then(rate => setUsdRate(rate));
   }, []);
 
+  // Hidratar desde Firestore si está configurado
+  useEffect(() => {
+    if (!cloudSyncEnabled) {
+      setCloudSyncStatus('offline');
+      return;
+    }
+    if (hydratedFromCloud.current) return;
+
+    loadTenantData(tenantId)
+      .then(async data => {
+        if (data?.menuItems?.length) {
+          setMenuItems(data.menuItems);
+        }
+        if (data?.menuCategories?.length) {
+          setMenuCategories(data.menuCategories);
+        }
+        if (data?.extras?.length) setExtrasData(data.extras);
+        if (data?.settings) {
+          setSiteSettings(prev => ({
+            ...prev,
+            ...data.settings,
+            orderSoundEnabled: data.settings!.orderSoundEnabled ?? true,
+            autoPrintOnNewOrder: data.settings!.autoPrintOnNewOrder ?? false,
+          }));
+        }
+        if (data?.promotions) setPromotions(data.promotions);
+
+        if (!data?.menuItems?.length) {
+          await saveTenantSnapshot(tenantId, {
+            settings: siteSettings,
+            menuItems,
+            menuCategories,
+            extras: extrasData,
+            promotions,
+            plan: parsePlan(import.meta.env.VITE_PLAN as string | undefined),
+          });
+        }
+        setCloudSyncStatus('synced');
+      })
+      .catch(err => {
+        console.error('Cloud sync hydrate failed:', err);
+        setCloudSyncStatus('error');
+      })
+      .finally(() => {
+        hydratedFromCloud.current = true;
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- initial seed only once on mount
+  }, [cloudSyncEnabled, tenantId]);
+
+  // Persistir snapshot en Firestore (debounced)
+  useEffect(() => {
+    if (!cloudSyncEnabled || !hydratedFromCloud.current) return;
+    const timer = window.setTimeout(() => {
+      saveTenantSnapshot(tenantId, {
+        settings: siteSettings,
+        menuItems,
+        menuCategories,
+        extras: extrasData,
+        promotions,
+        plan: parsePlan(import.meta.env.VITE_PLAN as string | undefined),
+      }).catch(console.error);
+    }, 800);
+    return () => window.clearTimeout(timer);
+  }, [cloudSyncEnabled, tenantId, siteSettings, menuItems, menuCategories, extrasData, promotions]);
+
   // Persistir menuItems en localStorage cada vez que cambie
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(menuItems));
   }, [menuItems]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY_CATEGORIES, JSON.stringify(menuCategories));
+  }, [menuCategories]);
 
   // Persistir extrasData en localStorage cada vez que cambie
   useEffect(() => {
@@ -157,6 +271,10 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(siteSettings));
   }, [siteSettings]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY_PROMOTIONS, JSON.stringify(promotions));
+  }, [promotions]);
 
   const updateMenuItem = useCallback((index: number, updated: MenuItemType) => {
     setMenuItems(prev => {
@@ -191,8 +309,10 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const freshMenu = JSON.parse(JSON.stringify(menuData));
     const freshExtras = JSON.parse(JSON.stringify(initialExtras));
     setMenuItems(freshMenu);
+    setMenuCategories(getInitialMenuCategories());
     setExtrasData(freshExtras);
     localStorage.removeItem(STORAGE_KEY_MENU);
+    localStorage.removeItem(STORAGE_KEY_CATEGORIES);
     localStorage.removeItem(STORAGE_KEY_EXTRAS);
     localStorage.removeItem(STORAGE_KEY_LAST_EDIT);
     setLastEditTimestamp(null);
@@ -265,7 +385,7 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
     : usdRate;
 
   return (
-    <MenuContext.Provider value={{ menuItems, updateMenuItem, deleteMenuItem, setMenuItems, extrasData, updateExtraItem, setExtrasData, resetToDefaults, resetTextsOnly, lastEditTimestamp, siteSettings, setSiteSettings, usdRate: effectiveRate, setUsdRate }}>
+    <MenuContext.Provider value={{ menuItems, updateMenuItem, deleteMenuItem, setMenuItems, menuCategories, setMenuCategories, extrasData, updateExtraItem, setExtrasData, resetToDefaults, resetTextsOnly, lastEditTimestamp, siteSettings, setSiteSettings, usdRate: effectiveRate, setUsdRate, promotions, setPromotions, cloudSyncEnabled, cloudSyncStatus, tenantId }}>
       {children}
     </MenuContext.Provider>
   );

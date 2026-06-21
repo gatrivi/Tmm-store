@@ -1,0 +1,11 @@
+---
+description: Core Trufi rule — write laconically
+alwaysApply: true
+---
+
+# Laconic
+
+- Write code, comments, commits, and docs **laconically**.
+- Bullets over paragraphs; omit obvious context.
+- Minimize diff scope; no drive-by refactors.
+- When unsure where logic lives, read `docs/README.md` before exploring the repo.

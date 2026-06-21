@@ -5,15 +5,22 @@ import App from './App.tsx'
 import { AdminProvider } from './context/AdminContext'
 import { MenuProvider } from './context/MenuContext'
 import { LanguageProvider } from './context/LanguageContext'
+import { PlanProvider } from './context/PlanContext'
+
+import { ThemeProvider } from './context/ThemeContext'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AdminProvider>
-      <MenuProvider>
-        <LanguageProvider>
-          <App />
-        </LanguageProvider>
-      </MenuProvider>
-    </AdminProvider>
+    <ThemeProvider>
+    <PlanProvider>
+      <AdminProvider>
+        <MenuProvider>
+          <LanguageProvider>
+            <App />
+          </LanguageProvider>
+        </MenuProvider>
+      </AdminProvider>
+    </PlanProvider>
+    </ThemeProvider>
   </StrictMode>,
 )

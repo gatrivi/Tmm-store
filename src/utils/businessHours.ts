@@ -7,7 +7,18 @@ export interface BusinessHoursSchedule {
   daysOpen: number[]; // 0=Dom, 1=Lun, ... 6=Sab
 }
 
-const STORAGE_KEY = 'elpuestito_business_hours';
+export const BUSINESS_HOURS_STORAGE_KEY = 'elpuestito_business_hours';
+export const BUSINESS_HOURS_UPDATED_EVENT = 'trufi:business-hours-updated';
+
+export const BUSINESS_HOURS_DAYS = [
+  { idx: 1, label: 'Lun', full: 'Lunes' },
+  { idx: 2, label: 'Mar', full: 'Martes' },
+  { idx: 3, label: 'Mié', full: 'Miércoles' },
+  { idx: 4, label: 'Jue', full: 'Jueves' },
+  { idx: 5, label: 'Vie', full: 'Viernes' },
+  { idx: 6, label: 'Sáb', full: 'Sábado' },
+  { idx: 0, label: 'Dom', full: 'Domingo' },
+] as const;
 
 export const defaultBusinessHours: BusinessHoursSchedule = {
   enabled: false,
@@ -18,7 +29,7 @@ export const defaultBusinessHours: BusinessHoursSchedule = {
 
 export function loadBusinessHours(): BusinessHoursSchedule {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(BUSINESS_HOURS_STORAGE_KEY);
     if (raw) return JSON.parse(raw) as BusinessHoursSchedule;
   } catch {
     // ignore
@@ -28,7 +39,10 @@ export function loadBusinessHours(): BusinessHoursSchedule {
 
 export function saveBusinessHours(hours: BusinessHoursSchedule): void {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(hours));
+    localStorage.setItem(BUSINESS_HOURS_STORAGE_KEY, JSON.stringify(hours));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent(BUSINESS_HOURS_UPDATED_EVENT, { detail: hours }));
+    }
   } catch {
     // ignore
   }
@@ -42,7 +56,7 @@ export function isBusinessOpen(hours: BusinessHoursSchedule): boolean {
   if (!hours.enabled) return true;
 
   const now = new Date();
-  const currentDay = now.getDay(); // 0=Dom, 1=Lun...
+  const currentDay = now.getDay();
 
   if (!hours.daysOpen.includes(currentDay)) return false;
 
@@ -55,7 +69,6 @@ export function isBusinessOpen(hours: BusinessHoursSchedule): boolean {
   const closeMinutes = closeH * 60 + closeM;
 
   if (closeMinutes < openMinutes) {
-    // Cruza medianoche (ej: 19:00 -> 02:00)
     return currentMinutes >= openMinutes || currentMinutes <= closeMinutes;
   }
 
@@ -72,7 +85,6 @@ export function getNextOpeningText(hours: BusinessHoursSchedule, lang: string = 
   const now = new Date();
   const today = now.getDay();
 
-  // Buscar el próximo día abierto
   for (let i = 1; i <= 7; i++) {
     const checkDay = (today + i) % 7;
     if (hours.daysOpen.includes(checkDay)) {
@@ -84,3 +96,13 @@ export function getNextOpeningText(hours: BusinessHoursSchedule, lang: string = 
   return '';
 }
 
+/** Texto corto para footer / ficha del local (ej: "Mié, Jue, Vie, Sáb, Dom · 19:00 a 00:00hs") */
+export function formatBusinessHoursSummary(hours: BusinessHoursSchedule): string {
+  if (!hours.enabled || hours.daysOpen.length === 0) return '';
+
+  const openLabels = BUSINESS_HOURS_DAYS.filter(d => hours.daysOpen.includes(d.idx)).map(d => d.label);
+  const daysPart =
+    openLabels.length === 7 ? 'Todos los días' : openLabels.join(', ');
+
+  return `${daysPart} · ${hours.openTime} a ${hours.closeTime}hs`;
+}

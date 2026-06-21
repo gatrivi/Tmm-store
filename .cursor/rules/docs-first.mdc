@@ -1,0 +1,10 @@
+---
+description: Consult docs/ before broad exploration
+alwaysApply: true
+---
+
+# Docs first
+
+- Before wide codebase search, read `docs/README.md` and the relevant `docs/features/` or `docs/components/` file.
+- After meaningful feature changes, update the matching doc (same laconic format).
+- Do not add new markdown files at repo root; use `docs/` subfolders.

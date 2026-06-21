@@ -1,0 +1,13 @@
+---
+description: Vercel serverless conventions
+globs: api/**/*.ts
+alwaysApply: false
+---
+
+# API (Vercel)
+
+- Serverless handlers only; no long-lived processes.
+- Secrets from `process.env` — never commit tokens.
+- Client uses `VITE_*`; server may use `FIREBASE_*`, `MP_ACCESS_TOKEN`, `OPENAI_API_KEY`.
+- Reuse CORS pattern from `api/create-preference.ts` (`setCors` + OPTIONS).
+- Return JSON errors with appropriate HTTP status.

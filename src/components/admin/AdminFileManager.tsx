@@ -32,6 +32,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { Save, RotateCcw, Check, Plus, Trash2, ArrowLeft, ArrowRight, AlertTriangle, GripVertical } from 'lucide-react';
 import { useMenu } from '../../context/MenuContext';
 import { getDynamicImagesForProduct } from '../../utils/imageLoader';
+import { compressImageFile } from '../../utils/imageCompress';
 import type { MenuItemType } from '../../data/menu';
 
 // ─── Helpers ───────────────────────────────────────────────────
@@ -280,42 +281,6 @@ export function AdminFileManager() {
 
   const activeImage = images.find(img => img.id === activeId);
 
-  // ─── Compress & Upload ───────────────────────────────────────
-
-  const compressImage = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          const MAX_SIZE = 1024;
-
-          if (width > height && width > MAX_SIZE) {
-            height *= MAX_SIZE / width;
-            width = MAX_SIZE;
-          } else if (height > MAX_SIZE) {
-            width *= MAX_SIZE / height;
-            height = MAX_SIZE;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          if (!ctx) return reject('No context');
-          ctx.drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL('image/webp', 0.8));
-        };
-        img.onerror = reject;
-        if (typeof e.target?.result === 'string') img.src = e.target.result;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
     const file = e.target.files[0];
@@ -323,7 +288,7 @@ export function AdminFileManager() {
 
     try {
       setToast('⏳ Comprimiendo imagen...');
-      const base64 = await compressImage(file);
+      const base64 = await compressImageFile(file);
       setImages(prev => [...prev, { id: base64, isCustom: true }]);
       setIsDirty(true);
       setToast(null);

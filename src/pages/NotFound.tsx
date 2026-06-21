@@ -5,13 +5,13 @@ export default function NotFound() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-surface flex items-center justify-center p-4">
       <div className="text-center max-w-md">
-        <div className="w-20 h-20 bg-black rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-          <UtensilsCrossed size={32} className="text-white" />
+        <div className="w-20 h-20 bg-surface-elevated border border-border rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+          <UtensilsCrossed size={32} className="text-text-primary" />
         </div>
-        <h1 className="text-6xl font-black text-gray-900 mb-2">404</h1>
-        <p className="text-lg text-gray-500 mb-8">
+        <h1 className="text-6xl font-black text-text-primary mb-2">404</h1>
+        <p className="text-lg text-text-secondary mb-8">
           Parece que te perdiste camino a la cocina.
           <br />
           Esta página no existe.

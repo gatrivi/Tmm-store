@@ -30,6 +30,8 @@ import {
   getDemoTopProducts,
 } from '../../utils/analyticsTracker';
 import { useMenu } from '../../context/MenuContext';
+import { usePlan } from '../../context/PlanContext';
+import { fetchOrdersForReports } from '../../services/orderService';
 
 type TimeFilter = 'today' | 'week' | 'month';
 
@@ -47,6 +49,7 @@ const BAR_RANGE = BAR_BOTTOM - BAR_TOP;
 
 export function AdminDashboard() {
   const { setSiteSettings } = useMenu();
+  const { tenantId, features } = usePlan();
   const [demo, setDemo] = useState(() => isDemoMode());
   const [filter, setFilter] = useState<TimeFilter>('today');
   const [chartData, setChartData] = useState<number[]>(getVisitsTodayByHour);
@@ -68,6 +71,30 @@ export function AdminDashboard() {
 
   // Auto-refresh de todas las métricas cada 30 segundos
   useEffect(() => {
+    const loadRealOrders = async () => {
+      if (demo || !features.canUseReports) return;
+      const orders = await fetchOrdersForReports(tenantId, 1);
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+      const todayOrders = orders.filter(o => new Date(o.createdAt) >= todayStart);
+      setOrdersToday(todayOrders.length);
+      setRevenueToday(todayOrders.reduce((s, o) => s + o.total, 0));
+
+      const productCounts: Record<string, number> = {};
+      todayOrders.forEach(o => {
+        o.items.forEach(item => {
+          productCounts[item.name] = (productCounts[item.name] || 0) + item.qty;
+        });
+      });
+      const ranked = Object.entries(productCounts)
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5);
+      if (ranked.length) setTopProducts(ranked);
+    };
+
+    loadRealOrders();
+
     const interval = setInterval(() => {
       setSessionTime(getAverageSessionTime());
       setTotalToday(getTotalVisitsToday());
@@ -77,14 +104,15 @@ export function AdminDashboard() {
         setOrdersToday(getDemoOrdersToday());
         setRevenueToday(getDemoRevenueToday());
         setTopProducts(getDemoTopProducts());
+      } else {
+        loadRealOrders();
       }
-      // Refrescar gráfico según filtro actual
       if (filter === 'today') setChartData(getVisitsTodayByHour());
       else if (filter === 'week') setChartData(getVisitsLast7Days());
       else setChartData(getVisitsLast30Days());
     }, 30000);
     return () => clearInterval(interval);
-  }, [filter, demo]);
+  }, [filter, demo, features.canUseReports, tenantId]);
 
   // Cambio de filtro del gráfico
   const handleFilterChange = useCallback((newFilter: TimeFilter) => {
@@ -338,8 +366,8 @@ export function AdminDashboard() {
         </div>
       </div>
 
-      {/* Demo: Productos más vendidos */}
-      {demo && (
+      {/* Productos más pedidos */}
+      {(demo || (features.canUseReports && topProducts.length > 0)) && (
         <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
@@ -347,7 +375,9 @@ export function AdminDashboard() {
             </div>
             <div>
               <h3 className="text-base md:text-lg font-black text-white">Productos más pedidos</h3>
-              <p className="text-[10px] md:text-xs text-gray-400 font-medium">Ranking simulado de popularidad</p>
+              <p className="text-[10px] md:text-xs text-gray-400 font-medium">
+                {demo ? 'Ranking simulado de popularidad' : 'Datos reales de pedidos de hoy'}
+              </p>
             </div>
           </div>
           <div className="space-y-2">

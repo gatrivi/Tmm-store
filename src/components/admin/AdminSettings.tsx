@@ -6,13 +6,15 @@
  * cierre de sesión y créditos.
  */
 import { useState } from 'react';
-import { LogOut, Shield, Code, RotateCcw, AlertTriangle, Trash2, DollarSign, RefreshCw, Wifi, WifiOff, Clock, CalendarCheck, Phone, CreditCard } from 'lucide-react';
+import { LogOut, Shield, Code, RotateCcw, AlertTriangle, Trash2, DollarSign, RefreshCw, Wifi, WifiOff, Clock, CalendarCheck, Phone, CreditCard, Package } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 import { useMenu } from '../../context/MenuContext';
 import { clearAnalytics } from '../../utils/analyticsTracker';
 import { getUsdRate, checkApiStatus } from '../../utils/dollarRate';
-import { loadBusinessHours, saveBusinessHours, isBusinessOpen, getNextOpeningText, type BusinessHoursSchedule } from '../../utils/businessHours';
+import { loadBusinessHours, isBusinessOpen, getNextOpeningText, type BusinessHoursSchedule } from '../../utils/businessHours';
 import { AdminBranding } from './AdminBranding';
+import { CloudSyncPanel } from './CloudSyncPanel';
+import { BusinessHoursFields } from './BusinessHoursFields';
 
 const LANG_OPTIONS = [
   { code: undefined, label: '🌐 Todos', shortLabel: 'Todos' },
@@ -22,16 +24,6 @@ const LANG_OPTIONS = [
   { code: 'ru', label: '🇷🇺 RU', shortLabel: 'RU' },
   { code: 'de', label: '🇩🇪 DE', shortLabel: 'DE' },
 ] as const;
-
-const DAYS = [
-  { idx: 1, label: 'Lun', full: 'Lunes' },
-  { idx: 2, label: 'Mar', full: 'Martes' },
-  { idx: 3, label: 'Mié', full: 'Miércoles' },
-  { idx: 4, label: 'Jue', full: 'Jueves' },
-  { idx: 5, label: 'Vie', full: 'Viernes' },
-  { idx: 6, label: 'Sáb', full: 'Sábado' },
-  { idx: 0, label: 'Dom', full: 'Domingo' },
-];
 
 export function AdminSettings() {
   const { logout } = useAdmin();
@@ -116,13 +108,58 @@ export function AdminSettings() {
             Tipo de autenticación: <span className="text-gray-300">Local (SHA-256)</span>
           </span>
           <span className="text-xs text-gray-500 font-medium block">
-            Almacenamiento: <span className="text-gray-300">localStorage del navegador</span>
+            Almacenamiento: <span className="text-gray-300">localStorage + Firestore (si Nube activo)</span>
           </span>
           {lastEditTimestamp && (
             <span className="text-xs text-gray-500 font-medium block">
               Última edición: <span className="text-brand-green font-bold">{formatDate(lastEditTimestamp)}</span>
             </span>
           )}
+        </div>
+      </div>
+
+      <CloudSyncPanel />
+
+      {/* Pedidos — sonido e impresión */}
+      <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-6 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-brand-green/20 flex items-center justify-center">
+            <Package size={20} className="text-brand-green" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <span className="text-sm font-black text-white block">Alertas de pedidos</span>
+            <span className="text-xs text-gray-400 font-medium">Sonido y ticket térmico al llegar un pedido nuevo.</span>
+          </div>
+        </div>
+        <div className="border-t border-white/5 pt-4 space-y-3">
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-sm text-gray-300 font-bold">Sonido pedido nuevo</span>
+            <button
+              onClick={() => setSiteSettings(prev => ({ ...prev, orderSoundEnabled: !prev.orderSoundEnabled }))}
+              aria-label="Alternar sonido de pedido"
+              className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${
+                siteSettings.orderSoundEnabled ? 'bg-brand-green' : 'bg-white/20'
+              }`}
+            >
+              <span className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${
+                siteSettings.orderSoundEnabled ? 'translate-x-5' : 'translate-x-0'
+              }`} />
+            </button>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-sm text-gray-300 font-bold">Auto-imprimir ticket 58mm</span>
+            <button
+              onClick={() => setSiteSettings(prev => ({ ...prev, autoPrintOnNewOrder: !prev.autoPrintOnNewOrder }))}
+              aria-label="Alternar impresión automática"
+              className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${
+                siteSettings.autoPrintOnNewOrder ? 'bg-brand-green' : 'bg-white/20'
+              }`}
+            >
+              <span className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${
+                siteSettings.autoPrintOnNewOrder ? 'translate-x-5' : 'translate-x-0'
+              }`} />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -299,96 +336,14 @@ export function AdminSettings() {
 
       {/* Horarios de atención */}
       <div className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-6 space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
-            <Clock size={20} className="text-purple-400" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <span className="text-sm font-black text-white block">Horarios de atención</span>
-            <span className="text-xs text-gray-400 font-medium">Mostrar estado Abierto/Cerrado en la tienda y controlar pedidos fuera de horario.</span>
-          </div>
-          <button
-            onClick={() => {
-              const updated = { ...businessHours, enabled: !businessHours.enabled };
-              setBusinessHours(updated);
-              saveBusinessHours(updated);
-            }}
-            aria-label="Alternar horarios de atención"
-            className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${businessHours.enabled ? 'bg-brand-green' : 'bg-white/20'}`}
-          >
-            <span
-              className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-white shadow transform transition-transform duration-200 ease-in-out ${businessHours.enabled ? 'translate-x-5' : 'translate-x-0'}`}
-            />
-          </button>
-        </div>
-
+        <BusinessHoursFields value={businessHours} onChange={setBusinessHours} />
         {businessHours.enabled && (
-          <div className="border-t border-white/5 pt-4 space-y-4">
-            {/* Status indicator */}
-            <div className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-xs font-bold ${isBusinessOpen(businessHours) ? 'bg-green-500/10 border border-green-500/20 text-green-400' : 'bg-red-500/10 border border-red-500/20 text-red-400'}`}>
-              {isBusinessOpen(businessHours) ? (
-                <><CalendarCheck size={14} /><span>🟢 Abierto ahora</span></>
-              ) : (
-                <><Clock size={14} /><span>🔴 Cerrado — {getNextOpeningText(businessHours)}</span></>
-              )}
-            </div>
-
-            {/* Time inputs */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 block">Apertura</label>
-                <input
-                  type="time"
-                  value={businessHours.openTime}
-                  onChange={(e) => {
-                    const updated = { ...businessHours, openTime: e.target.value };
-                    setBusinessHours(updated);
-                    saveBusinessHours(updated);
-                  }}
-                  className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2 text-sm font-black text-white outline-none focus:ring-2 focus:ring-purple-500/40 transition-shadow"
-                />
-              </div>
-              <div>
-                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 block">Cierre</label>
-                <input
-                  type="time"
-                  value={businessHours.closeTime}
-                  onChange={(e) => {
-                    const updated = { ...businessHours, closeTime: e.target.value };
-                    setBusinessHours(updated);
-                    saveBusinessHours(updated);
-                  }}
-                  className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2 text-sm font-black text-white outline-none focus:ring-2 focus:ring-purple-500/40 transition-shadow"
-                />
-              </div>
-            </div>
-
-            {/* Days selector */}
-            <div>
-              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2 block">Días de atención</label>
-              <div className="flex flex-wrap gap-2">
-                {DAYS.map((day) => {
-                  const isActive = businessHours.daysOpen.includes(day.idx);
-                  return (
-                    <button
-                      key={day.idx}
-                      onClick={() => {
-                        const nextDays = isActive
-                          ? businessHours.daysOpen.filter(d => d !== day.idx)
-                          : [...businessHours.daysOpen, day.idx];
-                        const updated = { ...businessHours, daysOpen: nextDays.sort((a, b) => a - b) };
-                        setBusinessHours(updated);
-                        saveBusinessHours(updated);
-                      }}
-                      className={`px-3 py-2 rounded-lg text-xs font-bold transition-all border ${isActive ? 'bg-purple-500 text-white border-purple-500 shadow-md' : 'bg-white/6 text-gray-400 border-white/10 hover:bg-white/10 hover:text-white'}`}
-                      title={day.full}
-                    >
-                      {day.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+          <div className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-xs font-bold ${isBusinessOpen(businessHours) ? 'bg-green-500/10 border border-green-500/20 text-green-400' : 'bg-red-500/10 border border-red-500/20 text-red-400'}`}>
+            {isBusinessOpen(businessHours) ? (
+              <><CalendarCheck size={14} /><span>Abierto ahora</span></>
+            ) : (
+              <><Clock size={14} /><span>Cerrado — {getNextOpeningText(businessHours)}</span></>
+            )}
           </div>
         )}
       </div>
@@ -559,7 +514,7 @@ export function AdminSettings() {
           Desarrollado por <span className="text-brand-green font-bold">DevSalz</span>
         </p>
         <p className="text-[10px] text-gray-600">
-          Panel de Administración v2.0 — El Puestito del Tío © {new Date().getFullYear()}
+          Panel de Administración — Trufi © {new Date().getFullYear()}
         </p>
       </div>
     </div>

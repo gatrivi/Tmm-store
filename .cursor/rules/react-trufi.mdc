@@ -1,0 +1,13 @@
+---
+description: React/TS conventions for Trufi src/
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# React (Trufi)
+
+- Functional components; Context + hooks for state.
+- Tailwind v4; Framer Motion in admin UI.
+- Feature gates: `usePlan()` + `src/config/plans.ts` — never hardcode tier checks.
+- Admin components use `@file` JSDoc headers — preserve when editing.
+- Match existing naming and file layout; reuse utils/contexts.

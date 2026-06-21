@@ -5,7 +5,7 @@
  * la información estática (precios, descripciones, variaciones, imágenes) que nutre
  * a toda la aplicación.
  */
-export type TabCategory = 'choripan' | 'meat' | 'veggie' | 'extras';
+export type TabCategory = 'choripan' | 'meat' | 'veggie' | 'extras' | 'general' | string;
 
 export interface MenuOption {
   id: string;
@@ -35,7 +35,7 @@ export interface MenuItemType {
   namePt?: string;
   nameRu?: string;
   nameDe?: string;
-  category: TabCategory;
+  category: string;
   description: string;
   descriptionEn?: string;
   descriptionPt?: string;

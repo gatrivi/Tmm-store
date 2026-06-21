@@ -3,18 +3,31 @@ import { ShoppingCart, Plus, Minus, Trash2, Send, Globe, Clock, Share2, Flame, C
 import { useSearchParams } from 'react-router-dom';
 import { useMenu } from '../context/MenuContext';
 import { useLanguage } from '../context/LanguageContext';
+import { usePlan } from '../context/PlanContext';
 import { resolveImagesForProduct } from '../utils/imageLoader';
-import { loadBusinessHours, isBusinessOpen, getNextOpeningText } from '../utils/businessHours';
+import { useBusinessHours } from '../hooks/useBusinessHours';
 import { startSession, trackPageView } from '../utils/analyticsTracker';
 import CheckoutModal from '../components/CheckoutModal';
 import ShareModal from '../components/ShareModal';
 import { GlobalFooter } from '../components/GlobalFooter';
+import { AIAssistant } from '../components/AIAssistant';
+import { ThemeToggle } from '../components/ThemeToggle';
+import { MenuCategoryNav, useCategoryScrollSpy } from '../components/MenuCategoryNav';
+import { resolveStorefrontCategories } from '../utils/menuImport';
 import { playAddToCartSound } from '../utils/sounds';
 import { translations } from '../i18n/translations';
+import { calculateDiscount } from '../types/promotion';
 
 export default function Storefront() {
-  const { menuItems, siteSettings } = useMenu();
+  const { menuItems, menuCategories, siteSettings, promotions } = useMenu();
   const { language, setLanguage } = useLanguage();
+  const { features } = usePlan();
+  const canOrder = features.canOrder;
+  const mpEnabled = features.canUseMercadoPago && siteSettings.mpEnabled;
+
+  const [promoInput, setPromoInput] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState<typeof promotions[0] | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
 
   const [cart, setCart] = useState(() => {
     try {
@@ -71,10 +84,11 @@ export default function Storefront() {
 
   // Persist cart to localStorage
   useEffect(() => {
+    if (!canOrder) return;
     try {
       localStorage.setItem('elpuestito_cart', JSON.stringify(cart));
     } catch { /* ignore */ }
-  }, [cart]);
+  }, [cart, canOrder]);
 
   const WHATSAPP_NUMBER = siteSettings.whatsappNumber || import.meta.env.VITE_WHATSAPP_NUMBER || '';
   const BANK_ALIAS = siteSettings.bankAlias || import.meta.env.VITE_BANK_ALIAS || '';
@@ -82,9 +96,7 @@ export default function Storefront() {
   // Default language to 'es' if null (avoid blocking modal in this flow)
   const lang = language || 'es';
 
-  const [businessHours] = useState(() => loadBusinessHours());
-  const isOpenNow = businessHours.enabled ? isBusinessOpen(businessHours) : true;
-  const nextOpeningText = businessHours.enabled ? getNextOpeningText(businessHours, lang) : '';
+  const { hours: businessHours, isOpen: isOpenNow, nextOpening: nextOpeningText, summary: hoursSummary } = useBusinessHours(lang);
 
   // Apply branding CSS variables
   useEffect(() => {
@@ -175,7 +187,34 @@ export default function Storefront() {
 
   const clearCart = () => setCart([]);
 
-  const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const discount = appliedPromo ? calculateDiscount(appliedPromo, subtotal) : 0;
+  const total = Math.max(0, subtotal - discount);
+
+  const handleApplyPromo = () => {
+    const code = promoInput.trim().toUpperCase();
+    const promo = promotions.find(p => p.code === code && p.active);
+    if (!promo) {
+      setPromoError('Código inválido o expirado');
+      setAppliedPromo(null);
+      return;
+    }
+    if (subtotal < promo.minOrderTotal) {
+      setPromoError(`Mínimo de compra: $${promo.minOrderTotal.toLocaleString('es-AR')}`);
+      setAppliedPromo(null);
+      return;
+    }
+    setAppliedPromo(promo);
+    setPromoError(null);
+  };
+
+  const handleAIAddToCart = (itemId: string, optionId: string, qty: number) => {
+    const item = menuItems.find(m => m.id === itemId);
+    const option = item?.options.find(o => o.id === optionId);
+    if (!item || !option || item.available === false || option.available === false) return;
+    for (let i = 0; i < qty; i += 1) addToCart(item, option);
+    if (canOrder) setIsCartOpen(true);
+  };
 
   // Filter available items and options
   const availableItems = useMemo(() => {
@@ -188,10 +227,85 @@ export default function Storefront() {
       .filter(item => item.options.length > 0);
   }, [menuItems]);
 
+  const storefrontCategories = useMemo(() => {
+    const cats = resolveStorefrontCategories(menuCategories, availableItems);
+    return cats.filter(cat => availableItems.some(item => item.category === cat.id));
+  }, [menuCategories, availableItems]);
+
+  const { activeId, scrollToCategory } = useCategoryScrollSpy({
+    categories: storefrontCategories.length > 0 ? storefrontCategories : [{ id: 'menu', name: 'Menú', sortOrder: 0 }],
+  });
+
+  const renderMenuCard = (item: typeof availableItems[0]) => {
+    const images = resolveImagesForProduct(item);
+    const isUnavailable = item.available === false;
+    return (
+      <div key={item.id} className={`bg-surface-elevated rounded-2xl shadow-sm border border-border overflow-hidden flex flex-col ${isUnavailable ? 'opacity-60 grayscale' : ''}`}>
+        {images && images.length > 0 ? (
+          <img
+            src={images[0]}
+            alt={getLocalizedName(item)}
+            loading="lazy"
+            className="w-full h-48 object-cover bg-white/10"
+          />
+        ) : (
+          <div className="w-full h-32 bg-surface-muted flex items-center justify-center text-text-muted text-xs font-bold uppercase tracking-wider">
+            {getLocalizedName(item)}
+          </div>
+        )}
+        <div className="p-5 flex flex-col flex-1 justify-between">
+          <div>
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <h3 className="text-xl font-bold">{getLocalizedName(item)}</h3>
+              {item.badge && (
+                <span className="shrink-0 inline-flex items-center gap-1 bg-amber-500/20 text-amber-300 text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-wider">
+                  <Flame size={10} />
+                  {item.badge}
+                </span>
+              )}
+            </div>
+            <p className="text-text-secondary text-sm mb-4 leading-relaxed line-clamp-3">
+              {getLocalizedDescription(item)}
+            </p>
+          </div>
+          <div className="space-y-2 mt-auto">
+            {item.options.map(opt => {
+              const optUnavailable = opt.available === false;
+              return (
+                <div key={opt.id} className={`flex justify-between items-center p-2 rounded-lg transition border border-border ${optUnavailable ? 'bg-surface-muted opacity-60' : 'bg-surface-muted hover:bg-white/5'}`}>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-bold">{getLocalizedLabel(opt)}</span>
+                    {getLocalizedFeatures(opt) && (
+                      <span className="text-xs text-text-muted">{getLocalizedFeatures(opt).join(', ')}</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="font-black text-green-400">${opt.price.toLocaleString('es-AR')}</span>
+                    {optUnavailable ? (
+                      <span className="text-[10px] font-bold text-red-400 bg-red-500/10 px-2 py-1 rounded">{t.unavailable}</span>
+                    ) : canOrder ? (
+                      <button
+                        onClick={() => addToCart(item, opt)}
+                        className="bg-black text-white p-2 rounded-md hover:bg-gray-800 transition shadow-sm"
+                        aria-label={t.add}
+                      >
+                        <Plus size={16} />
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Skeleton loading state
   if (!menuItems || menuItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 pb-24">
+      <div className="min-h-screen bg-surface pb-24">
         <header className="bg-black text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center">
           <div className="h-6 w-40 bg-white/20 rounded animate-pulse" />
           <div className="h-10 w-10 bg-white/20 rounded-full animate-pulse" />
@@ -199,15 +313,15 @@ export default function Storefront() {
         <main className="max-w-5xl mx-auto p-4 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                <div className="w-full h-48 bg-gray-200 animate-pulse" />
+              <div key={i} className="bg-surface-elevated rounded-2xl shadow-sm border border-border overflow-hidden flex flex-col">
+                <div className="w-full h-48 bg-white/10 animate-pulse" />
                 <div className="p-5 space-y-3">
-                  <div className="h-5 w-3/4 bg-gray-200 rounded animate-pulse" />
-                  <div className="h-4 w-full bg-gray-200 rounded animate-pulse" />
-                  <div className="h-4 w-2/3 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-5 w-3/4 bg-white/10 rounded animate-pulse" />
+                  <div className="h-4 w-full bg-white/10 rounded animate-pulse" />
+                  <div className="h-4 w-2/3 bg-white/10 rounded animate-pulse" />
                   <div className="space-y-2 pt-2">
-                    <div className="h-10 w-full bg-gray-100 rounded-lg animate-pulse" />
-                    <div className="h-10 w-full bg-gray-100 rounded-lg animate-pulse" />
+                    <div className="h-10 w-full bg-surface-muted rounded-lg animate-pulse" />
+                    <div className="h-10 w-full bg-surface-muted rounded-lg animate-pulse" />
                   </div>
                 </div>
               </div>
@@ -219,7 +333,7 @@ export default function Storefront() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24 font-sans text-gray-900">
+    <div className="min-h-screen bg-surface pb-24 font-sans text-text-primary">
       {/* MercadoPago Success Banner */}
       {mpSuccess && mpPendingOrder && (
         <div className="fixed inset-x-0 top-0 z-50 bg-sky-500 text-white px-4 py-4 shadow-lg">
@@ -267,13 +381,14 @@ export default function Storefront() {
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           {/* Language Switcher */}
           <div className="relative group">
             <button className="flex items-center gap-1.5 bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-full transition text-sm font-bold">
               <Globe size={14} />
               {lang.toUpperCase()}
             </button>
-            <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden hidden group-hover:flex flex-col min-w-[120px]">
+            <div className="absolute right-0 top-full mt-2 bg-surface-elevated rounded-xl shadow-xl border border-border overflow-hidden hidden group-hover:flex flex-col min-w-[120px]">
               {[
                 { code: 'es', label: '🇦🇷 ES' },
                 { code: 'en', label: '🇺🇸 EN' },
@@ -284,7 +399,7 @@ export default function Storefront() {
                 <button
                   key={l.code}
                   onClick={() => setLanguage(l.code)}
-                  className={`px-4 py-2.5 text-left text-sm font-bold transition hover:bg-gray-50 ${lang === l.code ? 'text-green-600 bg-green-50' : 'text-gray-700'}`}
+                  className={`px-4 py-2.5 text-left text-sm font-bold transition hover:bg-white/5 ${lang === l.code ? 'text-green-400 bg-green-500/10' : 'text-text-secondary'}`}
                 >
                   {l.label}
                 </button>
@@ -300,6 +415,19 @@ export default function Storefront() {
             <Share2 size={20} />
           </button>
 
+          {features.showWhatsAppContact && WHATSAPP_NUMBER && !canOrder && (
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hola! Quiero consultar sobre el menú.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 bg-green-600 hover:bg-green-700 px-3 py-2 rounded-full text-xs font-bold transition"
+            >
+              <MessageCircle size={16} />
+              WhatsApp
+            </a>
+          )}
+
+          {canOrder && (
           <button
             onClick={() => setIsCartOpen(!isCartOpen)}
             className="relative p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition"
@@ -311,94 +439,52 @@ export default function Storefront() {
               </span>
             )}
           </button>
+          )}
         </div>
       </header>
 
       {/* Closed Banner */}
       {!isOpenNow && businessHours.enabled && (
-        <div className="bg-red-50 border-b border-red-100 px-4 py-3">
-          <div className="max-w-5xl mx-auto flex items-center gap-2 text-red-700 text-sm font-bold">
+        <div className="bg-red-500/10 border-b border-red-500/20 px-4 py-3">
+          <div className="max-w-5xl mx-auto flex items-center gap-2 text-red-300 text-sm font-bold">
             <Clock size={16} />
             <span>{t.closedMsg} — {nextOpeningText}</span>
           </div>
         </div>
       )}
 
-      {/* Dynamic Menu Grid */}
+      {/* Dynamic Menu — category sections */}
       <main className="max-w-5xl mx-auto p-4 space-y-8 mt-6">
-        <section>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {availableItems.map(item => {
-              const images = resolveImagesForProduct(item);
-              const isUnavailable = item.available === false;
-              return (
-                <div key={item.id} className={`bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col ${isUnavailable ? 'opacity-60 grayscale' : ''}`}>
+        {storefrontCategories.length > 1 && (
+          <MenuCategoryNav
+            categories={storefrontCategories}
+            activeId={activeId}
+            onSelect={scrollToCategory}
+          />
+        )}
 
-                  {/* Image Section */}
-                  {images && images.length > 0 ? (
-                    <img
-                      src={images[0]}
-                      alt={getLocalizedName(item)}
-                      loading="lazy"
-                      className="w-full h-48 object-cover bg-gray-200"
-                    />
-                  ) : (
-                    <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400">
-                      No Image
-                    </div>
-                  )}
+        {storefrontCategories.map(cat => {
+          const sectionItems = availableItems.filter(item => item.category === cat.id);
+          if (sectionItems.length === 0) return null;
+          return (
+            <section key={cat.id} id={`menu-section-${cat.id}`} className="scroll-mt-36">
+              <h2 className="text-lg md:text-xl font-black text-text-primary uppercase tracking-wide mb-4 pb-2 border-b border-border">
+                {cat.name}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {sectionItems.map(item => renderMenuCard(item))}
+              </div>
+            </section>
+          );
+        })}
 
-                  <div className="p-5 flex flex-col flex-1 justify-between">
-                    <div>
-                      <div className="flex items-start justify-between gap-2 mb-2">
-                        <h3 className="text-xl font-bold">{getLocalizedName(item)}</h3>
-                        {item.badge && (
-                          <span className="shrink-0 inline-flex items-center gap-1 bg-amber-100 text-amber-700 text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-wider">
-                            <Flame size={10} />
-                            {item.badge}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-gray-500 text-sm mb-4 leading-relaxed line-clamp-3">
-                        {getLocalizedDescription(item)}
-                      </p>
-                    </div>
-
-                    <div className="space-y-2 mt-auto">
-                      {item.options.map((opt) => {
-                        const optUnavailable = opt.available === false;
-                        return (
-                          <div key={opt.id} className={`flex justify-between items-center p-2 rounded-lg transition border border-gray-100 ${optUnavailable ? 'bg-gray-100 opacity-60' : 'bg-gray-50 hover:bg-gray-100'}`}>
-                            <div className="flex flex-col">
-                              <span className="text-sm font-bold">{getLocalizedLabel(opt)}</span>
-                              {getLocalizedFeatures(opt) && (
-                                <span className="text-xs text-gray-400">{getLocalizedFeatures(opt).join(', ')}</span>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <span className="font-black text-green-600">${opt.price.toLocaleString('es-AR')}</span>
-                              {optUnavailable ? (
-                                <span className="text-[10px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded">{t.unavailable}</span>
-                              ) : (
-                                <button
-                                  onClick={() => addToCart(item, opt)}
-                                  className="bg-black text-white p-2 rounded-md hover:bg-gray-800 transition shadow-sm"
-                                  aria-label={t.add}
-                                >
-                                  <Plus size={16} />
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+        {storefrontCategories.length === 0 && availableItems.length > 0 && (
+          <section>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {availableItems.map(item => renderMenuCard(item))}
+            </div>
+          </section>
+        )}
       </main>
 
       {/* Footer */}
@@ -407,44 +493,45 @@ export default function Storefront() {
         address={siteSettings.brandAddress}
         instagram={siteSettings.brandInstagram}
         googleMaps={siteSettings.brandGoogleMaps}
+        hoursSummary={hoursSummary || undefined}
       />
 
       {/* Cart Overlay */}
-      {isCartOpen && (
+      {canOrder && isCartOpen && (
         <div className="fixed inset-0 bg-black/50 z-40 flex justify-end">
-          <div className="bg-white w-full max-w-md h-full shadow-2xl flex flex-col animate-in slide-in-from-right">
-            <div className="p-6 border-b flex justify-between items-center bg-gray-50">
+          <div className="bg-surface-elevated w-full max-w-md h-full shadow-2xl flex flex-col animate-in slide-in-from-right">
+            <div className="p-6 border-b border-border flex justify-between items-center bg-surface-muted">
               <h2 className="text-xl font-bold">{t.cart}</h2>
               <div className="flex items-center gap-2">
                 {cart.length > 0 && (
                   <button
                     onClick={clearCart}
-                    className="text-xs font-bold text-red-500 hover:text-red-700 hover:bg-red-50 px-2 py-1 rounded-lg transition"
+                    className="text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 px-2 py-1 rounded-lg transition"
                   >
                     {t.clear}
                   </button>
                 )}
-                <button onClick={() => setIsCartOpen(false)} className="text-gray-500 hover:text-black p-1">✕</button>
+                <button onClick={() => setIsCartOpen(false)} className="text-text-muted hover:text-text-primary p-1">✕</button>
               </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {cart.length === 0 ? (
-                <div className="text-center text-gray-400 mt-10">{t.empty}</div>
+                <div className="text-center text-text-muted mt-10">{t.empty}</div>
               ) : (
                 cart.map((item, idx) => (
-                  <div key={idx} className="flex justify-between items-start border-b pb-4 gap-3">
+                  <div key={idx} className="flex justify-between items-start border-b border-border pb-4 gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="font-bold text-sm truncate">{item.name}</div>
-                      <div className="text-xs text-gray-500">{item.optionLabel}</div>
-                      <div className="text-xs font-bold text-green-600 mt-1">${item.price.toLocaleString('es-AR')} c/u</div>
+                      <div className="text-xs text-text-secondary">{item.optionLabel}</div>
+                      <div className="text-xs font-bold text-green-400 mt-1">${item.price.toLocaleString('es-AR')} c/u</div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="font-bold text-sm">${(item.price * item.qty).toLocaleString('es-AR')}</span>
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => updateQty(idx, -1)}
-                          className="p-1 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 transition"
+                          className="p-1 bg-surface-muted hover:bg-white/10 rounded text-text-secondary transition"
                           aria-label="Restar"
                         >
                           <Minus size={14} />
@@ -452,14 +539,14 @@ export default function Storefront() {
                         <span className="text-xs font-bold w-6 text-center">{item.qty}</span>
                         <button
                           onClick={() => updateQty(idx, 1)}
-                          className="p-1 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 transition"
+                          className="p-1 bg-surface-muted hover:bg-white/10 rounded text-text-secondary transition"
                           aria-label="Sumar"
                         >
                           <Plus size={14} />
                         </button>
                         <button
                           onClick={() => removeFromCart(idx)}
-                          className="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition ml-1"
+                          className="p-1 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition ml-1"
                           aria-label="Eliminar"
                         >
                           <Trash2 size={14} />
@@ -471,7 +558,7 @@ export default function Storefront() {
               )}
             </div>
 
-            <div className="p-6 border-t bg-gray-50">
+            <div className="p-6 border-t border-border bg-surface-muted">
               <div className="flex justify-between items-center text-xl font-black mb-6">
                 <span>{t.total}</span>
                 <span>${total.toLocaleString('es-AR')}</span>
@@ -479,13 +566,13 @@ export default function Storefront() {
               <button
                 disabled={cart.length === 0 || !isOpenNow}
                 onClick={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }}
-                className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg"
+                className="w-full bg-green-600 hover:bg-green-700 disabled:bg-white/10 disabled:text-text-muted text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg"
               >
                 <Send size={20} />
                 {isOpenNow ? t.order : t.closed}
               </button>
               {!isOpenNow && cart.length > 0 && (
-                <p className="text-xs text-center text-red-500 font-medium mt-2">
+                <p className="text-xs text-center text-red-400 font-medium mt-2">
                   {t.closedMsg}. {nextOpeningText}
                 </p>
               )}
@@ -495,16 +582,26 @@ export default function Storefront() {
       )}
 
       {/* Checkout Modal */}
+      {canOrder && (
       <CheckoutModal
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
         cart={cart}
         total={total}
+        subtotal={subtotal}
+        discount={discount}
+        promoCode={appliedPromo?.code || promoInput}
+        onPromoCodeChange={setPromoInput}
+        onApplyPromo={handleApplyPromo}
+        promoError={promoError}
         whatsappNumber={WHATSAPP_NUMBER}
         bankAlias={BANK_ALIAS}
-        mpEnabled={siteSettings.mpEnabled}
-        onOrderSent={() => setCart([])}
+        mpEnabled={mpEnabled}
+        onOrderSent={() => { setCart([]); setAppliedPromo(null); setPromoInput(''); }}
       />
+      )}
+
+      <AIAssistant onAddToCart={canOrder ? handleAIAddToCart : undefined} />
 
       {/* Share Modal */}
       <ShareModal

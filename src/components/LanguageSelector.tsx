@@ -40,7 +40,7 @@ export function LanguageSelector() {
       >
         <img 
           src="/titulo-blanco.png" 
-          alt="El Puestito del Tío" 
+          alt="Trufi" 
           className="w-72 md:w-96 lg:w-[450px] h-auto object-contain mb-4 md:mb-6"
         />
 

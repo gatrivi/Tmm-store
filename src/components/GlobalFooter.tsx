@@ -30,6 +30,7 @@ const InstagramIcon = ({ size = 20, className = '' }: { size?: number; className
   </svg>
 );
 import { useLanguage } from '../context/LanguageContext';
+import { AppVersionBadge } from './AppVersionBadge';
 import { useAdmin } from '../context/AdminContext';
 import { translations } from '../i18n/translations';
 
@@ -38,6 +39,7 @@ interface GlobalFooterProps {
   address?: string;
   instagram?: string;
   googleMaps?: string;
+  hoursSummary?: string;
 }
 
 /**
@@ -46,7 +48,7 @@ interface GlobalFooterProps {
  *
  * @returns {JSX.Element} Elemento que representa el pie de página.
  */
-export function GlobalFooter({ brandName, address, instagram, googleMaps }: GlobalFooterProps) {
+export function GlobalFooter({ brandName, address, instagram, googleMaps, hoursSummary }: GlobalFooterProps) {
   const { language } = useLanguage();
   const { triggerLogin } = useAdmin();
   const t = translations[language || 'es'].menuPage;
@@ -152,7 +154,9 @@ export function GlobalFooter({ brandName, address, instagram, googleMaps }: Glob
           )}
           <div className="flex items-center gap-3 mt-2 lg:mt-3">
             <Clock size={20} className="shrink-0 text-brand-green lg:w-6 lg:h-6" />
-            <span className="text-sm lg:text-base font-medium text-gray-300">{t.footerHours}</span>
+            <span className="text-sm lg:text-base font-medium text-gray-300">
+              {hoursSummary || t.footerHours}
+            </span>
           </div>
         </div>
 
@@ -180,9 +184,7 @@ export function GlobalFooter({ brandName, address, instagram, googleMaps }: Glob
         <div className="text-xs font-medium text-gray-400">
           {t.footerRights}
         </div>
-        <div className="text-[10px] font-black text-brand-green/40 tracking-widest uppercase">
-          v1.1.0
-        </div>
+        <AppVersionBadge className="text-brand-green/40" />
       </div>
     </div>
   );

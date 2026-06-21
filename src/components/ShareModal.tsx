@@ -56,17 +56,17 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="p-4 border-b flex justify-between items-center bg-gray-50">
-          <h2 className="text-lg font-black text-gray-900">{t.title}</h2>
-          <button onClick={onClose} className="p-1 hover:bg-gray-200 rounded-full transition">
-            <X size={18} className="text-gray-500" />
+      <div className="bg-surface-elevated rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="p-4 border-b border-border flex justify-between items-center bg-surface-muted">
+          <h2 className="text-lg font-black text-text-primary">{t.title}</h2>
+          <button onClick={onClose} className="p-1 hover:bg-white/10 rounded-full transition">
+            <X size={18} className="text-text-muted" />
           </button>
         </div>
 
         <div className="p-6 flex flex-col items-center gap-5">
           {/* QR Code */}
-          <div className="bg-white p-3 rounded-xl border border-gray-200 shadow-sm">
+          <div className="bg-surface-elevated p-3 rounded-xl border border-border shadow-sm">
             <img
               src={qrUrl}
               alt="QR Code"
@@ -76,8 +76,8 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
           </div>
 
           {/* URL + Copy */}
-          <div className="w-full flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
-            <span className="flex-1 text-sm text-gray-600 truncate">{url}</span>
+          <div className="w-full flex items-center gap-2 bg-surface-muted border border-border rounded-xl px-3 py-2">
+            <span className="flex-1 text-sm text-text-secondary truncate">{url}</span>
             <button
               onClick={handleCopy}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-black text-white text-xs font-bold rounded-lg hover:bg-gray-800 transition"
