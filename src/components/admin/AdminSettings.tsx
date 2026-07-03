@@ -370,7 +370,7 @@ export function AdminSettings() {
               type="text"
               value={siteSettings.whatsappNumber}
               onChange={(e) => setSiteSettings(prev => ({ ...prev, whatsappNumber: e.target.value.replace(/\D/g, '') }))}
-              placeholder={import.meta.env.VITE_WHATSAPP_NUMBER || "5491131844469"}
+              placeholder="5491123456789"
               className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2.5 text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/40 transition-shadow placeholder:text-gray-600"
             />
             <p className="text-[10px] text-gray-500 mt-1">Solo números, con código de país (ej: 5491131844469)</p>

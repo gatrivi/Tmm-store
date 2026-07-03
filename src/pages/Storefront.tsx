@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ShoppingCart, Plus, Minus, Trash2, Send, Globe, Clock, Share2, Flame, CheckCircle, MessageCircle } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { useMenu } from '../context/MenuContext';
@@ -17,11 +18,14 @@ import { resolveStorefrontCategories } from '../utils/menuImport';
 import { playAddToCartSound } from '../utils/sounds';
 import { translations } from '../i18n/translations';
 import { calculateDiscount } from '../types/promotion';
+import { parseMenuLayout } from '../utils/menuLayouts';
+import type { MenuLayoutId } from '../utils/menuLayouts';
+import { resolveAdminPath } from '../utils/adminPath';
 
 export default function Storefront() {
   const { menuItems, menuCategories, siteSettings, promotions } = useMenu();
   const { language, setLanguage } = useLanguage();
-  const { features } = usePlan();
+  const { features, tenantId } = usePlan();
   const canOrder = features.canOrder;
   const mpEnabled = features.canUseMercadoPago && siteSettings.mpEnabled;
 
@@ -97,6 +101,12 @@ export default function Storefront() {
   const lang = language || 'es';
 
   const { hours: businessHours, isOpen: isOpenNow, nextOpening: nextOpeningText, summary: hoursSummary } = useBusinessHours(lang);
+
+  // Dynamic page title from branding
+  useEffect(() => {
+    const name = siteSettings.brandName?.trim();
+    document.title = name ? `${name} — Menú online` : 'Trufi — Menú online';
+  }, [siteSettings.brandName]);
 
   // Apply branding CSS variables
   useEffect(() => {
@@ -236,27 +246,127 @@ export default function Storefront() {
     categories: storefrontCategories.length > 0 ? storefrontCategories : [{ id: 'menu', name: 'Menú', sortOrder: 0 }],
   });
 
+  const menuLayout = parseMenuLayout(siteSettings.menuLayout);
+
+  const sectionContainerClass: Record<MenuLayoutId, string> = {
+    grid: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6',
+    list: 'flex flex-col gap-3',
+    magazine: 'grid grid-cols-1 md:grid-cols-2 gap-8',
+    compact: 'flex flex-col',
+  };
+
+  const renderOptionRows = (item: typeof availableItems[0]) => (
+    item.options.map(opt => {
+      const optUnavailable = opt.available === false;
+      const feats = getLocalizedFeatures(opt);
+      return (
+        <div key={opt.id} className={`flex justify-between items-center p-2 rounded-lg transition border border-border ${optUnavailable ? 'bg-surface-muted opacity-60' : 'bg-surface-muted hover:bg-white/5'}`}>
+          <div className="flex flex-col min-w-0">
+            <span className="text-sm font-bold">{getLocalizedLabel(opt)}</span>
+            {feats.length > 0 && (
+              <span className="text-xs text-text-muted">{feats.join(', ')}</span>
+            )}
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="font-black text-green-400">${opt.price.toLocaleString('es-AR')}</span>
+            {optUnavailable ? (
+              <span className="text-[10px] font-bold text-red-400 bg-red-500/10 px-2 py-1 rounded">{t.unavailable}</span>
+            ) : canOrder ? (
+              <button
+                onClick={() => addToCart(item, opt)}
+                className="bg-black text-white p-2 rounded-md hover:bg-gray-800 transition shadow-sm"
+                aria-label={t.add}
+              >
+                <Plus size={16} />
+              </button>
+            ) : null}
+          </div>
+        </div>
+      );
+    })
+  );
+
   const renderMenuCard = (item: typeof availableItems[0]) => {
     const images = resolveImagesForProduct(item);
     const isUnavailable = item.available === false;
+    const primaryOption = item.options[0];
+    const primaryPrice = primaryOption?.price;
+    const primaryFeats = primaryOption ? getLocalizedFeatures(primaryOption) : [];
+
+    if (menuLayout === 'compact') {
+      return (
+        <div key={item.id} className={`py-4 px-1 border-b border-border last:border-0 ${isUnavailable ? 'opacity-60' : ''}`}>
+          <div className="flex justify-between items-start gap-4">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-base font-bold">{getLocalizedName(item)}</h3>
+                {item.badge && (
+                  <span className="inline-flex items-center gap-1 bg-amber-500/20 text-amber-300 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">
+                    <Flame size={9} />
+                    {item.badge}
+                  </span>
+                )}
+              </div>
+              {getLocalizedDescription(item) && (
+                <p className="text-text-secondary text-sm leading-relaxed">{getLocalizedDescription(item)}</p>
+              )}
+              {primaryFeats.length > 0 && (
+                <p className="text-xs text-text-muted mt-1">{primaryFeats.join(' · ')}</p>
+              )}
+            </div>
+            {primaryPrice != null && (
+              <span className="font-black text-green-400 text-lg shrink-0">${primaryPrice.toLocaleString('es-AR')}</span>
+            )}
+          </div>
+          {item.options.length > 1 && (
+            <div className="space-y-1.5 mt-3">{renderOptionRows(item)}</div>
+          )}
+        </div>
+      );
+    }
+
+    if (menuLayout === 'list') {
+      return (
+        <div key={item.id} className={`flex gap-4 bg-surface-elevated rounded-xl border border-border p-3 ${isUnavailable ? 'opacity-60 grayscale' : ''}`}>
+          <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-surface-muted">
+            {images.length > 0 ? (
+              <img src={images[0]} alt={getLocalizedName(item)} loading="lazy" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-[9px] font-bold text-text-muted uppercase text-center px-1">
+                {getLocalizedName(item)}
+              </div>
+            )}
+          </div>
+          <div className="flex-1 min-w-0 flex flex-col">
+            <h3 className="text-base font-bold mb-1">{getLocalizedName(item)}</h3>
+            <p className="text-text-secondary text-xs mb-2 line-clamp-2">{getLocalizedDescription(item)}</p>
+            <div className="space-y-1.5 mt-auto">{renderOptionRows(item)}</div>
+          </div>
+        </div>
+      );
+    }
+
+    const imageHeight = menuLayout === 'magazine' ? 'h-64' : 'h-48';
+    const titleClass = menuLayout === 'magazine' ? 'text-2xl' : 'text-xl';
+
     return (
       <div key={item.id} className={`bg-surface-elevated rounded-2xl shadow-sm border border-border overflow-hidden flex flex-col ${isUnavailable ? 'opacity-60 grayscale' : ''}`}>
-        {images && images.length > 0 ? (
+        {images.length > 0 ? (
           <img
             src={images[0]}
             alt={getLocalizedName(item)}
             loading="lazy"
-            className="w-full h-48 object-cover bg-white/10"
+            className={`w-full ${imageHeight} object-cover bg-white/10`}
           />
-        ) : (
+        ) : menuLayout !== 'magazine' ? (
           <div className="w-full h-32 bg-surface-muted flex items-center justify-center text-text-muted text-xs font-bold uppercase tracking-wider">
             {getLocalizedName(item)}
           </div>
-        )}
-        <div className="p-5 flex flex-col flex-1 justify-between">
+        ) : null}
+        <div className={`p-5 flex flex-col flex-1 justify-between ${menuLayout === 'magazine' ? 'p-6' : ''}`}>
           <div>
             <div className="flex items-start justify-between gap-2 mb-2">
-              <h3 className="text-xl font-bold">{getLocalizedName(item)}</h3>
+              <h3 className={`${titleClass} font-bold`}>{getLocalizedName(item)}</h3>
               {item.badge && (
                 <span className="shrink-0 inline-flex items-center gap-1 bg-amber-500/20 text-amber-300 text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-wider">
                   <Flame size={10} />
@@ -268,66 +378,39 @@ export default function Storefront() {
               {getLocalizedDescription(item)}
             </p>
           </div>
-          <div className="space-y-2 mt-auto">
-            {item.options.map(opt => {
-              const optUnavailable = opt.available === false;
-              return (
-                <div key={opt.id} className={`flex justify-between items-center p-2 rounded-lg transition border border-border ${optUnavailable ? 'bg-surface-muted opacity-60' : 'bg-surface-muted hover:bg-white/5'}`}>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-sm font-bold">{getLocalizedLabel(opt)}</span>
-                    {getLocalizedFeatures(opt) && (
-                      <span className="text-xs text-text-muted">{getLocalizedFeatures(opt).join(', ')}</span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span className="font-black text-green-400">${opt.price.toLocaleString('es-AR')}</span>
-                    {optUnavailable ? (
-                      <span className="text-[10px] font-bold text-red-400 bg-red-500/10 px-2 py-1 rounded">{t.unavailable}</span>
-                    ) : canOrder ? (
-                      <button
-                        onClick={() => addToCart(item, opt)}
-                        className="bg-black text-white p-2 rounded-md hover:bg-gray-800 transition shadow-sm"
-                        aria-label={t.add}
-                      >
-                        <Plus size={16} />
-                      </button>
-                    ) : null}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <div className="space-y-2 mt-auto">{renderOptionRows(item)}</div>
         </div>
       </div>
     );
   };
 
-  // Skeleton loading state
+  // Empty menu — guide owner instead of infinite skeleton
   if (!menuItems || menuItems.length === 0) {
+    const adminPath = resolveAdminPath(tenantId);
     return (
-      <div className="min-h-screen bg-surface pb-24">
-        <header className="bg-black text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center">
-          <div className="h-6 w-40 bg-white/20 rounded animate-pulse" />
-          <div className="h-10 w-10 bg-white/20 rounded-full animate-pulse" />
+      <div className="min-h-screen bg-surface pb-24 flex flex-col">
+        <header className="bg-black text-white p-4 shadow-md">
+          <h1 className="text-xl font-black">{siteSettings.brandName || 'Tu Negocio'}</h1>
         </header>
-        <main className="max-w-5xl mx-auto p-4 mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="bg-surface-elevated rounded-2xl shadow-sm border border-border overflow-hidden flex flex-col">
-                <div className="w-full h-48 bg-white/10 animate-pulse" />
-                <div className="p-5 space-y-3">
-                  <div className="h-5 w-3/4 bg-white/10 rounded animate-pulse" />
-                  <div className="h-4 w-full bg-white/10 rounded animate-pulse" />
-                  <div className="h-4 w-2/3 bg-white/10 rounded animate-pulse" />
-                  <div className="space-y-2 pt-2">
-                    <div className="h-10 w-full bg-surface-muted rounded-lg animate-pulse" />
-                    <div className="h-10 w-full bg-surface-muted rounded-lg animate-pulse" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+        <main className="flex-1 flex flex-col items-center justify-center p-8 text-center max-w-md mx-auto">
+          <p className="text-xl font-bold text-text-primary mb-2">Menú en preparación</p>
+          <p className="text-text-secondary text-sm mb-6">
+            Todavía no hay productos cargados. Configurá tu carta desde el panel de administración.
+          </p>
+          <Link
+            to={adminPath}
+            className="px-6 py-3 bg-brand-green text-white font-bold rounded-xl hover:brightness-110 transition"
+          >
+            Configurar menú
+          </Link>
         </main>
+        <GlobalFooter
+          brandName={siteSettings.brandName}
+          address={siteSettings.brandAddress}
+          instagram={siteSettings.brandInstagram}
+          googleMaps={siteSettings.brandGoogleMaps}
+          hoursSummary={hoursSummary || undefined}
+        />
       </div>
     );
   }
@@ -377,7 +460,9 @@ export default function Storefront() {
                 {isOpenNow ? t.openNow : t.closed}
               </span>
             ) : null}
-            <span className="text-xs md:text-sm text-gray-300">{siteSettings.brandAddress || t.addressDefault}</span>
+            {siteSettings.brandAddress ? (
+              <span className="text-xs md:text-sm text-gray-300">{siteSettings.brandAddress}</span>
+            ) : null}
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -471,7 +556,7 @@ export default function Storefront() {
               <h2 className="text-lg md:text-xl font-black text-text-primary uppercase tracking-wide mb-4 pb-2 border-b border-border">
                 {cat.name}
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className={sectionContainerClass[menuLayout]}>
                 {sectionItems.map(item => renderMenuCard(item))}
               </div>
             </section>
@@ -480,7 +565,7 @@ export default function Storefront() {
 
         {storefrontCategories.length === 0 && availableItems.length > 0 && (
           <section>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className={sectionContainerClass[menuLayout]}>
               {availableItems.map(item => renderMenuCard(item))}
             </div>
           </section>

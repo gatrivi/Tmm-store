@@ -129,6 +129,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     if (!phone.trim()) newErrors.phone = t.phoneError;
     if (deliveryType === 'delivery' && !address.trim()) newErrors.address = t.addressError;
     if (paymentMethod === 'transfer' && !bankAlias.trim()) newErrors.bankAlias = t.aliasError;
+    if (!whatsappNumber.trim()) newErrors.whatsapp = t.whatsappError;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -422,6 +423,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 </div>
               )}
               {errors.bankAlias && <span className="text-xs text-red-500 mt-1 block">{errors.bankAlias}</span>}
+              {errors.whatsapp && <span className="text-xs text-red-500 mt-1 block">{errors.whatsapp}</span>}
             </div>
 
             {/* Notes */}

@@ -30,6 +30,7 @@ import { resolveImagesForProduct } from '../../utils/imageLoader';
 import { buildStorefrontUrl, generateStoreQrDataUrl } from '../../utils/storeQr';
 import { loadBusinessHours, type BusinessHoursSchedule } from '../../utils/businessHours';
 import { BusinessHoursFields } from './BusinessHoursFields';
+import { MenuAppearanceSettings } from './MenuAppearanceSettings';
 
 type WizardStep = 1 | 2 | 3 | 4 | 5;
 
@@ -382,6 +383,11 @@ export function AdminClientSetup({ onOpenImportMenu, onExitSetup, onOpenSettings
                 compact
               />
             </div>
+
+            <div className="border-t border-white/10 pt-4">
+              <p className="text-sm font-bold text-white mb-3">Estilo visual</p>
+              <MenuAppearanceSettings compact />
+            </div>
           </div>
 
           <button
@@ -516,6 +522,12 @@ export function AdminClientSetup({ onOpenImportMenu, onExitSetup, onOpenSettings
                         className="flex-1 bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white text-sm"
                       />
                     </div>
+                    <input
+                      value={row.ingredients ?? ''}
+                      onChange={e => updateProductRow(row.rowId, { ingredients: e.target.value })}
+                      placeholder="Ingredientes (opcional) — ej: lechuga, tomate, queso"
+                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white text-sm"
+                    />
                     <button
                       type="button"
                       onClick={() => deleteProductRow(row.rowId)}

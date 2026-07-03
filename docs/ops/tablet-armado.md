@@ -13,11 +13,15 @@ Purpose: el cliente carga su menú y fotos desde una tablet, sin IA ni terminal.
 
 | Paso | Qué hacer |
 |------|-----------|
-| **1. Negocio** | Nombre, WhatsApp, alias CBU, logo opcional. Dejá marcado **Empezar menú vacío**. |
+| **1. Negocio** | Nombre, WhatsApp, alias CBU, logo opcional, **paleta y disposición**. Dejá marcado **Empezar menú vacío**. |
 | **2. Categorías** | Ej: Bebidas, Platos, Postres. |
-| **3. Productos** | Nombre + precio por producto. Podés agregar varios por categoría. |
+| **3. Productos** | Nombre + precio + ingredientes opcionales por producto. |
 | **4. Fotos** | Cámara o galería por plato. Opcional — **Saltar fotos** si no hay tiempo. |
 | **5. Listo** | **Ver mi tienda**, QR para mostrador, copiar link. Cambiá la contraseña del admin. |
+
+## Modo simple (plan Menu)
+
+Sin **Modo avanzado**: nav incluye Armado, Menú, Fotos, Apariencia, Configuración.
 
 ## Modo avanzado
 

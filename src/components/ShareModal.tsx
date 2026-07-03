@@ -16,7 +16,8 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
   const t = translations[lang].share;
 
   const [copied, setCopied] = useState(false);
-  const url = typeof window !== 'undefined' ? window.location.origin : '';
+  const storePath = typeof window !== 'undefined' ? window.location.pathname.replace(/\/admin\/?$/, '') || '/' : '/';
+  const url = typeof window !== 'undefined' ? `${window.location.origin}${storePath}` : '';
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`;
 
   if (!isOpen) return null;

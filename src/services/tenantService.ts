@@ -6,13 +6,12 @@ import {
   setDoc,
   updateDoc,
 } from 'firebase/firestore';
-import { menuData } from '../data/menu';
 import type { Plan } from '../config/plans';
 import type { ExtraItem, SiteSettings } from '../context/MenuContext';
 import type { MenuItemType } from '../data/menu';
 import type { CreateTenantInput, TenantRecord } from '../types/tenant';
 import type { MenuCategory } from '../types/menuCategory';
-import { getInitialMenuCategories } from '../utils/menuImport';
+import { DEFAULT_MENU_LAYOUT } from '../utils/menuLayouts';
 import { getFirestoreDb, isFirebaseConfigured } from '../lib/firebase';
 
 const defaultSettings: SiteSettings = {
@@ -31,6 +30,7 @@ const defaultSettings: SiteSettings = {
   brandAddress: '',
   brandInstagram: '',
   brandGoogleMaps: '',
+  menuLayout: DEFAULT_MENU_LAYOUT,
   demoMode: false,
   mpEnabled: true,
   orderSoundEnabled: true,
@@ -100,8 +100,8 @@ export async function createTenant(input: CreateTenantInput): Promise<TenantReco
     createdAt: now,
     updatedAt: now,
     settings: { ...defaultSettings, brandName: input.businessName },
-    menuCategories: getInitialMenuCategories(),
-    menuItems: JSON.parse(JSON.stringify(menuData)),
+    menuCategories: [],
+    menuItems: [],
     extras: [],
     promotions: [],
   };

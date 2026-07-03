@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
+import { isUsingDefaultAdminCredentials } from '../../utils/adminSecurity';
 
 export function LoginModal() {
   const { showLogin, dismissLogin, login, failedAttempts, lockedUntil } = useAdmin();
@@ -205,6 +206,11 @@ export function LoginModal() {
               >
                 {isSubmitting ? 'Verificando...' : isLocked ? `Bloqueado (${lockCountdown}s)` : 'Ingresar'}
               </button>
+              {isUsingDefaultAdminCredentials() && (
+                <p className="text-[10px] text-amber-500/90 text-center leading-snug">
+                  Dev: admin / admin123 — cambiá antes de producción.
+                </p>
+              )}
             </form>
           </motion.div>
         </motion.div>

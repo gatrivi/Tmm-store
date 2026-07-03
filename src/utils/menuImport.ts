@@ -130,11 +130,16 @@ export function reviewRowsToMenuItems(rows: MenuImportReviewRow[]): MenuItemType
         available: true,
       }));
     } else {
+      const features = first.ingredients
+        ?.split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
       options = [{
         id: `${itemId}-default`,
         label: 'Standard',
         price: first.price,
         available: true,
+        ...(features?.length ? { features } : {}),
       }];
     }
 

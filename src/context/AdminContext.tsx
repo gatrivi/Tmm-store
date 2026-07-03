@@ -8,10 +8,11 @@
  */
 import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
 import { sha256 as fallbackSha256 } from 'js-sha256';
+import { DEFAULT_ADMIN_PASS_HASH, DEFAULT_ADMIN_USER_HASH } from '../utils/adminSecurity';
 
 /** Hashes SHA-256 pre-computados de las credenciales válidas */
-const VALID_USER_HASH = import.meta.env.VITE_ADMIN_USER_HASH || 'b6d1bcb9c9ef2ebceab34f1a553e0dedcc758b6b47440b8258f6b4d0bfe72626';
-const VALID_PASSWORD_HASH = import.meta.env.VITE_ADMIN_PASS_HASH || '75a7fca82df2599b0f619e3db73352cec8ab7e7651c4fcac253ba4e6505e00ac';
+const VALID_USER_HASH = import.meta.env.VITE_ADMIN_USER_HASH || DEFAULT_ADMIN_USER_HASH;
+const VALID_PASSWORD_HASH = import.meta.env.VITE_ADMIN_PASS_HASH || DEFAULT_ADMIN_PASS_HASH;
 
 const MAX_ATTEMPTS = 5;
 const LOCKOUT_MS = 60_000; // 1 minuto

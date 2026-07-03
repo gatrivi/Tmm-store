@@ -1,7 +1,7 @@
 {
-  "name": "El Puestito del Tío",
-  "short_name": "El Puestito",
-  "description": "Pedí online en El Puestito del Tío. Choripanes, hamburguesas, bondiola y más.",
+  "name": "Trufi",
+  "short_name": "Trufi",
+  "description": "Menú digital y pedidos online para negocios gastronómicos.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0d0d0d",

@@ -13,6 +13,7 @@ import {
   Tag,
   FileUp,
   ClipboardList,
+  Palette,
 } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 import { useMenu } from '../../context/MenuContext';
@@ -26,7 +27,9 @@ import { AdminOrders } from './AdminOrders';
 import { AdminPromotions } from './AdminPromotions';
 import { AdminMenuOnboarding } from './AdminMenuOnboarding';
 import { AdminClientSetup } from './AdminClientSetup';
+import { MenuAppearanceSettings } from './MenuAppearanceSettings';
 import { CloudSyncBadge } from './CloudSyncBadge';
+import { AdminSecurityBanner } from './AdminSecurityBanner';
 import { AppVersionBadge } from '../AppVersionBadge';
 import { shouldOpenSetupWizard } from '../../utils/clientSetup';
 
@@ -37,6 +40,7 @@ type Section =
   | 'orders'
   | 'editor'
   | 'images'
+  | 'appearance'
   | 'file-manager'
   | 'promotions'
   | 'settings';
@@ -47,14 +51,16 @@ const ALL_NAV: {
   Icon: typeof LayoutDashboard;
   minPlan?: 'menu' | 'pedidos' | 'premium';
   setupOnly?: boolean;
+  menuEssential?: boolean;
   advanced?: boolean;
 }[] = [
   { id: 'armado', label: 'Armado', Icon: ClipboardList, setupOnly: true },
+  { id: 'editor', label: 'Menú', Icon: UtensilsCrossed, menuEssential: true, advanced: true },
+  { id: 'images', label: 'Fotos', Icon: Image, menuEssential: true, advanced: true },
+  { id: 'appearance', label: 'Apariencia', Icon: Palette, menuEssential: true },
   { id: 'dashboard', label: 'Dashboard', Icon: LayoutDashboard, advanced: true },
   { id: 'import-menu', label: 'Importar menú', Icon: FileUp, advanced: true },
   { id: 'orders', label: 'Pedidos', Icon: Package, minPlan: 'pedidos', advanced: true },
-  { id: 'editor', label: 'Editor de Menú', Icon: UtensilsCrossed, advanced: true },
-  { id: 'images', label: 'Editor de Imágenes', Icon: Image, advanced: true },
   { id: 'file-manager', label: 'Archivos', Icon: Images, advanced: true },
   { id: 'promotions', label: 'Promociones', Icon: Tag, minPlan: 'pedidos', advanced: true },
   { id: 'settings', label: 'Configuración', Icon: Settings },
@@ -82,10 +88,13 @@ export function AdminPanel() {
 
   const navItems = useMemo(() => {
     if (section === 'armado' && !advancedNav) {
+      if (plan === 'menu') {
+        return allNavItems.filter(item => item.setupOnly || item.menuEssential || item.id === 'settings');
+      }
       return allNavItems.filter(item => item.setupOnly || item.id === 'settings');
     }
     return allNavItems;
-  }, [allNavItems, section, advancedNav]);
+  }, [allNavItems, section, advancedNav, plan]);
 
   useEffect(() => {
     if (!navItems.find(n => n.id === section)) {
@@ -235,6 +244,7 @@ export function AdminPanel() {
             </header>
 
             <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 hide-scrollbar">
+              <AdminSecurityBanner />
               <AnimatePresence mode="wait">
                 <motion.div
                   key={section}
@@ -264,6 +274,15 @@ export function AdminPanel() {
                   {section === 'orders' && <AdminOrders />}
                   {section === 'editor' && <AdminMenuEditor />}
                   {section === 'images' && <AdminImageEditor />}
+                  {section === 'appearance' && (
+                    <div className="space-y-6 max-w-2xl">
+                      <div>
+                        <h2 className="text-2xl md:text-3xl font-black text-white mb-1">Apariencia</h2>
+                        <p className="text-sm text-gray-400 font-medium">Colores y disposición de tu menú online</p>
+                      </div>
+                      <MenuAppearanceSettings />
+                    </div>
+                  )}
                   {section === 'file-manager' && <AdminFileManager />}
                   {section === 'promotions' && <AdminPromotions />}
                   {section === 'settings' && <AdminSettings />}

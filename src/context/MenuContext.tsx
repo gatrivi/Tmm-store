@@ -19,6 +19,8 @@ import { loadTenantData, saveTenantSnapshot } from '../services/tenantService';
 import { parsePlan } from '../config/plans';
 import type { MenuCategory } from '../types/menuCategory';
 import { getInitialMenuCategories } from '../utils/menuImport';
+import type { MenuLayoutId } from '../utils/menuLayouts';
+import { DEFAULT_MENU_LAYOUT, parseMenuLayout } from '../utils/menuLayouts';
 
 /** Keys de localStorage */
 const STORAGE_KEY_MENU = 'elpuestito_admin_menu';
@@ -82,6 +84,8 @@ export interface SiteSettings {
   brandInstagram: string;
   brandGoogleMaps: string;
   brandLogo?: string;
+  /** Storefront menu card layout */
+  menuLayout: MenuLayoutId;
   demoMode: boolean;
   mpEnabled: boolean;
   /** Play sound in admin when a new order arrives */
@@ -132,17 +136,26 @@ function resolveTenantId(): string {
   return 'default';
 }
 
+/** Demo menu only for local dev without a tenant slug */
+function getDefaultMenuSeed(): MenuItemType[] {
+  const tenant = resolveTenantId();
+  const isLocalDemo = import.meta.env.DEV && tenant === 'default' && !import.meta.env.VITE_TENANT_ID?.trim();
+  return isLocalDemo ? JSON.parse(JSON.stringify(menuData)) : [];
+}
+
 export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const tenantId = resolveTenantId();
   const cloudSyncEnabled = isFirebaseConfigured();
   const hydratedFromCloud = useRef(false);
 
   const [menuItems, setMenuItems] = useState<MenuItemType[]>(() =>
-    loadFromStorage(STORAGE_KEY_MENU, menuData)
+    loadFromStorage(STORAGE_KEY_MENU, getDefaultMenuSeed())
   );
-  const [menuCategories, setMenuCategories] = useState<MenuCategory[]>(() =>
-    loadFromStorage(STORAGE_KEY_CATEGORIES, getInitialMenuCategories())
-  );
+  const [menuCategories, setMenuCategories] = useState<MenuCategory[]>(() => {
+    const stored = loadFromStorage<MenuCategory[] | null>(STORAGE_KEY_CATEGORIES, null);
+    if (stored && stored.length > 0) return stored;
+    return getDefaultMenuSeed().length > 0 ? getInitialMenuCategories() : [];
+  });
   const [extrasData, setExtrasData] = useState<ExtraItem[]>(() =>
     loadFromStorage(STORAGE_KEY_EXTRAS, initialExtras)
   );
@@ -167,13 +180,18 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       brandInstagram: '',
       brandGoogleMaps: '',
       brandLogo: undefined,
+      menuLayout: DEFAULT_MENU_LAYOUT,
       demoMode: false,
       mpEnabled: true,
       orderSoundEnabled: true,
       autoPrintOnNewOrder: false,
     };
     const saved = loadFromStorage<Partial<SiteSettings>>(STORAGE_KEY_SETTINGS, {});
-    return { ...fallback, ...saved };
+    return {
+      ...fallback,
+      ...saved,
+      menuLayout: parseMenuLayout(saved.menuLayout),
+    };
   });
   const [usdRate, setUsdRate] = useState<number>(() => getUsdRateSync());
   const [promotions, setPromotions] = useState<Promotion[]>(() =>
@@ -209,6 +227,7 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setSiteSettings(prev => ({
             ...prev,
             ...data.settings,
+            menuLayout: parseMenuLayout(data.settings!.menuLayout ?? prev.menuLayout),
             orderSoundEnabled: data.settings!.orderSoundEnabled ?? true,
             autoPrintOnNewOrder: data.settings!.autoPrintOnNewOrder ?? false,
           }));

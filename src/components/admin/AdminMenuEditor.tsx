@@ -632,7 +632,7 @@ export function AdminMenuEditor() {
                                 {/* Features */}
                                 <div>
                                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 block">
-                                    Tags incluidos ({selectedLang.toUpperCase()}) — separar con coma
+                                    Ingredientes ({selectedLang.toUpperCase()}) — separar con coma
                                   </label>
                                   <input
                                     type="text"

@@ -9,6 +9,7 @@
  * panel de administración.
  */
 import { useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { MapPin, Clock } from 'lucide-react';
 
 /** Icono Instagram inline (lucide-react no incluye logos de marca en algunas versiones) */
@@ -30,8 +31,10 @@ const InstagramIcon = ({ size = 20, className = '' }: { size?: number; className
   </svg>
 );
 import { useLanguage } from '../context/LanguageContext';
+import { usePlan } from '../context/PlanContext';
 import { AppVersionBadge } from './AppVersionBadge';
 import { useAdmin } from '../context/AdminContext';
+import { resolveAdminPath } from '../utils/adminPath';
 import { translations } from '../i18n/translations';
 
 interface GlobalFooterProps {
@@ -50,12 +53,21 @@ interface GlobalFooterProps {
  */
 export function GlobalFooter({ brandName, address, instagram, googleMaps, hoursSummary }: GlobalFooterProps) {
   const { language } = useLanguage();
+  const { tenantId } = usePlan();
   const { triggerLogin } = useAdmin();
   const t = translations[language || 'es'].menuPage;
   const displayName = brandName || 'Tu Negocio';
-  const displayAddress = address || t.footerAddress;
+  const displayAddress = address || '';
   const displayInstagram = instagram || '';
   const displayMaps = googleMaps || '';
+  const lang = language || 'es';
+  const rightsSuffix: Record<string, string> = {
+    es: 'Todos los derechos reservados.',
+    en: 'All rights reserved.',
+    pt: 'Todos os direitos reservados.',
+    ru: 'Все права защищены.',
+    de: 'Alle Rechte vorbehalten.',
+  };
 
   // ---- Lógica del patrón secreto ----
   // Usamos useRef para evitar re-renders innecesarios al trackear clicks.
@@ -129,28 +141,30 @@ export function GlobalFooter({ brandName, address, instagram, googleMaps, hoursS
 
         <div className="flex flex-col items-start gap-3 lg:gap-4">
           <h4 className="text-lg lg:text-xl font-bold mb-1 lg:mb-2">{t.footerFindUs}</h4>
-          {displayMaps ? (
-            <a 
-              href={displayMaps}
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="flex items-start gap-3 group hover:text-brand-green transition-colors"
-              title="Abrir en Google Maps"
-            >
-              <MapPin size={20} className="shrink-0 mt-0.5 text-brand-green group-hover:text-brand-white transition-colors lg:w-6 lg:h-6" />
-              <span 
-                className="text-sm lg:text-base font-medium text-gray-300 group-hover:text-brand-green transition-colors leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: displayAddress.replace(/\n/g, '<br/>') }}
-              />
-            </a>
-          ) : (
-            <div className="flex items-start gap-3">
-              <MapPin size={20} className="shrink-0 mt-0.5 text-brand-green lg:w-6 lg:h-6" />
-              <span 
-                className="text-sm lg:text-base font-medium text-gray-300 leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: displayAddress.replace(/\n/g, '<br/>') }}
-              />
-            </div>
+          {displayAddress && (
+            displayMaps ? (
+              <a 
+                href={displayMaps}
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex items-start gap-3 group hover:text-brand-green transition-colors"
+                title="Abrir en Google Maps"
+              >
+                <MapPin size={20} className="shrink-0 mt-0.5 text-brand-green group-hover:text-brand-white transition-colors lg:w-6 lg:h-6" />
+                <span 
+                  className="text-sm lg:text-base font-medium text-gray-300 group-hover:text-brand-green transition-colors leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: displayAddress.replace(/\n/g, '<br/>') }}
+                />
+              </a>
+            ) : (
+              <div className="flex items-start gap-3">
+                <MapPin size={20} className="shrink-0 mt-0.5 text-brand-green lg:w-6 lg:h-6" />
+                <span 
+                  className="text-sm lg:text-base font-medium text-gray-300 leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: displayAddress.replace(/\n/g, '<br/>') }}
+                />
+              </div>
+            )
           )}
           <div className="flex items-center gap-3 mt-2 lg:mt-3">
             <Clock size={20} className="shrink-0 text-brand-green lg:w-6 lg:h-6" />
@@ -182,9 +196,17 @@ export function GlobalFooter({ brandName, address, instagram, googleMaps, hoursS
       
       <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-brand-white/10 flex flex-col items-center gap-2">
         <div className="text-xs font-medium text-gray-400">
-          {t.footerRights}
+          © {displayName}. {rightsSuffix[lang] || rightsSuffix.es}
         </div>
-        <AppVersionBadge className="text-brand-green/40" />
+        <div className="flex items-center gap-3">
+          <Link
+            to={resolveAdminPath(tenantId)}
+            className="text-[10px] text-gray-600 hover:text-gray-400 transition"
+          >
+            Administrar
+          </Link>
+          <AppVersionBadge className="text-brand-green/40" />
+        </div>
       </div>
     </div>
   );

@@ -6,6 +6,8 @@ Paths: `src/components/admin/AdminPanel.tsx`, `src/pages/AdminPage.tsx`, subcomp
 
 | Section | File | Plan |
 |---------|------|------|
+| Armado wizard | AdminClientSetup.tsx | all |
+| Menú / Fotos / Apariencia | AdminMenuEditor, AdminImageEditor, MenuAppearanceSettings | all (Menu tier: visible without advanced mode) |
 | Dashboard | AdminDashboard.tsx | pedidos+ (menu: hidden) |
 | Pedidos | AdminOrders.tsx | pedidos+ |
 | Menu editor | AdminMenuEditor.tsx | all |

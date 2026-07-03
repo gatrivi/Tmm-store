@@ -9,6 +9,7 @@ Deps: `useMenu()`, `usePlan()`, `useLanguage()`, `CheckoutModal`, `ShareModal`, 
 ## Flow
 
 - Load menu from MenuContext; filter unavailable items/options
+- `siteSettings.menuLayout`: grid | list | magazine | compact (set in admin Apariencia)
 - Menu plan: WhatsApp CTA, no cart buttons
 - Pedidos+: cart drawer, checkout, promos
 - Premium+: AI assistant hook

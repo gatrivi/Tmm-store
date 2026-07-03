@@ -42,4 +42,6 @@ export interface MenuImportReviewRow {
   description: string;
   price: number;
   variantLabel: string;
+  /** Comma-separated ingredients / included items */
+  ingredients?: string;
 }
