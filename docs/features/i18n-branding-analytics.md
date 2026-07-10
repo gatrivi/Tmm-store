@@ -15,7 +15,7 @@ Deps: localStorage keys `elpuestito_language`, `elpuestito_analytics`
 ## Branding
 
 - CSS vars injected from `SiteSettings` (`--brand-color`, etc.)
-- Logo upload WebP-compressed in admin
+- Logo upload WebP-compressed in admin; default fallback `/puestito.png`
 
 ## Analytics
 

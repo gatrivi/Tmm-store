@@ -20,7 +20,7 @@ import { translations } from '../i18n/translations';
 import { calculateDiscount } from '../types/promotion';
 import { parseMenuLayout } from '../utils/menuLayouts';
 import type { MenuLayoutId } from '../utils/menuLayouts';
-import { resolveAdminPath } from '../utils/adminPath';
+import { BrandLogoMark } from '../components/BrandLogoMark';
 
 export default function Storefront() {
   const { menuItems, menuCategories, siteSettings, promotions } = useMenu();
@@ -151,12 +151,12 @@ export default function Storefront() {
     return opt.label;
   };
 
-  const getLocalizedFeatures = (opt) => {
+  const getLocalizedFeatures = (opt): string[] => {
     if (lang === 'en' && opt.featuresEn) return opt.featuresEn;
     if (lang === 'pt' && opt.featuresPt) return opt.featuresPt;
     if (lang === 'ru' && opt.featuresRu) return opt.featuresRu;
     if (lang === 'de' && opt.featuresDe) return opt.featuresDe;
-    return opt.features;
+    return opt.features ?? [];
   };
 
   const addToCart = (item, option) => {
@@ -232,7 +232,7 @@ export default function Storefront() {
       .filter(item => item.available !== false)
       .map(item => ({
         ...item,
-        options: item.options.filter(opt => opt.available !== false)
+        options: (item.options ?? []).filter(opt => opt.available !== false)
       }))
       .filter(item => item.options.length > 0);
   }, [menuItems]);
@@ -406,6 +406,7 @@ export default function Storefront() {
         </main>
         <GlobalFooter
           brandName={siteSettings.brandName}
+          brandLogo={siteSettings.brandLogo}
           address={siteSettings.brandAddress}
           instagram={siteSettings.brandInstagram}
           googleMaps={siteSettings.brandGoogleMaps}
@@ -446,13 +447,12 @@ export default function Storefront() {
       )}
 
       {/* Header */}
-      <header className={`bg-black text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center ${mpSuccess ? 'mt-[88px] sm:mt-[72px]' : ''}`}>
+      <header className={`sticky top-0 z-10 shadow-md flex justify-between items-center p-4 dark:bg-black dark:text-white light:bg-brand-white light:text-text-primary light:border-b light:border-border ${mpSuccess ? 'mt-[88px] sm:mt-[72px]' : ''}`}>
         <div className="flex items-center gap-3">
-          {siteSettings.brandLogo ? (
-            <img src={siteSettings.brandLogo} alt={siteSettings.brandName || 'Logo'} className="h-8 md:h-10 object-contain" />
-          ) : (
-            <h1 className="text-xl md:text-2xl font-black tracking-tight">{siteSettings.brandName || 'Tu Negocio'}</h1>
-          )}
+          <BrandLogoMark
+            src={siteSettings.brandLogo || '/puestito.png'}
+            alt={siteSettings.brandName || 'Logo'}
+          />
           <div className="flex items-center gap-2 mt-0.5">
             {businessHours.enabled ? (
               <span className={`inline-flex items-center gap-1 text-[10px] md:text-xs font-bold px-2 py-0.5 rounded-full ${isOpenNow ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
@@ -461,7 +461,7 @@ export default function Storefront() {
               </span>
             ) : null}
             {siteSettings.brandAddress ? (
-              <span className="text-xs md:text-sm text-gray-300">{siteSettings.brandAddress}</span>
+              <span className="text-xs md:text-sm dark:text-gray-300 light:text-text-secondary">{siteSettings.brandAddress}</span>
             ) : null}
           </div>
         </div>
@@ -575,6 +575,7 @@ export default function Storefront() {
       {/* Footer */}
       <GlobalFooter
         brandName={siteSettings.brandName}
+        brandLogo={siteSettings.brandLogo}
         address={siteSettings.brandAddress}
         instagram={siteSettings.brandInstagram}
         googleMaps={siteSettings.brandGoogleMaps}

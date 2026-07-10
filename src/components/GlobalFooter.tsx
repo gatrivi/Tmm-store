@@ -39,6 +39,7 @@ import { translations } from '../i18n/translations';
 
 interface GlobalFooterProps {
   brandName?: string;
+  brandLogo?: string;
   address?: string;
   instagram?: string;
   googleMaps?: string;
@@ -51,7 +52,7 @@ interface GlobalFooterProps {
  *
  * @returns {JSX.Element} Elemento que representa el pie de página.
  */
-export function GlobalFooter({ brandName, address, instagram, googleMaps, hoursSummary }: GlobalFooterProps) {
+export function GlobalFooter({ brandName, brandLogo, address, instagram, googleMaps, hoursSummary }: GlobalFooterProps) {
   const { language } = useLanguage();
   const { tenantId } = usePlan();
   const { triggerLogin } = useAdmin();
@@ -132,9 +133,11 @@ export function GlobalFooter({ brandName, address, instagram, googleMaps, hoursS
             role="presentation"
           />
           <div className="flex flex-col items-center md:items-start w-full">
-            <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight md:-mt-2">
-              {displayName}
-            </h2>
+            <img
+              src={brandLogo || '/puestito.png'}
+              alt={displayName}
+              className="w-[280px] md:w-[320px] h-auto object-contain md:-mt-4"
+            />
             <div className="w-full max-w-[200px] h-px bg-brand-white/10 md:hidden mt-4 mx-auto rounded-full" />
           </div>
         </div>

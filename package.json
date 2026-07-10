@@ -1,7 +1,7 @@
 {
   "name": "trufi-tmm",
   "private": true,
-  "version": "1.4.6",
+  "version": "1.5.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "check:env": "node scripts/check-env.mjs",
     "hash:admin": "node scripts/hash-admin.mjs",
+    "leads:scan": "node scripts/leads-scan.mjs",
     "deploy:rules": "npx firebase-tools@latest deploy --only firestore"
   },
   "dependencies": {

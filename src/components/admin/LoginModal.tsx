@@ -135,7 +135,7 @@ export function LoginModal() {
                 <X size={18} />
               </button>
               <img
-                src="/titulo-blanco.png"
+                src="/puestito.png"
                 alt="Trufi Admin"
                 className="w-48 h-auto object-contain"
               />
