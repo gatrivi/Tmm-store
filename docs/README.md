@@ -32,6 +32,7 @@ Agent manifest: read this first, then one targeted file.
 | Pilot shop A / B | [ops/pilot-shop-a.md](./ops/pilot-shop-a.md), [pilot-shop-b.md](./ops/pilot-shop-b.md) |
 | Pilot metrics sheet | [ops/pilot-metrics.md](./ops/pilot-metrics.md) |
 | Case study + sales 5 | [ops/case-study-template.md](./ops/case-study-template.md), [sales-playbook-zn.md](./ops/sales-playbook-zn.md) |
+| **Leads anillos (Olivos→VL)** | [ops/leads-rings-routine.md](./ops/leads-rings-routine.md) |
 | Client onboarding | [ops/onboarding.md](./ops/onboarding.md) |
 | Live demo script | [ops/demo.md](./ops/demo.md) |
 | Human portfolio | [human/portfolio.md](./human/portfolio.md) |

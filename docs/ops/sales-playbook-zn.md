@@ -13,6 +13,8 @@ flowchart LR
 
 ## Target list (20)
 
+Seed + anillos: [`leads-rings-routine.md`](./leads-rings-routine.md) (T0 Olivos → T1 VL, 100+ reviews, sin web).
+
 | # | Shop | Barrio | Contact | PD? | Status |
 |---|------|--------|---------|-----|--------|
 | 1 | | | | | |

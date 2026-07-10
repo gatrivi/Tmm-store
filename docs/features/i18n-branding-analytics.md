@@ -16,6 +16,7 @@ Deps: localStorage keys `elpuestito_language`, `elpuestito_analytics`
 
 - CSS vars injected from `SiteSettings` (`--brand-color`, etc.)
 - Logo upload WebP-compressed in admin; default fallback `/puestito.png`
+- Header `BrandLogoMark`: circle badge (light + dark)
 
 ## Analytics
 
