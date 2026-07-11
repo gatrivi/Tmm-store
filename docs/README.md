@@ -25,6 +25,8 @@ Agent manifest: read this first, then one targeted file.
 | Env vars | [ops/env-vars.md](./ops/env-vars.md) |
 | Firebase production | [ops/firebase-setup.md](./ops/firebase-setup.md) |
 | Production smoke test | [ops/smoke-test.md](./ops/smoke-test.md) |
+| **Prospect demo (3 min)** | [ops/prospect-demo.md](./ops/prospect-demo.md) |
+| **30-day sales audit + Demo Express decision** | [ops/audit-sales-30-days-2026-07-11.md](./ops/audit-sales-30-days-2026-07-11.md) |
 | **Monday ship (deploy → demo)** | [ops/monday-deploy-checklist.md](./ops/monday-deploy-checklist.md), [monday-smoke-runbook.md](./ops/monday-smoke-runbook.md), [monday-demo-script.md](./ops/monday-demo-script.md) |
 | **Go-live / overnight report** | [ops/go-live-report.md](./ops/go-live-report.md) |
 | Tablet armado | [ops/tablet-armado.md](./ops/tablet-armado.md) |

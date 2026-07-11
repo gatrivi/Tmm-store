@@ -136,7 +136,7 @@ export function GlobalFooter({ brandName, brandLogo, address, instagram, googleM
             <img
               src={brandLogo || '/puestito.png'}
               alt={displayName}
-              className="w-[280px] md:w-[320px] h-auto object-contain md:-mt-4"
+              className="h-auto max-h-24 w-auto max-w-[220px] object-contain md:-mt-2"
             />
             <div className="w-full max-w-[200px] h-px bg-brand-white/10 md:hidden mt-4 mx-auto rounded-full" />
           </div>

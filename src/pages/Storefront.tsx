@@ -111,6 +111,9 @@ export default function Storefront() {
   // Apply branding CSS variables
   useEffect(() => {
     const root = document.documentElement;
+    root.style.setProperty('--color-brand-green', siteSettings.brandColor);
+    root.style.setProperty('--color-brand-black', siteSettings.brandColorDark);
+    root.style.setProperty('--color-brand-white', siteSettings.brandColorLight);
     root.style.setProperty('--brand-color', siteSettings.brandColor);
     root.style.setProperty('--brand-color-dark', siteSettings.brandColorDark);
     root.style.setProperty('--brand-color-light', siteSettings.brandColorLight);

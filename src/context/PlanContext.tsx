@@ -18,6 +18,8 @@ interface PlanContextValue {
 const PlanContext = createContext<PlanContextValue | undefined>(undefined);
 
 function resolveTenantId(): string {
+  if (window.location.pathname.startsWith('/demo')) return 'demo';
+
   const fromEnv = import.meta.env.VITE_TENANT_ID as string | undefined;
   if (fromEnv?.trim()) return fromEnv.trim();
 
@@ -28,8 +30,10 @@ function resolveTenantId(): string {
 }
 
 export const PlanProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const plan = parsePlan(import.meta.env.VITE_PLAN as string | undefined);
   const tenantId = resolveTenantId();
+  const plan = tenantId === 'demo'
+    ? 'premium'
+    : parsePlan(import.meta.env.VITE_PLAN as string | undefined);
 
   const value = useMemo(
     () => ({

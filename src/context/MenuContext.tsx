@@ -10,7 +10,7 @@
  * sobrevivan a recargas de página. Se expone una función `resetToDefaults`
  * para restaurar los datos originales de `menuData`.
  */
-import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { menuData, type MenuItemType } from '../data/menu';
 import { getUsdRate, getUsdRateSync } from '../utils/dollarRate';
 import type { Promotion } from '../types/promotion';
@@ -21,6 +21,7 @@ import type { MenuCategory } from '../types/menuCategory';
 import { getInitialMenuCategories } from '../utils/menuImport';
 import type { MenuLayoutId } from '../utils/menuLayouts';
 import { DEFAULT_MENU_LAYOUT, parseMenuLayout } from '../utils/menuLayouts';
+import { buildProspectLogoDataUrl, parseProspectDemo } from '../utils/prospectDemo';
 
 /** Keys de localStorage */
 const STORAGE_KEY_MENU = 'elpuestito_admin_menu';
@@ -94,6 +95,73 @@ export interface SiteSettings {
   autoPrintOnNewOrder: boolean;
 }
 
+const DEFAULT_SITE_SETTINGS: SiteSettings = {
+  showUsdToggle: false,
+  manualRate: 0,
+  useManualRate: false,
+  whatsappNumber: '',
+  bankAlias: '',
+  brandName: '',
+  brandColor: '#cc333f',
+  brandColorDark: '#6a4a3c',
+  brandColorLight: '#fdf6e3',
+  brandAccent: '#edc951',
+  brandTextColor: '#3d2b1f',
+  brandFont: 'system-ui',
+  brandAddress: '',
+  brandInstagram: '',
+  brandGoogleMaps: '',
+  brandLogo: undefined,
+  menuLayout: DEFAULT_MENU_LAYOUT,
+  demoMode: false,
+  mpEnabled: true,
+  orderSoundEnabled: true,
+  autoPrintOnNewOrder: false,
+};
+
+const DEMO_SITE_SETTINGS: SiteSettings = {
+  ...DEFAULT_SITE_SETTINGS,
+  whatsappNumber: '5491100000000',
+  bankAlias: 'CLUB.OLIVOS',
+  brandName: 'Club Social Olivos',
+  brandColor: '#171814',
+  brandColorDark: '#0f100d',
+  brandColorLight: '#f2eee6',
+  brandAccent: '#d7ff64',
+  brandTextColor: '#171814',
+  brandFont: 'Georgia, serif',
+  brandAddress: 'Olivos · Vicente López',
+  brandLogo: '/demo-logo.svg',
+  menuLayout: 'grid',
+  demoMode: true,
+  mpEnabled: false,
+};
+
+function getDemoSiteSettings(): SiteSettings {
+  const prospect = parseProspectDemo(window.location.search);
+  return {
+    ...DEMO_SITE_SETTINGS,
+    brandName: prospect.businessName,
+    brandAddress: `${prospect.categoryLabel} · ${prospect.area}`,
+    brandColor: prospect.colorValue,
+    brandLogo: prospect.customized
+      ? buildProspectLogoDataUrl(prospect)
+      : DEMO_SITE_SETTINGS.brandLogo,
+  };
+}
+
+function getStorageKeys(tenantId: string) {
+  const suffix = tenantId === 'default' ? '' : `:${tenantId}`;
+  return {
+    menu: `${STORAGE_KEY_MENU}${suffix}`,
+    categories: `${STORAGE_KEY_CATEGORIES}${suffix}`,
+    extras: `${STORAGE_KEY_EXTRAS}${suffix}`,
+    lastEdit: `${STORAGE_KEY_LAST_EDIT}${suffix}`,
+    settings: `${STORAGE_KEY_SETTINGS}${suffix}`,
+    promotions: `${STORAGE_KEY_PROMOTIONS}${suffix}`,
+  };
+}
+
 interface MenuContextProps {
   menuItems: MenuItemType[];
   updateMenuItem: (index: number, updated: MenuItemType) => void;
@@ -129,6 +197,8 @@ interface MenuContextProps {
 const MenuContext = createContext<MenuContextProps | undefined>(undefined);
 
 function resolveTenantId(): string {
+  if (window.location.pathname.startsWith('/demo')) return 'demo';
+
   const fromEnv = import.meta.env.VITE_TENANT_ID as string | undefined;
   if (fromEnv?.trim()) return fromEnv.trim();
   const slugMatch = window.location.pathname.match(/^\/s\/([^/]+)/);
@@ -136,67 +206,56 @@ function resolveTenantId(): string {
   return 'default';
 }
 
-/** Demo menu only for local dev without a tenant slug */
-function getDefaultMenuSeed(): MenuItemType[] {
-  const tenant = resolveTenantId();
-  const isLocalDemo = import.meta.env.DEV && tenant === 'default' && !import.meta.env.VITE_TENANT_ID?.trim();
-  return isLocalDemo ? JSON.parse(JSON.stringify(menuData)) : [];
+/** Demo menu for the public showcase and local development. */
+function getDefaultMenuSeed(tenantId: string): MenuItemType[] {
+  const isLocalDemo = import.meta.env.DEV
+    && tenantId === 'default'
+    && !import.meta.env.VITE_TENANT_ID?.trim();
+  return tenantId === 'demo' || isLocalDemo
+    ? JSON.parse(JSON.stringify(menuData))
+    : [];
 }
 
 export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const tenantId = resolveTenantId();
-  const cloudSyncEnabled = isFirebaseConfigured();
+  const isDemoTenant = tenantId === 'demo';
+  const storageKeys = useMemo(() => getStorageKeys(tenantId), [tenantId]);
+  const cloudSyncEnabled = isFirebaseConfigured() && !isDemoTenant;
   const hydratedFromCloud = useRef(false);
 
-  const [menuItems, setMenuItems] = useState<MenuItemType[]>(() =>
-    loadFromStorage(STORAGE_KEY_MENU, getDefaultMenuSeed())
-  );
-  const [menuCategories, setMenuCategories] = useState<MenuCategory[]>(() => {
-    const stored = loadFromStorage<MenuCategory[] | null>(STORAGE_KEY_CATEGORIES, null);
-    if (stored && stored.length > 0) return stored;
-    return getDefaultMenuSeed().length > 0 ? getInitialMenuCategories() : [];
+  const [menuItems, setMenuItems] = useState<MenuItemType[]>(() => {
+    const seed = getDefaultMenuSeed(tenantId);
+    return isDemoTenant ? seed : loadFromStorage(storageKeys.menu, seed);
   });
-  const [extrasData, setExtrasData] = useState<ExtraItem[]>(() =>
-    loadFromStorage(STORAGE_KEY_EXTRAS, initialExtras)
-  );
-  const [lastEditTimestamp, setLastEditTimestamp] = useState<string | null>(() =>
-    localStorage.getItem(STORAGE_KEY_LAST_EDIT)
-  );
+  const [menuCategories, setMenuCategories] = useState<MenuCategory[]>(() => {
+    if (isDemoTenant) return getInitialMenuCategories();
+    const stored = loadFromStorage<MenuCategory[] | null>(storageKeys.categories, null);
+    if (stored && stored.length > 0) return stored;
+    return getDefaultMenuSeed(tenantId).length > 0 ? getInitialMenuCategories() : [];
+  });
+  const [extrasData, setExtrasData] = useState<ExtraItem[]>(() => (
+    isDemoTenant
+      ? JSON.parse(JSON.stringify(initialExtras))
+      : loadFromStorage(storageKeys.extras, initialExtras)
+  ));
+  const [lastEditTimestamp, setLastEditTimestamp] = useState<string | null>(() => (
+    isDemoTenant ? null : localStorage.getItem(storageKeys.lastEdit)
+  ));
   const [siteSettings, setSiteSettings] = useState<SiteSettings>(() => {
-    const fallback: SiteSettings = {
-      showUsdToggle: false,
-      manualRate: 0,
-      useManualRate: false,
-      whatsappNumber: '',
-      bankAlias: '',
-      brandName: '',
-      brandColor: '#cc333f',
-      brandColorDark: '#6a4a3c',
-      brandColorLight: '#fdf6e3',
-      brandAccent: '#edc951',
-      brandTextColor: '#3d2b1f',
-      brandFont: 'system-ui',
-      brandAddress: '',
-      brandInstagram: '',
-      brandGoogleMaps: '',
-      brandLogo: undefined,
-      menuLayout: DEFAULT_MENU_LAYOUT,
-      demoMode: false,
-      mpEnabled: true,
-      orderSoundEnabled: true,
-      autoPrintOnNewOrder: false,
-    };
-    const saved = loadFromStorage<Partial<SiteSettings>>(STORAGE_KEY_SETTINGS, {});
+    const fallback = isDemoTenant ? getDemoSiteSettings() : DEFAULT_SITE_SETTINGS;
+    const saved = isDemoTenant
+      ? {}
+      : loadFromStorage<Partial<SiteSettings>>(storageKeys.settings, {});
     return {
       ...fallback,
       ...saved,
-      menuLayout: parseMenuLayout(saved.menuLayout),
+      menuLayout: parseMenuLayout(saved.menuLayout ?? fallback.menuLayout),
     };
   });
   const [usdRate, setUsdRate] = useState<number>(() => getUsdRateSync());
-  const [promotions, setPromotions] = useState<Promotion[]>(() =>
-    loadFromStorage<Promotion[]>(STORAGE_KEY_PROMOTIONS, [])
-  );
+  const [promotions, setPromotions] = useState<Promotion[]>(() => (
+    isDemoTenant ? [] : loadFromStorage<Promotion[]>(storageKeys.promotions, [])
+  ));
   const [cloudSyncStatus, setCloudSyncStatus] = useState<'loading' | 'synced' | 'offline' | 'error'>(() =>
     cloudSyncEnabled ? 'loading' : 'offline',
   );
@@ -274,26 +333,31 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Persistir menuItems en localStorage cada vez que cambie
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(menuItems));
-  }, [menuItems]);
+    if (isDemoTenant) return;
+    localStorage.setItem(storageKeys.menu, JSON.stringify(menuItems));
+  }, [isDemoTenant, menuItems, storageKeys.menu]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_CATEGORIES, JSON.stringify(menuCategories));
-  }, [menuCategories]);
+    if (isDemoTenant) return;
+    localStorage.setItem(storageKeys.categories, JSON.stringify(menuCategories));
+  }, [isDemoTenant, menuCategories, storageKeys.categories]);
 
   // Persistir extrasData en localStorage cada vez que cambie
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_EXTRAS, JSON.stringify(extrasData));
-  }, [extrasData]);
+    if (isDemoTenant) return;
+    localStorage.setItem(storageKeys.extras, JSON.stringify(extrasData));
+  }, [extrasData, isDemoTenant, storageKeys.extras]);
 
   // Persistir siteSettings
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(siteSettings));
-  }, [siteSettings]);
+    if (isDemoTenant) return;
+    localStorage.setItem(storageKeys.settings, JSON.stringify(siteSettings));
+  }, [isDemoTenant, siteSettings, storageKeys.settings]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_PROMOTIONS, JSON.stringify(promotions));
-  }, [promotions]);
+    if (isDemoTenant) return;
+    localStorage.setItem(storageKeys.promotions, JSON.stringify(promotions));
+  }, [isDemoTenant, promotions, storageKeys.promotions]);
 
   const updateMenuItem = useCallback((index: number, updated: MenuItemType) => {
     setMenuItems(prev => {
@@ -302,16 +366,16 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return next;
     });
     const ts = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY_LAST_EDIT, ts);
+    localStorage.setItem(storageKeys.lastEdit, ts);
     setLastEditTimestamp(ts);
-  }, []);
+  }, [storageKeys.lastEdit]);
 
   const deleteMenuItem = useCallback((index: number) => {
     setMenuItems(prev => prev.filter((_, i) => i !== index));
     const ts = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY_LAST_EDIT, ts);
+    localStorage.setItem(storageKeys.lastEdit, ts);
     setLastEditTimestamp(ts);
-  }, []);
+  }, [storageKeys.lastEdit]);
 
   const updateExtraItem = useCallback((index: number, updated: ExtraItem) => {
     setExtrasData(prev => {
@@ -320,9 +384,9 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return next;
     });
     const ts = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY_LAST_EDIT, ts);
+    localStorage.setItem(storageKeys.lastEdit, ts);
     setLastEditTimestamp(ts);
-  }, []);
+  }, [storageKeys.lastEdit]);
 
   const resetToDefaults = useCallback(() => {
     const freshMenu = JSON.parse(JSON.stringify(menuData));
@@ -330,12 +394,12 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setMenuItems(freshMenu);
     setMenuCategories(getInitialMenuCategories());
     setExtrasData(freshExtras);
-    localStorage.removeItem(STORAGE_KEY_MENU);
-    localStorage.removeItem(STORAGE_KEY_CATEGORIES);
-    localStorage.removeItem(STORAGE_KEY_EXTRAS);
-    localStorage.removeItem(STORAGE_KEY_LAST_EDIT);
+    localStorage.removeItem(storageKeys.menu);
+    localStorage.removeItem(storageKeys.categories);
+    localStorage.removeItem(storageKeys.extras);
+    localStorage.removeItem(storageKeys.lastEdit);
     setLastEditTimestamp(null);
-  }, []);
+  }, [storageKeys]);
 
   const resetTextsOnly = useCallback((targetLang?: string) => {
     setMenuItems(prev => prev.map((item, i) => {
@@ -394,9 +458,9 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }));
 
     const ts = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY_LAST_EDIT, ts);
+    localStorage.setItem(storageKeys.lastEdit, ts);
     setLastEditTimestamp(ts);
-  }, []);
+  }, [storageKeys.lastEdit]);
 
   // Tasa efectiva: manual (si activada y > 0) o de la API
   const effectiveRate = siteSettings.useManualRate && siteSettings.manualRate > 0

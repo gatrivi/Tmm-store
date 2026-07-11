@@ -23,6 +23,7 @@ tenants/{tenantId}
 ## Gotchas
 
 - Works without Firebase (localStorage only)
+- Browser storage is namespaced per tenant; `/demo` is isolated and never syncs to Firestore
 - Images still Base64 in storage until Storage migration
 - Slug routes: `/s/:slug` resolves tenant from path
 

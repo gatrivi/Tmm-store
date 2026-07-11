@@ -1,6 +1,6 @@
 # Trufi
 
-White-label food ordering app (PedidoDirecto-style): digital menu, cart, checkout, WhatsApp, MercadoPago, admin panel, and three product tiers (Menu / Pedidos / Premium).
+Done-for-you, white-label ordering suite for local businesses: sales landing, digital menu, cart, checkout, WhatsApp, MercadoPago, owner panel, and three product tiers (Menu / Pedidos / Premium).
 
 ## Quick start
 
@@ -12,7 +12,10 @@ cp .env.example .env
 npm run dev
 ```
 
-- Store: http://localhost:5173/
+- Sales landing: http://localhost:5173/
+- Customer demo: http://localhost:5173/demo
+- Owner demo: http://localhost:5173/demo/owner
+- Tenant store: http://localhost:5173/s/demo-shop
 - Admin: http://localhost:5173/admin
 
 ## Scripts
@@ -33,6 +36,8 @@ Copy `.env.example` to `.env`. Key variables:
 | `VITE_PLAN` | Product tier: `menu`, `pedidos`, `premium` |
 | `VITE_ADMIN_*_HASH` | Admin login (SHA-256) |
 | `VITE_WHATSAPP_NUMBER` | Order WhatsApp number |
+| `VITE_SALES_WHATSAPP_NUMBER` | Sales CTA WhatsApp number |
+| `VITE_SALES_EMAIL` | Sales fallback email |
 | `MP_ACCESS_TOKEN` | MercadoPago (Vercel serverless only) |
 
 Full reference: [docs/ops/env-vars.md](docs/ops/env-vars.md)

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Trufi — pedidos directos</title>
+  <desc id="desc">Carta digital y pedidos directos para negocios gastronómicos</desc>
+  <rect width="1200" height="630" fill="#f2eee6"/>
+  <defs>
+    <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#171814" opacity=".12"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+  <circle cx="1050" cy="-40" r="260" fill="#d7ff64"/>
+  <circle cx="1110" cy="590" r="310" fill="#ee6847"/>
+  <rect x="760" y="105" width="340" height="420" rx="44" fill="#171814" transform="rotate(4 930 315)"/>
+  <rect x="782" y="128" width="296" height="376" rx="30" fill="#fbfaf6" transform="rotate(4 930 315)"/>
+  <rect x="815" y="180" width="230" height="118" rx="20" fill="#e2dfd7" transform="rotate(4 930 315)"/>
+  <rect x="815" y="324" width="230" height="54" rx="16" fill="#d7ff64" transform="rotate(4 930 315)"/>
+  <rect x="815" y="395" width="230" height="54" rx="16" fill="#171814" transform="rotate(4 930 315)"/>
+  <text x="72" y="90" fill="#171814" font-family="Arial,sans-serif" font-size="34" font-weight="900" letter-spacing="-1">TRUFI</text>
+  <text x="72" y="245" fill="#171814" font-family="Arial,sans-serif" font-size="86" font-weight="900" letter-spacing="-5">Tus pedidos,</text>
+  <text x="72" y="334" fill="#ee6847" font-family="Arial,sans-serif" font-size="86" font-weight="900" letter-spacing="-5">sin el caos.</text>
+  <text x="76" y="405" fill="#171814" opacity=".64" font-family="Arial,sans-serif" font-size="29">Carta, carrito y WhatsApp para tu negocio.</text>
+  <rect x="72" y="465" width="360" height="64" rx="32" fill="#171814"/>
+  <text x="252" y="506" fill="#fff" font-family="Arial,sans-serif" font-size="22" font-weight="700" text-anchor="middle">Sin comisión por venta</text>
+  <text x="76" y="586" fill="#171814" opacity=".46" font-family="Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="2">POR ZENGASOFT · ZONA NORTE</text>
+</svg>

@@ -1,7 +1,7 @@
 {
   "name": "Trufi",
   "short_name": "Trufi",
-  "description": "Menú digital y pedidos online para negocios gastronómicos.",
+  "description": "Carta digital y pedidos directos para negocios, sin comisión por venta.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0d0d0d",

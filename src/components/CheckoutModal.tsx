@@ -60,7 +60,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   const effectiveSubtotal = subtotal ?? total;
   const showPromos = features.canUsePromotions && onApplyPromo;
 
-  const [step, setStep] = useState<'form' | 'confirm'>('form');
+  const [step, setStep] = useState<'form' | 'confirm' | 'demo-success'>('form');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [deliveryType, setDeliveryType] = useState<'pickup' | 'delivery'>('pickup');
@@ -140,6 +140,11 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   };
 
   const handleSendWhatsApp = async () => {
+    if (tenantId === 'demo') {
+      setStep('demo-success');
+      return;
+    }
+
     const paymentLabel = {
       cash: t.cash,
       transfer: t.transfer,
@@ -297,13 +302,17 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
         {/* Header */}
         <div className="sticky top-0 bg-surface-elevated z-10 px-6 py-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {step === 'confirm' ? (
+            {step === 'confirm' || step === 'demo-success' ? (
               <CheckCircle size={20} className="text-green-600" />
             ) : (
               <ClipboardList size={20} className="text-green-600" />
             )}
             <h2 id="checkout-modal-title" className="text-lg font-black text-text-primary">
-              {step === 'confirm' ? t.confirmTitle : t.title}
+              {step === 'demo-success'
+                ? 'Pedido de demostración listo'
+                : step === 'confirm'
+                  ? t.confirmTitle
+                  : t.title}
             </h2>
           </div>
           <button
@@ -512,6 +521,50 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               <Send size={18} />
               {t.submit}
             </button>
+          </div>
+        ) : step === 'demo-success' ? (
+          <div className="p-6 sm:p-8">
+            <div className="flex flex-col items-center text-center">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+                <CheckCircle size={40} className="text-green-600" />
+              </div>
+              <p className="mt-5 text-xs font-black uppercase tracking-[0.14em] text-green-700">
+                Demo segura · no se envió ningún mensaje
+              </p>
+              <h3 className="mt-2 text-2xl font-black text-text-primary">
+                Así de claro llega el pedido.
+              </h3>
+              <p className="mt-3 max-w-sm text-sm leading-relaxed text-text-secondary">
+                En un local real, ahora se guarda en la bandeja y se abre WhatsApp con el detalle listo para confirmar.
+              </p>
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-green-200 bg-green-50 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.12em] text-green-700">Pedido</p>
+                  <p className="mt-1 text-lg font-black text-green-900">#{orderId} · ${total.toLocaleString('es-AR')}</p>
+                </div>
+                <Store size={24} className="text-green-700" />
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-3">
+              <a
+                href={`/demo/owner${window.location.search}`}
+                className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-[#171814] px-4 py-3.5 text-sm font-black text-white transition hover:bg-[#ee6847]"
+              >
+                <Store size={18} />
+                Ver cómo lo recibe el local
+              </a>
+              <button
+                type="button"
+                onClick={resetAndClose}
+                className="w-full rounded-xl border border-border py-3 text-sm font-bold text-text-secondary transition hover:text-text-primary"
+              >
+                Seguir viendo la carta
+              </button>
+            </div>
           </div>
         ) : (
           /* Confirmation Step */
