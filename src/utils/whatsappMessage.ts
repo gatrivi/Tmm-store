@@ -25,8 +25,10 @@ export function buildWhatsAppMessage(params: {
   notes: string;
   cart: Array<{ qty: number; name: string; optionLabel: string; price: number }>;
   total: number;
+  discount?: number;
+  promoCode?: string;
 }): string {
-  const { orderId, name, phone, deliveryType, address, paymentMethod, paymentLabel, bankAlias, notes, cart, total } = params;
+  const { orderId, name, phone, deliveryType, address, paymentMethod, paymentLabel, bankAlias, notes, cart, total, discount = 0, promoCode } = params;
 
   let message = `🛒 *Pedido #${orderId}*\n`;
   message += `━━━━━━━━━━━━━━━━━━\n\n`;
@@ -46,6 +48,9 @@ export function buildWhatsAppMessage(params: {
   });
 
   message += `\n*Total: $${total.toLocaleString('es-AR')}*\n`;
+  if (discount > 0) {
+    message += `🎁 *Descuento${promoCode ? ` (${promoCode})` : ''}:* -$${discount.toLocaleString('es-AR')}\n`;
+  }
   message += `━━━━━━━━━━━━━━━━━━\n`;
 
   if (paymentMethod === 'transfer' && bankAlias) {

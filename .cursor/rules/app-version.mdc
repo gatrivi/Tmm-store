@@ -1,0 +1,35 @@
+---
+description: Agent replies and app build must share the same version stamp
+alwaysApply: true
+---
+
+# App version stamp
+
+## Source of truth
+
+- Version lives in [`package.json`](../../package.json) → `version` field.
+- Bump `version` on every shippable change (patch/minor as appropriate).
+- Build injects it via `vite.config.js` → [`src/config/version.ts`](../../src/config/version.ts).
+
+## Visible in app
+
+- Fixed stamp bottom-left on all routes (`AppVersionStamp` in `App.tsx`).
+- Footer + admin header also show `vX.Y.Z`.
+
+## Agent messages
+
+**Every assistant reply must end with the current app version on its own line:**
+
+```
+— Trufi vX.Y.Z
+```
+
+Use the exact value from `package.json` at time of reply. If you bumped version in the same turn, use the new number.
+
+Purpose: user compares chat footer vs on-screen stamp to confirm deploy / HMR applied.
+
+## When bumping
+
+- User-visible fix or feature → patch bump (e.g. 1.2.0 → 1.2.1).
+- MVP slice or multiple files → minor bump if meaningful (e.g. 1.1.0 → 1.2.0).
+- Always bump in the same commit/turn as the change you want verified.

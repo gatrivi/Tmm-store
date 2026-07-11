@@ -1,29 +1,36 @@
 /**
- * Genera un sonido sutil de "pop" usando Web Audio API.
- * No requiere archivos externos.
+ * Web Audio feedback for storefront and admin.
  */
-export function playAddToCartSound(): void {
+function getAudioContext(): AudioContext | null {
   try {
-    const AudioContext = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContext) return;
-
-    const ctx = new AudioContext();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.1);
-
-    gain.gain.setValueAtTime(0.08, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.15);
+    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    return Ctx ? new Ctx() : null;
   } catch {
-    // Silenciosamente fallar si Web Audio no está disponible
+    return null;
   }
+}
+
+function playTone(freq: number, duration: number, gainValue: number, type: OscillatorType = 'sine'): void {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, ctx.currentTime);
+  gain.gain.setValueAtTime(gainValue, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime + duration);
+}
+
+export function playAddToCartSound(): void {
+  playTone(880, 0.15, 0.08);
+}
+
+/** Admin alert when a new order arrives */
+export function playNewOrderSound(): void {
+  playTone(523.25, 0.12, 0.1);
+  window.setTimeout(() => playTone(659.25, 0.18, 0.09, 'triangle'), 120);
 }

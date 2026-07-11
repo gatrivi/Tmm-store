@@ -10,15 +10,26 @@
  * sobrevivan a recargas de página. Se expone una función `resetToDefaults`
  * para restaurar los datos originales de `menuData`.
  */
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { menuData, type MenuItemType } from '../data/menu';
 import { getUsdRate, getUsdRateSync } from '../utils/dollarRate';
+import type { Promotion } from '../types/promotion';
+import { isFirebaseConfigured } from '../lib/firebase';
+import { loadTenantData, saveTenantSnapshot } from '../services/tenantService';
+import { parsePlan } from '../config/plans';
+import type { MenuCategory } from '../types/menuCategory';
+import { getInitialMenuCategories } from '../utils/menuImport';
+import type { MenuLayoutId } from '../utils/menuLayouts';
+import { DEFAULT_MENU_LAYOUT, parseMenuLayout } from '../utils/menuLayouts';
+import { buildProspectLogoDataUrl, parseProspectDemo } from '../utils/prospectDemo';
 
 /** Keys de localStorage */
 const STORAGE_KEY_MENU = 'elpuestito_admin_menu';
+const STORAGE_KEY_CATEGORIES = 'elpuestito_admin_categories';
 const STORAGE_KEY_EXTRAS = 'elpuestito_admin_extras';
 const STORAGE_KEY_LAST_EDIT = 'elpuestito_admin_last_edit';
 const STORAGE_KEY_SETTINGS = 'elpuestito_admin_settings';
+const STORAGE_KEY_PROMOTIONS = 'elpuestito_admin_promotions';
 
 /**
  * Interfaz para los extras hardcodeados que aparecen en SimplifiedMenu.
@@ -74,8 +85,81 @@ export interface SiteSettings {
   brandInstagram: string;
   brandGoogleMaps: string;
   brandLogo?: string;
+  /** Storefront menu card layout */
+  menuLayout: MenuLayoutId;
   demoMode: boolean;
   mpEnabled: boolean;
+  /** Play sound in admin when a new order arrives */
+  orderSoundEnabled: boolean;
+  /** Auto-open print dialog for new orders (thermal) */
+  autoPrintOnNewOrder: boolean;
+}
+
+const DEFAULT_SITE_SETTINGS: SiteSettings = {
+  showUsdToggle: false,
+  manualRate: 0,
+  useManualRate: false,
+  whatsappNumber: '',
+  bankAlias: '',
+  brandName: '',
+  brandColor: '#cc333f',
+  brandColorDark: '#6a4a3c',
+  brandColorLight: '#fdf6e3',
+  brandAccent: '#edc951',
+  brandTextColor: '#3d2b1f',
+  brandFont: 'system-ui',
+  brandAddress: '',
+  brandInstagram: '',
+  brandGoogleMaps: '',
+  brandLogo: undefined,
+  menuLayout: DEFAULT_MENU_LAYOUT,
+  demoMode: false,
+  mpEnabled: true,
+  orderSoundEnabled: true,
+  autoPrintOnNewOrder: false,
+};
+
+const DEMO_SITE_SETTINGS: SiteSettings = {
+  ...DEFAULT_SITE_SETTINGS,
+  whatsappNumber: '5491100000000',
+  bankAlias: 'CLUB.OLIVOS',
+  brandName: 'Club Social Olivos',
+  brandColor: '#171814',
+  brandColorDark: '#0f100d',
+  brandColorLight: '#f2eee6',
+  brandAccent: '#d7ff64',
+  brandTextColor: '#171814',
+  brandFont: 'Georgia, serif',
+  brandAddress: 'Olivos · Vicente López',
+  brandLogo: '/demo-logo.svg',
+  menuLayout: 'grid',
+  demoMode: true,
+  mpEnabled: false,
+};
+
+function getDemoSiteSettings(): SiteSettings {
+  const prospect = parseProspectDemo(window.location.search);
+  return {
+    ...DEMO_SITE_SETTINGS,
+    brandName: prospect.businessName,
+    brandAddress: `${prospect.categoryLabel} · ${prospect.area}`,
+    brandColor: prospect.colorValue,
+    brandLogo: prospect.customized
+      ? buildProspectLogoDataUrl(prospect)
+      : DEMO_SITE_SETTINGS.brandLogo,
+  };
+}
+
+function getStorageKeys(tenantId: string) {
+  const suffix = tenantId === 'default' ? '' : `:${tenantId}`;
+  return {
+    menu: `${STORAGE_KEY_MENU}${suffix}`,
+    categories: `${STORAGE_KEY_CATEGORIES}${suffix}`,
+    extras: `${STORAGE_KEY_EXTRAS}${suffix}`,
+    lastEdit: `${STORAGE_KEY_LAST_EDIT}${suffix}`,
+    settings: `${STORAGE_KEY_SETTINGS}${suffix}`,
+    promotions: `${STORAGE_KEY_PROMOTIONS}${suffix}`,
+  };
 }
 
 interface MenuContextProps {
@@ -83,6 +167,8 @@ interface MenuContextProps {
   updateMenuItem: (index: number, updated: MenuItemType) => void;
   deleteMenuItem: (index: number) => void;
   setMenuItems: React.Dispatch<React.SetStateAction<MenuItemType[]>>;
+  menuCategories: MenuCategory[];
+  setMenuCategories: React.Dispatch<React.SetStateAction<MenuCategory[]>>;
   extrasData: ExtraItem[];
   updateExtraItem: (index: number, updated: ExtraItem) => void;
   setExtrasData: React.Dispatch<React.SetStateAction<ExtraItem[]>>;
@@ -98,65 +184,180 @@ interface MenuContextProps {
   /** Cotización actual del dólar blue */
   usdRate: number;
   setUsdRate: React.Dispatch<React.SetStateAction<number>>;
+  /** Promociones / cupones */
+  promotions: Promotion[];
+  setPromotions: React.Dispatch<React.SetStateAction<Promotion[]>>;
+  /** Sync remoto activo */
+  cloudSyncEnabled: boolean;
+  /** loading | synced | offline | error */
+  cloudSyncStatus: 'loading' | 'synced' | 'offline' | 'error';
+  tenantId: string;
 }
 
 const MenuContext = createContext<MenuContextProps | undefined>(undefined);
 
+function resolveTenantId(): string {
+  if (window.location.pathname.startsWith('/demo')) return 'demo';
+
+  const fromEnv = import.meta.env.VITE_TENANT_ID as string | undefined;
+  if (fromEnv?.trim()) return fromEnv.trim();
+  const slugMatch = window.location.pathname.match(/^\/s\/([^/]+)/);
+  if (slugMatch?.[1]) return slugMatch[1];
+  return 'default';
+}
+
+/** Demo menu for the public showcase and local development. */
+function getDefaultMenuSeed(tenantId: string): MenuItemType[] {
+  const isLocalDemo = import.meta.env.DEV
+    && tenantId === 'default'
+    && !import.meta.env.VITE_TENANT_ID?.trim();
+  return tenantId === 'demo' || isLocalDemo
+    ? JSON.parse(JSON.stringify(menuData))
+    : [];
+}
+
 export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [menuItems, setMenuItems] = useState<MenuItemType[]>(() =>
-    loadFromStorage(STORAGE_KEY_MENU, menuData)
-  );
-  const [extrasData, setExtrasData] = useState<ExtraItem[]>(() =>
-    loadFromStorage(STORAGE_KEY_EXTRAS, initialExtras)
-  );
-  const [lastEditTimestamp, setLastEditTimestamp] = useState<string | null>(() =>
-    localStorage.getItem(STORAGE_KEY_LAST_EDIT)
-  );
+  const tenantId = resolveTenantId();
+  const isDemoTenant = tenantId === 'demo';
+  const storageKeys = useMemo(() => getStorageKeys(tenantId), [tenantId]);
+  const cloudSyncEnabled = isFirebaseConfigured() && !isDemoTenant;
+  const hydratedFromCloud = useRef(false);
+
+  const [menuItems, setMenuItems] = useState<MenuItemType[]>(() => {
+    const seed = getDefaultMenuSeed(tenantId);
+    return isDemoTenant ? seed : loadFromStorage(storageKeys.menu, seed);
+  });
+  const [menuCategories, setMenuCategories] = useState<MenuCategory[]>(() => {
+    if (isDemoTenant) return getInitialMenuCategories();
+    const stored = loadFromStorage<MenuCategory[] | null>(storageKeys.categories, null);
+    if (stored && stored.length > 0) return stored;
+    return getDefaultMenuSeed(tenantId).length > 0 ? getInitialMenuCategories() : [];
+  });
+  const [extrasData, setExtrasData] = useState<ExtraItem[]>(() => (
+    isDemoTenant
+      ? JSON.parse(JSON.stringify(initialExtras))
+      : loadFromStorage(storageKeys.extras, initialExtras)
+  ));
+  const [lastEditTimestamp, setLastEditTimestamp] = useState<string | null>(() => (
+    isDemoTenant ? null : localStorage.getItem(storageKeys.lastEdit)
+  ));
   const [siteSettings, setSiteSettings] = useState<SiteSettings>(() => {
-    const fallback: SiteSettings = {
-      showUsdToggle: false,
-      manualRate: 0,
-      useManualRate: false,
-      whatsappNumber: '',
-      bankAlias: '',
-      brandName: '',
-      brandColor: '#cc333f',
-      brandColorDark: '#6a4a3c',
-      brandColorLight: '#fdf6e3',
-      brandAccent: '#edc951',
-      brandTextColor: '#3d2b1f',
-      brandFont: 'system-ui',
-      brandAddress: '',
-      brandInstagram: '',
-      brandGoogleMaps: '',
-      brandLogo: undefined,
-      demoMode: false,
-      mpEnabled: true,
+    const fallback = isDemoTenant ? getDemoSiteSettings() : DEFAULT_SITE_SETTINGS;
+    const saved = isDemoTenant
+      ? {}
+      : loadFromStorage<Partial<SiteSettings>>(storageKeys.settings, {});
+    return {
+      ...fallback,
+      ...saved,
+      menuLayout: parseMenuLayout(saved.menuLayout ?? fallback.menuLayout),
     };
-    const saved = loadFromStorage<Partial<SiteSettings>>(STORAGE_KEY_SETTINGS, {});
-    return { ...fallback, ...saved };
   });
   const [usdRate, setUsdRate] = useState<number>(() => getUsdRateSync());
+  const [promotions, setPromotions] = useState<Promotion[]>(() => (
+    isDemoTenant ? [] : loadFromStorage<Promotion[]>(storageKeys.promotions, [])
+  ));
+  const [cloudSyncStatus, setCloudSyncStatus] = useState<'loading' | 'synced' | 'offline' | 'error'>(() =>
+    cloudSyncEnabled ? 'loading' : 'offline',
+  );
 
   // Cargar cotización actual al montar (async)
   useEffect(() => {
     getUsdRate().then(rate => setUsdRate(rate));
   }, []);
 
+  // Hidratar desde Firestore si está configurado
+  useEffect(() => {
+    if (!cloudSyncEnabled) {
+      setCloudSyncStatus('offline');
+      return;
+    }
+    if (hydratedFromCloud.current) return;
+
+    loadTenantData(tenantId)
+      .then(async data => {
+        if (data?.menuItems?.length) {
+          setMenuItems(data.menuItems);
+        }
+        if (data?.menuCategories?.length) {
+          setMenuCategories(data.menuCategories);
+        }
+        if (data?.extras?.length) setExtrasData(data.extras);
+        if (data?.settings) {
+          setSiteSettings(prev => ({
+            ...prev,
+            ...data.settings,
+            menuLayout: parseMenuLayout(data.settings!.menuLayout ?? prev.menuLayout),
+            orderSoundEnabled: data.settings!.orderSoundEnabled ?? true,
+            autoPrintOnNewOrder: data.settings!.autoPrintOnNewOrder ?? false,
+          }));
+        }
+        if (data?.promotions) setPromotions(data.promotions);
+
+        if (!data?.menuItems?.length) {
+          await saveTenantSnapshot(tenantId, {
+            settings: siteSettings,
+            menuItems,
+            menuCategories,
+            extras: extrasData,
+            promotions,
+            plan: parsePlan(import.meta.env.VITE_PLAN as string | undefined),
+          });
+        }
+        setCloudSyncStatus('synced');
+      })
+      .catch(err => {
+        console.error('Cloud sync hydrate failed:', err);
+        setCloudSyncStatus('error');
+      })
+      .finally(() => {
+        hydratedFromCloud.current = true;
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- initial seed only once on mount
+  }, [cloudSyncEnabled, tenantId]);
+
+  // Persistir snapshot en Firestore (debounced)
+  useEffect(() => {
+    if (!cloudSyncEnabled || !hydratedFromCloud.current) return;
+    const timer = window.setTimeout(() => {
+      saveTenantSnapshot(tenantId, {
+        settings: siteSettings,
+        menuItems,
+        menuCategories,
+        extras: extrasData,
+        promotions,
+        plan: parsePlan(import.meta.env.VITE_PLAN as string | undefined),
+      }).catch(console.error);
+    }, 800);
+    return () => window.clearTimeout(timer);
+  }, [cloudSyncEnabled, tenantId, siteSettings, menuItems, menuCategories, extrasData, promotions]);
+
   // Persistir menuItems en localStorage cada vez que cambie
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(menuItems));
-  }, [menuItems]);
+    if (isDemoTenant) return;
+    localStorage.setItem(storageKeys.menu, JSON.stringify(menuItems));
+  }, [isDemoTenant, menuItems, storageKeys.menu]);
+
+  useEffect(() => {
+    if (isDemoTenant) return;
+    localStorage.setItem(storageKeys.categories, JSON.stringify(menuCategories));
+  }, [isDemoTenant, menuCategories, storageKeys.categories]);
 
   // Persistir extrasData en localStorage cada vez que cambie
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_EXTRAS, JSON.stringify(extrasData));
-  }, [extrasData]);
+    if (isDemoTenant) return;
+    localStorage.setItem(storageKeys.extras, JSON.stringify(extrasData));
+  }, [extrasData, isDemoTenant, storageKeys.extras]);
 
   // Persistir siteSettings
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(siteSettings));
-  }, [siteSettings]);
+    if (isDemoTenant) return;
+    localStorage.setItem(storageKeys.settings, JSON.stringify(siteSettings));
+  }, [isDemoTenant, siteSettings, storageKeys.settings]);
+
+  useEffect(() => {
+    if (isDemoTenant) return;
+    localStorage.setItem(storageKeys.promotions, JSON.stringify(promotions));
+  }, [isDemoTenant, promotions, storageKeys.promotions]);
 
   const updateMenuItem = useCallback((index: number, updated: MenuItemType) => {
     setMenuItems(prev => {
@@ -165,16 +366,16 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return next;
     });
     const ts = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY_LAST_EDIT, ts);
+    localStorage.setItem(storageKeys.lastEdit, ts);
     setLastEditTimestamp(ts);
-  }, []);
+  }, [storageKeys.lastEdit]);
 
   const deleteMenuItem = useCallback((index: number) => {
     setMenuItems(prev => prev.filter((_, i) => i !== index));
     const ts = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY_LAST_EDIT, ts);
+    localStorage.setItem(storageKeys.lastEdit, ts);
     setLastEditTimestamp(ts);
-  }, []);
+  }, [storageKeys.lastEdit]);
 
   const updateExtraItem = useCallback((index: number, updated: ExtraItem) => {
     setExtrasData(prev => {
@@ -183,20 +384,22 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return next;
     });
     const ts = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY_LAST_EDIT, ts);
+    localStorage.setItem(storageKeys.lastEdit, ts);
     setLastEditTimestamp(ts);
-  }, []);
+  }, [storageKeys.lastEdit]);
 
   const resetToDefaults = useCallback(() => {
     const freshMenu = JSON.parse(JSON.stringify(menuData));
     const freshExtras = JSON.parse(JSON.stringify(initialExtras));
     setMenuItems(freshMenu);
+    setMenuCategories(getInitialMenuCategories());
     setExtrasData(freshExtras);
-    localStorage.removeItem(STORAGE_KEY_MENU);
-    localStorage.removeItem(STORAGE_KEY_EXTRAS);
-    localStorage.removeItem(STORAGE_KEY_LAST_EDIT);
+    localStorage.removeItem(storageKeys.menu);
+    localStorage.removeItem(storageKeys.categories);
+    localStorage.removeItem(storageKeys.extras);
+    localStorage.removeItem(storageKeys.lastEdit);
     setLastEditTimestamp(null);
-  }, []);
+  }, [storageKeys]);
 
   const resetTextsOnly = useCallback((targetLang?: string) => {
     setMenuItems(prev => prev.map((item, i) => {
@@ -255,9 +458,9 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }));
 
     const ts = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY_LAST_EDIT, ts);
+    localStorage.setItem(storageKeys.lastEdit, ts);
     setLastEditTimestamp(ts);
-  }, []);
+  }, [storageKeys.lastEdit]);
 
   // Tasa efectiva: manual (si activada y > 0) o de la API
   const effectiveRate = siteSettings.useManualRate && siteSettings.manualRate > 0
@@ -265,7 +468,7 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
     : usdRate;
 
   return (
-    <MenuContext.Provider value={{ menuItems, updateMenuItem, deleteMenuItem, setMenuItems, extrasData, updateExtraItem, setExtrasData, resetToDefaults, resetTextsOnly, lastEditTimestamp, siteSettings, setSiteSettings, usdRate: effectiveRate, setUsdRate }}>
+    <MenuContext.Provider value={{ menuItems, updateMenuItem, deleteMenuItem, setMenuItems, menuCategories, setMenuCategories, extrasData, updateExtraItem, setExtrasData, resetToDefaults, resetTextsOnly, lastEditTimestamp, siteSettings, setSiteSettings, usdRate: effectiveRate, setUsdRate, promotions, setPromotions, cloudSyncEnabled, cloudSyncStatus, tenantId }}>
       {children}
     </MenuContext.Provider>
   );

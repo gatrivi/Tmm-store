@@ -1,0 +1,30 @@
+# Roadmap index
+
+Purpose: future Trufi work — competitive parity with PedidoDirecto, then Premium CX and Gaucho monetization.
+
+**Status:** specification only. No implementation committed in these docs.
+
+## Read order
+
+| Topic | Doc |
+|-------|-----|
+| vs PedidoDirecto today | [competitive-parity.md](./competitive-parity.md) |
+| Delivery sequence | [phases.md](./phases.md) |
+| WhatsApp CX | [whatsapp-cx.md](./whatsapp-cx.md) |
+| Print tickets | [print-tickets.md](./print-tickets.md) |
+| Gaucho free mode | [gaucho-mode.md](./gaucho-mode.md) |
+| Premium supervised AI desk | [premium-cx-desk.md](./premium-cx-desk.md) |
+
+## Phase summary
+
+| Phase | Focus |
+|-------|--------|
+| P1 | WSP templates, order deep links, print ticket v2 |
+| P2 | Firebase default, MP webhook hardening, mobile admin |
+| P3 | WhatsApp Business API |
+| P4 | Gaucho mode + earnings tracker + donate/subscribe |
+| P5 | Premium CX desk (10 windows, human-in-the-loop) |
+
+Defer P4–P5 until P1–P2 shippable.
+
+See also: [../features/plans-tiers.md](../features/plans-tiers.md), [../README.md](../README.md)

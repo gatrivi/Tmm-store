@@ -8,8 +8,9 @@
  */
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Save, RotateCcw, Check, ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
+import { Save, RotateCcw, Check, ChevronDown, ChevronUp, Plus, Trash2, Percent } from 'lucide-react';
 import { useMenu, type ExtraItem } from '../../context/MenuContext';
+import { usePlan } from '../../context/PlanContext';
 import type { MenuItemType, MenuOption } from '../../data/menu';
 
 type EditLang = 'es' | 'en' | 'pt' | 'ru' | 'de';
@@ -141,6 +142,9 @@ function deepClone<T>(obj: T): T {
 
 export function AdminMenuEditor() {
   const { menuItems, setMenuItems, updateMenuItem, deleteMenuItem, extrasData, updateExtraItem } = useMenu();
+  const { features } = usePlan();
+  const [bulkPercent, setBulkPercent] = useState('10');
+  const [bulkDirection, setBulkDirection] = useState<'increase' | 'decrease'>('increase');
   const [selectedLang, setSelectedLang] = useState<EditLang>('es');
   const [selectedItemIndex, setSelectedItemIndex] = useState<number>(0);
   const [editingExtras, setEditingExtras] = useState(false);
@@ -218,6 +222,22 @@ export function AdminMenuEditor() {
     }
   }, [deleteMenuItem, draft, menuItems, selectedItemIndex, showToast]);
 
+  const applyBulkPricing = useCallback(() => {
+    const pct = parseInt(bulkPercent, 10);
+    if (!pct || pct <= 0) return;
+    const factor = bulkDirection === 'increase' ? 1 + pct / 100 : 1 - pct / 100;
+    setMenuItems(prev =>
+      prev.map(item => ({
+        ...item,
+        options: item.options.map(opt => ({
+          ...opt,
+          price: Math.max(0, Math.round(opt.price * factor)),
+        })),
+      })),
+    );
+    showToast(`💰 Precios ${bulkDirection === 'increase' ? 'aumentados' : 'reducidos'} ${pct}%`);
+  }, [bulkPercent, bulkDirection, setMenuItems, showToast]);
+
   const updateDraftOption = useCallback((optIndex: number, updater: (opt: MenuOption) => MenuOption) => {
     if (!draft) return;
     const newDraft = { ...draft };
@@ -280,6 +300,35 @@ export function AdminMenuEditor() {
           Nuevo Producto
         </button>
       </div>
+
+      {features.canUseBulkPricing && (
+        <div className="bg-white/3 border border-white/10 rounded-2xl p-4 flex flex-wrap items-end gap-3">
+          <div className="flex items-center gap-2 text-sm font-bold text-white">
+            <Percent size={16} className="text-green-400" />
+            Cambio masivo de precios
+          </div>
+          <select
+            value={bulkDirection}
+            onChange={e => setBulkDirection(e.target.value as 'increase' | 'decrease')}
+            className="bg-black/30 border border-white/10 rounded-xl px-3 py-2 text-sm text-white"
+          >
+            <option value="increase">Aumentar</option>
+            <option value="decrease">Reducir</option>
+          </select>
+          <input
+            value={bulkPercent}
+            onChange={e => setBulkPercent(e.target.value.replace(/[^0-9]/g, ''))}
+            className="w-20 bg-black/30 border border-white/10 rounded-xl px-3 py-2 text-sm text-white"
+          />
+          <span className="text-sm text-gray-400">%</span>
+          <button
+            onClick={applyBulkPricing}
+            className="px-4 py-2 bg-brand-green text-white rounded-xl text-xs font-bold"
+          >
+            Aplicar a todo el menú
+          </button>
+        </div>
+      )}
 
       {/* Language Selector */}
       <div className="flex items-center gap-1.5 bg-white/6 backdrop-blur-sm border border-white/10 rounded-xl p-1.5">
@@ -583,7 +632,7 @@ export function AdminMenuEditor() {
                                 {/* Features */}
                                 <div>
                                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 block">
-                                    Tags incluidos ({selectedLang.toUpperCase()}) — separar con coma
+                                    Ingredientes ({selectedLang.toUpperCase()}) — separar con coma
                                   </label>
                                   <input
                                     type="text"

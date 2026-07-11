@@ -18,7 +18,7 @@ interface LayoutProps {
  */
 export function Layout({ children }: LayoutProps) {
   return (
-    <div className="w-full min-h-dvh bg-brand-white relative overflow-x-hidden">
+    <div className="w-full min-h-dvh bg-surface relative overflow-x-hidden">
       {children}
     </div>
   );

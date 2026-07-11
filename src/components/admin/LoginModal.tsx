@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
+import { isUsingDefaultAdminCredentials } from '../../utils/adminSecurity';
 
 export function LoginModal() {
   const { showLogin, dismissLogin, login, failedAttempts, lockedUntil } = useAdmin();
@@ -122,7 +123,7 @@ export function LoginModal() {
             }
             exit={{ opacity: 0, scale: 0.85, y: 30 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="relative w-full max-w-sm bg-brand-white rounded-2xl shadow-[0_30px_80px_rgba(0,0,0,0.5)] overflow-hidden"
+            className="relative w-full max-w-sm bg-surface-elevated border border-border rounded-2xl shadow-[0_30px_80px_rgba(0,0,0,0.5)] overflow-hidden"
           >
             {/* Header con logo */}
             <div className="bg-brand-green px-6 py-8 flex flex-col items-center relative">
@@ -134,8 +135,8 @@ export function LoginModal() {
                 <X size={18} />
               </button>
               <img
-                src="/titulo-blanco.png"
-                alt="El Puestito del Tío"
+                src="/puestito.png"
+                alt="Trufi Admin"
                 className="w-48 h-auto object-contain"
               />
               <div className="w-12 h-0.5 bg-white/30 rounded-full mt-4" />
@@ -152,7 +153,7 @@ export function LoginModal() {
                   onChange={(e) => { setUsername(e.target.value); setError(''); }}
                   placeholder="Usuario"
                   maxLength={80}
-                  className="w-full pl-11 pr-4 py-3.5 bg-gray-100 rounded-xl text-sm font-medium text-brand-black placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-brand-green/40 transition-shadow disabled:opacity-50"
+                  className="w-full pl-11 pr-4 py-3.5 bg-surface-muted border border-border rounded-xl text-sm font-medium text-text-primary placeholder:text-text-muted outline-none focus:ring-2 focus:ring-brand-green/40 transition-shadow disabled:opacity-50"
                   autoComplete="off"
                   autoFocus
                   disabled={isLocked || isSubmitting}
@@ -168,7 +169,7 @@ export function LoginModal() {
                   onChange={(e) => { setPassword(e.target.value); setError(''); }}
                   placeholder="Contraseña"
                   maxLength={80}
-                  className="w-full pl-11 pr-11 py-3.5 bg-gray-100 rounded-xl text-sm font-medium text-brand-black placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-brand-green/40 transition-shadow disabled:opacity-50"
+                  className="w-full pl-11 pr-11 py-3.5 bg-surface-muted border border-border rounded-xl text-sm font-medium text-text-primary placeholder:text-text-muted outline-none focus:ring-2 focus:ring-brand-green/40 transition-shadow disabled:opacity-50"
                   autoComplete="current-password"
                   disabled={isLocked || isSubmitting}
                 />
@@ -205,6 +206,11 @@ export function LoginModal() {
               >
                 {isSubmitting ? 'Verificando...' : isLocked ? `Bloqueado (${lockCountdown}s)` : 'Ingresar'}
               </button>
+              {isUsingDefaultAdminCredentials() && (
+                <p className="text-[10px] text-amber-500/90 text-center leading-snug">
+                  Dev: admin / admin123 — cambiá antes de producción.
+                </p>
+              )}
             </form>
           </motion.div>
         </motion.div>

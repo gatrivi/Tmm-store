@@ -39,7 +39,7 @@ export function LanguageSelector() {
         className="bg-brand-green w-full max-w-2xl rounded-xl md:rounded-2xl p-8 md:p-12 shadow-[0_30px_60px_rgba(0,0,0,0.8)] flex flex-col items-center"
       >
         <img 
-          src="/titulo-blanco.png" 
+          src="/puestito.png" 
           alt="El Puestito del Tío" 
           className="w-72 md:w-96 lg:w-[450px] h-auto object-contain mb-4 md:mb-6"
         />

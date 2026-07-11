@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Palette, MapPin, ExternalLink, Type, Check, Upload, X, ImageIcon } from 'lucide-react';
 import { useMenu } from '../../context/MenuContext';
 import { PRESET_PALETTES } from '../../utils/palettes';
+import { compressImageFile } from '../../utils/imageCompress';
 
 export function AdminBranding() {
   const { siteSettings, setSiteSettings } = useMenu();
@@ -32,45 +33,11 @@ export function AdminBranding() {
     setSiteSettings(prev => ({ ...prev, [field]: value }));
   };
 
-  const compressLogo = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          const MAX_SIZE = 512;
-
-          if (width > height && width > MAX_SIZE) {
-            height *= MAX_SIZE / width;
-            width = MAX_SIZE;
-          } else if (height > MAX_SIZE) {
-            width *= MAX_SIZE / height;
-            height = MAX_SIZE;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          if (!ctx) return reject('No context');
-          ctx.drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL('image/webp', 0.85));
-        };
-        img.onerror = reject;
-        if (typeof e.target?.result === 'string') img.src = e.target.result;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
-
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
-      const base64 = await compressLogo(file);
+      const base64 = await compressImageFile(file, { maxSize: 512, quality: 0.85 });
       setSiteSettings(prev => ({ ...prev, brandLogo: base64 }));
     } catch {
       alert('Error al procesar el logo');
@@ -101,7 +68,7 @@ export function AdminBranding() {
           type="text"
           value={siteSettings.brandName}
           onChange={(e) => updateField('brandName', e.target.value)}
-          placeholder="Ej: El Puestito del Tío"
+          placeholder="Ej: Café de la Esquina"
           className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2.5 text-sm font-medium text-white outline-none focus:ring-2 focus:ring-pink-500/40 transition-shadow placeholder:text-gray-600"
         />
       </div>

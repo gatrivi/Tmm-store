@@ -1,13 +1,18 @@
 {
-  "name": "El Puestito del Tío",
-  "short_name": "El Puestito",
-  "description": "Pedí online en El Puestito del Tío. Choripanes, hamburguesas, bondiola y más.",
+  "name": "Trufi",
+  "short_name": "Trufi",
+  "description": "Carta digital y pedidos directos para negocios, sin comisión por venta.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0d0d0d",
   "theme_color": "#0d0d0d",
   "orientation": "portrait",
   "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
     {
       "src": "/favicon.jpg",
       "sizes": "192x192",

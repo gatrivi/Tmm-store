@@ -27,7 +27,7 @@ export function MenuList() {
   return (
     <div className="relative z-20 px-0 lg:px-4 flex flex-col items-center bg-brand-green w-full">
       <img
-        src={siteSettings.brandLogo || '/titulo-blanco.png'}
+        src={siteSettings.brandLogo || '/puestito.png'}
         alt={siteSettings.brandName || 'Título'}
         className="w-full md:w-[1200px] relative z-30 h-auto mx-auto mb-3 -mt-32 md:-mt-48 lg:-mt-64 px-4 object-contain"
       />
