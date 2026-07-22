@@ -43,6 +43,8 @@ interface CheckoutModalProps {
   onPromoCodeChange?: (code: string) => void;
   onApplyPromo?: () => void;
   promoError?: string | null;
+  /** Prefill delivery mode (demo verticals). */
+  initialDeliveryType?: 'pickup' | 'delivery';
 }
 
 const generateOrderId = (): string => {
@@ -54,7 +56,7 @@ const generateOrderId = (): string => {
   return id;
 };
 
-export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNumber, bankAlias, onOrderSent, mpEnabled, subtotal, discount = 0, promoCode = '', onPromoCodeChange, onApplyPromo, promoError }: CheckoutModalProps) {
+export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNumber, bankAlias, onOrderSent, mpEnabled, subtotal, discount = 0, promoCode = '', onPromoCodeChange, onApplyPromo, promoError, initialDeliveryType = 'pickup' }: CheckoutModalProps) {
   const { language } = useLanguage();
   const { features, tenantId } = usePlan();
   const location = useLocation();
@@ -77,7 +79,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   const [step, setStep] = useState<'form' | 'confirm' | 'demo-success'>('form');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [deliveryType, setDeliveryType] = useState<'pickup' | 'delivery'>('pickup');
+  const [deliveryType, setDeliveryType] = useState<'pickup' | 'delivery'>(initialDeliveryType);
   const [address, setAddress] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'transfer' | 'mercadopago'>('cash');
   const [notes, setNotes] = useState('');
@@ -102,6 +104,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
       setPopupBlocked(false);
       setMpError(null);
       setMpLoading(false);
+      setDeliveryType(initialDeliveryType);
       orderIdRef.current = generateOrderId();
       document.body.style.overflow = 'hidden';
     } else {
@@ -110,7 +113,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isOpen]);
+  }, [isOpen, initialDeliveryType]);
 
   const resetAndClose = useCallback(() => {
     setStep('form');

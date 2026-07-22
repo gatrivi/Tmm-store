@@ -2,6 +2,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import AdminPage from './pages/AdminPage';
 import NotFound from './pages/NotFound';
 import OrderStatusPage from './pages/OrderStatusPage';
+import CarniceriaDemoPage from './pages/CarniceriaDemoPage';
 import Storefront from './pages/Storefront';
 import SuperAdminPage from './pages/SuperAdminPage';
 import { AppVersionStamp } from './components/AppVersionBadge';
@@ -33,7 +34,7 @@ export default function CommerceApp() {
             <AppVersionStamp />
             <Routes>
               <Route path="/demo" element={<CustomerDemo />} />
-              <Route path="/demo/carniceria" element={<CustomerDemo />} />
+              <Route path="/demo/carniceria" element={<CarniceriaDemoPage />} />
               <Route path="/demo/carniceria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/s/:slug" element={<Storefront />} />
               <Route path="/admin" element={<AdminPage />} />

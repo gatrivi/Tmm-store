@@ -16,7 +16,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'parrilla',
     badge: 'Rinde 2–3',
     description: 'Asado, vacío, chorizos y morcillas',
-    images: [],
+    images: ['/demos/carniceria/combo-parrillero.jpg'],
     options: [{ id: 'pack', label: 'Pack 2–3 personas', price: 49900 }],
   },
   {
@@ -25,7 +25,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'parrilla',
     badge: 'Más pedido',
     description: 'Tira pareja para parrilla',
-    images: [],
+    images: ['/demos/carniceria/asado.jpg'],
     options: kgOptions(18900),
   },
   {
@@ -33,7 +33,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Vacío',
     category: 'parrilla',
     description: 'Pieza sabrosa, cocción lenta',
-    images: [],
+    images: ['/demos/carniceria/vacio.jpg'],
     options: kgOptions(16900),
   },
   {
@@ -41,7 +41,8 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Bife ancho',
     category: 'parrilla',
     description: 'Cortado en bifes',
-    images: [],
+    images: ['/demos/carniceria/asado.jpg'],
+    imagePositions: { '/demos/carniceria/asado.jpg': 'center 30%' },
     options: kgOptions(25200),
   },
   {
@@ -49,7 +50,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Nalga para milanesas',
     category: 'diario',
     description: 'Feteada fina o mediana',
-    images: [],
+    images: ['/demos/carniceria/nalga.jpg'],
     options: kgOptions(32000),
   },
   {
@@ -57,7 +58,8 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Picada especial',
     category: 'diario',
     description: 'Para hamburguesas, salsa o relleno',
-    images: [],
+    images: ['/demos/carniceria/nalga.jpg'],
+    imagePositions: { '/demos/carniceria/nalga.jpg': 'center bottom' },
     options: kgOptions(14000),
   },
   {
@@ -65,7 +67,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Milanesas de carne',
     category: 'listos',
     description: 'Empanadas y listas para cocinar',
-    images: [],
+    images: ['/demos/carniceria/nalga.jpg'],
     options: [
       { id: 'half', label: 'Bandeja ½ kg aprox.', price: 17450 },
       { id: 'kilo', label: 'Bandeja 1 kg aprox.', price: 34900 },
@@ -76,7 +78,8 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Hamburguesas caseras',
     category: 'listos',
     description: 'Medallones frescos',
-    images: [],
+    images: ['/demos/carniceria/combo-parrillero.jpg'],
+    imagePositions: { '/demos/carniceria/combo-parrillero.jpg': 'center 60%' },
     options: [{ id: 'pack4', label: 'Pack de 4', price: 12900 }],
   },
 ];
@@ -161,9 +164,8 @@ export const CARNICERIA_DEMO: DemoDefinition = {
   plan: 'pedidos',
   locale: 'es',
   monogram: 'GC',
-  // ponytail: path reserved; object-position set when asset lands
-  heroImage: undefined,
-  heroObjectPosition: 'center',
+  heroImage: '/demos/carniceria/gabriel-hero.jpg',
+  heroObjectPosition: 'center 40%',
   hideLanguageSwitcher: true,
   hideThemeToggle: true,
   hideShare: true,

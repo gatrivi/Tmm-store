@@ -2,18 +2,18 @@
 
 Brief de producto e implementación para Cursor.
 
-**Estado: Hito 1 shipped** (v1.8.0) — vertical `/demo/carniceria` aislada del showcase gastronómico.
+**Estado: Hito 1 shipped** (v1.8.1) — vertical `/demo/carniceria` + pasada visual hacia
+[mockup desktop](./assets/demo-carniceria-gabriel-target.jpg).
 
-**Objetivo visual de la próxima pasada:**
-[mockup desktop vendible](./assets/demo-carniceria-gabriel-target.jpg).
-La imagen fija jerarquía, densidad, controles y tratamiento fotográfico; ante
-cualquier diferencia de contenido, este documento sigue siendo la fuente de
-verdad.
+**Objetivo visual:** la imagen fija jerarquía, densidad, controles y tratamiento fotográfico;
+ante diferencia de contenido, este documento sigue siendo la fuente de verdad.
 
 - Config: `src/data/demos/carniceria.ts`
+- Page: `src/pages/CarniceriaDemoPage.tsx`
 - Registry: `src/utils/demoRegistry.ts`
 - Check: `npm run check:demo`
 - Storage: `trufi_demo_orders_v2:carniceria`
+- Assets: `public/demos/carniceria/` (hero + cortes)
 
 Placeholders pendientes: foto/nombre real, precios, cobertura, punto de retiro. Sin motor de peso variable (siguiente hito).
 
