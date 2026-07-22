@@ -150,10 +150,14 @@ export default function DemoOwnerPage() {
               <span className="h-2 w-2 animate-pulse rounded-full bg-[#2eb36c]" />
               Recibiendo pedidos
             </span>
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white" aria-hidden="true">
-              <Bell size={17} />
+            <div
+              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white"
+              aria-label={counts.new > 0 ? `${counts.new} pedidos nuevos (demo)` : 'Sin pedidos nuevos'}
+              title="Indicador demo — no hay notificaciones reales"
+            >
+              <Bell size={17} className="pointer-events-none text-black/45" aria-hidden />
               {counts.new > 0 && (
-                <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#ee6847]" />
+                <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#ee6847]" aria-hidden />
               )}
             </div>
           </div>

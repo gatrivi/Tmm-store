@@ -155,14 +155,6 @@ export default function CarniceriaDemoPage() {
     >
       <DemoRibbon />
 
-      {/* Demo strip */}
-      <div
-        className="px-4 py-2 text-center text-[11px] font-black uppercase tracking-[0.14em] text-white"
-        style={{ backgroundColor: theme.bordo }}
-      >
-        {copy.ribbonLabel}
-      </div>
-
       {/* Header */}
       <header className="sticky top-0 z-30 border-b border-black/8 bg-[#fffdf9]/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
@@ -200,6 +192,7 @@ export default function CarniceriaDemoPage() {
             <button
               type="button"
               onClick={() => setCartOpen(true)}
+              aria-label={`Ver carrito${cartCount ? ` · ${formatArs(cartTotal)}` : ''}`}
               className="flex min-h-11 items-center gap-2 rounded-xl px-2.5 text-left transition hover:bg-black/4"
             >
               <span
@@ -305,7 +298,7 @@ export default function CarniceriaDemoPage() {
                 key={item.id}
                 className="flex flex-col overflow-hidden rounded-2xl border border-black/8 bg-white shadow-sm"
               >
-                <div className="aspect-[4/3] bg-[#ebe4d8]">
+                <div className="aspect-[4/3]" style={{ backgroundColor: theme.papel }}>
                   {img ? (
                     <img
                       src={img}
@@ -315,8 +308,17 @@ export default function CarniceriaDemoPage() {
                       loading="lazy"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center text-xs font-black uppercase tracking-wider text-black/30">
-                      {item.name}
+                    <div className="flex h-full flex-col items-center justify-center gap-2 px-4 text-center">
+                      <span
+                        className="flex h-14 w-14 items-center justify-center rounded-2xl text-lg font-bold"
+                        style={{ backgroundColor: theme.bordo, color: theme.hueso, fontFamily: siteSettings.brandFont }}
+                        aria-hidden
+                      >
+                        {demo.monogram}
+                      </span>
+                      <span className="text-xs font-black uppercase tracking-[0.12em]" style={{ color: `${theme.carbon}99` }}>
+                        {item.name}
+                      </span>
                     </div>
                   )}
                 </div>

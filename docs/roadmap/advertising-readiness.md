@@ -1,5 +1,7 @@
 # Release gate — publicitar Trufi
 
+**Estado: Hito A shipped** (v1.9.0) — listo para publicitar como búsqueda de pilotos.
+
 Auditoría de `trabajo` en `b0f0cf7` / v1.8.3, 22 de julio de 2026.
 
 ## Veredicto

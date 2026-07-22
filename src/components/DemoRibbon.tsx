@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, Store, UserRound } from 'lucide-react';
-import { buildSalesContactHref } from '../utils/salesContact';
+import { buildSalesContactHref, hasSalesWhatsApp } from '../utils/salesContact';
 import { resolveDemoFromPath, resolveDemoPaths } from '../utils/demoRegistry';
 
 export function DemoRibbon() {
@@ -10,10 +10,43 @@ export function DemoRibbon() {
   const ownerActive = location.pathname === paths.ownerPath;
   const demoSearch = vertical ? '' : location.search;
   const prospectName = new URLSearchParams(demoSearch).get('negocio');
+  const salesSource = prospectName
+    ? `demo para ${prospectName}`
+    : vertical?.id === 'carniceria'
+      ? 'demo carnicería'
+      : vertical
+        ? `demo ${vertical.siteSettings.brandName ?? vertical.id}`
+        : 'demo';
+  const theme = vertical?.theme;
+  const ctaLabel = hasSalesWhatsApp() ? (
+    <>
+      <span className="hidden sm:inline">Quiero esto</span>
+      <span className="sm:hidden">Lo quiero</span>
+    </>
+  ) : (
+    <>
+      <span className="hidden sm:inline">Pedí tu demo</span>
+      <span className="sm:hidden">Demo</span>
+    </>
+  );
 
   return (
-    <div className="relative z-40 border-b border-white/10 bg-[#151612] text-white">
-      <div className="mx-auto flex min-h-14 max-w-7xl items-center justify-between gap-2 px-3 sm:px-6">
+    <div
+      className="relative z-40 border-b text-white"
+      style={{
+        backgroundColor: theme?.carbon ?? '#151612',
+        borderColor: 'rgba(255,255,255,0.1)',
+      }}
+    >
+      {vertical?.copy.ribbonLabel && (
+        <p
+          className="px-3 py-1.5 text-center text-[10px] font-black uppercase tracking-[0.14em]"
+          style={{ backgroundColor: theme?.bordo ?? '#ee6847', color: theme?.hueso ?? '#fff' }}
+        >
+          {vertical.copy.ribbonLabel}
+        </p>
+      )}
+      <div className="mx-auto flex min-h-12 max-w-7xl items-center justify-between gap-2 px-3 sm:px-6">
         <Link
           to="/"
           className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-white/75 transition hover:text-white"
@@ -45,17 +78,14 @@ export function DemoRibbon() {
         </div>
 
         <a
-          href={buildSalesContactHref(
-            prospectName
-              ? `demo para ${prospectName}`
-              : vertical
-                ? `demo ${vertical.siteSettings.brandName ?? vertical.id}`
-                : 'demo',
-          )}
-          className="rounded-full bg-[#d7ff64] px-3 py-2 text-xs font-black text-[#151612] transition hover:bg-white sm:px-4"
+          href={buildSalesContactHref(salesSource)}
+          className="rounded-full px-3 py-2 text-xs font-black transition sm:px-4"
+          style={{
+            backgroundColor: theme?.hueso ?? '#d7ff64',
+            color: theme?.carbon ?? '#151612',
+          }}
         >
-          <span className="hidden sm:inline">Quiero esto</span>
-          <span className="sm:hidden">Lo quiero</span>
+          {ctaLabel}
         </a>
       </div>
     </div>

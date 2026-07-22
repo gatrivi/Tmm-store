@@ -26,6 +26,7 @@ Agent manifest: read this first, then one targeted file.
 | Firebase production | [ops/firebase-setup.md](./ops/firebase-setup.md) |
 | Production smoke test | [ops/smoke-test.md](./ops/smoke-test.md) |
 | **Prospect demo (3 min)** | [ops/prospect-demo.md](./ops/prospect-demo.md) |
+| **Release gate publicitar (Hito A)** | [roadmap/advertising-readiness.md](./roadmap/advertising-readiness.md) |
 | **Demo carnicería (live)** | [roadmap/demo-carniceria-gabriel.md](./roadmap/demo-carniceria-gabriel.md) · `/demo/carniceria` |
 | **30-day sales audit + Demo Express decision** | [ops/audit-sales-30-days-2026-07-11.md](./ops/audit-sales-30-days-2026-07-11.md) |
 | **Monday ship (deploy → demo)** | [ops/monday-deploy-checklist.md](./ops/monday-deploy-checklist.md), [monday-smoke-runbook.md](./ops/monday-smoke-runbook.md), [monday-demo-script.md](./ops/monday-demo-script.md) |

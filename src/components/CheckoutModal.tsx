@@ -76,6 +76,17 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   const transferLabel = vertical?.copy.transferLabel ?? t.transfer;
   const submitLabel = vertical?.copy.submitLabel ?? t.whatsappSend;
   const notesPlaceholder = vertical?.copy.notesPlaceholder ?? t.notesPlaceholder;
+  const theme = vertical?.theme;
+  const reviewTitle = vertical?.copy.reviewTitle ?? t.confirmTitle;
+  const reviewBody = vertical?.copy.reviewBody ?? t.successSubtitle;
+  const addressPlaceholder = vertical?.copy.addressPlaceholder ?? t.addressPlaceholder;
+  const successEyebrow = vertical?.copy.successEyebrow ?? 'Pedido de prueba creado';
+  const transferAliasPending = vertical?.copy.transferAliasPending ?? 'Te enviamos el alias al confirmar';
+  const hasAlias = Boolean(bankAlias.trim());
+  const accentBtnStyle = theme ? { backgroundColor: theme.bordo, borderColor: theme.bordo } : undefined;
+  const modalShellStyle = theme
+    ? { backgroundColor: theme.hueso, color: theme.carbon }
+    : undefined;
 
   const [step, setStep] = useState<'form' | 'confirm' | 'demo-success'>('form');
   const [name, setName] = useState('');
@@ -123,7 +134,6 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   }, [isOpen, initialDeliveryType]);
 
   const resetAndClose = useCallback(() => {
-    const clearCart = Boolean(confirmedOrder);
     setStep('form');
     setName('');
     setPhone('');
@@ -138,9 +148,8 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     setConfirmedOrder(null);
     setDemoSubmitting(false);
     orderIdRef.current = generateOrderId();
-    if (clearCart && onOrderSent) onOrderSent();
     onClose();
-  }, [confirmedOrder, onClose, onOrderSent]);
+  }, [onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -215,9 +224,10 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     });
 
     if (demoMode) {
-      // Persist first; clear cart only when modal closes (avoid $0 overwrite race)
+      // Persist first, then clear cart (success UI uses confirmedOrder only)
       const persisted = createDemoOrder({ ...record, source: 'demo' });
       setConfirmedOrder(persisted);
+      if (onOrderSent) onOrderSent();
       setStep('demo-success');
       return;
     }
@@ -343,21 +353,25 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     >
       <div
         className="bg-surface-elevated rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200"
+        style={modalShellStyle}
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-surface-elevated z-10 px-6 py-4 border-b border-border flex items-center justify-between">
+        <div
+          className="sticky top-0 z-10 px-6 py-4 border-b border-border flex items-center justify-between"
+          style={theme ? { backgroundColor: theme.hueso, borderColor: `${theme.carbon}14` } : undefined}
+        >
           <div className="flex items-center gap-2">
             {step === 'confirm' || step === 'demo-success' ? (
-              <CheckCircle size={20} className="text-green-600" />
+              <CheckCircle size={20} style={theme ? { color: theme.bordo } : undefined} className={theme ? '' : 'text-green-600'} />
             ) : (
-              <ClipboardList size={20} className="text-green-600" />
+              <ClipboardList size={20} style={theme ? { color: theme.bordo } : undefined} className={theme ? '' : 'text-green-600'} />
             )}
             <h2 id="checkout-modal-title" className="text-lg font-black text-text-primary">
               {step === 'demo-success'
                 ? (vertical?.copy.successTitle ?? 'Pedido de demostración listo')
                 : step === 'confirm'
-                  ? t.confirmTitle
+                  ? (demoMode ? reviewTitle : t.confirmTitle)
                   : t.title}
             </h2>
           </div>
@@ -445,7 +459,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   type="text"
                   value={address}
                   onChange={(e) => { setAddress(e.target.value); if (errors.address) setErrors(p => { const n = { ...p }; delete n.address; return n; }); }}
-                  placeholder={t.addressPlaceholder}
+                  placeholder={addressPlaceholder}
                   className={`w-full bg-surface-muted border rounded-xl px-4 py-2.5 text-sm font-medium text-text-primary outline-none focus:ring-2 transition-shadow placeholder:text-text-muted ${errors.address ? 'border-red-300 focus:ring-red-200' : 'border-border focus:ring-green-200'}`}
                 />
                 {errors.address && <span className="text-xs text-red-500 mt-1 block">{errors.address}</span>}
@@ -472,10 +486,14 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   </button>
                 ))}
               </div>
-              {paymentMethod === 'transfer' && bankAlias && (
-                <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs text-blue-700 font-medium">
-                  {t.aliasLabel}: <span className="font-black">{bankAlias}</span>
-                </div>
+              {paymentMethod === 'transfer' && (
+                hasAlias ? (
+                  <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs text-blue-700 font-medium">
+                    {t.aliasLabel}: <span className="font-black">{bankAlias}</span>
+                  </div>
+                ) : demoMode ? (
+                  <p className="mt-2 text-xs font-medium text-text-secondary">{transferAliasPending}</p>
+                ) : null
               )}
               {paymentMethod === 'mercadopago' && (
                 <div className="mt-2 bg-sky-50 border border-sky-200 rounded-lg px-3 py-2 text-xs text-sky-700 font-medium">
@@ -582,8 +600,11 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
                 <CheckCircle size={40} className="text-green-600" />
               </div>
-              <p className="mt-5 text-xs font-black uppercase tracking-[0.14em] text-green-700">
-                Pedido enviado #{confirmedOrder?.id ?? orderId}
+              <p
+                className={`mt-5 text-xs font-black uppercase tracking-[0.14em] ${theme ? '' : 'text-green-700'}`}
+                style={theme ? { color: theme.bordo } : undefined}
+              >
+                {successEyebrow} #{confirmedOrder?.id ?? orderId}
               </p>
               <h3 className="mt-2 text-2xl font-black text-text-primary">
                 {vertical?.copy.successTitle ?? 'El local ya lo tiene en la bandeja.'}
@@ -635,11 +656,14 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
           <div className="p-6 space-y-5">
             {/* Success Icon */}
             <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-3">
-                <CheckCircle size={32} className="text-green-600" />
+              <div
+                className={`w-16 h-16 rounded-full flex items-center justify-center mb-3 ${theme ? '' : 'bg-green-100'}`}
+                style={theme ? { backgroundColor: `${theme.bordo}22` } : undefined}
+              >
+                <CheckCircle size={32} className={theme ? '' : 'text-green-600'} style={theme ? { color: theme.bordo } : undefined} />
               </div>
-              <h3 className="text-xl font-black text-text-primary">{t.successTitle}</h3>
-              <p className="text-sm text-text-secondary mt-1">{t.successSubtitle}</p>
+              <h3 className="text-xl font-black text-text-primary">{demoMode ? reviewTitle : t.successTitle}</h3>
+              <p className="text-sm text-text-secondary mt-1">{demoMode ? reviewBody : t.successSubtitle}</p>
             </div>
 
             {/* Order ID */}
@@ -673,23 +697,27 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 <span className="font-bold text-text-primary">{paymentLabel}</span>
               </div>
               {paymentMethod === 'transfer' && (
-                <div className="flex justify-between items-center bg-blue-50 rounded-lg px-3 py-2">
-                  <span className="text-text-secondary text-xs">{t.aliasLabel}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-black text-blue-700">{bankAlias}</span>
-                    <button
-                      onClick={async () => { await copyToClipboard(bankAlias); showCopied('alias'); }}
-                      className="p-1 hover:bg-blue-100 rounded transition"
-                      title={t.copyAlias}
-                    >
-                      {copiedField === 'alias' || copiedField === 'alias-auto' ? (
-                        <Check size={14} className="text-green-600" />
-                      ) : (
-                        <Copy size={14} className="text-blue-600" />
-                      )}
-                    </button>
+                hasAlias ? (
+                  <div className="flex justify-between items-center bg-blue-50 rounded-lg px-3 py-2">
+                    <span className="text-text-secondary text-xs">{t.aliasLabel}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-black text-blue-700">{bankAlias}</span>
+                      <button
+                        onClick={async () => { await copyToClipboard(bankAlias); showCopied('alias'); }}
+                        className="p-1 hover:bg-blue-100 rounded transition"
+                        title={t.copyAlias}
+                      >
+                        {copiedField === 'alias' || copiedField === 'alias-auto' ? (
+                          <Check size={14} className="text-green-600" />
+                        ) : (
+                          <Copy size={14} className="text-blue-600" />
+                        )}
+                      </button>
+                    </div>
                   </div>
-                </div>
+                ) : demoMode ? (
+                  <p className="text-xs font-medium text-text-secondary">{transferAliasPending}</p>
+                ) : null
               )}
               {notes && (
                 <div className="pt-2 border-t border-border">
@@ -751,7 +779,9 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               ) : (
                 <button
                   onClick={handleSendWhatsApp}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg"
+                  disabled={demoMode && (demoSubmitting || Boolean(confirmedOrder))}
+                  className={`w-full font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg ${theme ? 'text-white' : 'bg-green-600 hover:bg-green-700 text-white'} disabled:opacity-60`}
+                  style={accentBtnStyle}
                 >
                   {demoMode ? <Send size={20} /> : <MessageCircle size={20} />}
                   {demoMode ? submitLabel : t.whatsappSend}
@@ -759,7 +789,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               )}
 
               {/* Quick copy buttons for transfer payments */}
-              {paymentMethod === 'transfer' && (
+              {paymentMethod === 'transfer' && !demoMode && hasAlias && (
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={async () => { await copyToClipboard(`$${total.toLocaleString('es-AR')}`); showCopied('total-btn'); }}
@@ -776,6 +806,9 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                     {t.copyAlias}
                   </button>
                 </div>
+              )}
+              {paymentMethod === 'transfer' && demoMode && !hasAlias && (
+                <p className="text-center text-xs font-medium text-text-secondary">{transferAliasPending}</p>
               )}
 
               <button

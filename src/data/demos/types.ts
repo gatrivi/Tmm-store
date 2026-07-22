@@ -42,6 +42,11 @@ export interface DemoCopy {
   cashLabel: string;
   transferLabel: string;
   submitLabel: string;
+  reviewTitle: string;
+  reviewBody: string;
+  addressPlaceholder: string;
+  successEyebrow: string;
+  transferAliasPending: string;
   successTitle: string;
   successBody: string;
   ownerLinkLabel: string;
