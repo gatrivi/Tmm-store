@@ -28,6 +28,15 @@ Demo ON: synthetic visits, charts, orders. Demo OFF: real localStorage metrics (
 6. Branding — change color or logo
 7. Close — mention tiers (Menu / Pedidos / Premium) and optional Firebase sync
 
+### Alternate: carnicería vertical (~3 min)
+
+1. `/demo/carniceria` — hero, Delivery/Retiro, cortes con peso
+2. Add asado + combo → Coordinar pedido (estimado)
+3. `/demo/carniceria/owner` — bandeja + CTA estados
+4. Close — “misma bandeja, otro rubro”
+
+Spec: [demo-carniceria-gabriel.md](../roadmap/demo-carniceria-gabriel.md)
+
 ## Show / avoid
 
 | Show | Avoid live |

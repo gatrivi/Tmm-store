@@ -43,7 +43,7 @@ Save under `docs/screenshots/`:
 | 5 | Dashboard demo | 05-admin-dashboard.png |
 | 6 | Branding | 06-admin-branding.png |
 
-Live demo: [ops/demo.md](../ops/demo.md)
+Live demos: [ops/demo.md](../ops/demo.md) · carnicería [tmm.gatrivi.com/demo/carniceria](https://tmm.gatrivi.com/demo/carniceria)
 
 ## Future (not shipped)
 

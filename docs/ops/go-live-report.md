@@ -3,7 +3,7 @@
 Purpose: what changed overnight, how to deploy, how to run the Menu product for real.
 
 **Live URL:** https://tmm.gatrivi.com  
-**Repo state:** v1.8.0 · Production promoted 2026-07-22 (`vercel promote` → commit `a544c10`)
+**Repo state:** v1.8.1 · Production promoted 2026-07-22 (`vercel promote`)
 
 **Sales routes (live):** `/` · `/demo` · `/demo/owner` · `/demo/armar` · **`/demo/carniceria`** · **`/demo/carniceria/owner`**  
 **Shop storefront:** `/s/:slug` (root is no longer El Puestito)

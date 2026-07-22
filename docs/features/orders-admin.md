@@ -23,8 +23,11 @@ Deps: Firestore optional; localStorage fallback keyed by tenant; demo → `sessi
 
 ## Demo
 
-- `/demo` checkout writes `trufi_demo_orders_v2` in sessionStorage
-- `/demo/owner` shows same order (ID + total); metrics from session orders
+- `/demo` → `trufi_demo_orders_v2`
+- `/demo/carniceria` → `trufi_demo_orders_v2:carniceria` (totales **estimado**)
+- Matching owner routes show same ID / items / total; prospect order highlighted
+
+See: [demo-carniceria-gabriel.md](../roadmap/demo-carniceria-gabriel.md)
 
 ## Gotchas
 

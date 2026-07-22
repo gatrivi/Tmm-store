@@ -15,5 +15,7 @@ Paths: `src/utils/`
 | palettes.ts | Brand color presets |
 | sounds.ts | Cart add sound |
 | clipboard.ts | Copy helper |
+| demoRegistry.ts | Demo vertical path → tenant / storage |
+| prospectDemo.ts | `/demo/armar` URL personalization |
 
-See also: [features/i18n-branding-analytics.md](../features/i18n-branding-analytics.md)
+See also: [features/i18n-branding-analytics.md](../features/i18n-branding-analytics.md), [roadmap/demo-carniceria-gabriel.md](../roadmap/demo-carniceria-gabriel.md)

@@ -6,10 +6,19 @@ Purpose: show the outcome, not a feature inventory.
 
 - Sales page: `/`
 - **Demo Express builder (internal sales tool): `/demo/armar`**
-- Customer view: `/demo`
+- Customer view (gastronomía): `/demo`
 - Owner view: `/demo/owner`
+- **Vertical carnicería:** `/demo/carniceria` · `/demo/carniceria/owner` · seguimiento `/demo/carniceria/order/:id`
 
-The demo tenant is isolated from Firebase and browser tenant data. Completing its checkout never sends a real WhatsApp message.
+Live: https://tmm.gatrivi.com/demo/carniceria
+
+Demo tenants are isolated from Firebase and browser tenant data. Checkout never sends a real WhatsApp message.
+
+### Vertical carnicería (Gabriel)
+
+Separate tenant `demo-carniceria` (sessionStorage `trufi_demo_orders_v2:carniceria`). Totals labeled **estimado**. Brief: [demo-carniceria-gabriel.md](../roadmap/demo-carniceria-gabriel.md).
+
+60s pitch: open `/demo/carniceria` → add corte by weight + pack → Coordinar pedido → panel `/demo/carniceria/owner`.
 
 ## Script
 

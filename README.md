@@ -13,10 +13,13 @@ npm run dev
 ```
 
 - Sales landing: http://localhost:5173/
-- Customer demo: http://localhost:5173/demo
+- Customer demo (gastronomía): http://localhost:5173/demo
 - Owner demo: http://localhost:5173/demo/owner
+- **Carnicería vertical:** http://localhost:5173/demo/carniceria · owner `/demo/carniceria/owner`
 - Tenant store: http://localhost:5173/s/demo-shop
 - Admin: http://localhost:5173/admin
+
+Live: [tmm.gatrivi.com/demo/carniceria](https://tmm.gatrivi.com/demo/carniceria)
 
 ## Scripts
 
@@ -26,6 +29,7 @@ npm run dev
 | `npm run build` | Production build to `dist/` |
 | `npm run preview` | Preview production build |
 | `npm run lint` | ESLint |
+| `npm run check:demo` | Registry self-check (carnicería routes/tenant) |
 
 ## Environment
 
@@ -47,6 +51,8 @@ Full reference: [docs/ops/env-vars.md](docs/ops/env-vars.md)
 All project docs live under [`docs/`](docs/README.md):
 
 - [Architecture](docs/architecture.md)
+- [Prospect demo (3 min)](docs/ops/prospect-demo.md)
+- [Demo carnicería Gabriel](docs/roadmap/demo-carniceria-gabriel.md)
 - [Demo script](docs/ops/demo.md)
 - [Client onboarding](docs/ops/onboarding.md)
 - [Portfolio (human)](docs/human/portfolio.md)
