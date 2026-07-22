@@ -4,6 +4,12 @@ Brief de producto e implementación para Cursor.
 
 **Estado: Hito 1 shipped** (v1.8.0) — vertical `/demo/carniceria` aislada del showcase gastronómico.
 
+**Objetivo visual de la próxima pasada:**
+[mockup desktop vendible](./assets/demo-carniceria-gabriel-target.jpg).
+La imagen fija jerarquía, densidad, controles y tratamiento fotográfico; ante
+cualquier diferencia de contenido, este documento sigue siendo la fuente de
+verdad.
+
 - Config: `src/data/demos/carniceria.ts`
 - Registry: `src/utils/demoRegistry.ts`
 - Check: `npm run check:demo`
