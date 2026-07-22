@@ -2,37 +2,33 @@
 
 Purpose: real-time order inbox and customer status page.
 
-Paths: `src/components/admin/AdminOrders.tsx`, `src/pages/OrderStatusPage.tsx`, `src/services/orderService.ts`, `src/types/order.ts`
+Paths: `AdminOrders`, `OrderStatusPage`, `orderService`, `demoOrderRepository`, `orderStateMachine`, `components/orders/*`
 
-Deps: Firestore optional; localStorage fallback keyed by tenant
+Deps: Firestore optional; localStorage fallback keyed by tenant; demo → `sessionStorage`
 
-## Status flow
+## Status flow (v2)
 
-`new` → `accepted` → `preparing` → `ready` → `delivered` (or `rejected` / `cancelled`)
+`new` → `preparing` → `ready` → (`out_for_delivery`) → `completed`
+
+- Legacy read: `accepted`→`preparing`, `delivered`→`completed`
+- Primary CTA from `orderStateMachine` (no “Avanzar estado”)
+- Mobile: bottom sheet (`OrderDrawer`); desktop: side panel
 
 ## Flow
 
-1. Checkout calls `createOrder()`
-2. AdminOrders subscribes via `subscribeOrders()`
-3. Admin advances status, **WSP quick replies** (Recibido / Preparando / Listo), **58mm ticket**, new-order **sound**
-4. Customer polls `/order/:orderId`
+1. Checkout → `createOrder` / demo → `createDemoOrder`
+2. AdminOrders / DemoOwnerPage subscribe
+3. One primary action; WSP / ticket / reject secondary
+4. Customer polls `/order/:orderId` (10s; stops on terminal)
 
-## Ops (P1)
+## Demo
 
-- `src/utils/whatsappTemplates.ts` — pre-filled wa.me to customer
-- `src/utils/printTicket.ts` — thermal 58mm layout
-- `src/utils/sounds.ts` — `playNewOrderSound()` on new orders
-- Settings toggles: `orderSoundEnabled`, `autoPrintOnNewOrder`
-
-## Cloud sync (P2)
-
-- `CloudSyncBadge` in admin header when Firebase configured
-- MenuContext seeds Firestore on first load if tenant empty
-- MP webhook fetches payment by id → updates `paymentStatus`
+- `/demo` checkout writes `trufi_demo_orders_v2` in sessionStorage
+- `/demo/owner` shows same order (ID + total); metrics from session orders
 
 ## Gotchas
 
 - localStorage orders not shared across devices
-- Order ID is 4-char alphanumeric from checkout
+- Hito 1: no Firestore/MP changes yet
 
-See also: [modules/services.md](../modules/services.md), [components/admin-panel.md](../components/admin-panel.md)
+See also: [ordering-checkout.md](./ordering-checkout.md), [modules/services.md](../modules/services.md)

@@ -39,6 +39,7 @@ Agent manifest: read this first, then one targeted file.
 | Live demo script | [ops/demo.md](./ops/demo.md) |
 | Human portfolio | [human/portfolio.md](./human/portfolio.md) |
 | **Roadmap / future** | [roadmap/README.md](./roadmap/README.md) |
+| **Orders v2 (Hito 1+)** | [roadmap/order-processing-v2.md](./roadmap/order-processing-v2.md) |
 
 ```mermaid
 flowchart TB

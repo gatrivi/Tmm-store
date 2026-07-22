@@ -39,9 +39,8 @@ export function openWhatsAppForOrder(
 }
 
 export function templateForStatus(status: OrderStatus): WhatsAppTemplateId | null {
-  if (status === 'accepted') return 'received';
-  if (status === 'preparing') return 'preparing';
-  if (status === 'ready') return 'ready';
+  if (status === 'preparing') return 'received';
+  if (status === 'ready' || status === 'out_for_delivery') return 'ready';
   return null;
 }
 

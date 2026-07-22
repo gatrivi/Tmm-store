@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { usePlan } from '../context/PlanContext';
 import { translations } from '../i18n/translations';
 import { createOrder } from '../services/orderService';
+import { createDemoOrder } from '../services/demoOrderRepository';
 import { buildOrderRecord } from '../utils/orderBuilder';
 
 
@@ -140,11 +141,6 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   };
 
   const handleSendWhatsApp = async () => {
-    if (tenantId === 'demo') {
-      setStep('demo-success');
-      return;
-    }
-
     const paymentLabel = {
       cash: t.cash,
       transfer: t.transfer,
@@ -161,7 +157,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
       notes,
     };
 
-    await createOrder(buildOrderRecord({
+    const record = buildOrderRecord({
       tenantId,
       checkout: checkoutData,
       cart: cart.map(c => ({
@@ -176,7 +172,16 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
       discount,
       total,
       promoCode: promoCode || undefined,
-    }));
+    });
+
+    if (tenantId === 'demo') {
+      createDemoOrder({ ...record, source: 'demo' });
+      if (onOrderSent) onOrderSent();
+      setStep('demo-success');
+      return;
+    }
+
+    await createOrder(record);
 
     const message = buildWhatsAppMessage({
       orderId,
@@ -529,13 +534,13 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 <CheckCircle size={40} className="text-green-600" />
               </div>
               <p className="mt-5 text-xs font-black uppercase tracking-[0.14em] text-green-700">
-                Demo segura · no se envió ningún mensaje
+                Pedido enviado #{orderId}
               </p>
               <h3 className="mt-2 text-2xl font-black text-text-primary">
-                Así de claro llega el pedido.
+                El local ya lo tiene en la bandeja.
               </h3>
               <p className="mt-3 max-w-sm text-sm leading-relaxed text-text-secondary">
-                En un local real, ahora se guarda en la bandeja y se abre WhatsApp con el detalle listo para confirmar.
+                Demo segura · no se envió WhatsApp. El ID y el total coinciden con el panel del local.
               </p>
             </div>
 
@@ -544,6 +549,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-[0.12em] text-green-700">Pedido</p>
                   <p className="mt-1 text-lg font-black text-green-900">#{orderId} · ${total.toLocaleString('es-AR')}</p>
+                  <p className="mt-1 text-xs font-bold text-green-800">Estado: Nuevo</p>
                 </div>
                 <Store size={24} className="text-green-700" />
               </div>
@@ -557,10 +563,16 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 <Store size={18} />
                 Ver cómo lo recibe el local
               </a>
+              <a
+                href={`/order/${orderId}`}
+                className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-border px-4 py-3 text-sm font-black text-text-primary transition hover:bg-white/5"
+              >
+                Ver estado del pedido
+              </a>
               <button
                 type="button"
                 onClick={resetAndClose}
-                className="w-full rounded-xl border border-border py-3 text-sm font-bold text-text-secondary transition hover:text-text-primary"
+                className="w-full rounded-xl py-3 text-sm font-bold text-text-secondary transition hover:text-text-primary"
               >
                 Seguir viendo la carta
               </button>

@@ -1,11 +1,14 @@
 export type OrderStatus =
   | 'new'
-  | 'accepted'
   | 'preparing'
   | 'ready'
-  | 'delivered'
+  | 'out_for_delivery'
+  | 'completed'
   | 'rejected'
   | 'cancelled';
+
+/** Legado — solo lectura; no volver a escribir. */
+export type LegacyOrderStatus = 'accepted' | 'delivered';
 
 export type PaymentMethod = 'cash' | 'transfer' | 'mercadopago';
 export type DeliveryType = 'pickup' | 'delivery';
@@ -39,22 +42,35 @@ export interface OrderRecord {
   mpPaymentId?: string;
   createdAt: string;
   updatedAt: string;
+  /** demo | storefront | admin — opcional hasta Hito 2 */
+  source?: 'storefront' | 'demo' | 'admin';
 }
 
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   new: 'Nuevo',
-  accepted: 'Aceptado',
   preparing: 'Preparando',
   ready: 'Listo',
-  delivered: 'Entregado',
+  out_for_delivery: 'En camino',
+  completed: 'Finalizado',
   rejected: 'Rechazado',
   cancelled: 'Cancelado',
 };
 
-export const ORDER_STATUS_FLOW: OrderStatus[] = [
+/** Flujo operativo activo (no terminal). */
+export const ACTIVE_ORDER_STATUSES: OrderStatus[] = [
   'new',
-  'accepted',
   'preparing',
   'ready',
-  'delivered',
+  'out_for_delivery',
 ];
+
+export function normalizeOrderStatus(raw: string): OrderStatus {
+  if (raw === 'accepted') return 'preparing';
+  if (raw === 'delivered') return 'completed';
+  return raw as OrderStatus;
+}
+
+export function normalizeOrderRecord(order: OrderRecord): OrderRecord {
+  const status = normalizeOrderStatus(order.status as string);
+  return status === order.status ? order : { ...order, status };
+}

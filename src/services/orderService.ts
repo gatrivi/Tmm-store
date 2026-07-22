@@ -11,6 +11,7 @@ import {
   type Unsubscribe,
 } from 'firebase/firestore';
 import type { OrderRecord, OrderStatus, PaymentStatus } from '../types/order';
+import { normalizeOrderRecord } from '../types/order';
 import { getFirestoreDb, isFirebaseConfigured } from '../lib/firebase';
 
 const LS_ORDERS_PREFIX = 'trufi_orders_';
@@ -22,7 +23,9 @@ function ordersKey(tenantId: string): string {
 function loadLocalOrders(tenantId: string): OrderRecord[] {
   try {
     const raw = localStorage.getItem(ordersKey(tenantId));
-    if (raw) return JSON.parse(raw) as OrderRecord[];
+    if (raw) {
+      return (JSON.parse(raw) as OrderRecord[]).map(normalizeOrderRecord);
+    }
   } catch {
     /* ignore */
   }
@@ -49,7 +52,7 @@ export async function getOrder(tenantId: string, orderId: string): Promise<Order
   const db = getFirestoreDb();
   if (db) {
     const snap = await getDoc(doc(db, 'tenants', tenantId, 'orders', orderId));
-    return snap.exists() ? (snap.data() as OrderRecord) : null;
+    return snap.exists() ? normalizeOrderRecord(snap.data() as OrderRecord) : null;
   }
 
   return loadLocalOrders(tenantId).find(o => o.id === orderId) ?? null;
@@ -63,7 +66,7 @@ export async function listOrders(tenantId: string): Promise<OrderRecord[]> {
       orderBy('createdAt', 'desc'),
     );
     const snap = await getDocs(q);
-    return snap.docs.map(d => d.data() as OrderRecord);
+    return snap.docs.map(d => normalizeOrderRecord(d.data() as OrderRecord));
   }
 
   return loadLocalOrders(tenantId).sort(
@@ -82,7 +85,7 @@ export function subscribeOrders(
       orderBy('createdAt', 'desc'),
     );
     return onSnapshot(q, snap => {
-      callback(snap.docs.map(d => d.data() as OrderRecord));
+      callback(snap.docs.map(d => normalizeOrderRecord(d.data() as OrderRecord)));
     });
   }
 

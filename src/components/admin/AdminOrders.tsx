@@ -1,12 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Check,
   Clock,
   DollarSign,
   MessageCircle,
   Package,
   Printer,
-  RefreshCw,
   ShoppingBag,
   Volume2,
   X,
@@ -18,10 +16,11 @@ import {
   updateOrderStatus,
 } from '../../services/orderService';
 import type { OrderRecord, OrderStatus } from '../../types/order';
-import {
-  ORDER_STATUS_FLOW,
-  ORDER_STATUS_LABELS,
-} from '../../types/order';
+import { ACTIVE_ORDER_STATUSES } from '../../types/order';
+import { OrderCard } from '../orders/OrderCard';
+import { OrderDetailContent } from '../orders/OrderDetailContent';
+import { OrderDesktopPanel, OrderDrawer } from '../orders/OrderDrawer';
+import { OrderPrimaryAction } from '../orders/OrderPrimaryAction';
 import { printOrderTicket } from '../../utils/printTicket';
 import { playNewOrderSound } from '../../utils/sounds';
 import {
@@ -30,21 +29,19 @@ import {
   type WhatsAppTemplateId,
 } from '../../utils/whatsappTemplates';
 import { AdminQuickStock } from './AdminQuickStock';
+import { inboxFilterBucket } from '../../utils/orderStateMachine';
 
 const WSP_TEMPLATES: WhatsAppTemplateId[] = ['received', 'preparing', 'ready'];
 
-const PAYMENT_LABELS: Record<OrderRecord['paymentMethod'], string> = {
-  cash: 'Efectivo',
-  transfer: 'Transferencia',
-  mercadopago: 'MercadoPago',
-};
+type Filter = 'active' | 'new' | 'preparing' | 'ready' | 'done' | 'all';
 
 export function AdminOrders() {
   const { tenantId } = usePlan();
   const { siteSettings } = useMenu();
   const [orders, setOrders] = useState<OrderRecord[]>([]);
-  const [filter, setFilter] = useState<'active' | 'all'>('active');
+  const [filter, setFilter] = useState<Filter>('active');
   const [selected, setSelected] = useState<OrderRecord | null>(null);
+  const [saving, setSaving] = useState(false);
   const knownOrderIds = useRef<Set<string>>(new Set());
   const initialLoadDone = useRef(false);
 
@@ -67,243 +64,240 @@ export function AdminOrders() {
       }
       knownOrderIds.current = new Set(next.map(o => o.id));
       setOrders(next);
+      setSelected(prev => (prev ? next.find(o => o.id === prev.id) ?? prev : prev));
     });
   }, [tenantId, siteSettings.autoPrintOnNewOrder, siteSettings.orderSoundEnabled]);
 
-  const activeStatuses: OrderStatus[] = ['new', 'accepted', 'preparing', 'ready'];
-  const visible = filter === 'active'
-    ? orders.filter(o => activeStatuses.includes(o.status))
-    : orders;
+  const visible = useMemo(() => {
+    if (filter === 'all') return orders;
+    if (filter === 'active') {
+      return orders.filter(o => ACTIVE_ORDER_STATUSES.includes(o.status));
+    }
+    return orders.filter(o => inboxFilterBucket(o.status) === filter);
+  }, [filter, orders]);
 
   const todayStats = useMemo(() => {
     const start = new Date();
     start.setHours(0, 0, 0, 0);
-    const todayOrders = orders.filter(o => new Date(o.createdAt) >= start);
+    const todayOrders = orders.filter(
+      o =>
+        new Date(o.createdAt) >= start &&
+        o.status !== 'rejected' &&
+        o.status !== 'cancelled' &&
+        o.paymentStatus === 'approved',
+    );
     return {
-      count: todayOrders.length,
+      count: orders.filter(o => new Date(o.createdAt) >= start).length,
       revenue: todayOrders.reduce((sum, o) => sum + o.total, 0),
     };
   }, [orders]);
 
   const handleStatus = async (order: OrderRecord, status: OrderStatus) => {
-    await updateOrderStatus(tenantId, order.id, status);
-    setSelected(prev => (prev?.id === order.id ? { ...prev, status } : prev));
-  };
-
-  const advanceStatus = (order: OrderRecord) => {
-    const idx = ORDER_STATUS_FLOW.indexOf(order.status);
-    if (idx >= 0 && idx < ORDER_STATUS_FLOW.length - 1) {
-      handleStatus(order, ORDER_STATUS_FLOW[idx + 1]);
+    setSaving(true);
+    try {
+      await updateOrderStatus(tenantId, order.id, status);
+      setSelected(prev => (prev?.id === order.id ? { ...prev, status } : prev));
+    } finally {
+      setSaving(false);
     }
   };
+
+  const secondaryActions = selected ? (
+    <div className="space-y-3">
+      <div>
+        <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+          Abrir WhatsApp
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {WSP_TEMPLATES.map(templateId => (
+            <button
+              key={templateId}
+              type="button"
+              disabled={!selected.customerPhone.replace(/\D/g, '')}
+              onClick={() => {
+                openWhatsAppForOrder(
+                  selected.customerPhone.replace(/\D/g, ''),
+                  selected,
+                  templateId,
+                );
+              }}
+              className="flex min-h-[44px] items-center gap-2 rounded-xl bg-green-600/80 px-3 py-2 text-xs font-bold text-white hover:bg-green-600 disabled:opacity-40"
+            >
+              <MessageCircle size={14} />
+              {WHATSAPP_TEMPLATE_LABELS[templateId]}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {selected.status === 'new' && (
+          <button
+            type="button"
+            onClick={() => handleStatus(selected, 'rejected')}
+            className="flex min-h-[44px] items-center gap-2 rounded-xl bg-red-600/80 px-4 py-2 text-xs font-bold text-white"
+          >
+            <X size={14} /> Rechazar
+          </button>
+        )}
+        {(selected.status === 'preparing' || selected.status === 'ready') && (
+          <button
+            type="button"
+            onClick={() => handleStatus(selected, 'cancelled')}
+            className="flex min-h-[44px] items-center gap-2 rounded-xl bg-red-600/80 px-4 py-2 text-xs font-bold text-white"
+          >
+            <X size={14} /> Cancelar
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() => printOrderTicket(selected)}
+          className="flex min-h-[44px] items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-xs font-bold text-white"
+        >
+          <Printer size={14} /> Ticket 58mm
+        </button>
+        <button
+          type="button"
+          onClick={() => playNewOrderSound()}
+          className="flex min-h-[44px] items-center gap-2 rounded-xl bg-white/5 px-3 py-2 text-xs font-bold text-gray-400"
+          title="Probar sonido de pedido nuevo"
+        >
+          <Volume2 size={14} />
+        </button>
+      </div>
+      <a
+        href={`/order/${selected.id}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-2 text-xs text-gray-400 hover:text-white"
+      >
+        <Clock size={12} /> Link de estado para el cliente
+      </a>
+    </div>
+  ) : null;
+
+  const detailBody = selected ? (
+    <OrderDetailContent
+      order={selected}
+      tone="dark"
+      extraActions={secondaryActions}
+    />
+  ) : null;
+
+  const primary = selected ? (
+    <OrderPrimaryAction
+      status={selected.status}
+      fulfillment={selected.deliveryType}
+      loading={saving}
+      onAdvance={next => handleStatus(selected, next)}
+      className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-4 text-sm font-black text-white disabled:opacity-50"
+    />
+  ) : null;
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-black text-white">Pedidos</h2>
-          <p className="text-sm text-gray-500 mt-1">Bandeja en tiempo real · imprimir 58mm · WSP rápido</p>
+          <p className="mt-1 text-sm text-gray-500">Bandeja · una acción primaria · WSP</p>
         </div>
-        <div className="flex gap-2">
-          {(['active', 'all'] as const).map(f => (
+        <div className="flex flex-wrap gap-2">
+          {([
+            ['active', 'Activos'],
+            ['new', 'Nuevos'],
+            ['preparing', 'Preparando'],
+            ['ready', 'Listos'],
+            ['done', 'Finalizados'],
+            ['all', 'Todos'],
+          ] as const).map(([f, label]) => (
             <button
               key={f}
+              type="button"
               onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
+              className={`rounded-xl px-3 py-2 text-xs font-bold transition ${
                 filter === f ? 'bg-brand-green text-white' : 'bg-white/5 text-gray-400 hover:text-white'
               }`}
             >
-              {f === 'active' ? 'Activos' : 'Todos'}
+              {label}
             </button>
           ))}
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-brand-green/10 border border-brand-green/20 rounded-2xl p-4 flex items-center gap-3">
-          <ShoppingBag size={22} className="text-brand-green shrink-0" />
+        <div className="flex items-center gap-3 rounded-2xl border border-brand-green/20 bg-brand-green/10 p-4">
+          <ShoppingBag size={22} className="shrink-0 text-brand-green" />
           <div>
-            <p className="text-[10px] font-bold text-gray-500 uppercase">Pedidos hoy</p>
+            <p className="text-[10px] font-bold uppercase text-gray-500">Pedidos hoy</p>
             <p className="text-2xl font-black text-white">{todayStats.count}</p>
           </div>
         </div>
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-3">
-          <DollarSign size={22} className="text-green-400 shrink-0" />
+        <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+          <DollarSign size={22} className="shrink-0 text-green-400" />
           <div>
-            <p className="text-[10px] font-bold text-gray-500 uppercase">Vendido hoy</p>
-            <p className="text-2xl font-black text-green-400">${todayStats.revenue.toLocaleString('es-AR')}</p>
+            <p className="text-[10px] font-bold uppercase text-gray-500">Cobrado hoy</p>
+            <p className="text-2xl font-black text-green-400">
+              ${todayStats.revenue.toLocaleString('es-AR')}
+            </p>
           </div>
         </div>
       </div>
 
       <AdminQuickStock />
 
-      <div className="grid lg:grid-cols-2 gap-4">
-        <div className="space-y-3 max-h-[70vh] overflow-y-auto hide-scrollbar">
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="max-h-[70vh] space-y-3 overflow-y-auto hide-scrollbar">
           {visible.length === 0 ? (
-            <div className="bg-white/3 border border-white/5 rounded-2xl p-8 text-center text-gray-500">
+            <div className="rounded-2xl border border-white/5 bg-white/3 p-8 text-center text-gray-500">
               <Package size={32} className="mx-auto mb-3 opacity-50" />
               No hay pedidos {filter === 'active' ? 'activos' : ''}
             </div>
           ) : (
             visible.map(order => (
-              <button
+              <OrderCard
                 key={order.id}
-                onClick={() => setSelected(order)}
-                className={`w-full text-left bg-white/3 border rounded-2xl p-4 transition hover:bg-white/5 ${
-                  selected?.id === order.id ? 'border-brand-green' : 'border-white/5'
-                } ${order.status === 'new' ? 'ring-1 ring-brand-green/40' : ''}`}
-              >
-                <div className="flex justify-between items-start mb-2">
-                  <span className="text-lg font-black text-white">#{order.id}</span>
-                  <span className="text-xs font-bold px-2 py-1 rounded-full bg-white/10 text-gray-300">
-                    {ORDER_STATUS_LABELS[order.status]}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-300 font-bold">{order.customerName}</p>
-                <div className="flex justify-between mt-2 text-sm">
-                  <span className="text-gray-500">{new Date(order.createdAt).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}</span>
-                  <span className="font-black text-green-400">${order.total.toLocaleString('es-AR')}</span>
-                </div>
-              </button>
+                order={order}
+                tone="dark"
+                selected={selected?.id === order.id}
+                onSelect={setSelected}
+              />
             ))
           )}
         </div>
 
-        {selected ? (
-          <div className="bg-white/3 border border-white/5 rounded-2xl p-6 space-y-4">
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-xl font-black text-white">#{selected.id}</h3>
-                <p className="text-sm text-gray-400">{selected.customerName} · {selected.customerPhone}</p>
-              </div>
-              <button onClick={() => setSelected(null)} className="text-gray-500 hover:text-white">
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="space-y-2 text-sm">
-              {selected.items.map((item, idx) => (
-                <div key={idx} className="flex justify-between text-gray-300">
-                  <span>{item.qty}x {item.name} ({item.optionLabel})</span>
-                  <span className="font-bold">${(item.price * item.qty).toLocaleString('es-AR')}</span>
-                </div>
-              ))}
-              {selected.discount > 0 && (
-                <div className="flex justify-between text-green-400">
-                  <span>Descuento {selected.promoCode ? `(${selected.promoCode})` : ''}</span>
-                  <span>-${selected.discount.toLocaleString('es-AR')}</span>
-                </div>
-              )}
-              <div className="flex justify-between text-white font-black text-base border-t border-white/10 pt-2">
-                <span>Total</span>
-                <span>${selected.total.toLocaleString('es-AR')}</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="bg-black/20 rounded-xl px-3 py-2">
-                <span className="text-gray-500 block">Entrega</span>
-                <span className="font-bold text-white">
-                  {selected.deliveryType === 'delivery' ? 'Delivery' : 'Retiro'}
-                </span>
-              </div>
-              <div className="bg-black/20 rounded-xl px-3 py-2">
-                <span className="text-gray-500 block">Pago</span>
-                <span className="font-bold text-white">{PAYMENT_LABELS[selected.paymentMethod]}</span>
-              </div>
-            </div>
-
-            {selected.deliveryType === 'delivery' && selected.address && (
-              <p className="text-sm text-gray-400 bg-black/20 rounded-xl px-3 py-2">
-                📍 {selected.address}
-              </p>
-            )}
-
-            {selected.notes?.trim() && (
-              <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl px-3 py-2">
-                <p className="text-[10px] font-bold text-amber-400 uppercase mb-1">Notas del cliente</p>
-                <p className="text-sm text-amber-100">{selected.notes}</p>
-              </div>
-            )}
-
-            <div>
-              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">WhatsApp rápido</p>
-              <div className="flex flex-wrap gap-2">
-                {WSP_TEMPLATES.map(templateId => (
-                  <button
-                    key={templateId}
-                    type="button"
-                    disabled={!selected.customerPhone.replace(/\D/g, '')}
-                    onClick={() => {
-                      openWhatsAppForOrder(selected.customerPhone.replace(/\D/g, ''), selected, templateId);
-                    }}
-                    className="flex items-center gap-2 px-3 py-2 min-h-[44px] bg-green-600/80 hover:bg-green-600 disabled:opacity-40 text-white rounded-xl text-xs font-bold"
-                  >
-                    <MessageCircle size={14} />
-                    {WHATSAPP_TEMPLATE_LABELS[templateId]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {ORDER_STATUS_FLOW.includes(selected.status) && selected.status !== 'delivered' && (
+        <OrderDesktopPanel
+          open={Boolean(selected)}
+          tone="dark"
+          empty="Seleccioná un pedido para ver detalle"
+        >
+          {selected && (
+            <>
+              <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+                <h3 className="font-black text-white">#{selected.id}</h3>
                 <button
-                  onClick={() => advanceStatus(selected)}
-                  className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-brand-green text-white rounded-xl text-xs font-bold"
+                  type="button"
+                  onClick={() => setSelected(null)}
+                  className="text-gray-500 hover:text-white"
+                  aria-label="Cerrar"
                 >
-                  <RefreshCw size={14} />
-                  Avanzar estado
+                  <X size={18} />
                 </button>
-              )}
-              {selected.status === 'new' && (
-                <>
-                  <button
-                    onClick={() => handleStatus(selected, 'accepted')}
-                    className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-indigo-600 text-white rounded-xl text-xs font-bold"
-                  >
-                    <Check size={14} /> Aceptar
-                  </button>
-                  <button
-                    onClick={() => handleStatus(selected, 'rejected')}
-                    className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-red-600/80 text-white rounded-xl text-xs font-bold"
-                  >
-                    <X size={14} /> Rechazar
-                  </button>
-                </>
-              )}
-              <button
-                onClick={() => printOrderTicket(selected)}
-                className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-white/10 text-white rounded-xl text-xs font-bold"
-              >
-                <Printer size={14} /> Ticket 58mm
-              </button>
-              <button
-                type="button"
-                onClick={() => playNewOrderSound()}
-                className="flex items-center gap-2 px-3 py-2 min-h-[44px] bg-white/5 text-gray-400 rounded-xl text-xs font-bold"
-                title="Probar sonido de pedido nuevo"
-              >
-                <Volume2 size={14} />
-              </button>
-            </div>
-
-            <a
-              href={`/order/${selected.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-xs text-gray-400 hover:text-white"
-            >
-              <Clock size={12} /> Link de estado para el cliente
-            </a>
-          </div>
-        ) : (
-          <div className="hidden lg:flex items-center justify-center bg-white/3 border border-white/5 rounded-2xl p-8 text-gray-500">
-            Seleccioná un pedido para ver detalle
-          </div>
-        )}
+              </div>
+              <div className="flex-1 overflow-y-auto p-5">{detailBody}</div>
+              {primary && <div className="border-t border-white/10 p-4">{primary}</div>}
+            </>
+          )}
+        </OrderDesktopPanel>
       </div>
+
+      <OrderDrawer
+        open={Boolean(selected)}
+        title={selected ? `#${selected.id}` : ''}
+        onClose={() => setSelected(null)}
+        tone="dark"
+        footer={primary}
+      >
+        {detailBody}
+      </OrderDrawer>
     </div>
   );
 }
