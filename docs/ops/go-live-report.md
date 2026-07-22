@@ -3,7 +3,12 @@
 Purpose: what changed overnight, how to deploy, how to run the Menu product for real.
 
 **Live URL:** https://tmm.gatrivi.com  
-**Repo state:** v1.4.6 (local — push to Vercel to apply)
+**Repo state:** v1.8.0 · Production promoted 2026-07-22 (`vercel promote` → commit `a544c10`)
+
+**Sales routes (live):** `/` · `/demo` · `/demo/owner` · `/demo/armar` · **`/demo/carniceria`** · **`/demo/carniceria/owner`**  
+**Shop storefront:** `/s/:slug` (root is no longer El Puestito)
+
+Note: Git pushes to `trabajo` were only creating **Preview**. Prod did not move for ~63d until a manual promote. Fix in Vercel: Production Branch = `trabajo` + auto-promote, or run `vercel --prod` / `vercel promote <preview-url>`.
 
 ---
 
@@ -33,17 +38,19 @@ Purpose: what changed overnight, how to deploy, how to run the Menu product for 
 
 ---
 
-## 2. Why live site still looks old
+## 2. Production deploy (don't trust push alone)
 
-Vercel serves the **last deployed commit** (`3e9bc22`). All v1.4.5+ work is **local only** until you:
+`git push origin trabajo` → **Preview only** (as of Jul 2026). Domain stays on last **Production** alias.
 
 ```bash
-git add -A
-git commit -m "Ship sale-ready Menu tier: appearance, white-label, pilot fixes (v1.4.6)"
-git push origin trabajo
+# Prefer: promote a Ready preview
+npx vercel promote <preview-url> --yes
+
+# Or rebuild prod from cwd
+npx vercel --prod --yes
 ```
 
-Vercel auto-deploys → check stamp bottom-left = **v1.4.6**.
+Stamp bottom-left must match `package.json` (currently **v1.8.0**).
 
 ---
 
