@@ -1,7 +1,7 @@
 {
   "name": "trufi-tmm",
   "private": true,
-  "version": "1.8.1",
+  "version": "1.8.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "check:demo": "npx --yes tsx src/utils/demoRegistry.selfcheck.ts",
+    "check:demo": "npx --yes tsx src/utils/demoRegistry.selfcheck.ts && npx --yes tsx src/services/demoOrderFlow.selfcheck.ts",
     "check:env": "node scripts/check-env.mjs",
     "hash:admin": "node scripts/hash-admin.mjs",
     "leads:scan": "node scripts/leads-scan.mjs",

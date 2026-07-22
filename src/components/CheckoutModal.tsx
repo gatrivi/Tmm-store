@@ -10,6 +10,7 @@ import { createDemoOrder } from '../services/demoOrderRepository';
 import { buildOrderRecord } from '../utils/orderBuilder';
 import { getDemoByTenantId, isDemoTenant, resolveDemoPaths } from '../utils/demoRegistry';
 import { useLocation } from 'react-router-dom';
+import type { OrderRecord } from '../types/order';
 
 export interface CheckoutData {
   orderId: string;
@@ -88,6 +89,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   const [popupBlocked, setPopupBlocked] = useState(false);
   const [mpLoading, setMpLoading] = useState(false);
   const [mpError, setMpError] = useState<string | null>(null);
+  const [confirmedOrder, setConfirmedOrder] = useState<OrderRecord | null>(null);
   const orderIdRef = useRef<string>(generateOrderId());
 
   const showCopied = (field: string) => {
@@ -104,6 +106,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
       setPopupBlocked(false);
       setMpError(null);
       setMpLoading(false);
+      setConfirmedOrder(null);
       setDeliveryType(initialDeliveryType);
       orderIdRef.current = generateOrderId();
       document.body.style.overflow = 'hidden';
@@ -127,6 +130,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     setPopupBlocked(false);
     setMpError(null);
     setMpLoading(false);
+    setConfirmedOrder(null);
     orderIdRef.current = generateOrderId();
     onClose();
   }, [onClose]);
@@ -191,7 +195,8 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     });
 
     if (demoMode) {
-      createDemoOrder({ ...record, source: 'demo' });
+      const persisted = createDemoOrder({ ...record, source: 'demo' });
+      setConfirmedOrder(persisted);
       if (onOrderSent) onOrderSent();
       setStep('demo-success');
       return;
@@ -558,7 +563,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 <CheckCircle size={40} className="text-green-600" />
               </div>
               <p className="mt-5 text-xs font-black uppercase tracking-[0.14em] text-green-700">
-                Pedido enviado #{orderId}
+                Pedido enviado #{confirmedOrder?.id ?? orderId}
               </p>
               <h3 className="mt-2 text-2xl font-black text-text-primary">
                 {vertical?.copy.successTitle ?? 'El local ya lo tiene en la bandeja.'}
@@ -572,7 +577,10 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-[0.12em] text-green-700">Pedido</p>
-                  <p className="mt-1 text-lg font-black text-green-900">#{orderId} · {totalLabel} ${total.toLocaleString('es-AR')}</p>
+                  <p className="mt-1 text-lg font-black text-green-900">
+                    #{confirmedOrder?.id ?? orderId} · {totalLabel} $
+                    {(confirmedOrder?.total ?? total).toLocaleString('es-AR')}
+                  </p>
                   <p className="mt-1 text-xs font-bold text-green-800">Estado: Nuevo</p>
                 </div>
                 <Store size={24} className="text-green-700" />
@@ -588,7 +596,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 {vertical?.copy.ownerLinkLabel ?? 'Ver cómo lo recibe el local'}
               </a>
               <a
-                href={demoPaths.orderPath(orderId)}
+                href={demoPaths.orderPath(confirmedOrder?.id ?? orderId)}
                 className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-border px-4 py-3 text-sm font-black text-text-primary transition hover:bg-white/5"
               >
                 {vertical?.copy.statusLinkLabel ?? 'Ver estado del pedido'}

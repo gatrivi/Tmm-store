@@ -73,30 +73,25 @@ export default function OrderStatusPage() {
       }
     });
 
-    const poll = window.setInterval(() => {
-      const current = getDemoOrder(id);
-      if (current) {
-        if (isTerminalStatus(current.status)) {
-          window.clearInterval(poll);
-        }
-        setOrder(current);
-        setUpdatedAt(current.updatedAt);
-        return;
-      }
-      void getOrder(tenantId, id).then(remote => {
-        if (!remote) return;
-        setOrder(remote);
-        setUpdatedAt(remote.updatedAt);
-        if (isTerminalStatus(remote.status)) {
-          window.clearInterval(poll);
-        }
-      });
-    }, 10_000);
+    const demoPath = Boolean(resolveDemoFromPath(location.pathname)) || isDemoTenant(tenantId);
+    let poll: number | undefined;
+    if (!demoPath) {
+      poll = window.setInterval(() => {
+        void getOrder(tenantId, id).then(remote => {
+          if (!remote) return;
+          setOrder(remote);
+          setUpdatedAt(remote.updatedAt);
+          if (isTerminalStatus(remote.status) && poll) {
+            window.clearInterval(poll);
+          }
+        });
+      }, 10_000);
+    }
 
     return () => {
       cancelled = true;
       unsubDemo();
-      window.clearInterval(poll);
+      if (poll) window.clearInterval(poll);
     };
   }, [tenantId, orderId, location.pathname]);
 

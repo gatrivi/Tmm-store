@@ -26,6 +26,8 @@ Deps: Firestore optional; localStorage fallback keyed by tenant; demo → `sessi
 - `/demo` → `trufi_demo_orders_v2`
 - `/demo/carniceria` → `trufi_demo_orders_v2:carniceria` (totales **estimado**)
 - Matching owner routes show same ID / items / total; prospect order highlighted
+- Writes notify same-tab subscribers immediately (`trufi:demo-orders`); panel/detail/metrics/filters/seguimiento read that store
+- Check: `npm run check:demo` (registry + full order flow)
 
 See: [demo-carniceria-gabriel.md](../roadmap/demo-carniceria-gabriel.md)
 

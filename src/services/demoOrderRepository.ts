@@ -2,6 +2,9 @@ import type { OrderRecord } from '../types/order';
 import { normalizeOrderRecord } from '../types/order';
 import { getDemoById, resolveDemoIdFromPath, resolveDemoStorageKey } from '../utils/demoRegistry';
 
+/** Same-tab notify — `storage` event only fires across tabs. */
+export const DEMO_ORDERS_EVENT = 'trufi:demo-orders';
+
 /** Legacy gastronomy seeds — only for id `demo`. */
 const GASTRONOMY_SEEDS: OrderRecord[] = [
   {
@@ -105,8 +108,13 @@ function readStore(demoId: string): DemoStore {
   return { seeded: false, prospectIds: [], orders: [] };
 }
 
+function notifyDemoOrders(demoId: string): void {
+  window.dispatchEvent(new CustomEvent(DEMO_ORDERS_EVENT, { detail: { demoId } }));
+}
+
 function writeStore(demoId: string, store: DemoStore): void {
   sessionStorage.setItem(resolveDemoStorageKey(demoId), JSON.stringify(store));
+  notifyDemoOrders(demoId);
 }
 
 function ensureSeeded(demoId = currentDemoId()): DemoStore {
@@ -176,14 +184,19 @@ export function subscribeDemoOrders(
   const key = resolveDemoStorageKey(demoId);
   const emit = () => callback(listDemoOrders(demoId));
   emit();
+  const onLocal = (e: Event) => {
+    const detail = (e as CustomEvent<{ demoId?: string }>).detail;
+    if (detail?.demoId && detail.demoId !== demoId) return;
+    emit();
+  };
   const onStorage = (e: StorageEvent) => {
     if (e.key === key) emit();
   };
+  window.addEventListener(DEMO_ORDERS_EVENT, onLocal);
   window.addEventListener('storage', onStorage);
-  const interval = window.setInterval(emit, 1500);
   return () => {
+    window.removeEventListener(DEMO_ORDERS_EVENT, onLocal);
     window.removeEventListener('storage', onStorage);
-    window.clearInterval(interval);
   };
 }
 
@@ -197,4 +210,10 @@ export function demoOrderMetrics(orders: OrderRecord[]) {
   const revenue = active.reduce((sum, o) => sum + o.total, 0);
   const ticket = count > 0 ? Math.round(revenue / count) : 0;
   return { count, revenue, ticket };
+}
+
+/** Test helper — wipe a demo bucket. */
+export function clearDemoOrders(demoId = currentDemoId()): void {
+  sessionStorage.removeItem(resolveDemoStorageKey(demoId));
+  notifyDemoOrders(demoId);
 }

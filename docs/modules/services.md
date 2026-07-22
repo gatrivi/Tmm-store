@@ -17,6 +17,8 @@ Paths: `src/services/orderService.ts`, `src/services/tenantService.ts`
 - Gastronomía: `trufi_demo_orders_v2` (`/demo` ↔ `/demo/owner`)
 - Carnicería: `trufi_demo_orders_v2:carniceria` (`/demo/carniceria` ↔ owner)
 - Seeds until prospect creates an order; prospect IDs highlighted
+- Same-tab updates via `DEMO_ORDERS_EVENT` (no 1.5s poll)
+- Flow check: `src/services/demoOrderFlow.selfcheck.ts`
 
 ## demoRegistry
 

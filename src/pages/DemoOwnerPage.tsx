@@ -47,7 +47,7 @@ export default function DemoOwnerPage() {
   const theme = vertical?.theme;
   const [orders, setOrders] = useState<OrderRecord[]>([]);
   const [filter, setFilter] = useState<Filter>('todos');
-  const [selected, setSelected] = useState<OrderRecord | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const autoOpenedRef = useRef(false);
   const contactHref = buildSalesContactHref(`demo panel de ${businessName}`);
@@ -63,19 +63,17 @@ export default function DemoOwnerPage() {
   useEffect(() => {
     return subscribeDemoOrders(next => {
       setOrders(next);
-      setSelected(prev => {
-        if (prev) return next.find(o => o.id === prev.id) ?? prev;
-        return prev;
-      });
       if (!autoOpenedRef.current) {
         const prospectOrder = next.find(o => isProspectDemoOrder(o.id));
         if (prospectOrder) {
           autoOpenedRef.current = true;
-          setSelected(prospectOrder);
+          setSelectedId(prospectOrder.id);
         }
       }
     });
   }, []);
+
+  const selected = selectedId ? orders.find(o => o.id === selectedId) ?? null : null;
 
   const visibleOrders = useMemo(() => {
     if (filter === 'todos') return orders;
@@ -93,12 +91,11 @@ export default function DemoOwnerPage() {
 
   const handleAdvance = (order: OrderRecord, next: OrderRecord['status']) => {
     setSaving(true);
-    const updated = transitionDemoOrder(order.id, next);
+    transitionDemoOrder(order.id, next);
     setSaving(false);
-    if (updated) setSelected(updated);
   };
 
-  const selectOrder = (order: OrderRecord) => setSelected(order);
+  const selectOrder = (order: OrderRecord) => setSelectedId(order.id);
 
   const detail = selected ? (
     <OrderDetailContent
@@ -301,7 +298,7 @@ export default function DemoOwnerPage() {
       <OrderDrawer
         open={Boolean(selected)}
         title={selected ? `#${selected.id}` : ''}
-        onClose={() => setSelected(null)}
+        onClose={() => setSelectedId(null)}
         tone="light"
         footer={primary}
       >
