@@ -35,3 +35,15 @@ body {
   background-color: var(--color-surface);
   color: var(--color-text-primary);
 }
+
+/* Vertical demo: carnicería — remap hardcoded green CTAs */
+[data-demo-theme="carniceria"] .bg-green-600 {
+  background-color: #7B1E24;
+}
+[data-demo-theme="carniceria"] .hover\:bg-green-700:hover {
+  background-color: #5f151a;
+}
+[data-demo-theme="carniceria"] .text-green-400,
+[data-demo-theme="carniceria"] .text-green-600 {
+  color: #7B1E24;
+}

@@ -30,26 +30,35 @@ import {
   assertOrderStateMachine,
   inboxFilterBucket,
 } from '../utils/orderStateMachine';
+import { resolveDemoFromPath, resolveDemoPaths } from '../utils/demoRegistry';
 
 type Filter = 'todos' | 'new' | 'preparing' | 'ready' | 'done';
 
 export default function DemoOwnerPage() {
   const location = useLocation();
+  const vertical = resolveDemoFromPath(location.pathname);
+  const paths = resolveDemoPaths(location.pathname);
   const prospect = parseProspectDemo(location.search);
+  const businessName = vertical?.siteSettings.brandName || prospect.businessName;
+  const ownerTitle = vertical?.copy.ownerTitle || businessName;
+  const ownerSubtitle = vertical?.copy.ownerSubtitle || 'Panel del local · demo';
+  const totalLabel = vertical?.copy.totalLabel || 'Total';
+  const revenueLabel = vertical?.copy.revenueLabel || 'Total sesión';
+  const theme = vertical?.theme;
   const [orders, setOrders] = useState<OrderRecord[]>([]);
   const [filter, setFilter] = useState<Filter>('todos');
   const [selected, setSelected] = useState<OrderRecord | null>(null);
   const [saving, setSaving] = useState(false);
   const autoOpenedRef = useRef(false);
-  const contactHref = buildSalesContactHref(`demo panel de ${prospect.businessName}`);
+  const contactHref = buildSalesContactHref(`demo panel de ${businessName}`);
 
   useEffect(() => {
     if (import.meta.env.DEV) assertOrderStateMachine();
   }, []);
 
   useEffect(() => {
-    document.title = `${prospect.businessName} — Demo del local`;
-  }, [prospect.businessName]);
+    document.title = `${ownerTitle} — Demo del local`;
+  }, [ownerTitle]);
 
   useEffect(() => {
     return subscribeDemoOrders(next => {
@@ -95,7 +104,11 @@ export default function DemoOwnerPage() {
     <OrderDetailContent
       order={selected}
       tone="light"
-      statusLinkHref={`/order/${selected.id}`}
+      totalLabel={totalLabel === 'Total estimado' ? 'Estimado' : totalLabel}
+      totalHint={vertical?.copy.totalHint}
+      pickupLabel={vertical?.copy.pickupLabel}
+      deliveryLabel={vertical?.copy.deliveryLabel}
+      statusLinkHref={paths.orderPath(selected.id)}
     />
   ) : null;
 
@@ -109,18 +122,26 @@ export default function DemoOwnerPage() {
   ) : null;
 
   return (
-    <div className="min-h-screen bg-[#f4f5f1] text-[#151612]">
+    <div
+      className="min-h-screen bg-[#f4f5f1] text-[#151612]"
+      style={theme ? { backgroundColor: theme.hueso, color: theme.carbon } : undefined}
+    >
       <DemoRibbon />
 
       <header className="border-b border-black/8 bg-white">
         <div className="mx-auto flex min-h-20 max-w-[1500px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#151612] text-[#d7ff64]">
+            <div
+              className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#151612] text-[#d7ff64]"
+              style={theme ? { backgroundColor: theme.carbon, color: theme.hueso } : undefined}
+            >
               <ChefHat size={22} />
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.14em] text-black/40">Panel del local · demo</p>
-              <h1 className="text-lg font-black tracking-[-0.025em]">{prospect.businessName}</h1>
+              <p className="text-[10px] font-black uppercase tracking-[0.14em] text-black/40">
+                {ownerSubtitle}
+              </p>
+              <h1 className="text-lg font-black tracking-[-0.025em]">{ownerTitle}</h1>
             </div>
           </div>
 
@@ -142,15 +163,21 @@ export default function DemoOwnerPage() {
       <main className="mx-auto max-w-[1500px] px-4 py-7 sm:px-6 lg:px-8 lg:py-10">
         <div className="mb-7 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#ee6847]">Demo en vivo</p>
+            <p
+              className="text-xs font-black uppercase tracking-[0.14em] text-[#ee6847]"
+              style={theme ? { color: theme.bordo } : undefined}
+            >
+              Demo en vivo
+            </p>
             <h2 className="mt-2 text-3xl font-black tracking-[-0.045em] sm:text-4xl">Bandeja de pedidos</h2>
             <p className="mt-2 text-sm font-medium text-black/50">
               Pedidos de esta sesión. Tocá uno para ver el detalle.
             </p>
           </div>
           <Link
-            to={`/demo${location.search}`}
+            to={paths.customerPath}
             className="flex min-h-11 items-center gap-2 rounded-xl bg-[#151612] px-4 text-sm font-black text-white"
+            style={theme ? { backgroundColor: theme.carbon } : undefined}
           >
             <Store size={16} />
             Ver tienda
@@ -160,7 +187,7 @@ export default function DemoOwnerPage() {
         <section className="grid gap-3 sm:grid-cols-3">
           {[
             { label: 'Pedidos', value: String(metrics.count), icon: ShoppingBag, accent: 'bg-[#d7ff64]' },
-            { label: 'Total sesión', value: `$${metrics.revenue.toLocaleString('es-AR')}`, icon: WalletCards, accent: 'bg-[#ffd8cc]' },
+            { label: revenueLabel, value: `$${metrics.revenue.toLocaleString('es-AR')}`, icon: WalletCards, accent: 'bg-[#ffd8cc]' },
             { label: 'Ticket medio', value: `$${metrics.ticket.toLocaleString('es-AR')}`, icon: TrendingUp, accent: 'bg-[#dfe2ff]' },
           ].map(card => (
             <article key={card.label} className="rounded-2xl border border-black/8 bg-white p-5 shadow-sm">
@@ -214,6 +241,7 @@ export default function DemoOwnerPage() {
                   tone="light"
                   selected={selected?.id === order.id}
                   highlight={isProspectDemoOrder(order.id)}
+                  highlightLabel={isProspectDemoOrder(order.id) ? 'Tu pedido de prueba' : undefined}
                   onSelect={selectOrder}
                 />
               ))}
@@ -250,7 +278,7 @@ export default function DemoOwnerPage() {
             </OrderDesktopPanel>
 
             <section className="rounded-3xl border border-black/8 bg-white p-6 shadow-sm">
-              <div className="flex items-center gap-2 text-[#ee6847]">
+              <div className="flex items-center gap-2 text-[#ee6847]" style={theme ? { color: theme.bordo } : undefined}>
                 <BarChart3 size={18} />
                 <p className="text-xs font-black uppercase tracking-[0.12em]">Siguiente paso</p>
               </div>
@@ -261,6 +289,7 @@ export default function DemoOwnerPage() {
               <a
                 href={contactHref}
                 className="mt-5 flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#ee6847] px-4 text-sm font-black text-white transition hover:bg-[#151612]"
+                style={theme ? { backgroundColor: theme.bordo } : undefined}
               >
                 Pedir mi demo <ArrowRight size={16} />
               </a>

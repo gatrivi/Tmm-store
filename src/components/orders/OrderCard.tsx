@@ -44,6 +44,7 @@ interface OrderCardProps {
   order: OrderRecord;
   selected?: boolean;
   highlight?: boolean;
+  highlightLabel?: string;
   tone?: 'light' | 'dark';
   onSelect: (order: OrderRecord) => void;
 }
@@ -52,6 +53,7 @@ export function OrderCard({
   order,
   selected,
   highlight,
+  highlightLabel,
   tone = 'light',
   onSelect,
 }: OrderCardProps) {
@@ -77,6 +79,13 @@ export function OrderCard({
             <span className={`rounded-full px-2 py-0.5 text-[10px] font-black uppercase ${statusClass}`}>
               {ORDER_STATUS_LABELS[order.status]}
             </span>
+            {highlightLabel && (
+              <span className={`rounded-full px-2 py-0.5 text-[10px] font-black uppercase ${
+                isLight ? 'bg-[#ee6847]/15 text-[#ee6847]' : 'bg-brand-green/20 text-brand-green'
+              }`}>
+                {highlightLabel}
+              </span>
+            )}
             <PaymentBadge order={order} tone={tone} />
           </div>
           <p className={`mt-1 text-sm font-bold ${isLight ? 'text-black/70' : 'text-gray-300'}`}>

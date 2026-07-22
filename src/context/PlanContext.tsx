@@ -7,6 +7,7 @@ import {
   getPlanFeatures,
   PLAN_LABELS,
 } from '../config/plans';
+import { getDemoByTenantId, resolveTenantIdFromPath } from '../utils/demoRegistry';
 
 interface PlanContextValue {
   plan: Plan;
@@ -17,23 +18,14 @@ interface PlanContextValue {
 
 const PlanContext = createContext<PlanContextValue | undefined>(undefined);
 
-function resolveTenantId(): string {
-  if (window.location.pathname.startsWith('/demo')) return 'demo';
-
-  const fromEnv = import.meta.env.VITE_TENANT_ID as string | undefined;
-  if (fromEnv?.trim()) return fromEnv.trim();
-
-  const slugMatch = window.location.pathname.match(/^\/s\/([^/]+)/);
-  if (slugMatch?.[1]) return slugMatch[1];
-
-  return 'default';
-}
-
 export const PlanProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const tenantId = resolveTenantId();
-  const plan = tenantId === 'demo'
-    ? 'premium'
-    : parsePlan(import.meta.env.VITE_PLAN as string | undefined);
+  const tenantId = resolveTenantIdFromPath(window.location.pathname);
+  const vertical = getDemoByTenantId(tenantId);
+  const plan = vertical
+    ? vertical.plan
+    : tenantId === 'demo'
+      ? 'premium'
+      : parsePlan(import.meta.env.VITE_PLAN as string | undefined);
 
   const value = useMemo(
     () => ({

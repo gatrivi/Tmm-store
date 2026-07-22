@@ -10,6 +10,7 @@ import { AdminProvider } from './context/AdminContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { MenuProvider } from './context/MenuContext';
 import { PlanProvider } from './context/PlanContext';
+import { resolveTenantIdFromPath } from './utils/demoRegistry';
 
 function CustomerDemo() {
   return (
@@ -20,15 +21,9 @@ function CustomerDemo() {
   );
 }
 
-function resolveProviderScope(pathname: string): string {
-  if (pathname.startsWith('/demo')) return 'demo';
-  const slugMatch = pathname.match(/^\/s\/([^/]+)/);
-  return slugMatch?.[1] || 'default';
-}
-
 export default function CommerceApp() {
   const location = useLocation();
-  const providerScope = resolveProviderScope(location.pathname);
+  const providerScope = resolveTenantIdFromPath(location.pathname);
 
   return (
     <PlanProvider key={providerScope}>
@@ -38,6 +33,8 @@ export default function CommerceApp() {
             <AppVersionStamp />
             <Routes>
               <Route path="/demo" element={<CustomerDemo />} />
+              <Route path="/demo/carniceria" element={<CustomerDemo />} />
+              <Route path="/demo/carniceria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/s/:slug" element={<Storefront />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/s/:slug/admin" element={<AdminPage />} />

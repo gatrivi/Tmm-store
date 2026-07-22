@@ -21,13 +21,20 @@ import { calculateDiscount } from '../types/promotion';
 import { parseMenuLayout } from '../utils/menuLayouts';
 import type { MenuLayoutId } from '../utils/menuLayouts';
 import { BrandLogoMark } from '../components/BrandLogoMark';
+import { useTheme } from '../context/ThemeContext';
+import { getDemoByTenantId, isDemoTenant, resolveTenantIdFromPath } from '../utils/demoRegistry';
 
 export default function Storefront() {
   const { menuItems, menuCategories, siteSettings, promotions } = useMenu();
   const { language, setLanguage } = useLanguage();
   const { features, tenantId } = usePlan();
+  const { setTheme } = useTheme();
   const canOrder = features.canOrder;
   const mpEnabled = features.canUseMercadoPago && siteSettings.mpEnabled;
+  const vertical = getDemoByTenantId(tenantId);
+  const cartStorageKey = isDemoTenant(tenantId)
+    ? `trufi_cart:${tenantId}`
+    : 'elpuestito_cart';
 
   const [promoInput, setPromoInput] = useState('');
   const [appliedPromo, setAppliedPromo] = useState<typeof promotions[0] | null>(null);
@@ -35,7 +42,9 @@ export default function Storefront() {
 
   const [cart, setCart] = useState(() => {
     try {
-      const raw = localStorage.getItem('elpuestito_cart');
+      const tid = resolveTenantIdFromPath(window.location.pathname);
+      const key = isDemoTenant(tid) ? `trufi_cart:${tid}` : 'elpuestito_cart';
+      const raw = localStorage.getItem(key);
       if (raw) return JSON.parse(raw);
     } catch { /* ignore */ }
     return [];
@@ -90,9 +99,9 @@ export default function Storefront() {
   useEffect(() => {
     if (!canOrder) return;
     try {
-      localStorage.setItem('elpuestito_cart', JSON.stringify(cart));
+      localStorage.setItem(cartStorageKey, JSON.stringify(cart));
     } catch { /* ignore */ }
-  }, [cart, canOrder]);
+  }, [cart, canOrder, cartStorageKey]);
 
   const WHATSAPP_NUMBER = siteSettings.whatsappNumber || import.meta.env.VITE_WHATSAPP_NUMBER || '';
   const BANK_ALIAS = siteSettings.bankAlias || import.meta.env.VITE_BANK_ALIAS || '';
@@ -100,13 +109,19 @@ export default function Storefront() {
   // Default language to 'es' if null (avoid blocking modal in this flow)
   const lang = language || 'es';
 
-  const { hours: businessHours, isOpen: isOpenNow, nextOpening: nextOpeningText, summary: hoursSummary } = useBusinessHours(lang);
+  const { hours: businessHours, isOpen: isOpenNowRaw, nextOpening: nextOpeningText, summary: hoursSummary } = useBusinessHours(lang);
+  const isOpenNow = vertical?.forceOpen ? true : isOpenNowRaw;
 
   // Dynamic page title from branding
   useEffect(() => {
     const name = siteSettings.brandName?.trim();
     document.title = name ? `${name} — Menú online` : 'Trufi — Menú online';
   }, [siteSettings.brandName]);
+
+  // Carnicería: light only (no restaurante oscuro)
+  useEffect(() => {
+    if (vertical) setTheme('light');
+  }, [vertical, setTheme]);
 
   // Apply branding CSS variables
   useEffect(() => {
@@ -120,7 +135,22 @@ export default function Storefront() {
     root.style.setProperty('--brand-accent', siteSettings.brandAccent);
     root.style.setProperty('--brand-text', siteSettings.brandTextColor);
     root.style.setProperty('--brand-font', siteSettings.brandFont);
-  }, [siteSettings]);
+    if (vertical?.theme) {
+      root.style.setProperty('--color-surface', vertical.theme.hueso);
+      root.style.setProperty('--color-surface-elevated', '#fffdf9');
+      root.style.setProperty('--color-surface-muted', vertical.theme.papel);
+      root.style.setProperty('--color-text-primary', vertical.theme.carbon);
+      root.style.setProperty('--color-brand-green', vertical.theme.bordo);
+    }
+    return () => {
+      if (vertical?.theme) {
+        root.style.removeProperty('--color-surface');
+        root.style.removeProperty('--color-surface-elevated');
+        root.style.removeProperty('--color-surface-muted');
+        root.style.removeProperty('--color-text-primary');
+      }
+    };
+  }, [siteSettings, vertical]);
 
   // Analytics tracking
   useEffect(() => {
@@ -410,17 +440,26 @@ export default function Storefront() {
         <GlobalFooter
           brandName={siteSettings.brandName}
           brandLogo={siteSettings.brandLogo}
-          address={siteSettings.brandAddress}
+          address={vertical?.hideAddress ? undefined : siteSettings.brandAddress}
           instagram={siteSettings.brandInstagram}
-          googleMaps={siteSettings.brandGoogleMaps}
-          hoursSummary={hoursSummary || undefined}
+          googleMaps={vertical ? undefined : siteSettings.brandGoogleMaps}
+          hoursSummary={vertical ? undefined : (hoursSummary || undefined)}
         />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-surface pb-24 font-sans text-text-primary">
+    <div
+      className="min-h-screen bg-surface pb-24 font-sans text-text-primary"
+      data-demo-theme={vertical?.id}
+      style={vertical?.theme ? {
+        ['--demo-bordo' as string]: vertical.theme.bordo,
+        ['--demo-carbon' as string]: vertical.theme.carbon,
+        ['--demo-salvia' as string]: vertical.theme.salvia,
+        fontFamily: 'system-ui, sans-serif',
+      } : undefined}
+    >
       {/* MercadoPago Success Banner */}
       {mpSuccess && mpPendingOrder && (
         <div className="fixed inset-x-0 top-0 z-50 bg-sky-500 text-white px-4 py-4 shadow-lg">
@@ -449,28 +488,48 @@ export default function Storefront() {
         </div>
       )}
 
+      {vertical && (
+        <div
+          className="px-4 py-2 text-center text-[11px] font-black uppercase tracking-[0.12em]"
+          style={{ backgroundColor: vertical.theme.carbon, color: vertical.theme.hueso }}
+        >
+          {vertical.copy.ribbonLabel}
+        </div>
+      )}
+
       {/* Header */}
-      <header className={`sticky top-0 z-10 shadow-md flex justify-between items-center p-4 dark:bg-black dark:text-white light:bg-brand-white light:text-text-primary light:border-b light:border-border ${mpSuccess ? 'mt-[88px] sm:mt-[72px]' : ''}`}>
+      <header className={`sticky top-0 z-10 shadow-md flex justify-between items-center p-4 dark:bg-black dark:text-white light:bg-brand-white light:text-text-primary light:border-b light:border-border ${mpSuccess ? 'mt-[88px] sm:mt-[72px]' : ''}`}
+        style={vertical?.theme ? { backgroundColor: vertical.theme.carbon, color: vertical.theme.hueso } : undefined}
+      >
         <div className="flex items-center gap-3">
           <BrandLogoMark
             src={siteSettings.brandLogo || '/puestito.png'}
             alt={siteSettings.brandName || 'Logo'}
           />
-          <div className="flex items-center gap-2 mt-0.5">
-            {businessHours.enabled ? (
-              <span className={`inline-flex items-center gap-1 text-[10px] md:text-xs font-bold px-2 py-0.5 rounded-full ${isOpenNow ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                <span className={`w-1.5 h-1.5 rounded-full ${isOpenNow ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`} />
-                {isOpenNow ? t.openNow : t.closed}
-              </span>
-            ) : null}
-            {siteSettings.brandAddress ? (
-              <span className="text-xs md:text-sm dark:text-gray-300 light:text-text-secondary">{siteSettings.brandAddress}</span>
-            ) : null}
+          <div>
+            <p
+              className="text-sm font-black tracking-[-0.02em]"
+              style={vertical ? { fontFamily: siteSettings.brandFont } : undefined}
+            >
+              {siteSettings.brandName || 'Tu Negocio'}
+            </p>
+            <div className="flex items-center gap-2 mt-0.5">
+              {businessHours.enabled && !vertical ? (
+                <span className={`inline-flex items-center gap-1 text-[10px] md:text-xs font-bold px-2 py-0.5 rounded-full ${isOpenNow ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${isOpenNow ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`} />
+                  {isOpenNow ? t.openNow : t.closed}
+                </span>
+              ) : null}
+              {!vertical?.hideAddress && siteSettings.brandAddress ? (
+                <span className="text-xs md:text-sm dark:text-gray-300 light:text-text-secondary">{siteSettings.brandAddress}</span>
+              ) : null}
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <ThemeToggle />
+          {!vertical?.hideThemeToggle && <ThemeToggle />}
           {/* Language Switcher */}
+          {!vertical?.hideLanguageSwitcher && (
           <div className="relative group">
             <button className="flex items-center gap-1.5 bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-full transition text-sm font-bold">
               <Globe size={14} />
@@ -494,7 +553,9 @@ export default function Storefront() {
               ))}
             </div>
           </div>
+          )}
 
+          {!vertical?.hideShare && (
           <button
             onClick={() => setIsShareOpen(true)}
             className="p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition"
@@ -502,6 +563,7 @@ export default function Storefront() {
           >
             <Share2 size={20} />
           </button>
+          )}
 
           {features.showWhatsAppContact && WHATSAPP_NUMBER && !canOrder && (
             <a
@@ -519,10 +581,13 @@ export default function Storefront() {
           <button
             onClick={() => setIsCartOpen(!isCartOpen)}
             className="relative p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition"
+            style={vertical?.theme ? { backgroundColor: 'rgba(255,255,255,0.12)' } : undefined}
           >
             <ShoppingCart size={24} />
             {cart.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full"
+                style={vertical?.theme ? { backgroundColor: vertical.theme.bordo } : undefined}
+              >
                 {cart.reduce((sum, item) => sum + item.qty, 0)}
               </span>
             )}
@@ -532,13 +597,73 @@ export default function Storefront() {
       </header>
 
       {/* Closed Banner */}
-      {!isOpenNow && businessHours.enabled && (
+      {!isOpenNow && businessHours.enabled && !vertical && (
         <div className="bg-red-500/10 border-b border-red-500/20 px-4 py-3">
           <div className="max-w-5xl mx-auto flex items-center gap-2 text-red-300 text-sm font-bold">
             <Clock size={16} />
             <span>{t.closedMsg} — {nextOpeningText}</span>
           </div>
         </div>
+      )}
+
+      {vertical && (
+        <section className="max-w-5xl mx-auto px-4 pt-6 pb-2">
+          <div
+            className="overflow-hidden rounded-2xl border border-black/8"
+            style={{ backgroundColor: vertical.theme.papel }}
+          >
+            {vertical.heroImage ? (
+              <img
+                src={vertical.heroImage}
+                alt=""
+                className="h-40 w-full object-cover sm:h-52"
+                style={{ objectPosition: vertical.heroObjectPosition || 'center' }}
+              />
+            ) : (
+              <div
+                className="flex h-36 items-center justify-center sm:h-44"
+                style={{ backgroundColor: vertical.theme.bordo, color: vertical.theme.hueso }}
+                aria-hidden="true"
+              >
+                <span
+                  className="text-5xl font-bold tracking-tight sm:text-6xl"
+                  style={{ fontFamily: siteSettings.brandFont }}
+                >
+                  {vertical.monogram}
+                </span>
+              </div>
+            )}
+            <div className="space-y-3 p-5">
+              <h1
+                className="text-2xl font-bold leading-tight tracking-[-0.03em] sm:text-3xl"
+                style={{ fontFamily: siteSettings.brandFont, color: vertical.theme.carbon }}
+              >
+                {vertical.copy.heroTitle}
+              </h1>
+              <p className="text-sm leading-relaxed" style={{ color: `${vertical.theme.carbon}cc` }}>
+                {vertical.copy.heroBody}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {vertical.copy.chips.map(chip => (
+                  <span
+                    key={chip}
+                    className="rounded-full border px-3 py-1 text-xs font-bold"
+                    style={{
+                      borderColor: `${vertical.theme.salvia}66`,
+                      color: vertical.theme.salvia,
+                      backgroundColor: `${vertical.theme.hueso}`,
+                    }}
+                  >
+                    {chip}
+                  </span>
+                ))}
+              </div>
+              <p className="text-xs font-medium" style={{ color: vertical.theme.salvia }}>
+                {vertical.copy.weightNotice}
+              </p>
+            </div>
+          </div>
+        </section>
       )}
 
       {/* Dynamic Menu — category sections */}
@@ -575,15 +700,15 @@ export default function Storefront() {
         )}
       </main>
 
-      {/* Footer */}
+{/* Footer */}
       <GlobalFooter
-        brandName={siteSettings.brandName}
-        brandLogo={siteSettings.brandLogo}
-        address={siteSettings.brandAddress}
-        instagram={siteSettings.brandInstagram}
-        googleMaps={siteSettings.brandGoogleMaps}
-        hoursSummary={hoursSummary || undefined}
-      />
+          brandName={siteSettings.brandName}
+          brandLogo={siteSettings.brandLogo}
+          address={vertical?.hideAddress ? undefined : siteSettings.brandAddress}
+          instagram={siteSettings.brandInstagram}
+          googleMaps={vertical ? undefined : siteSettings.brandGoogleMaps}
+          hoursSummary={vertical ? undefined : (hoursSummary || undefined)}
+        />
 
       {/* Cart Overlay */}
       {canOrder && isCartOpen && (
@@ -611,8 +736,9 @@ export default function Storefront() {
                 cart.map((item, idx) => (
                   <div key={idx} className="flex justify-between items-start border-b border-border pb-4 gap-3">
                     <div className="min-w-0 flex-1">
-                      <div className="font-bold text-sm truncate">{item.name}</div>
-                      <div className="text-xs text-text-secondary">{item.optionLabel}</div>
+                      <div className="font-bold text-sm truncate">
+                        {item.qty} × {item.name}{item.optionLabel ? ` · ${item.optionLabel}` : ''}
+                      </div>
                       <div className="text-xs font-bold text-green-400 mt-1">${item.price.toLocaleString('es-AR')} c/u</div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
@@ -648,17 +774,21 @@ export default function Storefront() {
             </div>
 
             <div className="p-6 border-t border-border bg-surface-muted">
-              <div className="flex justify-between items-center text-xl font-black mb-6">
-                <span>{t.total}</span>
+              <div className="flex justify-between items-center text-xl font-black mb-2">
+                <span>{vertical?.copy.totalLabel ?? t.total}</span>
                 <span>${total.toLocaleString('es-AR')}</span>
               </div>
+              {vertical?.copy.totalHint && (
+                <p className="mb-4 text-xs font-medium text-text-secondary">{vertical.copy.totalHint}</p>
+              )}
               <button
                 disabled={cart.length === 0 || !isOpenNow}
                 onClick={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }}
                 className="w-full bg-green-600 hover:bg-green-700 disabled:bg-white/10 disabled:text-text-muted text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg"
+                style={vertical?.theme && cart.length > 0 && isOpenNow ? { backgroundColor: vertical.theme.bordo } : undefined}
               >
                 <Send size={20} />
-                {isOpenNow ? t.order : t.closed}
+                {isOpenNow ? (vertical?.copy.cartCta ?? t.order) : t.closed}
               </button>
               {!isOpenNow && cart.length > 0 && (
                 <p className="text-xs text-center text-red-400 font-medium mt-2">
@@ -680,8 +810,8 @@ export default function Storefront() {
         subtotal={subtotal}
         discount={discount}
         promoCode={appliedPromo?.code || promoInput}
-        onPromoCodeChange={setPromoInput}
-        onApplyPromo={handleApplyPromo}
+        onPromoCodeChange={vertical?.hidePromos ? undefined : setPromoInput}
+        onApplyPromo={vertical?.hidePromos ? undefined : handleApplyPromo}
         promoError={promoError}
         whatsappNumber={WHATSAPP_NUMBER}
         bankAlias={BANK_ALIAS}
@@ -690,13 +820,15 @@ export default function Storefront() {
       />
       )}
 
-      <AIAssistant onAddToCart={canOrder ? handleAIAddToCart : undefined} />
+      {!vertical && <AIAssistant onAddToCart={canOrder ? handleAIAddToCart : undefined} />}
 
       {/* Share Modal */}
+      {!vertical?.hideShare && (
       <ShareModal
         isOpen={isShareOpen}
         onClose={() => setIsShareOpen(false)}
       />
+      )}
     </div>
   );
 }

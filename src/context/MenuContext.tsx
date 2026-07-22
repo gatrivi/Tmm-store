@@ -22,6 +22,7 @@ import { getInitialMenuCategories } from '../utils/menuImport';
 import type { MenuLayoutId } from '../utils/menuLayouts';
 import { DEFAULT_MENU_LAYOUT, parseMenuLayout } from '../utils/menuLayouts';
 import { buildProspectLogoDataUrl, parseProspectDemo } from '../utils/prospectDemo';
+import { getDemoByTenantId, isDemoTenant, resolveTenantIdFromPath } from '../utils/demoRegistry';
 
 /** Keys de localStorage */
 const STORAGE_KEY_MENU = 'elpuestito_admin_menu';
@@ -196,18 +197,10 @@ interface MenuContextProps {
 
 const MenuContext = createContext<MenuContextProps | undefined>(undefined);
 
-function resolveTenantId(): string {
-  if (window.location.pathname.startsWith('/demo')) return 'demo';
-
-  const fromEnv = import.meta.env.VITE_TENANT_ID as string | undefined;
-  if (fromEnv?.trim()) return fromEnv.trim();
-  const slugMatch = window.location.pathname.match(/^\/s\/([^/]+)/);
-  if (slugMatch?.[1]) return slugMatch[1];
-  return 'default';
-}
-
 /** Demo menu for the public showcase and local development. */
 function getDefaultMenuSeed(tenantId: string): MenuItemType[] {
+  const vertical = getDemoByTenantId(tenantId);
+  if (vertical) return JSON.parse(JSON.stringify(vertical.menuItems));
   const isLocalDemo = import.meta.env.DEV
     && tenantId === 'default'
     && !import.meta.env.VITE_TENANT_ID?.trim();
@@ -216,34 +209,54 @@ function getDefaultMenuSeed(tenantId: string): MenuItemType[] {
     : [];
 }
 
+function getDefaultCategories(tenantId: string): MenuCategory[] {
+  const vertical = getDemoByTenantId(tenantId);
+  if (vertical) return JSON.parse(JSON.stringify(vertical.menuCategories));
+  return getInitialMenuCategories();
+}
+
+function getDemoFallbackSettings(tenantId: string): SiteSettings {
+  const vertical = getDemoByTenantId(tenantId);
+  if (vertical) {
+    return {
+      ...DEFAULT_SITE_SETTINGS,
+      ...vertical.siteSettings,
+      menuLayout: parseMenuLayout(vertical.siteSettings.menuLayout),
+      demoMode: true,
+      mpEnabled: false,
+    };
+  }
+  return getDemoSiteSettings();
+}
+
 export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const tenantId = resolveTenantId();
-  const isDemoTenant = tenantId === 'demo';
+  const tenantId = resolveTenantIdFromPath(window.location.pathname);
+  const demoTenant = isDemoTenant(tenantId);
   const storageKeys = useMemo(() => getStorageKeys(tenantId), [tenantId]);
-  const cloudSyncEnabled = isFirebaseConfigured() && !isDemoTenant;
+  const cloudSyncEnabled = isFirebaseConfigured() && !demoTenant;
   const hydratedFromCloud = useRef(false);
 
   const [menuItems, setMenuItems] = useState<MenuItemType[]>(() => {
     const seed = getDefaultMenuSeed(tenantId);
-    return isDemoTenant ? seed : loadFromStorage(storageKeys.menu, seed);
+    return demoTenant ? seed : loadFromStorage(storageKeys.menu, seed);
   });
   const [menuCategories, setMenuCategories] = useState<MenuCategory[]>(() => {
-    if (isDemoTenant) return getInitialMenuCategories();
+    if (demoTenant) return getDefaultCategories(tenantId);
     const stored = loadFromStorage<MenuCategory[] | null>(storageKeys.categories, null);
     if (stored && stored.length > 0) return stored;
     return getDefaultMenuSeed(tenantId).length > 0 ? getInitialMenuCategories() : [];
   });
   const [extrasData, setExtrasData] = useState<ExtraItem[]>(() => (
-    isDemoTenant
+    demoTenant
       ? JSON.parse(JSON.stringify(initialExtras))
       : loadFromStorage(storageKeys.extras, initialExtras)
   ));
   const [lastEditTimestamp, setLastEditTimestamp] = useState<string | null>(() => (
-    isDemoTenant ? null : localStorage.getItem(storageKeys.lastEdit)
+    demoTenant ? null : localStorage.getItem(storageKeys.lastEdit)
   ));
   const [siteSettings, setSiteSettings] = useState<SiteSettings>(() => {
-    const fallback = isDemoTenant ? getDemoSiteSettings() : DEFAULT_SITE_SETTINGS;
-    const saved = isDemoTenant
+    const fallback = demoTenant ? getDemoFallbackSettings(tenantId) : DEFAULT_SITE_SETTINGS;
+    const saved = demoTenant
       ? {}
       : loadFromStorage<Partial<SiteSettings>>(storageKeys.settings, {});
     return {
@@ -254,7 +267,7 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
   const [usdRate, setUsdRate] = useState<number>(() => getUsdRateSync());
   const [promotions, setPromotions] = useState<Promotion[]>(() => (
-    isDemoTenant ? [] : loadFromStorage<Promotion[]>(storageKeys.promotions, [])
+    demoTenant ? [] : loadFromStorage<Promotion[]>(storageKeys.promotions, [])
   ));
   const [cloudSyncStatus, setCloudSyncStatus] = useState<'loading' | 'synced' | 'offline' | 'error'>(() =>
     cloudSyncEnabled ? 'loading' : 'offline',
@@ -333,31 +346,31 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Persistir menuItems en localStorage cada vez que cambie
   useEffect(() => {
-    if (isDemoTenant) return;
+    if (demoTenant) return;
     localStorage.setItem(storageKeys.menu, JSON.stringify(menuItems));
-  }, [isDemoTenant, menuItems, storageKeys.menu]);
+  }, [demoTenant, menuItems, storageKeys.menu]);
 
   useEffect(() => {
-    if (isDemoTenant) return;
+    if (demoTenant) return;
     localStorage.setItem(storageKeys.categories, JSON.stringify(menuCategories));
-  }, [isDemoTenant, menuCategories, storageKeys.categories]);
+  }, [demoTenant, menuCategories, storageKeys.categories]);
 
   // Persistir extrasData en localStorage cada vez que cambie
   useEffect(() => {
-    if (isDemoTenant) return;
+    if (demoTenant) return;
     localStorage.setItem(storageKeys.extras, JSON.stringify(extrasData));
-  }, [extrasData, isDemoTenant, storageKeys.extras]);
+  }, [extrasData, demoTenant, storageKeys.extras]);
 
   // Persistir siteSettings
   useEffect(() => {
-    if (isDemoTenant) return;
+    if (demoTenant) return;
     localStorage.setItem(storageKeys.settings, JSON.stringify(siteSettings));
-  }, [isDemoTenant, siteSettings, storageKeys.settings]);
+  }, [demoTenant, siteSettings, storageKeys.settings]);
 
   useEffect(() => {
-    if (isDemoTenant) return;
+    if (demoTenant) return;
     localStorage.setItem(storageKeys.promotions, JSON.stringify(promotions));
-  }, [isDemoTenant, promotions, storageKeys.promotions]);
+  }, [demoTenant, promotions, storageKeys.promotions]);
 
   const updateMenuItem = useCallback((index: number, updated: MenuItemType) => {
     setMenuItems(prev => {

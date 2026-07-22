@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import {
   CheckCircle,
   Clock,
@@ -13,10 +13,22 @@ import type { OrderRecord } from '../types/order';
 import { ORDER_STATUS_LABELS } from '../types/order';
 import { isTerminalStatus } from '../utils/orderStateMachine';
 import { PaymentBadge } from '../components/orders/PaymentBadge';
+import {
+  getDemoByTenantId,
+  isDemoTenant,
+  resolveDemoFromPath,
+  resolveDemoPaths,
+} from '../utils/demoRegistry';
 
 export default function OrderStatusPage() {
   const { tenantId } = usePlan();
-  const orderId = window.location.pathname.split('/order/')[1]?.split('/')[0] ?? '';
+  const location = useLocation();
+  const params = useParams();
+  const orderId = params.orderId
+    ?? window.location.pathname.split('/order/')[1]?.split('/')[0]
+    ?? '';
+  const vertical = resolveDemoFromPath(location.pathname) ?? getDemoByTenantId(tenantId);
+  const paths = resolveDemoPaths(location.pathname);
   const [order, setOrder] = useState<OrderRecord | null>(null);
   const [loading, setLoading] = useState(true);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
@@ -31,14 +43,16 @@ export default function OrderStatusPage() {
     const id = orderId.toUpperCase();
 
     const load = async () => {
-      const demo = getDemoOrder(id);
-      if (demo) {
-        if (!cancelled) {
-          setOrder(demo);
-          setUpdatedAt(demo.updatedAt);
-          setLoading(false);
+      if (isDemoTenant(tenantId) || resolveDemoFromPath(location.pathname)) {
+        const demo = getDemoOrder(id);
+        if (demo) {
+          if (!cancelled) {
+            setOrder(demo);
+            setUpdatedAt(demo.updatedAt);
+            setLoading(false);
+          }
+          return;
         }
-        return;
       }
       const remote = await getOrder(tenantId, id);
       if (!cancelled) {
@@ -84,7 +98,7 @@ export default function OrderStatusPage() {
       unsubDemo();
       window.clearInterval(poll);
     };
-  }, [tenantId, orderId]);
+  }, [tenantId, orderId, location.pathname]);
 
   if (loading) {
     return (
@@ -100,7 +114,7 @@ export default function OrderStatusPage() {
         <XCircle size={48} className="mb-4 text-red-400" />
         <h1 className="mb-2 text-xl font-black text-text-primary">Pedido no encontrado</h1>
         <p className="mb-6 text-text-secondary">Verificá el número de pedido e intentá de nuevo.</p>
-        <Link to="/" className="font-bold text-green-400 hover:underline">Volver al menú</Link>
+        <Link to={paths.customerPath} className="font-bold text-green-400 hover:underline">Volver al menú</Link>
       </div>
     );
   }
@@ -115,7 +129,13 @@ export default function OrderStatusPage() {
     cancelled: 'bg-red-500/20 text-red-300',
   };
 
-  const backHref = order.tenantId === 'demo' || order.source === 'demo' ? '/demo' : '/';
+  const backHref = isDemoTenant(order.tenantId) || order.source === 'demo'
+    ? paths.customerPath
+    : '/';
+  const totalLabel = vertical?.copy.totalLabel ?? 'Total';
+  const totalHint = vertical?.copy.totalHint;
+  const deliveryLabel = vertical?.copy.deliveryLabel ?? 'Envío';
+  const pickupLabel = vertical?.copy.pickupLabel ?? 'Retiro';
 
   return (
     <div className="min-h-screen bg-surface p-4">
@@ -145,19 +165,22 @@ export default function OrderStatusPage() {
             <div className="flex justify-between">
               <span className="text-text-secondary">Entrega</span>
               <span className="font-bold text-text-primary">
-                {order.deliveryType === 'delivery' ? 'Envío' : 'Retiro'}
+                {order.deliveryType === 'delivery' ? deliveryLabel : pickupLabel}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-text-secondary">Total</span>
+              <span className="text-text-secondary">{totalLabel}</span>
               <span className="font-black text-green-400">${order.total.toLocaleString('es-AR')}</span>
             </div>
+            {totalHint && (
+              <p className="text-xs text-text-secondary">{totalHint}</p>
+            )}
           </div>
 
           <div className="space-y-2 border-t border-border pt-4">
             {order.items.map((item, idx) => (
               <div key={idx} className="flex justify-between text-sm text-text-primary">
-                <span>{item.qty}x {item.name}</span>
+                <span>{item.qty}× {item.name}{item.optionLabel ? ` · ${item.optionLabel}` : ''}</span>
                 <span className="font-bold">${(item.price * item.qty).toLocaleString('es-AR')}</span>
               </div>
             ))}

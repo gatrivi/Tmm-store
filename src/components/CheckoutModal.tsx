@@ -8,7 +8,8 @@ import { translations } from '../i18n/translations';
 import { createOrder } from '../services/orderService';
 import { createDemoOrder } from '../services/demoOrderRepository';
 import { buildOrderRecord } from '../utils/orderBuilder';
-
+import { getDemoByTenantId, isDemoTenant, resolveDemoPaths } from '../utils/demoRegistry';
+import { useLocation } from 'react-router-dom';
 
 export interface CheckoutData {
   orderId: string;
@@ -56,10 +57,22 @@ const generateOrderId = (): string => {
 export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNumber, bankAlias, onOrderSent, mpEnabled, subtotal, discount = 0, promoCode = '', onPromoCodeChange, onApplyPromo, promoError }: CheckoutModalProps) {
   const { language } = useLanguage();
   const { features, tenantId } = usePlan();
+  const location = useLocation();
   const lang = language || 'es';
   const t = translations[lang].checkout;
   const effectiveSubtotal = subtotal ?? total;
-  const showPromos = features.canUsePromotions && onApplyPromo;
+  const vertical = getDemoByTenantId(tenantId);
+  const demoPaths = resolveDemoPaths(location.pathname);
+  const demoMode = isDemoTenant(tenantId);
+  const showPromos = features.canUsePromotions && onApplyPromo && !vertical?.hidePromos;
+  const totalLabel = vertical?.copy.totalLabel ?? t.total;
+  const totalHint = vertical?.copy.totalHint;
+  const pickupLabel = vertical?.copy.pickupLabel ?? t.pickup;
+  const deliveryLabel = vertical?.copy.deliveryLabel ?? t.delivery;
+  const cashLabel = vertical?.copy.cashLabel ?? t.cash;
+  const transferLabel = vertical?.copy.transferLabel ?? t.transfer;
+  const submitLabel = vertical?.copy.submitLabel ?? t.whatsappSend;
+  const notesPlaceholder = vertical?.copy.notesPlaceholder ?? t.notesPlaceholder;
 
   const [step, setStep] = useState<'form' | 'confirm' | 'demo-success'>('form');
   const [name, setName] = useState('');
@@ -129,8 +142,8 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     if (!name.trim()) newErrors.name = t.nameError;
     if (!phone.trim()) newErrors.phone = t.phoneError;
     if (deliveryType === 'delivery' && !address.trim()) newErrors.address = t.addressError;
-    if (paymentMethod === 'transfer' && !bankAlias.trim()) newErrors.bankAlias = t.aliasError;
-    if (!whatsappNumber.trim()) newErrors.whatsapp = t.whatsappError;
+    if (paymentMethod === 'transfer' && !bankAlias.trim() && !demoMode) newErrors.bankAlias = t.aliasError;
+    if (!whatsappNumber.trim() && !demoMode) newErrors.whatsapp = t.whatsappError;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -174,7 +187,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
       promoCode: promoCode || undefined,
     });
 
-    if (tenantId === 'demo') {
+    if (demoMode) {
       createDemoOrder({ ...record, source: 'demo' });
       if (onOrderSent) onOrderSent();
       setStep('demo-success');
@@ -285,8 +298,8 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   };
 
   const paymentLabel = {
-    cash: t.cash,
-    transfer: t.transfer,
+    cash: cashLabel,
+    transfer: transferLabel,
     mercadopago: t.mp,
   }[paymentMethod];
 
@@ -314,7 +327,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
             )}
             <h2 id="checkout-modal-title" className="text-lg font-black text-text-primary">
               {step === 'demo-success'
-                ? 'Pedido de demostración listo'
+                ? (vertical?.copy.successTitle ?? 'Pedido de demostración listo')
                 : step === 'confirm'
                   ? t.confirmTitle
                   : t.title}
@@ -378,15 +391,20 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   onClick={() => setDeliveryType('pickup')}
                   className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-bold transition-all ${deliveryType === 'pickup' ? 'bg-green-600 text-white border-green-600 shadow-lg shadow-green-200' : 'bg-surface-muted text-text-secondary border-border hover:border-green-500/40'}`}
                 >
-                  <Store size={16} /> {t.pickup}
+                  <Store size={16} /> {pickupLabel}
                 </button>
                 <button
                   onClick={() => setDeliveryType('delivery')}
                   className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-bold transition-all ${deliveryType === 'delivery' ? 'bg-green-600 text-white border-green-600 shadow-lg shadow-green-200' : 'bg-surface-muted text-text-secondary border-border hover:border-green-500/40'}`}
                 >
-                  <MapPin size={16} /> {t.delivery}
+                  <MapPin size={16} /> {deliveryLabel}
                 </button>
               </div>
+              {vertical && (
+                <p className="mt-2 text-xs font-medium text-text-secondary">
+                  {deliveryType === 'delivery' ? vertical.copy.deliveryHint : vertical.copy.pickupHint}
+                </p>
+              )}
             </div>
 
             {/* Address (conditional) */}
@@ -413,8 +431,8 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               </label>
               <div className={`grid gap-2 ${mpEnabled ? 'grid-cols-3' : 'grid-cols-2'}`}>
                 {[
-                  { id: 'cash' as const, label: t.cash },
-                  { id: 'transfer' as const, label: t.transfer },
+                  { id: 'cash' as const, label: cashLabel },
+                  { id: 'transfer' as const, label: transferLabel },
                   ...(mpEnabled ? [{ id: 'mercadopago' as const, label: t.mp }] : []),
                 ].map((opt) => (
                   <button
@@ -426,9 +444,9 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   </button>
                 ))}
               </div>
-              {paymentMethod === 'transfer' && (
+              {paymentMethod === 'transfer' && bankAlias && (
                 <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs text-blue-700 font-medium">
-                  {t.aliasLabel}: <span className="font-black">{bankAlias || 'No configurado'}</span>
+                  {t.aliasLabel}: <span className="font-black">{bankAlias}</span>
                 </div>
               )}
               {paymentMethod === 'mercadopago' && (
@@ -449,7 +467,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
-                placeholder={t.notesPlaceholder}
+                placeholder={notesPlaceholder}
                 className="w-full bg-surface-muted border border-border rounded-xl px-4 py-2.5 text-sm font-medium text-text-primary outline-none focus:ring-2 focus:ring-green-200 transition-shadow resize-none placeholder:text-text-muted"
               />
             </div>
@@ -495,7 +513,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 </div>
               ))}
               <div className="border-t border-border pt-2 flex justify-between items-center text-base font-black text-text-primary">
-                <span>{t.total}</span>
+                <span>{totalLabel}</span>
                 <div className="flex flex-col items-end">
                   {discount > 0 && (
                     <span className="text-xs text-text-muted line-through">${effectiveSubtotal.toLocaleString('es-AR')}</span>
@@ -516,6 +534,9 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   </div>
                 </div>
               </div>
+              {totalHint && (
+                <p className="text-xs font-medium text-text-secondary pt-1">{totalHint}</p>
+              )}
             </div>
 
             {/* Submit */}
@@ -537,10 +558,10 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 Pedido enviado #{orderId}
               </p>
               <h3 className="mt-2 text-2xl font-black text-text-primary">
-                El local ya lo tiene en la bandeja.
+                {vertical?.copy.successTitle ?? 'El local ya lo tiene en la bandeja.'}
               </h3>
               <p className="mt-3 max-w-sm text-sm leading-relaxed text-text-secondary">
-                Demo segura · no se envió WhatsApp. El ID y el total coinciden con el panel del local.
+                {vertical?.copy.successBody ?? 'Demo segura · no se envió WhatsApp. El ID y el total coinciden con el panel del local.'}
               </p>
             </div>
 
@@ -548,7 +569,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-[0.12em] text-green-700">Pedido</p>
-                  <p className="mt-1 text-lg font-black text-green-900">#{orderId} · ${total.toLocaleString('es-AR')}</p>
+                  <p className="mt-1 text-lg font-black text-green-900">#{orderId} · {totalLabel} ${total.toLocaleString('es-AR')}</p>
                   <p className="mt-1 text-xs font-bold text-green-800">Estado: Nuevo</p>
                 </div>
                 <Store size={24} className="text-green-700" />
@@ -557,24 +578,24 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
 
             <div className="mt-6 space-y-3">
               <a
-                href={`/demo/owner${window.location.search}`}
+                href={demoPaths.ownerPath}
                 className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-[#171814] px-4 py-3.5 text-sm font-black text-white transition hover:bg-[#ee6847]"
               >
                 <Store size={18} />
-                Ver cómo lo recibe el local
+                {vertical?.copy.ownerLinkLabel ?? 'Ver cómo lo recibe el local'}
               </a>
               <a
-                href={`/order/${orderId}`}
+                href={demoPaths.orderPath(orderId)}
                 className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-border px-4 py-3 text-sm font-black text-text-primary transition hover:bg-white/5"
               >
-                Ver estado del pedido
+                {vertical?.copy.statusLinkLabel ?? 'Ver estado del pedido'}
               </a>
               <button
                 type="button"
                 onClick={resetAndClose}
                 className="w-full rounded-xl py-3 text-sm font-bold text-text-secondary transition hover:text-text-primary"
               >
-                Seguir viendo la carta
+                {vertical?.copy.continueLabel ?? 'Seguir viendo la carta'}
               </button>
             </div>
           </div>
@@ -608,7 +629,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
               </div>
               <div className="flex justify-between">
                 <span className="text-text-secondary">{t.deliveryLabel}</span>
-                <span className="font-bold text-text-primary">{deliveryType === 'pickup' ? t.pickup : t.delivery}</span>
+                <span className="font-bold text-text-primary">{deliveryType === 'pickup' ? pickupLabel : deliveryLabel}</span>
               </div>
               {deliveryType === 'delivery' && (
                 <div className="flex justify-between">
@@ -657,9 +678,12 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 </div>
               ))}
               <div className="border-t border-border pt-2 flex justify-between text-base font-black text-text-primary">
-                <span>{t.total}</span>
+                <span>{totalLabel}</span>
                 <span>${total.toLocaleString('es-AR')}</span>
               </div>
+              {totalHint && (
+                <p className="text-xs font-medium text-text-secondary pt-1">{totalHint}</p>
+              )}
             </div>
 
             {/* Actions */}
@@ -698,8 +722,8 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   onClick={handleSendWhatsApp}
                   className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition shadow-lg"
                 >
-                  <MessageCircle size={20} />
-                  {t.whatsappSend}
+                  {demoMode ? <Send size={20} /> : <MessageCircle size={20} />}
+                  {demoMode ? submitLabel : t.whatsappSend}
                 </button>
               )}
 

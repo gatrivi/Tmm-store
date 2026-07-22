@@ -2,7 +2,18 @@
 
 Brief de producto e implementación para Cursor.
 
-Estado de referencia: rama `trabajo`, después de Orders v2 Hito 1
+**Estado: Hito 1 shipped** (v1.8.0) — vertical `/demo/carniceria` aislada del showcase gastronómico.
+
+- Config: `src/data/demos/carniceria.ts`
+- Registry: `src/utils/demoRegistry.ts`
+- Check: `npm run check:demo`
+- Storage: `trufi_demo_orders_v2:carniceria`
+
+Placeholders pendientes: foto/nombre real, precios, cobertura, punto de retiro. Sin motor de peso variable (siguiente hito).
+
+---
+
+Estado de referencia original: rama `trabajo`, después de Orders v2 Hito 1
 (`cf2b2bf`), 21 de julio de 2026.
 
 ## 0. Instrucción para Cursor

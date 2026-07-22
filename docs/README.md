@@ -40,6 +40,7 @@ Agent manifest: read this first, then one targeted file.
 | Human portfolio | [human/portfolio.md](./human/portfolio.md) |
 | **Roadmap / future** | [roadmap/README.md](./roadmap/README.md) |
 | **Orders v2 (Hito 1+)** | [roadmap/order-processing-v2.md](./roadmap/order-processing-v2.md) |
+| **Demo carnicería Gabriel (Hito 1)** | [roadmap/demo-carniceria-gabriel.md](./roadmap/demo-carniceria-gabriel.md) |
 
 ```mermaid
 flowchart TB

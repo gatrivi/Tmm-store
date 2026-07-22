@@ -1,9 +1,9 @@
 import type { OrderRecord } from '../types/order';
 import { normalizeOrderRecord } from '../types/order';
+import { getDemoById, resolveDemoIdFromPath, resolveDemoStorageKey } from '../utils/demoRegistry';
 
-const STORAGE_KEY = 'trufi_demo_orders_v2';
-
-const SEED_ORDERS: OrderRecord[] = [
+/** Legacy gastronomy seeds — only for id `demo`. */
+const GASTRONOMY_SEEDS: OrderRecord[] = [
   {
     id: 'K7P4',
     tenantId: 'demo',
@@ -73,14 +73,24 @@ const SEED_ORDERS: OrderRecord[] = [
 
 type DemoStore = {
   seeded: boolean;
-  /** IDs creados por el prospecto en esta sesión */
   prospectIds: string[];
   orders: OrderRecord[];
 };
 
-function readStore(): DemoStore {
+function currentDemoId(): string {
+  return resolveDemoIdFromPath(window.location.pathname);
+}
+
+function seedsFor(demoId: string): OrderRecord[] {
+  if (demoId === 'demo') return GASTRONOMY_SEEDS.map(o => ({ ...o }));
+  const demo = getDemoById(demoId);
+  return (demo?.seedOrders ?? []).map(o => ({ ...o }));
+}
+
+function readStore(demoId: string): DemoStore {
+  const key = resolveDemoStorageKey(demoId);
   try {
-    const raw = sessionStorage.getItem(STORAGE_KEY);
+    const raw = sessionStorage.getItem(key);
     if (raw) {
       const parsed = JSON.parse(raw) as DemoStore;
       return {
@@ -95,38 +105,38 @@ function readStore(): DemoStore {
   return { seeded: false, prospectIds: [], orders: [] };
 }
 
-function writeStore(store: DemoStore): void {
-  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+function writeStore(demoId: string, store: DemoStore): void {
+  sessionStorage.setItem(resolveDemoStorageKey(demoId), JSON.stringify(store));
 }
 
-function ensureSeeded(): DemoStore {
-  const store = readStore();
+function ensureSeeded(demoId = currentDemoId()): DemoStore {
+  const store = readStore(demoId);
   if (store.seeded && store.orders.length > 0) return store;
   const next: DemoStore = {
     seeded: true,
     prospectIds: store.prospectIds,
-    orders: SEED_ORDERS.map(o => ({ ...o })),
+    orders: seedsFor(demoId),
   };
-  writeStore(next);
+  writeStore(demoId, next);
   return next;
 }
 
-export function listDemoOrders(): OrderRecord[] {
-  const store = ensureSeeded();
+export function listDemoOrders(demoId = currentDemoId()): OrderRecord[] {
+  const store = ensureSeeded(demoId);
   return [...store.orders].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 }
 
-export function getDemoOrder(orderId: string): OrderRecord | null {
+export function getDemoOrder(orderId: string, demoId = currentDemoId()): OrderRecord | null {
   const id = orderId.toUpperCase();
-  return listDemoOrders().find(o => o.id.toUpperCase() === id) ?? null;
+  return listDemoOrders(demoId).find(o => o.id.toUpperCase() === id) ?? null;
 }
 
-export function createDemoOrder(order: OrderRecord): OrderRecord {
-  const store = ensureSeeded();
+export function createDemoOrder(order: OrderRecord, demoId = currentDemoId()): OrderRecord {
+  const store = ensureSeeded(demoId);
   const existing = store.orders.findIndex(o => o.id === order.id);
-  const normalized = normalizeOrderRecord({ ...order, tenantId: 'demo', source: 'demo' });
+  const normalized = normalizeOrderRecord({ ...order, source: 'demo' });
   const orders = [...store.orders];
   if (existing >= 0) {
     orders[existing] = normalized;
@@ -136,15 +146,16 @@ export function createDemoOrder(order: OrderRecord): OrderRecord {
   const prospectIds = store.prospectIds.includes(order.id)
     ? store.prospectIds
     : [order.id, ...store.prospectIds];
-  writeStore({ seeded: true, prospectIds, orders });
+  writeStore(demoId, { seeded: true, prospectIds, orders });
   return normalized;
 }
 
 export function transitionDemoOrder(
   orderId: string,
   to: OrderRecord['status'],
+  demoId = currentDemoId(),
 ): OrderRecord | null {
-  const store = ensureSeeded();
+  const store = ensureSeeded(demoId);
   const idx = store.orders.findIndex(o => o.id === orderId);
   if (idx < 0) return null;
   const updated: OrderRecord = {
@@ -154,18 +165,21 @@ export function transitionDemoOrder(
   };
   const orders = [...store.orders];
   orders[idx] = updated;
-  writeStore({ ...store, orders });
+  writeStore(demoId, { ...store, orders });
   return updated;
 }
 
-export function subscribeDemoOrders(callback: (orders: OrderRecord[]) => void): () => void {
-  const emit = () => callback(listDemoOrders());
+export function subscribeDemoOrders(
+  callback: (orders: OrderRecord[]) => void,
+  demoId = currentDemoId(),
+): () => void {
+  const key = resolveDemoStorageKey(demoId);
+  const emit = () => callback(listDemoOrders(demoId));
   emit();
   const onStorage = (e: StorageEvent) => {
-    if (e.key === STORAGE_KEY) emit();
+    if (e.key === key) emit();
   };
   window.addEventListener('storage', onStorage);
-  // same-tab updates: poll lightly (sessionStorage no dispara storage)
   const interval = window.setInterval(emit, 1500);
   return () => {
     window.removeEventListener('storage', onStorage);
@@ -173,8 +187,8 @@ export function subscribeDemoOrders(callback: (orders: OrderRecord[]) => void): 
   };
 }
 
-export function isProspectDemoOrder(orderId: string): boolean {
-  return readStore().prospectIds.includes(orderId);
+export function isProspectDemoOrder(orderId: string, demoId = currentDemoId()): boolean {
+  return readStore(demoId).prospectIds.includes(orderId);
 }
 
 export function demoOrderMetrics(orders: OrderRecord[]) {

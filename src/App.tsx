@@ -26,6 +26,7 @@ export default function App() {
           <Route path="/pricing" element={<Navigate to="/#planes" replace />} />
           <Route path="/demo/armar" element={<ProspectDemoBuilderPage />} />
           <Route path="/demo/owner" element={<DemoOwnerPage />} />
+          <Route path="/demo/carniceria/owner" element={<DemoOwnerPage />} />
           <Route path="/*" element={<CommerceApp />} />
         </Routes>
       </Suspense>

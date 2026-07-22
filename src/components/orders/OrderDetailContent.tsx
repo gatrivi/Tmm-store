@@ -13,6 +13,10 @@ interface OrderDetailContentProps {
   tone?: 'light' | 'dark';
   statusLinkHref?: string;
   extraActions?: React.ReactNode;
+  totalLabel?: string;
+  totalHint?: string;
+  pickupLabel?: string;
+  deliveryLabel?: string;
 }
 
 export function OrderDetailContent({
@@ -20,6 +24,10 @@ export function OrderDetailContent({
   tone = 'light',
   statusLinkHref,
   extraActions,
+  totalLabel = 'Total',
+  totalHint,
+  pickupLabel = 'Retiro',
+  deliveryLabel = 'Envío',
 }: OrderDetailContentProps) {
   const isLight = tone === 'light';
   const muted = isLight ? 'text-black/45' : 'text-gray-500';
@@ -46,7 +54,7 @@ export function OrderDetailContent({
           <div key={idx} className={`flex justify-between gap-3 ${body}`}>
             <span>
               {item.qty}× {item.name}
-              {item.optionLabel ? ` (${item.optionLabel})` : ''}
+              {item.optionLabel ? ` · ${item.optionLabel}` : ''}
             </span>
             <span className="font-bold shrink-0">
               ${(item.price * item.qty).toLocaleString('es-AR')}
@@ -60,9 +68,12 @@ export function OrderDetailContent({
           </div>
         )}
         <div className={`flex justify-between border-t pt-2 text-base font-black ${isLight ? 'border-black/8' : 'border-white/10'} ${strong}`}>
-          <span>Total</span>
+          <span>{totalLabel}</span>
           <span>${order.total.toLocaleString('es-AR')}</span>
         </div>
+        {totalHint && (
+          <p className={`text-xs font-medium ${muted}`}>{totalHint}</p>
+        )}
       </div>
 
       {order.notes?.trim() && (
@@ -80,7 +91,7 @@ export function OrderDetailContent({
         <div className={`rounded-xl px-3 py-2 ${box}`}>
           <span className={`block ${muted}`}>Entrega</span>
           <span className={`font-bold ${strong}`}>
-            {order.deliveryType === 'delivery' ? 'Envío' : 'Retiro'}
+            {order.deliveryType === 'delivery' ? deliveryLabel : pickupLabel}
           </span>
         </div>
         <div className={`rounded-xl px-3 py-2 ${box}`}>

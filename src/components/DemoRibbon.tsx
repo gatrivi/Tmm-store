@@ -1,11 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, Store, UserRound } from 'lucide-react';
 import { buildSalesContactHref } from '../utils/salesContact';
+import { resolveDemoFromPath, resolveDemoPaths } from '../utils/demoRegistry';
 
 export function DemoRibbon() {
   const location = useLocation();
-  const ownerActive = location.pathname === '/demo/owner';
-  const demoSearch = location.search;
+  const paths = resolveDemoPaths(location.pathname);
+  const vertical = resolveDemoFromPath(location.pathname);
+  const ownerActive = location.pathname === paths.ownerPath;
+  const demoSearch = vertical ? '' : location.search;
   const prospectName = new URLSearchParams(demoSearch).get('negocio');
 
   return (
@@ -22,7 +25,7 @@ export function DemoRibbon() {
 
         <div className="flex rounded-full bg-white/8 p-1 text-xs font-bold">
           <Link
-            to={`/demo${demoSearch}`}
+            to={`${paths.customerPath}${demoSearch}`}
             className={`flex min-h-9 items-center gap-1.5 rounded-full px-3 transition ${
               !ownerActive ? 'bg-white text-[#151612]' : 'text-white/65 hover:text-white'
             }`}
@@ -31,7 +34,7 @@ export function DemoRibbon() {
             Cliente
           </Link>
           <Link
-            to={`/demo/owner${demoSearch}`}
+            to={`${paths.ownerPath}${demoSearch}`}
             className={`flex min-h-9 items-center gap-1.5 rounded-full px-3 transition ${
               ownerActive ? 'bg-white text-[#151612]' : 'text-white/65 hover:text-white'
             }`}
@@ -42,7 +45,13 @@ export function DemoRibbon() {
         </div>
 
         <a
-          href={buildSalesContactHref(prospectName ? `demo para ${prospectName}` : 'demo')}
+          href={buildSalesContactHref(
+            prospectName
+              ? `demo para ${prospectName}`
+              : vertical
+                ? `demo ${vertical.siteSettings.brandName ?? vertical.id}`
+                : 'demo',
+          )}
           className="rounded-full bg-[#d7ff64] px-3 py-2 text-xs font-black text-[#151612] transition hover:bg-white sm:px-4"
         >
           <span className="hidden sm:inline">Quiero esto</span>
