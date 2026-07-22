@@ -143,6 +143,25 @@ async function main() {
   assert.equal(inboxFilterBucket(tracked!.status), 'preparing');
   assert.equal(snaps.at(-1)!.find(o => o.id === 'T9ST')?.status, 'preparing');
 
+  // Empty/zero re-submit must not wipe total or reset progressed status
+  const wiped = repo.createDemoOrder({
+    ...persisted,
+    items: [],
+    subtotal: 0,
+    total: 0,
+    status: 'new',
+  }, demoId);
+  assert.equal(wiped.total, total);
+  assert.equal(wiped.status, 'preparing');
+  assert.equal(repo.getDemoOrder('T9ST', demoId)!.total, total);
+  assert.equal(repo.getDemoOrder('T9ST', demoId)!.status, 'preparing');
+
+  // Case-insensitive transition
+  const ready = repo.transitionDemoOrder('t9st', 'ready', demoId);
+  assert.ok(ready);
+  assert.equal(ready!.status, 'ready');
+  assert.equal(repo.getDemoOrder('T9ST', demoId)!.status, 'ready');
+
   unsub();
 
   // Gastronomy bucket stays isolated (explicit demoId — no path dependency)

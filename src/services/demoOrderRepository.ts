@@ -143,19 +143,33 @@ export function getDemoOrder(orderId: string, demoId = currentDemoId()): OrderRe
 
 export function createDemoOrder(order: OrderRecord, demoId = currentDemoId()): OrderRecord {
   const store = ensureSeeded(demoId);
-  const existing = store.orders.findIndex(o => o.id === order.id);
-  const normalized = normalizeOrderRecord({ ...order, source: 'demo' });
+  const id = order.id.toUpperCase();
+  const existing = store.orders.findIndex(o => o.id.toUpperCase() === id);
+  const normalized = normalizeOrderRecord({ ...order, id, source: 'demo' });
   const orders = [...store.orders];
   if (existing >= 0) {
-    orders[existing] = normalized;
+    const prev = orders[existing];
+    // Refuse empty/zero overwrite of a real order (double-submit after cart clear)
+    if (
+      (normalized.items.length === 0 && prev.items.length > 0)
+      || (normalized.total <= 0 && prev.total > 0)
+    ) {
+      return prev;
+    }
+    // Keep progressed status if re-submit races after owner advance
+    orders[existing] = {
+      ...normalized,
+      status: prev.status !== 'new' ? prev.status : normalized.status,
+      createdAt: prev.createdAt,
+    };
   } else {
     orders.unshift(normalized);
   }
-  const prospectIds = store.prospectIds.includes(order.id)
+  const prospectIds = store.prospectIds.includes(id)
     ? store.prospectIds
-    : [order.id, ...store.prospectIds];
+    : [id, ...store.prospectIds];
   writeStore(demoId, { seeded: true, prospectIds, orders });
-  return normalized;
+  return orders[existing >= 0 ? existing : 0];
 }
 
 export function transitionDemoOrder(
@@ -164,7 +178,8 @@ export function transitionDemoOrder(
   demoId = currentDemoId(),
 ): OrderRecord | null {
   const store = ensureSeeded(demoId);
-  const idx = store.orders.findIndex(o => o.id === orderId);
+  const id = orderId.toUpperCase();
+  const idx = store.orders.findIndex(o => o.id.toUpperCase() === id);
   if (idx < 0) return null;
   const updated: OrderRecord = {
     ...store.orders[idx],
@@ -201,7 +216,8 @@ export function subscribeDemoOrders(
 }
 
 export function isProspectDemoOrder(orderId: string, demoId = currentDemoId()): boolean {
-  return readStore(demoId).prospectIds.includes(orderId);
+  const id = orderId.toUpperCase();
+  return readStore(demoId).prospectIds.some(p => p.toUpperCase() === id);
 }
 
 export function demoOrderMetrics(orders: OrderRecord[]) {

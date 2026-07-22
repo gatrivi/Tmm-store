@@ -73,7 +73,9 @@ export default function DemoOwnerPage() {
     });
   }, []);
 
-  const selected = selectedId ? orders.find(o => o.id === selectedId) ?? null : null;
+  const selected = selectedId
+    ? orders.find(o => o.id.toUpperCase() === selectedId.toUpperCase()) ?? null
+    : null;
 
   const visibleOrders = useMemo(() => {
     if (filter === 'todos') return orders;
@@ -97,26 +99,27 @@ export default function DemoOwnerPage() {
 
   const selectOrder = (order: OrderRecord) => setSelectedId(order.id);
 
-  const detail = selected ? (
-    <OrderDetailContent
-      order={selected}
-      tone="light"
-      totalLabel={totalLabel === 'Total estimado' ? 'Estimado' : totalLabel}
-      totalHint={vertical?.copy.totalHint}
-      pickupLabel={vertical?.copy.pickupLabel}
-      deliveryLabel={vertical?.copy.deliveryLabel}
-      statusLinkHref={paths.orderPath(selected.id)}
-    />
-  ) : null;
+  // Fresh elements per mount point — shared JSX node desyncs list vs detail
+  const detailProps = selected
+    ? {
+        order: selected,
+        tone: 'light' as const,
+        totalLabel: totalLabel === 'Total estimado' ? 'Estimado' : totalLabel,
+        totalHint: vertical?.copy.totalHint,
+        pickupLabel: vertical?.copy.pickupLabel,
+        deliveryLabel: vertical?.copy.deliveryLabel,
+        statusLinkHref: paths.orderPath(selected.id),
+      }
+    : null;
 
-  const primary = selected ? (
-    <OrderPrimaryAction
-      status={selected.status}
-      fulfillment={selected.deliveryType}
-      loading={saving}
-      onAdvance={next => handleAdvance(selected, next)}
-    />
-  ) : null;
+  const primaryProps = selected
+    ? {
+        status: selected.status,
+        fulfillment: selected.deliveryType,
+        loading: saving,
+        onAdvance: (next: OrderRecord['status']) => handleAdvance(selected, next),
+      }
+    : null;
 
   return (
     <div
@@ -266,10 +269,14 @@ export default function DemoOwnerPage() {
                 </div>
               }
             >
-              {selected && (
+              {detailProps && primaryProps && (
                 <>
-                  <div className="flex-1 overflow-y-auto p-5">{detail}</div>
-                  <div className="border-t border-black/8 p-4">{primary}</div>
+                  <div className="flex-1 overflow-y-auto p-5">
+                    <OrderDetailContent {...detailProps} />
+                  </div>
+                  <div className="border-t border-black/8 p-4">
+                    <OrderPrimaryAction {...primaryProps} />
+                  </div>
                 </>
               )}
             </OrderDesktopPanel>
@@ -300,9 +307,9 @@ export default function DemoOwnerPage() {
         title={selected ? `#${selected.id}` : ''}
         onClose={() => setSelectedId(null)}
         tone="light"
-        footer={primary}
+        footer={primaryProps ? <OrderPrimaryAction {...primaryProps} /> : null}
       >
-        {detail}
+        {detailProps ? <OrderDetailContent {...detailProps} /> : null}
       </OrderDrawer>
     </div>
   );

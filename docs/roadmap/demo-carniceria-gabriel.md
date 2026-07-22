@@ -2,8 +2,10 @@
 
 Brief de producto e implementación para Cursor.
 
-**Estado: Hito 1 shipped** (v1.8.1) — vertical `/demo/carniceria` + pasada visual hacia
+**Estado: Hito 1 shipped** (v1.8.3) — vertical `/demo/carniceria` + pasada visual hacia
 [mockup desktop](./assets/demo-carniceria-gabriel-target.jpg).
+
+Fix 1.8.3: confirm no pisa total a $0; listado/detalle mismo estado.
 
 **Objetivo visual:** la imagen fija jerarquía, densidad, controles y tratamiento fotográfico;
 ante diferencia de contenido, este documento sigue siendo la fuente de verdad.

@@ -90,6 +90,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   const [mpLoading, setMpLoading] = useState(false);
   const [mpError, setMpError] = useState<string | null>(null);
   const [confirmedOrder, setConfirmedOrder] = useState<OrderRecord | null>(null);
+  const [demoSubmitting, setDemoSubmitting] = useState(false);
   const orderIdRef = useRef<string>(generateOrderId());
 
   const showCopied = (field: string) => {
@@ -98,27 +99,31 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   };
 
   const orderId = orderIdRef.current;
+  const wasOpenRef = useRef(false);
 
-  // Reset when modal opens/closes
+  // Reset only on open transition — not when initialDeliveryType changes mid-flow
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !wasOpenRef.current) {
       setStep('form');
       setPopupBlocked(false);
       setMpError(null);
       setMpLoading(false);
       setConfirmedOrder(null);
+      setDemoSubmitting(false);
       setDeliveryType(initialDeliveryType);
       orderIdRef.current = generateOrderId();
       document.body.style.overflow = 'hidden';
-    } else {
+    } else if (!isOpen && wasOpenRef.current) {
       document.body.style.overflow = '';
     }
+    wasOpenRef.current = isOpen;
     return () => {
       document.body.style.overflow = '';
     };
   }, [isOpen, initialDeliveryType]);
 
   const resetAndClose = useCallback(() => {
+    const clearCart = Boolean(confirmedOrder);
     setStep('form');
     setName('');
     setPhone('');
@@ -131,9 +136,11 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
     setMpError(null);
     setMpLoading(false);
     setConfirmedOrder(null);
+    setDemoSubmitting(false);
     orderIdRef.current = generateOrderId();
+    if (clearCart && onOrderSent) onOrderSent();
     onClose();
-  }, [onClose]);
+  }, [confirmedOrder, onClose, onOrderSent]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -161,9 +168,15 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   };
 
   const handleSendWhatsApp = async () => {
+    if (demoMode) {
+      if (demoSubmitting || confirmedOrder) return;
+      if (cart.length === 0 || total <= 0) return;
+      setDemoSubmitting(true);
+    }
+
     const paymentLabel = {
-      cash: t.cash,
-      transfer: t.transfer,
+      cash: cashLabel,
+      transfer: transferLabel,
       mercadopago: t.mp,
     }[paymentMethod];
 
@@ -177,27 +190,34 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
       notes,
     };
 
+    const lineItems = cart.map(c => ({
+      id: c.id,
+      name: c.name,
+      optionId: c.optionId || '',
+      optionLabel: c.optionLabel,
+      price: Number(c.price) || 0,
+      qty: Number(c.qty) || 0,
+    }));
+    const safeTotal = lineItems.reduce((s, l) => s + l.price * l.qty, 0);
+    if (demoMode && safeTotal <= 0) {
+      setDemoSubmitting(false);
+      return;
+    }
+
     const record = buildOrderRecord({
       tenantId,
       checkout: checkoutData,
-      cart: cart.map(c => ({
-        id: c.id,
-        name: c.name,
-        optionId: c.optionId || '',
-        optionLabel: c.optionLabel,
-        price: c.price,
-        qty: c.qty,
-      })),
-      subtotal: effectiveSubtotal,
+      cart: lineItems,
+      subtotal: effectiveSubtotal > 0 ? effectiveSubtotal : safeTotal,
       discount,
-      total,
+      total: total > 0 ? total : safeTotal,
       promoCode: promoCode || undefined,
     });
 
     if (demoMode) {
+      // Persist first; clear cart only when modal closes (avoid $0 overwrite race)
       const persisted = createDemoOrder({ ...record, source: 'demo' });
       setConfirmedOrder(persisted);
-      if (onOrderSent) onOrderSent();
       setStep('demo-success');
       return;
     }
@@ -579,7 +599,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   <p className="text-[10px] font-black uppercase tracking-[0.12em] text-green-700">Pedido</p>
                   <p className="mt-1 text-lg font-black text-green-900">
                     #{confirmedOrder?.id ?? orderId} · {totalLabel} $
-                    {(confirmedOrder?.total ?? total).toLocaleString('es-AR')}
+                    {(confirmedOrder?.total ?? 0).toLocaleString('es-AR')}
                   </p>
                   <p className="mt-1 text-xs font-bold text-green-800">Estado: Nuevo</p>
                 </div>
