@@ -15,6 +15,8 @@ Ancla: **Olivos** (`-34.5075, -58.4878`). Anillos cada **5 km**.
 
 Refrescar lista: `GOOGLE_PLACES_API_KEY=... npm run leads:scan` → [`leads-data.md`](./leads-data.md)
 
+**Propuesta + shortlist demo (jul 2026):** [`propuesta-olivos-vl.md`](./propuesta-olivos-vl.md) — mails públicos ≈0; canal = tel/WSP/IG.
+
 ---
 
 ## T0 — Olivos (prioridad esta semana)
