@@ -193,18 +193,18 @@ export default function LandingPage() {
 
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <Link
-                  to="/demo/pizzeria"
+                  to="/demo/mamabel"
                   className="group inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#171814] px-6 text-sm font-black text-white transition hover:-translate-y-0.5 hover:shadow-xl"
                 >
-                  Probar como cliente
+                  Ver flagship · Mamá Mabel
                   <ArrowRight size={18} className="transition group-hover:translate-x-1" />
                 </Link>
                 <Link
-                  to="/demo/pizzeria/owner"
+                  to="/demo/mamabel/owner"
                   className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-black/15 bg-white/50 px-6 text-sm font-black transition hover:border-black hover:bg-white"
                 >
                   <Store size={18} />
-                  Ver panel del local
+                  Panel familia
                 </Link>
               </div>
 

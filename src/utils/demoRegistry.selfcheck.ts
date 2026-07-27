@@ -12,6 +12,7 @@ import {
   resolveTenantIdFromPath,
 } from './demoRegistry';
 import { CARNICERIA_DEMO } from '../data/demos/carniceria';
+import { MAMABEL_DEMO } from '../data/demos/mamabel';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
 import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
 
@@ -27,15 +28,20 @@ function main() {
   assert.equal(resolveTenantIdFromPath('/demo/panaderia'), 'demo-panaderia');
   assert.equal(resolveTenantIdFromPath('/demo/panaderia/owner'), 'demo-panaderia');
   assert.equal(resolveTenantIdFromPath('/demo/panaderia/order/M9A2'), 'demo-panaderia');
+  assert.equal(resolveTenantIdFromPath('/demo/mamabel'), 'demo-mamabel');
+  assert.equal(resolveTenantIdFromPath('/demo/mamabel/owner'), 'demo-mamabel');
+  assert.equal(resolveTenantIdFromPath('/demo/mamabel/order/MB12'), 'demo-mamabel');
   assert.equal(resolveTenantIdFromPath('/s/foo'), 'foo');
 
   assert.equal(resolveDemoIdFromPath('/demo/carniceria'), 'carniceria');
   assert.equal(resolveDemoIdFromPath('/demo/pizzeria'), 'pizzeria');
   assert.equal(resolveDemoIdFromPath('/demo/panaderia'), 'panaderia');
+  assert.equal(resolveDemoIdFromPath('/demo/mamabel'), 'mamabel');
   assert.equal(resolveDemoStorageKey('demo'), 'trufi_demo_orders_v2');
   assert.equal(resolveDemoStorageKey('carniceria'), 'trufi_demo_orders_v2:carniceria');
   assert.equal(resolveDemoStorageKey('pizzeria'), 'trufi_demo_orders_v2:pizzeria');
   assert.equal(resolveDemoStorageKey('panaderia'), 'trufi_demo_orders_v2:panaderia');
+  assert.equal(resolveDemoStorageKey('mamabel'), 'trufi_demo_orders_v2:mamabel');
 
   const demo = resolveDemoFromPath('/demo/carniceria');
   assert.ok(demo);
@@ -92,11 +98,26 @@ function main() {
   const med = PANADERIA_DEMO.menuItems.find(i => i.id === 'medialunas')!;
   assert.equal(med.options.length, 2);
 
+  // Flagship Mamá Mabel — premium + logo + cakes
+  const mm = resolveDemoFromPath('/demo/mamabel');
+  assert.ok(mm);
+  assert.equal(mm.tenantId, 'demo-mamabel');
+  assert.equal(mm.plan, 'premium');
+  assert.equal(mm.siteSettings.brandName, 'Las Tortas de Mamá Mabel');
+  assert.equal(mm.siteSettings.whatsappNumber, '5491156196941');
+  assert.ok(mm.menuItems.some(i => i.id === 'selva-negra'));
+  assert.ok(mm.menuItems.some(i => i.id === 'balcarce'));
+  assert.equal(mm.menuCategories.length, 3);
+  assert.equal(mm.seedOrders.length, 3);
+  assert.equal(getDemoByTenantId('demo-mamabel')?.id, 'mamabel');
+  assert.equal(MAMABEL_DEMO.siteSettings.brandLogo, '/demos/mamabel/logo.jpg');
+
   // Storage isolation keys must differ
   assert.notEqual(resolveDemoStorageKey('demo'), resolveDemoStorageKey('carniceria'));
   assert.notEqual(resolveDemoStorageKey('pizzeria'), resolveDemoStorageKey('carniceria'));
   assert.notEqual(resolveDemoStorageKey('pizzeria'), resolveDemoStorageKey('demo'));
   assert.notEqual(resolveDemoStorageKey('panaderia'), resolveDemoStorageKey('pizzeria'));
+  assert.notEqual(resolveDemoStorageKey('mamabel'), resolveDemoStorageKey('panaderia'));
 
   console.log('demoRegistry.selfcheck: ok');
 }

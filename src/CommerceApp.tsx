@@ -3,6 +3,7 @@ import AdminPage from './pages/AdminPage';
 import NotFound from './pages/NotFound';
 import OrderStatusPage from './pages/OrderStatusPage';
 import CarniceriaDemoPage from './pages/CarniceriaDemoPage';
+import MamabelDemoPage from './pages/MamabelDemoPage';
 import Storefront from './pages/Storefront';
 import SuperAdminPage from './pages/SuperAdminPage';
 import { AppVersionStamp } from './components/AppVersionBadge';
@@ -38,6 +39,8 @@ export default function CommerceApp() {
               <Route path="/demo/pizzeria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/panaderia" element={<CustomerDemo />} />
               <Route path="/demo/panaderia/order/:orderId" element={<OrderStatusPage />} />
+              <Route path="/demo/mamabel" element={<MamabelDemoPage />} />
+              <Route path="/demo/mamabel/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/carniceria" element={<CarniceriaDemoPage />} />
               <Route path="/demo/carniceria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/s/:slug" element={<Storefront />} />
