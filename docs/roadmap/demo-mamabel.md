@@ -1,12 +1,22 @@
 # Flagship — Las Tortas de Mamá Mabel
 
-**Estado: shipped** (v1.10.2) · sitio completo · empresa familiar
+**Estado: shipped** (v1.10.3) · sitio completo · FB + IG
 
 ## Premisa
 
-Demo de **sitio completo** (no solo carta): Inicio · Nosotros · Tortas · Cursos · Contacto · pedidos.
+Demo de **sitio completo**: Inicio · Nosotros · Tortas · Cursos · Contacto · pedidos.
 
-Cursos **solo** porque hay material real de FB (flyer + egreso). Si no hubiera, esa sección no se arma.
+Cursos porque hay material real (flyer FB + collage IG + egreso).
+
+## Assets
+
+| Fuente | Resultado |
+|--------|-----------|
+| Brave CDP + sesión IG | 36+ fotos grid (`scripts/scrape-mamabel-ig.ts`) |
+| Brave CDP + FB | flyer, egreso, canasta, bombones |
+| Hero | barco/kraken IG |
+
+Drop zone: `content/mamabel/incoming/`
 
 ## Live
 
@@ -14,19 +24,11 @@ Cursos **solo** porque hay material real de FB (flyer + egreso). Si no hubiera, 
 |-----|-----|
 | Cliente | https://tmm.gatrivi.com/demo/mamabel |
 | Panel | https://tmm.gatrivi.com/demo/mamabel/owner |
-| FB | https://www.facebook.com/lastortasdemamamabel/ |
-| IG | https://www.instagram.com/lastortasdemamamabel/ |
 
-## Producto
-
-- Plan **premium** (AI + pedidos)
-- UI: `MamabelDemoPage` — nav sticky, galería nosotros, shop, cursos FB, contacto
-- Assets: logo Graph + tortas/flyer/egreso scrapados Brave CDP
-- Drop zone futuro: `content/mamabel/incoming/`
-
-## Contacto demo
+## Contacto
 
 - WSP `5491156196941`
 - Mail `mabelvallejos.reposteria@hotmail.com`
+- IG / FB: `lastortasdemamamabel`
 
 See also: [`prospect-demo.md`](../ops/prospect-demo.md)

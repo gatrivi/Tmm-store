@@ -60,14 +60,16 @@ const NAV = [
 ] as const;
 
 const ABOUT_GALLERY = [
+  '/demos/mamabel/ig-01.jpg',
   '/demos/mamabel/curso-egreso.jpg',
+  '/demos/mamabel/ig-07.jpg',
   '/demos/mamabel/torta-canasta.jpg',
-  '/demos/mamabel/torta-violeta.jpg',
-  '/demos/mamabel/torta-nemo.jpg',
+  '/demos/mamabel/ig-06.jpg',
+  '/demos/mamabel/ig-08.jpg',
+  '/demos/mamabel/ig-13.jpg',
+  '/demos/mamabel/ig-14.jpg',
   '/demos/mamabel/bombones.jpg',
-  '/demos/mamabel/fb-gallery-01.jpg',
-  '/demos/mamabel/fb-gallery-02.jpg',
-  '/demos/mamabel/fb-extra.jpg',
+  '/demos/mamabel/ig-10.jpg',
 ];
 
 function formatArs(n: number): string {
@@ -487,7 +489,7 @@ export default function MamabelDemoPage() {
             </ul>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            {ABOUT_GALLERY.slice(0, 4).map((src, i) => (
+            {ABOUT_GALLERY.slice(0, 5).map((src, i) => (
               <img
                 key={src}
                 src={src}
@@ -500,7 +502,7 @@ export default function MamabelDemoPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
           <div className="flex gap-3 overflow-x-auto pb-2">
-            {ABOUT_GALLERY.slice(4).map(src => (
+            {ABOUT_GALLERY.slice(5).map(src => (
               <img
                 key={src}
                 src={src}
@@ -586,8 +588,13 @@ export default function MamabelDemoPage() {
           <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-20">
             <div className="space-y-4">
               <img
+                src="/demos/mamabel/curso-ig.jpg"
+                alt="Curso regular mensual — egreso con tortas"
+                className="w-full rounded-3xl border border-black/8 object-cover shadow-sm"
+              />
+              <img
                 src="/demos/mamabel/curso-flyer.jpg"
-                alt="Curso de iniciación a la decoración de tortas"
+                alt="Flyer curso de iniciación"
                 className="w-full rounded-3xl border border-black/8 object-cover shadow-sm"
               />
               <img
