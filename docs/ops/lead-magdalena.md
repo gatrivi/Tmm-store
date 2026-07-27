@@ -1,6 +1,6 @@
 # Lead — La Magdalena (confitería + panadería artesanal)
 
-Fecha: 2026-07-27 · Fuente: flyer físico (foto chat agente).
+Fecha: 2026-07-27 · Fuente: flyer físico.
 
 ## Comercio
 
@@ -14,19 +14,25 @@ Fecha: 2026-07-27 · Fuente: flyer físico (foto chat agente).
 | Zona | _pendiente_ |
 | Slug tentativo | `la-magdalena` |
 
+## Assets en repo
+
+| Archivo | Uso |
+|---------|-----|
+| [`assets/magdalena-flyer.png`](./assets/magdalena-flyer.png) | Scan/referencia flyer |
+| [`assets/magdalena-logo.svg`](./assets/magdalena-logo.svg) | Logo vector (admin / print) |
+| [`../../public/demos/magdalena/flyer.png`](../../public/demos/magdalena/flyer.png) | Flyer web |
+| [`../../public/demos/magdalena/logo.svg`](../../public/demos/magdalena/logo.svg) | Logo storefront |
+| [`../../public/demos/magdalena/monogram.svg`](../../public/demos/magdalena/monogram.svg) | Badge / favicon demo |
+
 ## Identidad (flyer)
 
-**Paleta:** monocromo — negro sobre blanco/off-white.
+**Paleta:** monocromo — negro sobre blanco/off-white (`#FAF8F4`).
 
-**Isotipo:** pan redondo line-art, scoring en cruz (rejilla) arriba, sombreado fino.
+**Isotipo:** pan redondo line-art, scoring en cruz (rejilla) arriba.
 
 **Tipografía:**
-- Arco superior: `PANADERÍA ARTESANAL` — serif mayúsculas.
-- Nombre: `La Magdalena` — script cursivo; flourishes en L y M.
-
-**Layout:** vertical centrado — arco → pan → nombre → WSP + ícono.
-
-**Asset:** guardar scan en [`assets/magdalena-flyer.jpg`](./assets/magdalena-flyer.jpg) (pendiente commit).
+- Arco: `PANADERÍA ARTESANAL` — serif mayúsculas.
+- Nombre: `La Magdalena` — script cursivo.
 
 ## Fit Trufi
 
@@ -34,24 +40,21 @@ Fecha: 2026-07-27 · Fuente: flyer físico (foto chat agente).
 |-------|------|
 | Vertical | Panadería / facturas (#4 en [`vertical-demos-plan.md`](../roadmap/vertical-demos-plan.md)) |
 | Dolor demo | Encargos mañana por WSP suelto → pack docena/media + chip horario retiro |
-| Plan sugerido | `pedidos` (carrito + bandeja; MP opcional después) |
-| Demo rápida hoy | `/demo/armar` con nombre + color negro; vertical dedicada bajo demanda |
-
-## Pitch 60s (borrador)
-
-> El cliente elige facturas/medialunas por pack y horario de retiro; vos recibís el pedido ordenado en la bandeja antes del pico de la mañana.
+| Plan sugerido | `pedidos` |
+| Demo rápida | `/demo/armar` o build `/demo/magdalena` |
 
 ## Próximos pasos
 
-- [ ] Subir flyer/logo a `docs/ops/assets/` (+ WebP para admin si hay vector)
-- [ ] Confirmar zona, horarios, menú fijo (facturas, panes, tortas)
-- [ ] ¿Build `/demo/magdalena`? → criterio cumplido (lead concreto)
-- [ ] Onboarding: [`onboarding.md`](./onboarding.md) · tenant `/s/la-magdalena`
+- [ ] Confirmar zona, horarios, menú
+- [ ] Reemplazar flyer PNG si llega scan original de mayor calidad
+- [ ] Build `/demo/magdalena` si cierra pitch
+- [ ] Tenant `/s/la-magdalena` → [`onboarding.md`](./onboarding.md)
 
 ## Status
 
 | Fecha | Nota |
 |-------|------|
-| 2026-07-27 | Flyer + identidad registrados; sin demo ni tenant |
+| 2026-07-27 | Flyer + logo SVG/PNG en repo |
+| 2026-07-27 | Lead doc creado |
 
-See also: [`vertical-demos-plan.md`](../roadmap/vertical-demos-plan.md), [`pilot-program-zn.md`](./pilot-program-zn.md)
+See also: [`vertical-demos-plan.md`](../roadmap/vertical-demos-plan.md)

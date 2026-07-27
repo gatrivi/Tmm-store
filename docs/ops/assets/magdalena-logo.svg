@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 520" role="img" aria-label="La Magdalena  Panadería Artesanal">
+  <rect width="400" height="520" fill="#FAF8F4"/>
+  <defs>
+    <path id="arc" d="M 60 120 A 140 140 0 0 1 340 120" fill="none"/>
+  </defs>
+  <text font-family="Georgia, 'Times New Roman', serif" font-size="22" font-weight="700" letter-spacing="2.5" fill="#111">
+    <textPath href="#arc" startOffset="50%" text-anchor="middle">PANADERÍA ARTESANAL</textPath>
+  </text>
+  <g transform="translate(200 250)" stroke="#111" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="0" cy="18" rx="78" ry="58" stroke-width="2.2"/>
+    <path d="M-58 8 C-42 -34 -18 -52 0 -56 C18 -52 42 -34 58 8" stroke-width="2.2"/>
+    <path d="M-34 -8 L34 30 M-10 -24 L58 14 M-58 14 L10 -24 M-22 2 L22 2" stroke-width="1.6"/>
+    <path d="M-48 24 C-24 42 24 42 48 24" stroke-width="1.2" opacity=".55"/>
+    <path d="M-36 36 C-12 50 12 50 36 36" stroke-width="1" opacity=".35"/>
+  </g>
+  <text x="200" y="360" text-anchor="middle" font-family="'Segoe Script', 'Brush Script MT', cursive" font-size="54" fill="#111">La Magdalena</text>
+  <g transform="translate(118 430)">
+    <circle cx="14" cy="14" r="13" fill="none" stroke="#111" stroke-width="1.8"/>
+    <path d="M14 7 v7 l5 3" fill="none" stroke="#111" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="36" y="20" font-family="Georgia, serif" font-size="22" fill="#111">1165631860</text>
+  </g>
+</svg>
