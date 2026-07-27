@@ -1,17 +1,9 @@
 /**
- * Full site demo — Las Tortas de Mamá Mabel
- * Sections: hero · nosotros · tortas · cursos (FB material) · contacto · pedidos
+ * Full site — Las Tortas de Mamá Mabel
+ * Palette from logo + flyer: cream, cake-pink, watercolor teal, ink.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Heart,
-  Mail,
-  MapPin,
-  Minus,
-  Phone,
-  Plus,
-  ShoppingCart,
-} from 'lucide-react';
+import { Heart, Mail, MapPin, Minus, Phone, Plus, ShoppingCart } from 'lucide-react';
 import { AIAssistant } from '../components/AIAssistant';
 import CheckoutModal from '../components/CheckoutModal';
 import { DemoRibbon } from '../components/DemoRibbon';
@@ -22,18 +14,26 @@ import type { MenuItemType, MenuOption } from '../data/menu';
 import { getDemoByTenantId } from '../utils/demoRegistry';
 import { playAddToCartSound } from '../utils/sounds';
 
-/** lucide sin logos de marca en esta versión */
+/** Logo/flyer tokens — not inventados */
+const MM = {
+  cream: '#FBF6F0',
+  blush: '#F8E4EB',
+  pink: '#E87890',
+  pinkSoft: '#F0C0D8',
+  teal: '#70A8A0',
+  tealDeep: '#4A7A74',
+  tealSoft: '#88B8B0',
+  ink: '#1C1714',
+  mustard: '#C9A24B',
+  paper: '#FFFCF8',
+} as const;
+
+const FONT_SERIF = '"Cormorant Garamond", Georgia, serif';
+const FONT_SCRIPT = '"Great Vibes", "Segoe Script", cursive';
+const FONT_UI = '"Nunito Sans", system-ui, sans-serif';
+
 const InstagramIcon = ({ size = 18, color }: { size?: number; color?: string }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke={color || 'currentColor'}
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color || 'currentColor'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
@@ -59,17 +59,18 @@ const NAV = [
   { id: 'contacto', label: 'Contacto' },
 ] as const;
 
+/** Soft brand photos first; piezas espectáculo después */
 const ABOUT_GALLERY = [
-  '/demos/mamabel/ig-01.jpg',
+  '/demos/mamabel/torta-canasta.jpg',
   '/demos/mamabel/curso-egreso.jpg',
   '/demos/mamabel/ig-07.jpg',
-  '/demos/mamabel/torta-canasta.jpg',
   '/demos/mamabel/ig-06.jpg',
-  '/demos/mamabel/ig-08.jpg',
+  '/demos/mamabel/ig-10.jpg',
+  '/demos/mamabel/ig-03.jpg',
   '/demos/mamabel/ig-13.jpg',
   '/demos/mamabel/ig-14.jpg',
   '/demos/mamabel/bombones.jpg',
-  '/demos/mamabel/ig-10.jpg',
+  '/demos/mamabel/ig-01.jpg',
 ];
 
 function formatArs(n: number): string {
@@ -87,7 +88,6 @@ export default function MamabelDemoPage() {
   const { tenantId } = usePlan();
   const { setTheme } = useTheme();
   const demo = getDemoByTenantId(tenantId);
-  const theme = demo?.theme;
   const copy = demo?.copy;
 
   const inicioRef = useRef<HTMLElement>(null);
@@ -119,22 +119,22 @@ export default function MamabelDemoPage() {
   const [cardState, setCardState] = useState<CardState>({});
   const [navOpen, setNavOpen] = useState(false);
 
-  const shopItems = useMemo(
-    () => menuItems.filter(i => i.category !== 'cursos'),
-    [menuItems],
-  );
-  const courseItems = useMemo(
-    () => menuItems.filter(i => i.category === 'cursos'),
-    [menuItems],
-  );
-  const shopCategories = useMemo(
-    () => menuCategories.filter(c => c.id !== 'cursos'),
-    [menuCategories],
-  );
+  const shopItems = useMemo(() => menuItems.filter(i => i.category !== 'cursos'), [menuItems]);
+  const courseItems = useMemo(() => menuItems.filter(i => i.category === 'cursos'), [menuItems]);
+  const shopCategories = useMemo(() => menuCategories.filter(c => c.id !== 'cursos'), [menuCategories]);
 
   useEffect(() => {
     setTheme('light');
     document.title = `${siteSettings.brandName || 'Mamá Mabel'} — Sitio`;
+    const id = 'mm-fonts';
+    if (!document.getElementById(id)) {
+      const link = document.createElement('link');
+      link.id = id;
+      link.rel = 'stylesheet';
+      link.href =
+        'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Great+Vibes&family=Nunito+Sans:wght@400;600;700;800&display=swap';
+      document.head.appendChild(link);
+    }
   }, [setTheme, siteSettings.brandName]);
 
   useEffect(() => {
@@ -148,9 +148,7 @@ export default function MamabelDemoPage() {
     setCardState(prev => {
       const next = { ...prev };
       for (const item of menuItems) {
-        if (!next[item.id]) {
-          next[item.id] = { optionId: item.options[0]?.id ?? '', qty: 1 };
-        }
+        if (!next[item.id]) next[item.id] = { optionId: item.options[0]?.id ?? '', qty: 1 };
       }
       return next;
     });
@@ -163,7 +161,6 @@ export default function MamabelDemoPage() {
 
   const cartCount = cart.reduce((s, l) => s + l.qty, 0);
   const cartTotal = cart.reduce((s, l) => s + l.price * l.qty, 0);
-  const accent = siteSettings.brandAccent || '#E8A0BF';
   const wsp = siteSettings.whatsappNumber || '';
   const wspHref = wsp ? `https://wa.me/${wsp}` : undefined;
 
@@ -177,9 +174,7 @@ export default function MamabelDemoPage() {
     playAddToCartSound();
     setCart(prev => {
       const idx = prev.findIndex(l => l.id === item.id && l.optionId === option.id);
-      if (idx >= 0) {
-        return prev.map((l, i) => (i === idx ? { ...l, qty: l.qty + qty } : l));
-      }
+      if (idx >= 0) return prev.map((l, i) => (i === idx ? { ...l, qty: l.qty + qty } : l));
       return [...prev, {
         id: item.id,
         name: item.name,
@@ -201,15 +196,13 @@ export default function MamabelDemoPage() {
 
   const updateCartQty = (index: number, delta: number) => {
     setCart(prev =>
-      prev
-        .map((l, i) => (i === index ? { ...l, qty: l.qty + delta } : l))
-        .filter(l => l.qty > 0),
+      prev.map((l, i) => (i === index ? { ...l, qty: l.qty + delta } : l)).filter(l => l.qty > 0),
     );
   };
 
-  if (!demo || !theme || !copy) {
+  if (!demo || !copy) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#FFFBFC] text-[#2C2426]">
+      <div className="flex min-h-screen items-center justify-center" style={{ background: MM.cream, color: MM.ink }}>
         Demo Mamá Mabel no configurada.
       </div>
     );
@@ -220,6 +213,8 @@ export default function MamabelDemoPage() {
     ...shopCategories.map(c => ({ id: c.id, label: c.name })),
   ];
 
+  const dotted = `2px dotted ${MM.tealSoft}`;
+
   const renderProductCard = (item: MenuItemType) => {
     const state = cardState[item.id] ?? { optionId: item.options[0]?.id ?? '', qty: 1 };
     const option = item.options.find(o => o.id === state.optionId) ?? item.options[0];
@@ -229,34 +224,31 @@ export default function MamabelDemoPage() {
     return (
       <article
         key={item.id}
-        className="flex flex-col overflow-hidden rounded-3xl border border-black/8 bg-white shadow-sm"
+        className="flex flex-col overflow-hidden bg-white"
+        style={{ border: dotted }}
       >
-        <div className="aspect-[4/3]" style={{ backgroundColor: theme.papel }}>
+        <div className="aspect-[4/3]" style={{ backgroundColor: MM.blush }}>
           {img ? (
             <img src={img} alt={item.name} className="h-full w-full object-cover" loading="lazy" />
-          ) : (
-            <div className="flex h-full items-center justify-center">
-              {siteSettings.brandLogo ? (
-                <img src={siteSettings.brandLogo} alt="" className="h-16 w-16 rounded-full object-cover" />
-              ) : null}
-            </div>
-          )}
+          ) : null}
         </div>
-        <div className="flex flex-1 flex-col gap-3 p-4">
+        <div className="flex flex-1 flex-col gap-3 p-4" style={{ fontFamily: FONT_UI }}>
           <div>
             <div className="flex items-start justify-between gap-2">
-              <h3 className="text-base font-black tracking-[-0.02em]">{item.name}</h3>
+              <h3 className="text-lg font-semibold leading-tight" style={{ fontFamily: FONT_SERIF, color: MM.ink }}>
+                {item.name}
+              </h3>
               {item.badge && (
                 <span
-                  className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-black uppercase"
-                  style={{ backgroundColor: accent, color: theme.carbon }}
+                  className="shrink-0 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white"
+                  style={{ backgroundColor: MM.pink }}
                 >
                   {item.badge}
                 </span>
               )}
             </div>
-            <p className="mt-1 text-xs leading-relaxed text-black/50">{item.description}</p>
-            <p className="mt-2 text-lg font-black" style={{ color: theme.bordo }}>
+            <p className="mt-1 text-xs leading-relaxed" style={{ color: `${MM.ink}99` }}>{item.description}</p>
+            <p className="mt-2 text-xl font-semibold" style={{ fontFamily: FONT_SERIF, color: MM.tealDeep }}>
               {priceLabel(item)}
             </p>
           </div>
@@ -274,10 +266,12 @@ export default function MamabelDemoPage() {
                         [item.id]: { optionId: opt.id, qty: prev[item.id]?.qty ?? 1 },
                       }))
                     }
-                    className={`min-h-9 rounded-full border px-3 text-[11px] font-bold transition ${
-                      on ? 'text-white' : 'border-black/12 bg-white text-black/60'
-                    }`}
-                    style={on ? { backgroundColor: theme.bordo, borderColor: theme.bordo } : undefined}
+                    className="min-h-9 px-3 text-[11px] font-bold transition"
+                    style={
+                      on
+                        ? { backgroundColor: MM.teal, color: '#fff', border: `1px solid ${MM.teal}` }
+                        : { backgroundColor: MM.paper, color: `${MM.ink}99`, border: `1px solid ${MM.tealSoft}` }
+                    }
                   >
                     {opt.label}
                   </button>
@@ -286,11 +280,12 @@ export default function MamabelDemoPage() {
             </div>
           )}
           <div className="mt-auto flex items-center gap-2">
-            <div className="flex items-center rounded-lg border border-black/12 bg-white">
+            <div className="flex items-center border" style={{ borderColor: `${MM.teal}55` }}>
               <button
                 type="button"
                 aria-label="Restar"
-                className="flex h-10 w-9 items-center justify-center text-black/55"
+                className="flex h-10 w-9 items-center justify-center"
+                style={{ color: MM.tealDeep }}
                 onClick={() =>
                   setCardState(prev => ({
                     ...prev,
@@ -300,11 +295,12 @@ export default function MamabelDemoPage() {
               >
                 <Minus size={14} />
               </button>
-              <span className="w-7 text-center text-sm font-black">{state.qty}</span>
+              <span className="w-7 text-center text-sm font-bold">{state.qty}</span>
               <button
                 type="button"
                 aria-label="Sumar"
-                className="flex h-10 w-9 items-center justify-center text-black/55"
+                className="flex h-10 w-9 items-center justify-center"
+                style={{ color: MM.tealDeep }}
                 onClick={() =>
                   setCardState(prev => ({
                     ...prev,
@@ -318,8 +314,8 @@ export default function MamabelDemoPage() {
             <button
               type="button"
               onClick={() => option && addLine(item, option, state.qty)}
-              className="flex min-h-10 flex-1 items-center justify-center rounded-full text-sm font-black text-white"
-              style={{ backgroundColor: theme.bordo }}
+              className="flex min-h-10 flex-1 items-center justify-center text-sm font-extrabold text-white"
+              style={{ backgroundColor: MM.pink }}
             >
               Agregar
             </button>
@@ -332,31 +328,30 @@ export default function MamabelDemoPage() {
   return (
     <div
       className="min-h-screen"
-      style={{ backgroundColor: theme.hueso, color: theme.carbon }}
+      style={{ backgroundColor: MM.cream, color: MM.ink, fontFamily: FONT_UI }}
       data-demo-theme="mamabel"
     >
       <DemoRibbon />
 
-      {/* Site nav */}
-      <header className="sticky top-0 z-30 border-b border-black/8 bg-white/95 backdrop-blur">
+      <header
+        className="sticky top-0 z-30 backdrop-blur-md"
+        style={{ backgroundColor: `${MM.cream}f2`, borderBottom: `1px solid ${MM.pinkSoft}88` }}
+      >
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <button type="button" onClick={() => scrollTo('inicio')} className="flex items-center gap-3 text-left">
             {siteSettings.brandLogo ? (
               <img
                 src={siteSettings.brandLogo}
                 alt=""
-                className="h-11 w-11 rounded-full object-cover ring-2 ring-[#E8A0BF]/70"
+                className="h-12 w-12 object-contain bg-white p-0.5"
+                style={{ border: dotted }}
               />
             ) : null}
             <div className="hidden sm:block">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Las tortas de</p>
-              <p
-                className="text-xl leading-none"
-                style={{
-                  fontFamily: '"Segoe Script", "Apple Chancery", cursive',
-                  color: theme.bordo,
-                }}
-              >
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: MM.tealDeep }}>
+                Las tortas de
+              </p>
+              <p className="text-2xl leading-none" style={{ fontFamily: FONT_SCRIPT, color: MM.ink }}>
                 mamá mabel
               </p>
             </div>
@@ -368,7 +363,8 @@ export default function MamabelDemoPage() {
                 key={n.id}
                 type="button"
                 onClick={() => scrollTo(n.id)}
-                className="rounded-full px-3 py-2 text-xs font-bold uppercase tracking-[0.08em] text-black/55 transition hover:bg-black/4 hover:text-black"
+                className="px-3 py-2 text-[11px] font-bold uppercase tracking-[0.14em] transition hover:opacity-70"
+                style={{ color: MM.tealDeep }}
               >
                 {n.label}
               </button>
@@ -378,7 +374,8 @@ export default function MamabelDemoPage() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className="rounded-full border border-black/10 px-3 py-2 text-xs font-bold md:hidden"
+              className="px-3 py-2 text-xs font-bold md:hidden"
+              style={{ border: dotted, color: MM.tealDeep }}
               onClick={() => setNavOpen(v => !v)}
             >
               Menú
@@ -387,14 +384,14 @@ export default function MamabelDemoPage() {
               type="button"
               onClick={() => setCartOpen(true)}
               aria-label="Ver pedido"
-              className="relative flex h-11 w-11 items-center justify-center rounded-full text-white"
-              style={{ backgroundColor: theme.bordo }}
+              className="relative flex h-11 w-11 items-center justify-center text-white"
+              style={{ backgroundColor: MM.pink }}
             >
               <ShoppingCart size={18} />
               {cartCount > 0 && (
                 <span
-                  className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[10px] font-black"
-                  style={{ backgroundColor: accent, color: theme.carbon }}
+                  className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center px-1 text-[10px] font-extrabold"
+                  style={{ backgroundColor: MM.teal, color: '#fff' }}
                 >
                   {cartCount}
                 </span>
@@ -403,89 +400,123 @@ export default function MamabelDemoPage() {
           </div>
         </div>
         {navOpen && (
-          <div className="border-t border-black/8 px-4 py-3 md:hidden">
-            <div className="flex flex-col gap-1">
-              {NAV.map(n => (
-                <button
-                  key={n.id}
-                  type="button"
-                  onClick={() => scrollTo(n.id)}
-                  className="rounded-xl px-3 py-3 text-left text-sm font-bold"
-                >
-                  {n.label}
-                </button>
-              ))}
-            </div>
+          <div className="px-4 py-3 md:hidden" style={{ borderTop: `1px solid ${MM.pinkSoft}` }}>
+            {NAV.map(n => (
+              <button
+                key={n.id}
+                type="button"
+                onClick={() => scrollTo(n.id)}
+                className="block w-full px-3 py-3 text-left text-sm font-bold"
+                style={{ color: MM.ink }}
+              >
+                {n.label}
+              </button>
+            ))}
           </div>
         )}
       </header>
 
-      {/* Hero */}
-      <section ref={sectionRefs.inicio} id="inicio" className="relative isolate overflow-hidden scroll-mt-24">
-        <img
-          src={demo.heroImage || '/demos/mamabel/hero.jpg'}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: demo.heroObjectPosition || 'center 45%' }}
+      {/* Hero — brand first, cream + logo + canasta */}
+      <section
+        ref={sectionRefs.inicio}
+        id="inicio"
+        className="relative isolate scroll-mt-24 overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, ${MM.cream} 0%, ${MM.blush} 45%, ${MM.cream} 100%)`,
+        }}
+      >
+        <div
+          className="pointer-events-none absolute -right-16 top-10 h-64 w-64 rounded-full opacity-40 blur-3xl"
+          style={{ background: MM.tealSoft }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#2C2426]/85 via-[#2C2426]/50 to-transparent" />
-        <div className="relative mx-auto flex max-w-6xl flex-col gap-5 px-4 py-20 sm:px-6 sm:py-28 lg:py-32">
-          <p
-            className="text-sm tracking-wide text-white/80"
-            style={{ fontFamily: '"Segoe Script", "Apple Chancery", cursive' }}
-          >
-            desde la cocina de mamá
-          </p>
-          <h1
-            className="max-w-xl text-3xl font-bold leading-[1.05] tracking-[-0.035em] text-white sm:text-5xl"
-            style={{ fontFamily: siteSettings.brandFont }}
-          >
-            {copy.heroTitle}
-          </h1>
-          <p className="max-w-md text-sm leading-relaxed text-white/85 sm:text-base">
-            {copy.heroBody}
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={() => scrollTo('tortas')}
-              className="inline-flex min-h-12 items-center justify-center rounded-full px-6 text-sm font-black text-white"
-              style={{ backgroundColor: theme.bordo }}
+        <div
+          className="pointer-events-none absolute -left-10 bottom-0 h-48 w-48 rounded-full opacity-50 blur-3xl"
+          style={{ background: MM.pinkSoft }}
+        />
+
+        <div className="relative mx-auto grid max-w-6xl items-center gap-8 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-2 lg:gap-12 lg:py-24">
+          <div className="flex flex-col items-start">
+            {siteSettings.brandLogo ? (
+              <img
+                src={siteSettings.brandLogo}
+                alt="Las Tortas de Mamá Mabel"
+                className="mb-6 h-28 w-auto object-contain sm:h-36"
+              />
+            ) : null}
+            <p
+              className="text-[11px] font-bold uppercase tracking-[0.28em]"
+              style={{ color: MM.tealDeep }}
             >
-              Ver tortas
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollTo('cursos')}
-              className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/40 bg-white/10 px-6 text-sm font-black text-white backdrop-blur"
+              Las tortas de
+            </p>
+            <h1
+              className="mt-1 text-5xl leading-none sm:text-6xl lg:text-7xl"
+              style={{ fontFamily: FONT_SCRIPT, color: MM.ink }}
             >
-              Cursos de decoración
-            </button>
+              mamá mabel
+            </h1>
+            <p className="mt-5 max-w-md text-base leading-relaxed sm:text-lg" style={{ fontFamily: FONT_SERIF, color: `${MM.ink}cc` }}>
+              {copy.heroBody}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => scrollTo('tortas')}
+                className="inline-flex min-h-12 items-center justify-center px-7 text-sm font-extrabold text-white"
+                style={{ backgroundColor: MM.pink }}
+              >
+                Encargar torta
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollTo('cursos')}
+                className="inline-flex min-h-12 items-center justify-center px-7 text-sm font-extrabold"
+                style={{ color: MM.tealDeep, border: `2px solid ${MM.teal}` }}
+              >
+                Ver cursos
+              </button>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div
+              className="absolute -inset-3 opacity-70"
+              style={{ border: `3px dotted ${MM.tealSoft}` }}
+            />
+            <img
+              src="/demos/mamabel/torta-canasta.jpg"
+              alt="Torta canasta — firma de Mamá Mabel"
+              className="relative w-full object-cover"
+              style={{ aspectRatio: '4 / 5', maxHeight: 560 }}
+            />
+            <p
+              className="absolute bottom-4 left-4 right-4 px-3 py-2 text-center text-xs font-bold uppercase tracking-[0.12em] text-white"
+              style={{ backgroundColor: `${MM.pink}ee` }}
+            >
+              Firma · glacé & ruffles
+            </p>
           </div>
         </div>
       </section>
 
       {/* Nosotros */}
-      <section ref={sectionRefs.nosotros} id="nosotros" className="scroll-mt-24 border-b border-black/8 bg-white">
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-20">
+      <section ref={sectionRefs.nosotros} id="nosotros" className="scroll-mt-24" style={{ backgroundColor: MM.paper }}>
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_1fr] lg:items-center lg:py-20">
           <div>
-            <p className="text-[11px] font-black uppercase tracking-[0.16em]" style={{ color: theme.bordo }}>
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: MM.teal }}>
               Sobre nosotros
             </p>
-            <h2
-              className="mt-3 text-3xl font-bold tracking-[-0.03em] sm:text-4xl"
-              style={{ fontFamily: siteSettings.brandFont }}
-            >
-              El oficio de mamá Mabel, vivo en cada torta.
+            <h2 className="mt-3 text-3xl leading-tight sm:text-4xl" style={{ fontFamily: FONT_SERIF, color: MM.ink }}>
+              El oficio de mamá, en cada encargue.
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-black/65 sm:text-base">
-              Pastelería familiar: tortas clásicas, decoración artística y talleres donde se enseña el mismo cuidado
-              que va a la mesa. Encargás por acá — sabor, tamaño, fecha y dedicatoria — y lo vemos ordenado en la bandeja.
+            <p className="mt-4 text-sm leading-relaxed sm:text-base" style={{ color: `${MM.ink}aa` }}>
+              Pastelería familiar desde 1979: tortas clásicas, decoración artística y talleres.
+              Pedís tamaño, fecha y dedicatoria — la familia lo ve ordenado.
             </p>
-            <ul className="mt-6 space-y-2 text-sm font-medium text-black/70">
-              <li className="flex items-center gap-2"><Heart size={15} style={{ color: theme.bordo }} /> Decoración a mano</li>
-              <li className="flex items-center gap-2"><Heart size={15} style={{ color: theme.bordo }} /> Temáticas y cumpleaños</li>
-              <li className="flex items-center gap-2"><Heart size={15} style={{ color: theme.bordo }} /> Cursos con material incluido</li>
+            <ul className="mt-6 space-y-2 text-sm font-semibold" style={{ color: MM.tealDeep }}>
+              <li className="flex items-center gap-2"><Heart size={15} color={MM.pink} /> Decoración a mano</li>
+              <li className="flex items-center gap-2"><Heart size={15} color={MM.pink} /> Temáticas y cumpleaños</li>
+              <li className="flex items-center gap-2"><Heart size={15} color={MM.pink} /> Cursos con material incluido</li>
             </ul>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
@@ -494,7 +525,8 @@ export default function MamabelDemoPage() {
                 key={src}
                 src={src}
                 alt=""
-                className={`h-36 w-full rounded-2xl object-cover sm:h-44 ${i === 0 ? 'col-span-2 h-48 sm:h-56' : ''}`}
+                className={`h-36 w-full object-cover sm:h-44 ${i === 0 ? 'col-span-2 h-48 sm:h-56' : ''}`}
+                style={{ border: dotted }}
                 loading="lazy"
               />
             ))}
@@ -507,7 +539,8 @@ export default function MamabelDemoPage() {
                 key={src}
                 src={src}
                 alt=""
-                className="h-28 w-40 shrink-0 rounded-2xl object-cover sm:h-32 sm:w-48"
+                className="h-28 w-40 shrink-0 object-cover sm:h-32 sm:w-48"
+                style={{ border: dotted }}
                 loading="lazy"
               />
             ))}
@@ -515,43 +548,39 @@ export default function MamabelDemoPage() {
         </div>
       </section>
 
-      {/* Tortas / shop */}
-      <section ref={sectionRefs.tortas} id="tortas" className="scroll-mt-24">
+      {/* Shop */}
+      <section ref={sectionRefs.tortas} id="tortas" className="scroll-mt-24" style={{ backgroundColor: MM.cream }}>
         <div className="mx-auto max-w-6xl px-4 pt-14 sm:px-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-[11px] font-black uppercase tracking-[0.16em]" style={{ color: theme.bordo }}>
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: MM.teal }}>
                 Encargos
               </p>
-              <h2
-                className="mt-2 text-3xl font-bold tracking-[-0.03em]"
-                style={{ fontFamily: siteSettings.brandFont }}
-              >
+              <h2 className="mt-2 text-3xl" style={{ fontFamily: FONT_SERIF }}>
                 Tortas y regalos
               </h2>
             </div>
-            <div className="flex rounded-full border border-black/10 bg-white p-1 text-xs font-bold">
-              <button
-                type="button"
-                onClick={() => setFulfillment('pickup')}
-                className={`min-h-9 rounded-full px-3 ${fulfillment === 'pickup' ? 'text-white' : 'text-black/55'}`}
-                style={fulfillment === 'pickup' ? { backgroundColor: theme.bordo } : undefined}
-              >
-                Retiro
-              </button>
-              <button
-                type="button"
-                onClick={() => setFulfillment('delivery')}
-                className={`min-h-9 rounded-full px-3 ${fulfillment === 'delivery' ? 'text-white' : 'text-black/55'}`}
-                style={fulfillment === 'delivery' ? { backgroundColor: theme.bordo } : undefined}
-              >
-                Delivery
-              </button>
+            <div className="flex p-1 text-xs font-bold" style={{ border: dotted, background: MM.paper }}>
+              {(['pickup', 'delivery'] as const).map(mode => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => setFulfillment(mode)}
+                  className="min-h-9 px-4"
+                  style={
+                    fulfillment === mode
+                      ? { backgroundColor: MM.teal, color: '#fff' }
+                      : { color: MM.tealDeep }
+                  }
+                >
+                  {mode === 'pickup' ? 'Retiro' : 'Delivery'}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        <nav className="mt-6 border-y border-black/8 bg-white">
+        <nav className="mt-6" style={{ backgroundColor: MM.blush, borderTop: dotted, borderBottom: dotted }}>
           <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 sm:px-6">
             {filters.map(f => {
               const active = categoryId === f.id;
@@ -560,10 +589,12 @@ export default function MamabelDemoPage() {
                   key={f.id}
                   type="button"
                   onClick={() => setCategoryId(f.id)}
-                  className={`shrink-0 border-b-2 px-3 py-3.5 text-xs font-black uppercase tracking-[0.06em] ${
-                    active ? '' : 'border-transparent text-black/40'
-                  }`}
-                  style={active ? { borderColor: theme.bordo, color: theme.bordo } : undefined}
+                  className="shrink-0 border-b-2 px-3 py-3.5 text-xs font-extrabold uppercase tracking-[0.08em]"
+                  style={
+                    active
+                      ? { borderColor: MM.pink, color: MM.pink }
+                      : { borderColor: 'transparent', color: `${MM.ink}66` }
+                  }
                 >
                   {f.label}
                 </button>
@@ -577,54 +608,37 @@ export default function MamabelDemoPage() {
         </div>
       </section>
 
-      {/* Cursos — only because FB material exists */}
       {courseItems.length > 0 && (
         <section
           ref={sectionRefs.cursos}
           id="cursos"
-          className="scroll-mt-24 border-y border-black/8"
-          style={{ backgroundColor: `${theme.papel}55` }}
+          className="scroll-mt-24"
+          style={{ backgroundColor: MM.blush }}
         >
-          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-20">
+          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-start lg:py-20">
             <div className="space-y-4">
-              <img
-                src="/demos/mamabel/curso-ig.jpg"
-                alt="Curso regular mensual — egreso con tortas"
-                className="w-full rounded-3xl border border-black/8 object-cover shadow-sm"
-              />
-              <img
-                src="/demos/mamabel/curso-flyer.jpg"
-                alt="Flyer curso de iniciación"
-                className="w-full rounded-3xl border border-black/8 object-cover shadow-sm"
-              />
-              <img
-                src="/demos/mamabel/curso-egreso.jpg"
-                alt="Alumnas con tortas del curso"
-                className="w-full rounded-3xl border border-black/8 object-cover shadow-sm"
-              />
+              <img src="/demos/mamabel/curso-flyer.jpg" alt="Flyer curso" className="w-full object-cover" style={{ border: dotted }} />
+              <img src="/demos/mamabel/curso-ig.jpg" alt="Curso mensual" className="w-full object-cover" style={{ border: dotted }} />
             </div>
             <div>
-              <p className="text-[11px] font-black uppercase tracking-[0.16em]" style={{ color: theme.bordo }}>
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: MM.teal }}>
                 Cursos
               </p>
-              <h2
-                className="mt-3 text-3xl font-bold tracking-[-0.03em] sm:text-4xl"
-                style={{ fontFamily: siteSettings.brandFont }}
-              >
+              <h2 className="mt-3 text-3xl sm:text-4xl" style={{ fontFamily: FONT_SERIF }}>
                 Iniciación a la decoración
               </h2>
-              <p className="mt-4 text-sm leading-relaxed text-black/65 sm:text-base">
-                Glasé real, buttercream, picos rusos, drip cake y canasta de mimbre. Se proveen materiales;
-                te llevás la torta hecha por vos. Material del Facebook de la familia.
+              <p className="mt-4 text-sm leading-relaxed sm:text-base" style={{ color: `${MM.ink}aa` }}>
+                Glasé real, buttercream, picos rusos, drip y canasta de mimbre.
+                Se proveen materiales; te llevás la torta hecha por vos.
               </p>
               <div className="mt-8 space-y-4">
                 {courseItems.map(item => {
                   const state = cardState[item.id] ?? { optionId: item.options[0]?.id ?? '', qty: 1 };
                   const option = item.options.find(o => o.id === state.optionId) ?? item.options[0];
                   return (
-                    <div key={item.id} className="rounded-3xl border border-black/8 bg-white p-5">
-                      <p className="text-lg font-black">{item.name}</p>
-                      <p className="mt-1 text-xs text-black/50">{item.description}</p>
+                    <div key={item.id} className="bg-white p-5" style={{ border: dotted }}>
+                      <p className="text-xl" style={{ fontFamily: FONT_SERIF }}>{item.name}</p>
+                      <p className="mt-1 text-xs" style={{ color: `${MM.ink}88` }}>{item.description}</p>
                       <div className="mt-3 flex flex-wrap gap-1.5">
                         {item.options.map(opt => {
                           const on = state.optionId === opt.id;
@@ -638,10 +652,12 @@ export default function MamabelDemoPage() {
                                   [item.id]: { optionId: opt.id, qty: 1 },
                                 }))
                               }
-                              className={`min-h-9 rounded-full border px-3 text-[11px] font-bold ${
-                                on ? 'text-white' : 'border-black/12 text-black/60'
-                              }`}
-                              style={on ? { backgroundColor: theme.bordo, borderColor: theme.bordo } : undefined}
+                              className="min-h-9 px-3 text-[11px] font-bold"
+                              style={
+                                on
+                                  ? { backgroundColor: MM.teal, color: '#fff' }
+                                  : { border: `1px solid ${MM.tealSoft}`, color: MM.tealDeep }
+                              }
                             >
                               {opt.label} · {formatArs(opt.price)}
                             </button>
@@ -651,8 +667,8 @@ export default function MamabelDemoPage() {
                       <button
                         type="button"
                         onClick={() => option && addLine(item, option, 1)}
-                        className="mt-4 flex min-h-11 w-full items-center justify-center rounded-full text-sm font-black text-white"
-                        style={{ backgroundColor: theme.bordo }}
+                        className="mt-4 flex min-h-11 w-full items-center justify-center text-sm font-extrabold text-white"
+                        style={{ backgroundColor: MM.pink }}
                       >
                         Reservar seña de prueba
                       </button>
@@ -665,97 +681,68 @@ export default function MamabelDemoPage() {
         </section>
       )}
 
-      {/* Contacto */}
-      <section ref={sectionRefs.contacto} id="contacto" className="scroll-mt-24 bg-white">
+      <section ref={sectionRefs.contacto} id="contacto" className="scroll-mt-24" style={{ backgroundColor: MM.paper }}>
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
-          <p className="text-[11px] font-black uppercase tracking-[0.16em]" style={{ color: theme.bordo }}>
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: MM.teal }}>
             Contacto
           </p>
-          <h2
-            className="mt-3 text-3xl font-bold tracking-[-0.03em]"
-            style={{ fontFamily: siteSettings.brandFont }}
-          >
+          <h2 className="mt-3 text-3xl" style={{ fontFamily: FONT_SERIF }}>
             Hablemos de tu torta
           </h2>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {wspHref && (
-              <a
-                href={wspHref}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-black/8 p-4 transition hover:border-black/20"
-              >
-                <Phone size={18} style={{ color: theme.bordo }} />
+              <a href={wspHref} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4" style={{ border: dotted }}>
+                <Phone size={18} color={MM.pink} />
                 <span className="text-sm font-bold">11 5619-6941</span>
               </a>
             )}
-            <a
-              href="mailto:mabelvallejos.reposteria@hotmail.com"
-              className="flex items-center gap-3 rounded-2xl border border-black/8 p-4 transition hover:border-black/20"
-            >
-              <Mail size={18} style={{ color: theme.bordo }} />
-              <span className="text-sm font-bold break-all">Mail</span>
+            <a href="mailto:mabelvallejos.reposteria@hotmail.com" className="flex items-center gap-3 p-4" style={{ border: dotted }}>
+              <Mail size={18} color={MM.pink} />
+              <span className="text-sm font-bold">Mail</span>
             </a>
             {siteSettings.brandInstagram && (
-              <a
-                href={siteSettings.brandInstagram}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-black/8 p-4 transition hover:border-black/20"
-              >
-                <InstagramIcon size={18} color={theme.bordo} />
+              <a href={siteSettings.brandInstagram} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4" style={{ border: dotted }}>
+                <InstagramIcon size={18} color={MM.pink} />
                 <span className="text-sm font-bold">Instagram</span>
               </a>
             )}
-            <a
-              href="https://www.facebook.com/lastortasdemamamabel/"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-3 rounded-2xl border border-black/8 p-4 transition hover:border-black/20"
-            >
-              <MapPin size={18} style={{ color: theme.bordo }} />
+            <a href="https://www.facebook.com/lastortasdemamamabel/" target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4" style={{ border: dotted }}>
+              <MapPin size={18} color={MM.pink} />
               <span className="text-sm font-bold">Facebook</span>
             </a>
           </div>
-          <p className="mt-8 text-xs text-black/45">
-            Demo Trufi — el checkout no envía WhatsApp real. Panel: /demo/mamabel/owner
-          </p>
         </div>
       </section>
 
-      <footer className="border-t border-black/8 bg-[#2C2426] py-8 text-center text-[11px] font-bold uppercase tracking-[0.14em] text-white/45">
-        Las Tortas de Mamá Mabel · Trufi flagship
+      <footer className="py-10 text-center" style={{ backgroundColor: MM.tealDeep, color: `${MM.cream}cc` }}>
+        <p className="text-3xl" style={{ fontFamily: FONT_SCRIPT, color: MM.cream }}>mamá mabel</p>
+        <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.2em]">Las tortas de · demo Trufi</p>
       </footer>
 
-      {/* Cart */}
       {cartOpen && (
-        <div className="fixed inset-0 z-40 flex justify-end bg-black/45">
-          <div className="flex h-full w-full max-w-md flex-col bg-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-black/8 px-5 py-4">
-              <h2 className="text-lg font-black">Tu encargo</h2>
-              <button type="button" className="text-sm font-bold text-black/45" onClick={() => setCartOpen(false)}>
+        <div className="fixed inset-0 z-40 flex justify-end bg-black/40">
+          <div className="flex h-full w-full max-w-md flex-col shadow-2xl" style={{ backgroundColor: MM.cream }}>
+            <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: dotted }}>
+              <h2 className="text-xl" style={{ fontFamily: FONT_SERIF }}>Tu encargo</h2>
+              <button type="button" className="text-sm font-bold" style={{ color: MM.tealDeep }} onClick={() => setCartOpen(false)}>
                 Cerrar
               </button>
             </div>
             <div className="flex-1 space-y-4 overflow-y-auto p-5">
               {cart.length === 0 ? (
-                <p className="text-sm text-black/45">Todavía vacío.</p>
+                <p className="text-sm" style={{ color: `${MM.ink}88` }}>Todavía vacío.</p>
               ) : (
                 cart.map((line, idx) => (
-                  <div key={`${line.id}-${line.optionId}-${idx}`} className="flex justify-between gap-3 border-b border-black/6 pb-3">
+                  <div key={`${line.id}-${line.optionId}-${idx}`} className="flex justify-between gap-3 pb-3" style={{ borderBottom: `1px solid ${MM.pinkSoft}` }}>
                     <div className="min-w-0">
-                      <p className="text-sm font-bold">
-                        {line.qty} × {line.name} · {line.optionLabel}
-                      </p>
-                      <p className="mt-1 text-xs font-bold" style={{ color: theme.bordo }}>
-                        {formatArs(line.price * line.qty)}
-                      </p>
+                      <p className="text-sm font-bold">{line.qty} × {line.name} · {line.optionLabel}</p>
+                      <p className="mt-1 text-xs font-bold" style={{ color: MM.pink }}>{formatArs(line.price * line.qty)}</p>
                     </div>
                     <div className="flex items-center gap-1">
-                      <button type="button" className="rounded border border-black/10 p-1" onClick={() => updateCartQty(idx, -1)}>
+                      <button type="button" className="p-1" style={{ border: dotted }} onClick={() => updateCartQty(idx, -1)}>
                         <Minus size={14} />
                       </button>
-                      <button type="button" className="rounded border border-black/10 p-1" onClick={() => updateCartQty(idx, 1)}>
+                      <button type="button" className="p-1" style={{ border: dotted }} onClick={() => updateCartQty(idx, 1)}>
                         <Plus size={14} />
                       </button>
                     </div>
@@ -763,18 +750,18 @@ export default function MamabelDemoPage() {
                 ))
               )}
             </div>
-            <div className="border-t border-black/8 p-5">
-              <div className="mb-1 flex justify-between text-lg font-black">
+            <div className="p-5" style={{ borderTop: dotted }}>
+              <div className="mb-1 flex justify-between text-lg font-bold">
                 <span>{copy.totalLabel}</span>
                 <span>{formatArs(cartTotal)}</span>
               </div>
-              <p className="mb-4 text-xs text-black/45">{copy.totalHint}</p>
+              <p className="mb-4 text-xs" style={{ color: `${MM.ink}88` }}>{copy.totalHint}</p>
               <button
                 type="button"
                 disabled={cart.length === 0}
                 onClick={() => { setCartOpen(false); setCheckoutOpen(true); }}
-                className="flex min-h-12 w-full items-center justify-center rounded-full text-sm font-black text-white disabled:opacity-40"
-                style={{ backgroundColor: theme.bordo }}
+                className="flex min-h-12 w-full items-center justify-center text-sm font-extrabold text-white disabled:opacity-40"
+                style={{ backgroundColor: MM.pink }}
               >
                 {copy.cartCta}
               </button>
