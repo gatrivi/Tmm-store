@@ -53,8 +53,8 @@ Propuesta concreta para [LOCAL]:
 2) Si cierra: cargamos menú, logo y WhatsApp; link listo en 2–3 días
 3) Precio plan Pedidos: ~$15–18k/mes · 0% comisión
 
-Demo en vivo: https://tmm.gatrivi.com/demo
-(Owner: /demo/owner)
+Demo en vivo: https://tmm.gatrivi.com/demo/pizzeria
+(Owner: /demo/pizzeria/owner)
 
 ¿Te va martes o jueves a la tarde (antes del pico)?
 

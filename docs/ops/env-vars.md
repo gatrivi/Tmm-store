@@ -27,7 +27,10 @@ Copy from `.env.example` at repo root.
 | Variable | Used by |
 |----------|---------|
 | MP_ACCESS_TOKEN | create-preference |
-| OPENAI_API_KEY | ai-chat |
+| OPENAI_API_KEY | ai-chat, parse-menu |
+| AI_PROVIDER | ai-chat (`openai` \| `anthropic` \| `gemini`) |
+| ANTHROPIC_API_KEY | ai-chat when provider=anthropic |
+| GEMINI_API_KEY | ai-chat when provider=gemini |
 | FIREBASE_API_KEY | mp-webhook |
 | FIREBASE_AUTH_DOMAIN | mp-webhook |
 | FIREBASE_PROJECT_ID | mp-webhook |

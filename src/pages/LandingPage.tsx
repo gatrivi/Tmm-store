@@ -193,14 +193,14 @@ export default function LandingPage() {
 
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <Link
-                  to="/demo"
+                  to="/demo/pizzeria"
                   className="group inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#171814] px-6 text-sm font-black text-white transition hover:-translate-y-0.5 hover:shadow-xl"
                 >
                   Probar como cliente
                   <ArrowRight size={18} className="transition group-hover:translate-x-1" />
                 </Link>
                 <Link
-                  to="/demo/owner"
+                  to="/demo/pizzeria/owner"
                   className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-black/15 bg-white/50 px-6 text-sm font-black transition hover:border-black hover:bg-white"
                 >
                   <Store size={18} />
@@ -401,7 +401,7 @@ export default function LandingPage() {
             </div>
 
             <div className="mt-12 grid gap-4 md:grid-cols-2">
-              <Link to="/demo" className="group rounded-[2rem] border border-white/12 bg-white/6 p-7 transition hover:-translate-y-1 hover:bg-white/10 sm:p-9">
+              <Link to="/demo/pizzeria" className="group rounded-[2rem] border border-white/12 bg-white/6 p-7 transition hover:-translate-y-1 hover:bg-white/10 sm:p-9">
                 <div className="flex items-start justify-between">
                   <Smartphone size={28} className="text-[#d7ff64]" />
                   <ChevronRight size={24} className="transition group-hover:translate-x-1" />
@@ -411,7 +411,7 @@ export default function LandingPage() {
                 <p className="mt-3 text-white/55">Carta real, variantes, carrito y checkout.</p>
               </Link>
 
-              <Link to="/demo/owner" className="group rounded-[2rem] bg-[#d7ff64] p-7 text-[#171814] transition hover:-translate-y-1 hover:bg-white sm:p-9">
+              <Link to="/demo/pizzeria/owner" className="group rounded-[2rem] bg-[#d7ff64] p-7 text-[#171814] transition hover:-translate-y-1 hover:bg-white sm:p-9">
                 <div className="flex items-start justify-between">
                   <BarChart3 size={28} />
                   <ChevronRight size={24} className="transition group-hover:translate-x-1" />
@@ -559,8 +559,8 @@ export default function LandingPage() {
             <p className="mt-2 text-sm text-white/45">Pedidos directos para negocios reales · por ZengaSoft</p>
           </div>
           <div className="flex flex-wrap gap-5 text-xs font-bold text-white/55">
-            <Link to="/demo" className="hover:text-white">Demo cliente</Link>
-            <Link to="/demo/owner" className="hover:text-white">Demo local</Link>
+            <Link to="/demo/pizzeria" className="hover:text-white">Demo cliente</Link>
+            <Link to="/demo/pizzeria/owner" className="hover:text-white">Demo local</Link>
             <a href="#planes" className="hover:text-white">Planes</a>
             <a href={contactHref} className="hover:text-white">Contacto</a>
           </div>

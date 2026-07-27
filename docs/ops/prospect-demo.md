@@ -6,13 +6,19 @@ Purpose: show the outcome, not a feature inventory.
 
 - Sales page: `/`
 - **Demo Express builder (internal sales tool): `/demo/armar`**
-- Customer view (gastronomía): `/demo`
-- Owner view: `/demo/owner`
-- **Vertical carnicería:** `/demo/carniceria` · `/demo/carniceria/owner` · seguimiento `/demo/carniceria/order/:id`
+- **Primary Fit A (pizzería/empanadas):** `/demo/pizzeria` · `/demo/pizzeria/owner` · `/demo/pizzeria/order/:id`
+- Legacy gastronomía (choripán): `/demo` · `/demo/owner`
+- **Vertical carnicería:** `/demo/carniceria` · `/demo/carniceria/owner` · `/demo/carniceria/order/:id`
 
-Live: https://tmm.gatrivi.com/demo/carniceria
+Live: https://tmm.gatrivi.com/demo/pizzeria
 
 Demo tenants are isolated from Firebase and browser tenant data. Checkout never sends a real WhatsApp message.
+
+### Vertical pizzería (Fit A — default pitch)
+
+Tenant `demo-pizzeria` · storage `trufi_demo_orders_v2:pizzeria`. Brief: [demo-pizzeria.md](../roadmap/demo-pizzeria.md).
+
+60s: `/demo/pizzeria` → muzza grande + ½ docena → pedido de prueba → `/demo/pizzeria/owner`.
 
 ### Vertical carnicería (Gabriel)
 
@@ -20,13 +26,13 @@ Separate tenant `demo-carniceria` (sessionStorage `trufi_demo_orders_v2:carnicer
 
 60s pitch: open `/demo/carniceria` → add corte by weight + pack → Coordinar pedido → panel `/demo/carniceria/owner`.
 
-## Script
+## Script (pizzería — default)
 
-1. **Problem (20s)** — “Hoy el cliente pregunta precio, manda un audio, pasa una dirección incompleta y el pedido se reconstruye a mano.”
-2. **Customer (60s)** — open `/demo`, add two products, open cart and complete the checkout.
-3. **Handoff (20s)** — point out the safe demo confirmation: in production the structured message opens in the shop WhatsApp.
-4. **Owner (60s)** — open `/demo/owner`, filter active orders and move one from **Nuevo** to **Preparando** and **Listo**.
-5. **Close (20s)** — “I load your current menu and branding. You receive link, QR and panel ready in 48–72 hours. No commission per sale.”
+1. **Problem (20s)** — “Hoy el cliente manda un audio: una muzza y media docena. Vos reconstruís el pedido a mano.”
+2. **Customer (60s)** — open `/demo/pizzeria`, add pizza + empanadas, complete checkout.
+3. **Handoff (20s)** — safe demo confirmation: in production the structured message opens in WhatsApp.
+4. **Owner (60s)** — `/demo/pizzeria/owner`, Nuevo → Preparando → Listo.
+5. **Close (20s)** — “Cargo tu carta y marca. Link + QR + panel en 48–72 hs. Cero comisión.”
 
 ## Prospect-specific demo — before qualification
 

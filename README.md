@@ -2,6 +2,9 @@
 
 Done-for-you, white-label ordering suite for local businesses: sales landing, digital menu, cart, checkout, WhatsApp, MercadoPago, owner panel, and three product tiers (Menu / Pedidos / Premium).
 
+> **Agentes (Grok / Cursor / cloud):** leer primero  
+> **[`docs/AGENT_STATUS.md`](docs/AGENT_STATUS.md)** — snapshot preciso del estado del producto (v1.9.1).
+
 ## Quick start
 
 ```bash
@@ -13,13 +16,14 @@ npm run dev
 ```
 
 - Sales landing: http://localhost:5173/
-- Customer demo (gastronomía): http://localhost:5173/demo
+- **Pizzería Fit A:** http://localhost:5173/demo/pizzeria · owner `/demo/pizzeria/owner`
+- Customer demo (legacy choripán): http://localhost:5173/demo
 - Owner demo: http://localhost:5173/demo/owner
 - **Carnicería vertical:** http://localhost:5173/demo/carniceria · owner `/demo/carniceria/owner`
 - Tenant store: http://localhost:5173/s/demo-shop
 - Admin: http://localhost:5173/admin
 
-Live: [tmm.gatrivi.com/demo/carniceria](https://tmm.gatrivi.com/demo/carniceria)
+Live: [tmm.gatrivi.com/demo/pizzeria](https://tmm.gatrivi.com/demo/pizzeria)
 
 ## Scripts
 
@@ -50,8 +54,10 @@ Full reference: [docs/ops/env-vars.md](docs/ops/env-vars.md)
 
 All project docs live under [`docs/`](docs/README.md):
 
+- **[AGENT_STATUS.md](docs/AGENT_STATUS.md)** — estado actual (para agentes)
 - [Architecture](docs/architecture.md)
 - [Prospect demo (3 min)](docs/ops/prospect-demo.md)
+- [Demo pizzería Fit A](docs/roadmap/demo-pizzeria.md)
 - [Demo carnicería Gabriel](docs/roadmap/demo-carniceria-gabriel.md)
 - [Demo script](docs/ops/demo.md)
 - [Client onboarding](docs/ops/onboarding.md)

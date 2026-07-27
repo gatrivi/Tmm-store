@@ -1,4 +1,5 @@
 import { CARNICERIA_DEMO } from '../data/demos/carniceria';
+import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
 import type { DemoDefinition } from '../data/demos/types';
 
 /** Gastronomy showcase — kept for path parity with legacy `/demo`. */
@@ -10,7 +11,7 @@ const GASTRONOMY_DEMO: Pick<DemoDefinition, 'id' | 'tenantId' | 'customerPath' |
   orderPath: (orderId: string) => `/order/${orderId}`,
 };
 
-const DEMOS: DemoDefinition[] = [CARNICERIA_DEMO];
+const DEMOS: DemoDefinition[] = [CARNICERIA_DEMO, PIZZERIA_DEMO];
 
 export function listVerticalDemos(): DemoDefinition[] {
   return DEMOS;
@@ -37,8 +38,7 @@ export function resolveTenantIdFromPath(pathname: string): string {
   const demo = resolveDemoFromPath(pathname);
   if (demo) return demo.tenantId;
   if (pathname === '/demo' || pathname.startsWith('/demo/')) {
-    // /demo/owner, /demo/armar, bare /demo
-    if (pathname.startsWith('/demo/carniceria')) return CARNICERIA_DEMO.tenantId;
+    // /demo/owner, /demo/armar, bare /demo — verticals already handled above
     return 'demo';
   }
 

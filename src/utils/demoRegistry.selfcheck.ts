@@ -1,6 +1,6 @@
 /**
  * Runnable check: npx --yes tsx src/utils/demoRegistry.selfcheck.ts
- * Fails loud if carnicería vertical registry drifts.
+ * Fails loud if vertical registry drifts.
  */
 import assert from 'node:assert/strict';
 import {
@@ -12,6 +12,7 @@ import {
   resolveTenantIdFromPath,
 } from './demoRegistry';
 import { CARNICERIA_DEMO } from '../data/demos/carniceria';
+import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
 
 function main() {
   assert.equal(resolveTenantIdFromPath('/demo'), 'demo');
@@ -19,11 +20,16 @@ function main() {
   assert.equal(resolveTenantIdFromPath('/demo/carniceria'), 'demo-carniceria');
   assert.equal(resolveTenantIdFromPath('/demo/carniceria/owner'), 'demo-carniceria');
   assert.equal(resolveTenantIdFromPath('/demo/carniceria/order/G7L2'), 'demo-carniceria');
+  assert.equal(resolveTenantIdFromPath('/demo/pizzeria'), 'demo-pizzeria');
+  assert.equal(resolveTenantIdFromPath('/demo/pizzeria/owner'), 'demo-pizzeria');
+  assert.equal(resolveTenantIdFromPath('/demo/pizzeria/order/P8K2'), 'demo-pizzeria');
   assert.equal(resolveTenantIdFromPath('/s/foo'), 'foo');
 
   assert.equal(resolveDemoIdFromPath('/demo/carniceria'), 'carniceria');
+  assert.equal(resolveDemoIdFromPath('/demo/pizzeria'), 'pizzeria');
   assert.equal(resolveDemoStorageKey('demo'), 'trufi_demo_orders_v2');
   assert.equal(resolveDemoStorageKey('carniceria'), 'trufi_demo_orders_v2:carniceria');
+  assert.equal(resolveDemoStorageKey('pizzeria'), 'trufi_demo_orders_v2:pizzeria');
 
   const demo = resolveDemoFromPath('/demo/carniceria');
   assert.ok(demo);
@@ -47,8 +53,29 @@ function main() {
   const combo = CARNICERIA_DEMO.menuItems.find(i => i.id === 'combo-parrillero')!;
   assert.equal(combo.options.length, 1);
 
+  // Pizzería vertical — sizes + packs, no choripán
+  const pizza = resolveDemoFromPath('/demo/pizzeria');
+  assert.ok(pizza);
+  assert.equal(pizza.tenantId, 'demo-pizzeria');
+  assert.equal(pizza.plan, 'pedidos');
+  assert.ok(!pizza.menuItems.some(i => /chorip/i.test(i.name)));
+  assert.ok(pizza.menuItems.some(i => i.id === 'muzza'));
+  assert.ok(pizza.menuItems.some(i => i.id === 'empanada-carne'));
+  assert.equal(pizza.menuCategories.length, 3);
+  assert.equal(pizza.seedOrders.length, 3);
+  assert.equal(getDemoByTenantId('demo-pizzeria')?.id, 'pizzeria');
+  assert.equal(isDemoTenant('demo-pizzeria'), true);
+
+  const muzza = PIZZERIA_DEMO.menuItems.find(i => i.id === 'muzza')!;
+  assert.equal(muzza.options.length, 2);
+  assert.ok(muzza.options[0].price < muzza.options[1].price);
+  const emp = PIZZERIA_DEMO.menuItems.find(i => i.id === 'empanada-carne')!;
+  assert.equal(emp.options.length, 2);
+
   // Storage isolation keys must differ
   assert.notEqual(resolveDemoStorageKey('demo'), resolveDemoStorageKey('carniceria'));
+  assert.notEqual(resolveDemoStorageKey('pizzeria'), resolveDemoStorageKey('carniceria'));
+  assert.notEqual(resolveDemoStorageKey('pizzeria'), resolveDemoStorageKey('demo'));
 
   console.log('demoRegistry.selfcheck: ok');
 }

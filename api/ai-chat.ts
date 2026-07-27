@@ -1,17 +1,12 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { catalogReplyWithTag, type MenuItemPayload } from './menuMatch';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
 }
 
-interface MenuItemPayload {
-  id: string;
-  name: string;
-  description?: string;
-  options: Array<{ id: string; label: string; price: number; available?: boolean }>;
-  available?: boolean;
-}
+type Provider = 'openai' | 'anthropic' | 'gemini';
 
 function buildMenuContext(items: MenuItemPayload[]): string {
   return items
@@ -45,41 +40,39 @@ function stripActionTags(text: string): string {
   return text.replace(/\[ADD_CART:[^\]]+\]/g, '').trim();
 }
 
+function resolveProvider(): Provider {
+  const raw = (process.env.AI_PROVIDER || 'openai').toLowerCase();
+  if (raw === 'anthropic' || raw === 'gemini' || raw === 'openai') return raw;
+  return 'openai';
+}
+
 function fallbackReply(
   messages: ChatMessage[],
   menuItems: MenuItemPayload[],
   settings: { brandName?: string; address?: string; whatsapp?: string },
 ): string {
-  const last = messages[messages.length - 1]?.content.toLowerCase() ?? '';
+  const last = messages[messages.length - 1]?.content ?? '';
+  const catalog = catalogReplyWithTag(last, menuItems);
+  if (catalog) return catalog;
+
+  const lower = last.toLowerCase();
   const available = menuItems.filter(i => i.available !== false);
 
-  if (last.includes('hora') || last.includes('abierto') || last.includes('cerrado')) {
+  if (lower.includes('hora') || lower.includes('abierto') || lower.includes('cerrado')) {
     return `Consultá nuestros horarios en la tienda o escribinos por WhatsApp${settings.whatsapp ? ` al ${settings.whatsapp}` : ''}.`;
   }
 
-  if (last.includes('recomend') || last.includes('popular') || last.includes('suger')) {
-    const pick = available.slice(0, 2);
+  if (lower.includes('recomend') || lower.includes('popular') || lower.includes('suger') || lower.includes('hay')) {
+    const pick = available.slice(0, 3);
     if (pick.length === 0) return 'Hoy no tenemos platos disponibles en el menú.';
-    return `Te recomiendo: ${pick.map(p => p.name).join(' y ')}. ¿Querés que los agregue al carrito?`;
+    return `En el menú tenés: ${pick.map(p => p.name).join(', ')}${available.length > 3 ? '…' : ''}. ¿Cuál te copa?`;
   }
 
-  if (last.includes('precio') || last.includes('cuánto') || last.includes('cuanto')) {
-    const item = available[0];
-    if (!item) return 'No encontré productos disponibles.';
-    const opt = item.options.find(o => o.available !== false);
-    return opt
-      ? `${item.name} (${opt.label}) sale $${opt.price.toLocaleString('es-AR')}.`
-      : `${item.name} está en el menú — elegí una variante en la carta.`;
-  }
-
-  return `Soy el asistente de ${settings.brandName || 'la tienda'}. Puedo recomendar platos, contarte precios o ayudarte a pedir. ¿Qué te gustaría comer?`;
+  const names = available.slice(0, 5).map(p => p.name).join(', ');
+  return `Soy el asistente de ${settings.brandName || 'la tienda'}. Ahora mismo: ${names || 'sin stock'}. Pedime por nombre (ej. bondiola) y te lo sumo.`;
 }
 
-async function callOpenAI(
-  systemPrompt: string,
-  messages: ChatMessage[],
-  apiKey: string,
-): Promise<string> {
+async function callOpenAI(systemPrompt: string, messages: ChatMessage[], apiKey: string): Promise<string> {
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -87,16 +80,80 @@ async function callOpenAI(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'gpt-4o-mini',
+      model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
       messages: [{ role: 'system', content: systemPrompt }, ...messages],
-      temperature: 0.6,
-      max_tokens: 500,
+      temperature: 0.2,
+      max_tokens: 400,
     }),
   });
-
   const data = await res.json();
   if (!res.ok) throw new Error(data.error?.message || 'OpenAI request failed');
   return data.choices?.[0]?.message?.content || '';
+}
+
+async function callAnthropic(systemPrompt: string, messages: ChatMessage[], apiKey: string): Promise<string> {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001',
+      max_tokens: 400,
+      temperature: 0.2,
+      system: systemPrompt,
+      messages: messages.map(m => ({ role: m.role, content: m.content })),
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error?.message || 'Anthropic request failed');
+  const block = data.content?.find((b: { type: string }) => b.type === 'text');
+  return block?.text || '';
+}
+
+async function callGemini(systemPrompt: string, messages: ChatMessage[], apiKey: string): Promise<string> {
+  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  const contents = messages.map(m => ({
+    role: m.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: m.content }],
+  }));
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        contents,
+        generationConfig: { temperature: 0.2, maxOutputTokens: 400 },
+      }),
+    },
+  );
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error?.message || 'Gemini request failed');
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+}
+
+async function callLlm(
+  provider: Provider,
+  systemPrompt: string,
+  messages: ChatMessage[],
+): Promise<string | null> {
+  if (provider === 'anthropic') {
+    const key = process.env.ANTHROPIC_API_KEY;
+    if (!key) return null;
+    return callAnthropic(systemPrompt, messages, key);
+  }
+  if (provider === 'gemini') {
+    const key = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+    if (!key) return null;
+    return callGemini(systemPrompt, messages, key);
+  }
+  const key = process.env.OPENAI_API_KEY;
+  if (!key) return null;
+  return callOpenAI(systemPrompt, messages, key);
 }
 
 function setCors(res: VercelResponse): void {
@@ -129,31 +186,60 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'messages required' });
     }
 
-    const menuContext = buildMenuContext(menuItems || []);
-    const systemPrompt = `Eres un asistente amable de un negocio de comida (${settings?.brandName || 'restaurante'}).
-Idioma: ${language || 'es'}.
-Solo recomendá productos del menú actual (disponibles).
-Para agregar al carrito del cliente, incluí al final del mensaje tags exactos: [ADD_CART:itemId:optionId:qty]
-Menú disponible:
-${menuContext}
-Dirección: ${settings?.address || 'consultar'}
-WhatsApp: ${settings?.whatsapp || 'consultar'}
-Sé breve, útil y orientado a ventas sin inventar productos.`;
+    const items = menuItems || [];
+    const lastUser = [...messages].reverse().find(m => m.role === 'user')?.content ?? '';
 
-    const apiKey = process.env.OPENAI_API_KEY;
-    let rawReply: string;
-
-    if (apiKey) {
-      rawReply = await callOpenAI(systemPrompt, messages, apiKey);
-    } else {
-      rawReply = fallbackReply(messages, menuItems || [], settings || {});
+    // 1) Deterministic catalog hit — fixes “bondiola” on tiny menus without LLM
+    const local = catalogReplyWithTag(lastUser, items);
+    if (local && /\[ADD_CART:/.test(local)) {
+      setCors(res);
+      return res.status(200).json({
+        reply: stripActionTags(local),
+        actions: parseActions(local),
+        source: 'catalog',
+      });
     }
 
-    const actions = parseActions(rawReply);
-    const reply = stripActionTags(rawReply);
+    const menuContext = buildMenuContext(items);
+    const systemPrompt = `Eres un asistente de pedidos de (${settings?.brandName || 'restaurante'}).
+Idioma: ${language || 'es'}.
+REGLAS:
+- Solo productos del menú listado. Si piden algo que está en el menú (aunque escriban mal), usalo.
+- Nunca inventes platos.
+- Para agregar al carrito, al FINAL del mensaje poné tags exactos: [ADD_CART:itemId:optionId:qty]
+- Sé breve.
+Menú:
+${menuContext}
+Dirección: ${settings?.address || 'consultar'}
+WhatsApp: ${settings?.whatsapp || 'consultar'}`;
+
+    const provider = resolveProvider();
+    let rawReply: string;
+    let source: string = provider;
+
+    try {
+      const llm = await callLlm(provider, systemPrompt, messages);
+      if (llm) {
+        rawReply = llm;
+      } else if (local) {
+        rawReply = local;
+        source = 'catalog';
+      } else {
+        rawReply = fallbackReply(messages, items, settings || {});
+        source = 'fallback';
+      }
+    } catch (err) {
+      console.error('LLM error, falling back:', err);
+      rawReply = local || fallbackReply(messages, items, settings || {});
+      source = local ? 'catalog' : 'fallback';
+    }
 
     setCors(res);
-    return res.status(200).json({ reply, actions });
+    return res.status(200).json({
+      reply: stripActionTags(rawReply),
+      actions: parseActions(rawReply),
+      source,
+    });
   } catch (error) {
     console.error('AI chat error:', error);
     setCors(res);

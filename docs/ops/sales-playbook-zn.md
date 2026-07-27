@@ -37,9 +37,9 @@ Sin comisión por pedido. Tus clientes piden por la web, vos ves todo en el celu
 
 ## Demo flow (10 min)
 
-1. Customer view: carta → carrito → WSP
-2. Admin: pedido nuevo → sonido → ticket → template Recibido
-3. Badge **Nube** — celular + PC sync
+1. Customer: `/demo/pizzeria` → carta → carrito → pedido de prueba
+2. Admin: `/demo/pizzeria/owner` → sonido → ticket → Nuevo→Prep→Listo
+3. Badge **Nube** — celular + PC sync (tenant real)
 4. Precio: $15–18k/mes vs PD $20k
 
 ## Close checklist

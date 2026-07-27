@@ -2,21 +2,39 @@
 
 Purpose: Premium-tier chat for menu Q&A and conversational add-to-cart.
 
-Paths: `src/components/AIAssistant.tsx`, `api/ai-chat.ts`
+Paths: `src/components/AIAssistant.tsx`, `api/ai-chat.ts`, `api/menuMatch.ts`
 
-Deps: `features.canUseAI`, `OPENAI_API_KEY` (optional; rule-based fallback without it)
+Deps: `features.canUseAI`, provider keys (optional; catalog matcher works without)
 
 ## Flow
 
-1. Floating button on Storefront (Premium only)
+1. Floating button on Storefront (Premium only) — demo: `/demo`
 2. POST messages + menu snapshot to `/api/ai-chat`
-3. Reply may include `[ADD_CART:itemId:optionId:qty]` tags
-4. Parsed actions call `onAddToCart` on Storefront
+3. **Catalog match first** (`menuMatch`) — “bondiola” / “dame 2 muzza” → `[ADD_CART:…]` without LLM
+4. Else LLM via `AI_PROVIDER` (`openai` | `anthropic` | `gemini`)
+5. Else keyword fallback listing menu names
+6. Client parses `actions` → `onAddToCart`
+
+## Env (Vercel)
+
+| Var | Notes |
+|-----|--------|
+| `AI_PROVIDER` | default `openai` |
+| `OPENAI_API_KEY` | OpenAI Chat Completions |
+| `ANTHROPIC_API_KEY` | Claude Messages API |
+| `GEMINI_API_KEY` | Google Generative Language |
+| `OPENAI_MODEL` / `ANTHROPIC_MODEL` / `GEMINI_MODEL` | optional overrides |
+
+## Check
+
+```bash
+npm run check:ai
+```
 
 ## Gotchas
 
-- Only recommends in-stock menu items from payload
-- Without OpenAI key, heuristic fallback responses
+- Tiny menus must not depend on the LLM — matcher is source of truth for named items
+- Without any API key, catalog + fallback still answer product names
 - Keep prompts/menu payload small for cost
 
-See also: [features/plans-tiers.md](./plans-tiers.md), [components/ai-assistant.md](../components/ai-assistant.md)
+See also: [features/plans-tiers.md](./plans-tiers.md)

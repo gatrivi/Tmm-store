@@ -4,6 +4,7 @@ Agent manifest: read this first, then one targeted file.
 
 | Need | Read |
 |------|------|
+| **Estado app (agentes cloud)** | [**AGENT_STATUS.md**](./AGENT_STATUS.md) ← empezar acá |
 | System overview | [architecture.md](./architecture.md) |
 | Product tiers | [features/plans-tiers.md](./features/plans-tiers.md) |
 | Cart, checkout, WhatsApp | [features/ordering-checkout.md](./features/ordering-checkout.md) |
@@ -27,7 +28,9 @@ Agent manifest: read this first, then one targeted file.
 | Production smoke test | [ops/smoke-test.md](./ops/smoke-test.md) |
 | **Prospect demo (3 min)** | [ops/prospect-demo.md](./ops/prospect-demo.md) |
 | **Release gate publicitar (Hito A)** | [roadmap/advertising-readiness.md](./roadmap/advertising-readiness.md) |
+| **Demo pizzería Fit A (live)** | [roadmap/demo-pizzeria.md](./roadmap/demo-pizzeria.md) · `/demo/pizzeria` |
 | **Demo carnicería (live)** | [roadmap/demo-carniceria-gabriel.md](./roadmap/demo-carniceria-gabriel.md) · `/demo/carniceria` |
+| **Plan verticales + demos** | [roadmap/vertical-demos-plan.md](./roadmap/vertical-demos-plan.md) |
 | **30-day sales audit + Demo Express decision** | [ops/audit-sales-30-days-2026-07-11.md](./ops/audit-sales-30-days-2026-07-11.md) |
 | **Monday ship (deploy → demo)** | [ops/monday-deploy-checklist.md](./ops/monday-deploy-checklist.md), [monday-smoke-runbook.md](./ops/monday-smoke-runbook.md), [monday-demo-script.md](./ops/monday-demo-script.md) |
 | **Go-live / overnight report** | [ops/go-live-report.md](./ops/go-live-report.md) |

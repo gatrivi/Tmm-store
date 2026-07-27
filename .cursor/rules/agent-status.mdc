@@ -1,0 +1,10 @@
+---
+description: Cloud/agent entry — read AGENT_STATUS first
+alwaysApply: true
+---
+
+# Agent entry
+
+Before exploring the codebase, read [`docs/AGENT_STATUS.md`](../../docs/AGENT_STATUS.md).
+
+Then open only the one targeted file from [`docs/README.md`](../../docs/README.md).
