@@ -6,10 +6,14 @@
 
 | Fuente | Resultado |
 |--------|-----------|
-| FB page | Nombre, 6K followers, mail `mabelvallejos.reposteria@hotmail.com`, cel **11 5619-6941**, logo vía Graph API |
-| FB photos/IG | Login wall — no se pudo bajar el álbum organizado |
+| **Brave CDP (logueado)** | 40 thumbs + 14+ fotos red vía network + flyers/curso/tortas reales |
+| FB page pública | Logo Graph, WSP, mail |
+| IG | 0 posts — probablemente sin sesión IG en ese Brave; re-correr scrape logueado |
 
-Drop zone para el resto (curso, fuentes, fotos): `content/mamabel/incoming/`
+Scripts: `scripts/scrape-mamabel-brave.ts`, `…-hires.ts`, `…-network.ts`  
+Puerto: Brave con `--remote-debugging-port=9222`
+
+Drop zone: `content/mamabel/incoming/`
 
 ## Live
 

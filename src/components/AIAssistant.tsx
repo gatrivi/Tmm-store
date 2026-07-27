@@ -150,12 +150,12 @@ export function AIAssistant({ onAddToCart }: AIAssistantProps) {
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && sendMessage()}
                 placeholder="Preguntá o pedí algo..."
-                className="flex-1 border border-border bg-surface-muted rounded-xl px-4 py-2.5 text-sm text-text-primary outline-none focus:ring-2 focus:ring-indigo-500/40 placeholder:text-text-muted"
+                className="flex-1 border border-border bg-surface-muted rounded-xl px-4 py-2.5 text-sm text-text-primary outline-none focus:ring-2 focus:ring-[#5FA7A7]/40 placeholder:text-text-muted"
               />
               <button
                 onClick={sendMessage}
                 disabled={loading || !input.trim()}
-                className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-white/10 disabled:text-text-muted text-white p-3 rounded-xl transition"
+                className="bg-[#5FA7A7] hover:brightness-110 disabled:bg-white/10 disabled:text-text-muted text-white p-3 rounded-xl transition"
                 aria-label="Enviar"
               >
                 <Send size={18} />

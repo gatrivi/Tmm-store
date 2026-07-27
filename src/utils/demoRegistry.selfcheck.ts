@@ -105,9 +105,9 @@ function main() {
   assert.equal(mm.plan, 'premium');
   assert.equal(mm.siteSettings.brandName, 'Las Tortas de Mamá Mabel');
   assert.equal(mm.siteSettings.whatsappNumber, '5491156196941');
-  assert.ok(mm.menuItems.some(i => i.id === 'selva-negra'));
-  assert.ok(mm.menuItems.some(i => i.id === 'balcarce'));
-  assert.equal(mm.menuCategories.length, 3);
+  assert.ok(mm.menuItems.some(i => i.id === 'torta-canasta'));
+  assert.ok(mm.menuItems.some(i => i.id === 'curso-iniciacion'));
+  assert.equal(mm.menuCategories.length, 4);
   assert.equal(mm.seedOrders.length, 3);
   assert.equal(getDemoByTenantId('demo-mamabel')?.id, 'mamabel');
   assert.equal(MAMABEL_DEMO.siteSettings.brandLogo, '/demos/mamabel/logo.jpg');
