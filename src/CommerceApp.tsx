@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import AdminPage from './pages/AdminPage';
 import NotFound from './pages/NotFound';
 import OrderStatusPage from './pages/OrderStatusPage';
@@ -23,6 +23,12 @@ function CustomerDemo() {
   );
 }
 
+/** Typo alias: mamamabel → mamabel */
+function RedirectMamabelOrder() {
+  const { orderId } = useParams();
+  return <Navigate to={`/demo/mamabel/order/${orderId}`} replace />;
+}
+
 export default function CommerceApp() {
   const location = useLocation();
   const providerScope = resolveTenantIdFromPath(location.pathname);
@@ -41,6 +47,8 @@ export default function CommerceApp() {
               <Route path="/demo/panaderia/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/mamabel" element={<MamabelDemoPage />} />
               <Route path="/demo/mamabel/order/:orderId" element={<OrderStatusPage />} />
+              <Route path="/demo/mamamabel" element={<Navigate to="/demo/mamabel" replace />} />
+              <Route path="/demo/mamamabel/order/:orderId" element={<RedirectMamabelOrder />} />
               <Route path="/demo/carniceria" element={<CarniceriaDemoPage />} />
               <Route path="/demo/carniceria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/s/:slug" element={<Storefront />} />

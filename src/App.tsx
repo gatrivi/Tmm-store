@@ -30,6 +30,7 @@ export default function App() {
           <Route path="/demo/pizzeria/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/panaderia/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/mamabel/owner" element={<DemoOwnerPage />} />
+          <Route path="/demo/mamamabel/owner" element={<Navigate to="/demo/mamabel/owner" replace />} />
           <Route path="/*" element={<CommerceApp />} />
         </Routes>
       </Suspense>

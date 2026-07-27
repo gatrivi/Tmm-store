@@ -1,4 +1,8 @@
 {
+  "redirects": [
+    { "source": "/demo/mamamabel", "destination": "/demo/mamabel", "permanent": false },
+    { "source": "/demo/mamamabel/(.*)", "destination": "/demo/mamabel/$1", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/demo/carniceria", "destination": "/demo-carniceria.html" },
