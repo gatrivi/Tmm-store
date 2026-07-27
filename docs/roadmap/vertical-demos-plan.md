@@ -25,7 +25,7 @@ Trufi gana cuando hay **pedido recurrente por WSP desordenado** + dueño que ati
 | 1 | **Pizzería / empanadas / roti** | ★★★★★ | Fit A playbook; WSP caos; pitch 0 comisión | `/demo/pizzeria` (v1.9.1) |
 | 2 | **Carnicería barrial** | ★★★★☆ | Cortes + “confirmo peso”; sin Rappi típico | `/demo/carniceria` |
 | 3 | **Verdulería / frutería** | ★★★★☆ | Pedido semanal por WSP; peso/unidad; mismo patrón carnicería | — |
-| 4 | **Panadería / facturas** | ★★★☆☆ | Encargos mañana; lista fija; pico 6–9h | — |
+| 4 | **Panadería / facturas** | ★★★☆☆ | Encargos mañana; lista fija; pico 6–9h | lead: [`lead-magdalena.md`](../ops/lead-magdalena.md) |
 | 5 | **Pollería / rotisería pollos** | ★★★☆☆ | Igual pizza/roti; half/pollo + guarnición | cubierto por `/demo` + armar |
 | 6 | **Heladería / sandwiches** | ★★★☆☆ | Pedido WSP fin de semana; sabores/combos | — |
 | 7 | **Café takeaway / dark kitchen** | ★★☆☆☆ | Solo si delivery propio; mesa = no | — |

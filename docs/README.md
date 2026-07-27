@@ -41,6 +41,7 @@ Agent manifest: read this first, then one targeted file.
 | Case study + sales 5 | [ops/case-study-template.md](./ops/case-study-template.md), [sales-playbook-zn.md](./ops/sales-playbook-zn.md) |
 | **Leads anillos (Olivos→VL)** | [ops/leads-rings-routine.md](./ops/leads-rings-routine.md) |
 | **Propuesta + demos Olivos/VL** | [ops/propuesta-olivos-vl.md](./ops/propuesta-olivos-vl.md) |
+| **Lead La Magdalena (panadería)** | [ops/lead-magdalena.md](./ops/lead-magdalena.md) |
 | Client onboarding | [ops/onboarding.md](./ops/onboarding.md) |
 | Live demo script | [ops/demo.md](./ops/demo.md) |
 | Human portfolio | [human/portfolio.md](./human/portfolio.md) |
