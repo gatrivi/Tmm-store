@@ -10,6 +10,7 @@ Purpose: future Trufi work — competitive parity with PedidoDirecto, then Premi
 |-------|-----|
 | **Order processing v2 (active)** | [order-processing-v2.md](./order-processing-v2.md) |
 | **Advertising readiness (Hito A)** | [advertising-readiness.md](./advertising-readiness.md) |
+| **Demo panadería La Magdalena** | [demo-panaderia.md](./demo-panaderia.md) |
 | **Demo pizzería Fit A (shipped)** | [demo-pizzeria.md](./demo-pizzeria.md) |
 | **Demo carnicería Gabriel (Hito 1 done)** | [demo-carniceria-gabriel.md](./demo-carniceria-gabriel.md) |
 | **Plan verticales (quién compra + demos)** | [vertical-demos-plan.md](./vertical-demos-plan.md) |

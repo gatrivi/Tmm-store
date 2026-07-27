@@ -7,12 +7,19 @@ Purpose: show the outcome, not a feature inventory.
 - Sales page: `/`
 - **Demo Express builder (internal sales tool): `/demo/armar`**
 - **Primary Fit A (pizzería/empanadas):** `/demo/pizzeria` · `/demo/pizzeria/owner` · `/demo/pizzeria/order/:id`
+- **Panadería La Magdalena:** `/demo/panaderia` · `/demo/panaderia/owner` · `/demo/panaderia/order/:id`
 - Legacy gastronomía (choripán): `/demo` · `/demo/owner`
 - **Vertical carnicería:** `/demo/carniceria` · `/demo/carniceria/owner` · `/demo/carniceria/order/:id`
 
-Live: https://tmm.gatrivi.com/demo/pizzeria
+Live: https://tmm.gatrivi.com/demo/panaderia
 
 Demo tenants are isolated from Firebase and browser tenant data. Checkout never sends a real WhatsApp message.
+
+### Vertical panadería (La Magdalena)
+
+Tenant `demo-panaderia` · WSP prospect `549116563860` · logo blueprint. Brief: [demo-panaderia.md](../roadmap/demo-panaderia.md).
+
+60s: `/demo/panaderia` → medialunas docena + nota retiro 7:30 → `/demo/panaderia/owner`.
 
 ### Vertical pizzería (Fit A — default pitch)
 

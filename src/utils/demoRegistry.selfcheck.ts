@@ -12,6 +12,7 @@ import {
   resolveTenantIdFromPath,
 } from './demoRegistry';
 import { CARNICERIA_DEMO } from '../data/demos/carniceria';
+import { PANADERIA_DEMO } from '../data/demos/panaderia';
 import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
 
 function main() {
@@ -23,13 +24,18 @@ function main() {
   assert.equal(resolveTenantIdFromPath('/demo/pizzeria'), 'demo-pizzeria');
   assert.equal(resolveTenantIdFromPath('/demo/pizzeria/owner'), 'demo-pizzeria');
   assert.equal(resolveTenantIdFromPath('/demo/pizzeria/order/P8K2'), 'demo-pizzeria');
+  assert.equal(resolveTenantIdFromPath('/demo/panaderia'), 'demo-panaderia');
+  assert.equal(resolveTenantIdFromPath('/demo/panaderia/owner'), 'demo-panaderia');
+  assert.equal(resolveTenantIdFromPath('/demo/panaderia/order/M9A2'), 'demo-panaderia');
   assert.equal(resolveTenantIdFromPath('/s/foo'), 'foo');
 
   assert.equal(resolveDemoIdFromPath('/demo/carniceria'), 'carniceria');
   assert.equal(resolveDemoIdFromPath('/demo/pizzeria'), 'pizzeria');
+  assert.equal(resolveDemoIdFromPath('/demo/panaderia'), 'panaderia');
   assert.equal(resolveDemoStorageKey('demo'), 'trufi_demo_orders_v2');
   assert.equal(resolveDemoStorageKey('carniceria'), 'trufi_demo_orders_v2:carniceria');
   assert.equal(resolveDemoStorageKey('pizzeria'), 'trufi_demo_orders_v2:pizzeria');
+  assert.equal(resolveDemoStorageKey('panaderia'), 'trufi_demo_orders_v2:panaderia');
 
   const demo = resolveDemoFromPath('/demo/carniceria');
   assert.ok(demo);
@@ -72,10 +78,25 @@ function main() {
   const emp = PIZZERIA_DEMO.menuItems.find(i => i.id === 'empanada-carne')!;
   assert.equal(emp.options.length, 2);
 
+  // Panadería La Magdalena — facturas packs + retiro
+  const pan = resolveDemoFromPath('/demo/panaderia');
+  assert.ok(pan);
+  assert.equal(pan.tenantId, 'demo-panaderia');
+  assert.equal(pan.siteSettings.brandName, 'La Magdalena');
+  assert.equal(pan.siteSettings.whatsappNumber, '549116563860');
+  assert.ok(pan.menuItems.some(i => i.id === 'medialunas'));
+  assert.ok(pan.menuItems.some(i => i.id === 'facturas-surtidas'));
+  assert.equal(pan.menuCategories.length, 3);
+  assert.equal(pan.seedOrders.length, 3);
+  assert.equal(getDemoByTenantId('demo-panaderia')?.id, 'panaderia');
+  const med = PANADERIA_DEMO.menuItems.find(i => i.id === 'medialunas')!;
+  assert.equal(med.options.length, 2);
+
   // Storage isolation keys must differ
   assert.notEqual(resolveDemoStorageKey('demo'), resolveDemoStorageKey('carniceria'));
   assert.notEqual(resolveDemoStorageKey('pizzeria'), resolveDemoStorageKey('carniceria'));
   assert.notEqual(resolveDemoStorageKey('pizzeria'), resolveDemoStorageKey('demo'));
+  assert.notEqual(resolveDemoStorageKey('panaderia'), resolveDemoStorageKey('pizzeria'));
 
   console.log('demoRegistry.selfcheck: ok');
 }

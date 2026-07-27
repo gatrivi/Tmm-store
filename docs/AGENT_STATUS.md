@@ -5,7 +5,7 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-07-26 |
-| **Versión** | `1.9.2` (`package.json` → stamp UI) |
+| **Versión** | `1.9.3` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
 | **Último commit** | `d57bee2` — 2026-07-24 — `wip: backup local changes` |
 | **Live** | https://tmm.gatrivi.com |
@@ -67,6 +67,9 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/demo/pizzeria` | **Fit A** pizzería/empanadas (cliente) |
 | `/demo/pizzeria/owner` | Panel pizzería |
 | `/demo/pizzeria/order/:id` | Seguimiento pizzería |
+| `/demo/panaderia` | **La Magdalena** panadería (cliente) |
+| `/demo/panaderia/owner` | Panel panadería |
+| `/demo/panaderia/order/:id` | Seguimiento panadería |
 | `/demo/carniceria` | Vertical carnicería (cliente) |
 | `/demo/carniceria/owner` | Panel Gabriel |
 | `/demo/carniceria/order/:id` | Seguimiento |
