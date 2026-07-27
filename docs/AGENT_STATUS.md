@@ -4,8 +4,8 @@
 
 | Campo | Valor |
 |-------|--------|
-| **Fecha snapshot** | 2026-07-26 |
-| **Versión** | `1.10.0` (`package.json` → stamp UI) |
+| **Fecha snapshot** | 2026-07-27 |
+| **Versión** | `1.10.2` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
 | **Último commit** | `d57bee2` — 2026-07-24 — `wip: backup local changes` |
 | **Live** | https://tmm.gatrivi.com |
