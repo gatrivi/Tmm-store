@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { catalogReplyWithTag, type MenuItemPayload } from './menuMatch';
+import { catalogReplyWithTag, type MenuItemPayload } from './menuMatch.js';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
