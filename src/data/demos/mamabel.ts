@@ -27,7 +27,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'decoradas',
     badge: 'Cumples',
     description: 'Modelado 3D / fondant a pedido — contanos el tema en notas',
-    images: ['/demos/mamabel/torta-nemo.jpg', '/demos/mamabel/ig-01.jpg'],
+    images: ['/demos/mamabel/torta-nemo.jpg', '/demos/mamabel/top-07.jpg'],
     options: cakeSizes(28900, 52900, 74900),
   },
   {
@@ -35,7 +35,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Torta artística',
     category: 'decoradas',
     description: 'Texturas, wafer paper, geode y brillos — diseño único',
-    images: ['/demos/mamabel/torta-violeta.jpg', '/demos/mamabel/torta-tronco.jpg'],
+    images: ['/demos/mamabel/top-08.jpg', '/demos/mamabel/torta-violeta.jpg'],
     options: cakeSizes(26900, 48900, 69900),
   },
   {
@@ -83,6 +83,18 @@ const MENU_ITEMS: MenuItemType[] = [
     options: [
       { id: 'docena', label: 'Docena', price: 12000 },
       { id: 'media', label: 'Media docena', price: 7000 },
+    ],
+  },
+  {
+    id: 'mesa-dulce',
+    name: 'Mesa dulce / sorteo',
+    category: 'regalos',
+    badge: 'Top IG',
+    description: 'Bandeja surtida — la publicación con más likes del perfil',
+    images: ['/demos/mamabel/top-01.jpg'],
+    options: [
+      { id: 'basica', label: 'Bandeja chica', price: 35000 },
+      { id: 'completa', label: 'Mesa completa', price: 85000 },
     ],
   },
   {

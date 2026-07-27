@@ -59,18 +59,18 @@ const NAV = [
   { id: 'contacto', label: 'Contacto' },
 ] as const;
 
-/** Soft brand photos first; piezas espectáculo después */
+/** Soft brand + top-liked IG (likes desc, filtered Mabel) */
 const ABOUT_GALLERY = [
   '/demos/mamabel/torta-canasta.jpg',
-  '/demos/mamabel/curso-egreso.jpg',
-  '/demos/mamabel/ig-07.jpg',
-  '/demos/mamabel/ig-06.jpg',
+  '/demos/mamabel/top-07.jpg',   // 55+ — números quince
+  '/demos/mamabel/top-08.jpg',   // 54 — tapestry 30
+  '/demos/mamabel/top-03.jpg',   // 188 — barco firma
+  '/demos/mamabel/top-04.jpg',   // 146 — barco corte
+  '/demos/mamabel/top-01.jpg',   // 630 — sorteo mesa dulce
   '/demos/mamabel/ig-10.jpg',
-  '/demos/mamabel/ig-03.jpg',
-  '/demos/mamabel/ig-13.jpg',
-  '/demos/mamabel/ig-14.jpg',
-  '/demos/mamabel/bombones.jpg',
-  '/demos/mamabel/ig-01.jpg',
+  '/demos/mamabel/curso-egreso.jpg',
+  '/demos/mamabel/top-12.jpg',
+  '/demos/mamabel/galletas.jpg',
 ];
 
 function formatArs(n: number): string {
