@@ -2,12 +2,14 @@
 
 Drop crudo: `content/mamabel/better ones/` (local).
 
-Listos (fondo negro, sin crop): `public/demos/mamabel/picked/`
+Listos (fondo negro + EXIF/enhance): `public/demos/mamabel/picked/`
+
+Regen: `python scripts/improve-mamabel-picked.py` (EXIF rotate, highlight compress, tilt).
 
 | Archivo | Uso |
 |---------|-----|
 | `hero.jpg` | Hero — retrato Mabel (16423085…) |
-| `black-bows.jpg` | Portfolio (SANY0080) |
+| `black-bows.jpg` | Portfolio (SANY0080, EXIF-fixed) |
 | `black-elegant.jpg` | Oficio + portfolio |
 | `black-*.jpg` | Portfolio / oficio gallery |
 
