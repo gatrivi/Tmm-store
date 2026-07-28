@@ -1,11 +1,13 @@
 # Flagship — Las Tortas de Mamá Mabel
 
-**Estado: shipped** (v1.11.0) · landing editorial · live
+**Estado: shipped** (v1.11.1) · plan etapa 1 (marca/portada)
 
-## Premisa (usuario)
+Plan: [`mamabel-cursor-auto-plan.md`](./mamabel-cursor-auto-plan.md) — ejecutar **una etapa por turno**.
 
-Demo de **sitio completo** (no solo carta). Cursos solo si hay material real.
-Preguntar ante dudas. Material de curso = sabor/decoración del sitio, no inventar SKUs.
+### Etapa 1 hecha
+- Sin ribbon TMM ni AI en vista cliente; `?trufi=1` los muestra
+- Hero: canasta real + copy plan + CTAs Contanos tu idea / Ver trabajos
+- Oficio: retrato Mabel+barco + galería 6 trabajos reales
 
 ## Live
 

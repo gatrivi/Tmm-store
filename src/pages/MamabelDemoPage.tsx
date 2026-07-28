@@ -4,6 +4,7 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Mail, Minus, Phone, Plus, ShoppingBag, X } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { AIAssistant } from '../components/AIAssistant';
 import CheckoutModal from '../components/CheckoutModal';
 import { DemoRibbon } from '../components/DemoRibbon';
@@ -49,19 +50,21 @@ type CardState = Record<string, { optionId: string; qty: number }>;
 
 const NAV = [
   { id: 'inicio', label: 'Inicio' },
-  { id: 'nosotros', label: 'Nosotros' },
+  { id: 'oficio', label: 'Oficio' },
   { id: 'tortas', label: 'Encargos' },
   { id: 'cursos', label: 'Cursos' },
   { id: 'contacto', label: 'Contacto' },
 ] as const;
 
-const GALLERY = [
-  '/demos/mamabel/top-03.jpg',
-  '/demos/mamabel/top-07.jpg',
+/** Prueba de oficio — fotos reales fuertes, sin duplicar */
+const OFICIO_PORTRAIT = '/demos/mamabel/top-03.jpg'; // Mabel con pieza escultórica
+const OFICIO_GALLERY = [
+  '/demos/mamabel/torta-canasta.jpg',
   '/demos/mamabel/top-08.jpg',
-  '/demos/mamabel/top-01.jpg',
-  '/demos/mamabel/ig-10.jpg',
-  '/demos/mamabel/curso-egreso.jpg',
+  '/demos/mamabel/top-07.jpg',
+  '/demos/mamabel/top-04.jpg', // barco — amplitud técnica
+  '/demos/mamabel/lemon-pie.jpg',
+  '/demos/mamabel/torta-violeta.jpg',
 ];
 
 const STYLE_ID = 'mm-editorial-css';
@@ -113,14 +116,17 @@ export default function MamabelDemoPage() {
   const demo = getDemoByTenantId(tenantId);
   const copy = demo?.copy;
 
+  const [searchParams] = useSearchParams();
+  const showTrufiChrome = searchParams.get('trufi') === '1';
+
   const inicioRef = useRef<HTMLElement>(null);
-  const nosotrosRef = useRef<HTMLElement>(null);
+  const oficioRef = useRef<HTMLElement>(null);
   const tortasRef = useRef<HTMLElement>(null);
   const cursosRef = useRef<HTMLElement>(null);
   const contactoRef = useRef<HTMLElement>(null);
   const sectionRefs = {
     inicio: inicioRef,
-    nosotros: nosotrosRef,
+    oficio: oficioRef,
     tortas: tortasRef,
     cursos: cursosRef,
     contacto: contactoRef,
@@ -248,35 +254,36 @@ export default function MamabelDemoPage() {
 
   return (
     <div className="mm-paper min-h-screen" style={{ color: MM.ink, fontFamily: FONT_SERIF }} data-demo-theme="mamabel">
-      <DemoRibbon />
+      {showTrufiChrome && <DemoRibbon />}
 
-      {/* Nav — thin, brand-led */}
+      {/* Nav — discreta */}
       <header
-        className="fixed inset-x-0 top-0 z-30 transition-colors duration-300"
+        className="fixed inset-x-0 z-30 transition-colors duration-300"
         style={{
+          top: showTrufiChrome ? undefined : 0,
           backgroundColor: scrolled || navOpen ? `${MM.cream}f5` : 'transparent',
           borderBottom: scrolled ? `1px solid ${MM.pinkSoft}55` : '1px solid transparent',
           backdropFilter: scrolled ? 'blur(10px)' : undefined,
         }}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-8">
-          <button type="button" onClick={() => scrollTo('inicio')} className="text-left">
-            <span className="block text-[9px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.tealDeep }}>
-              Las tortas de
-            </span>
-            <span className="block text-2xl leading-none sm:text-3xl" style={{ fontFamily: FONT_SCRIPT }}>
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-8">
+          <button type="button" onClick={() => scrollTo('inicio')} className="flex items-center gap-2.5 text-left">
+            {siteSettings.brandLogo ? (
+              <img src={siteSettings.brandLogo} alt="" className="h-9 w-9 object-contain bg-white/90 p-0.5" />
+            ) : null}
+            <span className="hidden text-xl leading-none sm:block" style={{ fontFamily: FONT_SCRIPT }}>
               mamá mabel
             </span>
           </button>
 
-          <nav className="hidden items-center gap-6 md:flex">
+          <nav className="hidden items-center gap-5 md:flex">
             {NAV.map(n => (
               <button
                 key={n.id}
                 type="button"
                 onClick={() => scrollTo(n.id)}
-                className="text-[11px] font-semibold uppercase tracking-[0.22em] transition hover:opacity-60"
-                style={{ color: MM.tealDeep }}
+                className="text-[11px] font-semibold uppercase tracking-[0.2em] transition hover:opacity-60"
+                style={{ color: scrolled ? MM.tealDeep : MM.cream }}
               >
                 {n.label}
               </button>
@@ -287,7 +294,7 @@ export default function MamabelDemoPage() {
             <button
               type="button"
               className="px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] md:hidden"
-              style={{ color: MM.tealDeep }}
+              style={{ color: scrolled ? MM.tealDeep : MM.cream }}
               onClick={() => setNavOpen(v => !v)}
             >
               {navOpen ? 'Cerrar' : 'Menú'}
@@ -296,10 +303,10 @@ export default function MamabelDemoPage() {
               type="button"
               onClick={() => setCartOpen(true)}
               aria-label="Encargo"
-              className="relative flex h-11 items-center gap-2 px-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-white"
+              className="relative flex h-10 items-center gap-2 px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white"
               style={{ backgroundColor: MM.pink }}
             >
-              <ShoppingBag size={16} strokeWidth={1.75} />
+              <ShoppingBag size={15} strokeWidth={1.75} />
               <span className="hidden sm:inline">Encargo</span>
               {cartCount > 0 && (
                 <span
@@ -313,14 +320,14 @@ export default function MamabelDemoPage() {
           </div>
         </div>
         {navOpen && (
-          <div className="border-t px-4 py-4 md:hidden" style={{ borderColor: `${MM.pinkSoft}88` }}>
+          <div className="border-t px-4 py-4 md:hidden" style={{ borderColor: `${MM.pinkSoft}88`, backgroundColor: MM.cream }}>
             {NAV.map(n => (
               <button
                 key={n.id}
                 type="button"
                 onClick={() => scrollTo(n.id)}
                 className="block w-full py-3 text-left text-lg"
-                style={{ fontFamily: FONT_SERIF }}
+                style={{ color: MM.ink }}
               >
                 {n.label}
               </button>
@@ -329,104 +336,100 @@ export default function MamabelDemoPage() {
         )}
       </header>
 
-      {/* HERO — full-bleed cake, brand as the signal */}
+      {/* HERO — foto real, contraste sin velo blanco */}
       <section ref={sectionRefs.inicio} id="inicio" className="relative isolate min-h-[100svh] overflow-hidden">
         <img
           src="/demos/mamabel/torta-canasta.jpg"
-          alt=""
+          alt="Torta canasta decorada a mano — Las Tortas de Mamá Mabel"
           className="mm-ken absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: 'center 35%' }}
+          style={{ objectPosition: 'center 30%' }}
         />
+        {/* Gradiente oscuro suave solo para legibilidad — no lava la foto */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              `linear-gradient(180deg, ${MM.cream}33 0%, transparent 28%, ${MM.cream}55 55%, ${MM.cream}f2 82%, ${MM.cream} 100%),
-               linear-gradient(90deg, ${MM.cream}cc 0%, transparent 45%)`,
+              'linear-gradient(180deg, rgba(28,23,20,0.35) 0%, rgba(28,23,20,0.15) 35%, rgba(28,23,20,0.45) 70%, rgba(28,23,20,0.82) 100%)',
           }}
         />
-        <div
-          className="mm-drift pointer-events-none absolute -left-20 top-24 h-72 w-72 rounded-full opacity-50 blur-3xl"
-          style={{ background: MM.pinkSoft }}
-        />
-        <div
-          className="mm-drift pointer-events-none absolute right-0 top-40 h-64 w-64 rounded-full opacity-40 blur-3xl"
-          style={{ background: MM.teal, animationDelay: '-4s' }}
-        />
 
-        <div className="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-4 pb-16 pt-28 sm:px-8 sm:pb-20 lg:justify-center lg:pb-24">
-          <div className="max-w-xl">
-            {siteSettings.brandLogo ? (
-              <img
-                src={siteSettings.brandLogo}
-                alt=""
-                className="mm-rise mb-6 h-20 w-auto object-contain sm:h-24"
-              />
-            ) : null}
+        <div className="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-4 pb-16 pt-28 sm:px-8 sm:pb-24 lg:justify-end">
+          <div className="max-w-2xl text-white">
             <p
-              className="mm-rise mm-rise-d1 text-[11px] font-semibold uppercase tracking-[0.42em]"
-              style={{ color: MM.tealDeep }}
+              className="mm-rise text-[11px] font-semibold uppercase tracking-[0.32em] text-white/85"
             >
-              Las tortas de
+              Pastelería familiar · desde 1979
             </p>
             <h1
-              className="mm-rise mm-rise-d2 mt-1 text-[4.25rem] leading-[0.85] sm:text-[6.5rem] lg:text-[7.5rem]"
-              style={{ fontFamily: FONT_SCRIPT, color: MM.ink }}
+              className="mm-rise mm-rise-d1 mt-4 text-4xl leading-[1.05] sm:text-5xl lg:text-6xl"
+              style={{ fontFamily: FONT_SERIF, fontWeight: 600 }}
             >
-              mamá mabel
+              Tortas que se recuerdan
             </h1>
-            <p
-              className="mm-rise mm-rise-d3 mt-5 max-w-md text-lg leading-relaxed sm:text-xl"
-              style={{ color: `${MM.ink}cc` }}
-            >
-              Decoración a mano, desde 1979. Encargá tu torta — tamaño, fecha y dedicatoria — con el oficio de mamá.
+            <p className="mm-rise mm-rise-d2 mt-5 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg">
+              Clásicas, temáticas y piezas extraordinarias, decoradas a mano por Mabel y su familia.
             </p>
             <div className="mm-rise mm-rise-d3 mt-8 flex flex-wrap gap-3">
               <button
                 type="button"
                 onClick={() => scrollTo('tortas')}
-                className="min-h-12 px-8 text-[12px] font-semibold uppercase tracking-[0.2em] text-white"
+                className="min-h-12 px-8 text-[12px] font-semibold uppercase tracking-[0.18em] text-white"
                 style={{ backgroundColor: MM.pink }}
               >
-                Encargar
+                Contanos tu idea
               </button>
               <button
                 type="button"
-                onClick={() => scrollTo('cursos')}
-                className="min-h-12 px-8 text-[12px] font-semibold uppercase tracking-[0.2em]"
-                style={{ color: MM.tealDeep, boxShadow: `inset 0 0 0 1.5px ${MM.teal}` }}
+                onClick={() => scrollTo('oficio')}
+                className="min-h-12 px-8 text-[12px] font-semibold uppercase tracking-[0.18em] text-white"
+                style={{ boxShadow: 'inset 0 0 0 1.5px rgba(255,255,255,0.7)' }}
               >
-                Cursos
+                Ver trabajos
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Nosotros — one job, real gallery */}
-      <section ref={sectionRefs.nosotros} id="nosotros" className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-28">
-        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
-              Desde la cocina
+      {/* Oficio — prueba, no historia inventada */}
+      <section ref={sectionRefs.oficio} id="oficio" className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-28">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-14">
+          <div className="relative">
+            <img
+              src={OFICIO_PORTRAIT}
+              alt="Mabel junto a una pieza de pastelería escultórica"
+              className="aspect-[4/5] w-full object-cover"
+            />
+            <p
+              className="mt-3 text-[11px] font-semibold uppercase tracking-[0.2em]"
+              style={{ color: MM.teal }}
+            >
+              Mabel · pieza escultórica
             </p>
-            <h2 className="mt-4 text-4xl leading-[1.1] sm:text-5xl" style={{ fontFamily: FONT_SERIF }}>
-              El mismo cuidado que va a la mesa, enseñado en cada curso.
+          </div>
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.32em]" style={{ color: MM.teal }}>
+              Oficio
+            </p>
+            <h2 className="mt-4 text-3xl leading-[1.15] sm:text-4xl lg:text-5xl">
+              Casi medio siglo haciendo lo difícil a mano.
             </h2>
             <p className="mt-6 text-lg leading-relaxed" style={{ color: `${MM.ink}aa` }}>
-              Pastelería familiar: clásicas, temáticas y piezas de vitrina.
-              Pedís claro por acá — la familia recibe el encargo ordenado.
+              Desde 1979: tortas clásicas, temáticas y trabajos de gran complejidad técnica —
+              como la pieza del barco — hechas en familia.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            <img src={GALLERY[0]} alt="" className="aspect-[3/4] w-full object-cover" loading="lazy" />
-            <img src={GALLERY[1]} alt="" className="mt-8 aspect-[3/4] w-full object-cover sm:mt-12" loading="lazy" />
-            <img src={GALLERY[2]} alt="" className="col-span-2 aspect-[16/9] w-full object-cover" loading="lazy" />
-          </div>
         </div>
-        <div className="mx-auto mt-10 flex max-w-6xl gap-3 overflow-x-auto pb-2">
-          {GALLERY.slice(3).map(src => (
-            <img key={src} src={src} alt="" className="h-36 w-48 shrink-0 object-cover sm:h-44 sm:w-60" loading="lazy" />
+
+        <div className="mx-auto mt-14 grid max-w-6xl grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
+          {OFICIO_GALLERY.map((src, i) => (
+            <img
+              key={src}
+              src={src}
+              alt={i === 3 ? 'Pieza escultórica — barco' : `Trabajo de pastelería ${i + 1}`}
+              className={`aspect-[4/5] w-full object-cover ${i === 0 ? 'md:col-span-1' : ''}`}
+              loading="lazy"
+            />
           ))}
         </div>
       </section>
@@ -768,7 +771,7 @@ export default function MamabelDemoPage() {
         onOrderSent={() => setCart([])}
       />
 
-      <AIAssistant onAddToCart={handleAIAddToCart} />
+      {showTrufiChrome && <AIAssistant onAddToCart={handleAIAddToCart} />}
     </div>
   );
 }
