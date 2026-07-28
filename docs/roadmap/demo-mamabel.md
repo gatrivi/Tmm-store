@@ -1,13 +1,13 @@
 # Flagship — Las Tortas de Mamá Mabel
 
-**Estado: shipped** (v1.11.1) · plan etapa 1 (marca/portada)
+**Estado: shipped** (v1.11.2) · etapa 1 mobile fix
 
-Plan: [`mamabel-cursor-auto-plan.md`](./mamabel-cursor-auto-plan.md) — ejecutar **una etapa por turno**.
+Plan: [`mamabel-cursor-auto-plan.md`](./mamabel-cursor-auto-plan.md) — una etapa por turno.
 
-### Etapa 1 hecha
-- Sin ribbon TMM ni AI en vista cliente; `?trufi=1` los muestra
-- Hero: canasta real + copy plan + CTAs Contanos tu idea / Ver trabajos
-- Oficio: retrato Mabel+barco + galería 6 trabajos reales
+### Etapa 1
+- `/demo/mamabel` sin query: portada + oficio, sin chrome TMM ni AI (`?trufi=1` tools)
+- Logo legible (logo-large + script); sin ken-burns
+- Caps: `mamabel-etapa1-390.png` · `mamabel-etapa1-1440.png`
 
 ## Live
 
