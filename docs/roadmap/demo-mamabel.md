@@ -1,17 +1,11 @@
 # Flagship — Las Tortas de Mamá Mabel
 
-**Estado: shipped** (v1.10.6) · likes IG + crop marcos
+**Estado: shipped** (v1.11.0) · landing editorial
 
 ## Premisa
 
-Sitio completo: Inicio · Nosotros · Tortas · Cursos · Contacto · pedidos.
-
-## Assets
-
-- Paleta logo/flyer (cream/pink/teal)
-- Rank IG por `like_count` GraphQL (`scripts/scrape-mamabel-ig-graphql.ts`) filtrado Mabel
-- Crop marcos blancos (`scripts/crop-mamabel-frames.py`)
-- Gallery/catálogo prioriza top likes (mesa dulce 630, barco 188/146, etc.)
+Sitio completo con estética de marca (no template cards).
+Hero full-bleed canasta + script “mamá mabel”; carta en filas tipográficas; papel/crema + rosa CTA + teal.
 
 ## Live
 

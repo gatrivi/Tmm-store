@@ -1,9 +1,9 @@
 /**
- * Full site — Las Tortas de Mamá Mabel
- * Palette from logo + flyer: cream, cake-pink, watercolor teal, ink.
+ * Editorial storefront — Las Tortas de Mamá Mabel
+ * Brand: cream paper, cake-pink, watercolor teal, ink script (logo/flyer).
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Heart, Mail, MapPin, Minus, Phone, Plus, ShoppingCart } from 'lucide-react';
+import { Mail, Minus, Phone, Plus, ShoppingBag, X } from 'lucide-react';
 import { AIAssistant } from '../components/AIAssistant';
 import CheckoutModal from '../components/CheckoutModal';
 import { DemoRibbon } from '../components/DemoRibbon';
@@ -14,26 +14,22 @@ import type { MenuItemType, MenuOption } from '../data/menu';
 import { getDemoByTenantId } from '../utils/demoRegistry';
 import { playAddToCartSound } from '../utils/sounds';
 
-/** Logo/flyer tokens — not inventados */
 const MM = {
   cream: '#FBF6F0',
-  blush: '#F8E4EB',
+  blush: '#F7E6EC',
   pink: '#E87890',
   pinkSoft: '#F0C0D8',
   teal: '#70A8A0',
-  tealDeep: '#4A7A74',
-  tealSoft: '#88B8B0',
+  tealDeep: '#3F6F6A',
   ink: '#1C1714',
   mustard: '#C9A24B',
-  paper: '#FFFCF8',
 } as const;
 
-const FONT_SERIF = '"Cormorant Garamond", Georgia, serif';
+const FONT_SERIF = '"Cormorant Garamond", "Times New Roman", serif';
 const FONT_SCRIPT = '"Great Vibes", "Segoe Script", cursive';
-const FONT_UI = '"Nunito Sans", system-ui, sans-serif';
 
 const InstagramIcon = ({ size = 18, color }: { size?: number; color?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color || 'currentColor'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color || 'currentColor'} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
@@ -54,24 +50,52 @@ type CardState = Record<string, { optionId: string; qty: number }>;
 const NAV = [
   { id: 'inicio', label: 'Inicio' },
   { id: 'nosotros', label: 'Nosotros' },
-  { id: 'tortas', label: 'Tortas' },
+  { id: 'tortas', label: 'Encargos' },
   { id: 'cursos', label: 'Cursos' },
   { id: 'contacto', label: 'Contacto' },
 ] as const;
 
-/** Soft brand + top-liked IG (likes desc, filtered Mabel) */
-const ABOUT_GALLERY = [
-  '/demos/mamabel/torta-canasta.jpg',
-  '/demos/mamabel/top-07.jpg',   // 55+ — números quince
-  '/demos/mamabel/top-08.jpg',   // 54 — tapestry 30
-  '/demos/mamabel/top-03.jpg',   // 188 — barco firma
-  '/demos/mamabel/top-04.jpg',   // 146 — barco corte
-  '/demos/mamabel/top-01.jpg',   // 630 — sorteo mesa dulce
+const GALLERY = [
+  '/demos/mamabel/top-03.jpg',
+  '/demos/mamabel/top-07.jpg',
+  '/demos/mamabel/top-08.jpg',
+  '/demos/mamabel/top-01.jpg',
   '/demos/mamabel/ig-10.jpg',
   '/demos/mamabel/curso-egreso.jpg',
-  '/demos/mamabel/top-12.jpg',
-  '/demos/mamabel/galletas.jpg',
 ];
+
+const STYLE_ID = 'mm-editorial-css';
+const EDITORIAL_CSS = `
+@keyframes mm-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes mm-ken {
+  from { transform: scale(1.06); }
+  to { transform: scale(1); }
+}
+@keyframes mm-drift {
+  0%, 100% { transform: translate3d(0,0,0); }
+  50% { transform: translate3d(12px,-10px,0); }
+}
+.mm-rise { animation: mm-rise 0.9s ease both; }
+.mm-rise-d1 { animation-delay: 0.12s; }
+.mm-rise-d2 { animation-delay: 0.24s; }
+.mm-rise-d3 { animation-delay: 0.36s; }
+.mm-ken { animation: mm-ken 14s ease-out both; }
+.mm-drift { animation: mm-drift 16s ease-in-out infinite; }
+.mm-paper {
+  background-color: ${MM.cream};
+  background-image:
+    radial-gradient(ellipse 80% 50% at 10% 0%, ${MM.blush}cc, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 20%, ${MM.teal}22, transparent 50%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+.mm-rule { height: 1px; background: linear-gradient(90deg, transparent, ${MM.teal}66, transparent); }
+@media (prefers-reduced-motion: reduce) {
+  .mm-rise, .mm-ken, .mm-drift { animation: none !important; }
+}
+`;
 
 function formatArs(n: number): string {
   return `$${n.toLocaleString('es-AR')}`;
@@ -79,8 +103,7 @@ function formatArs(n: number): string {
 
 function priceLabel(item: MenuItemType): string {
   if (item.options.length > 1) return `desde ${formatArs(item.options[0].price)}`;
-  const only = item.options[0];
-  return only ? formatArs(only.price) : '';
+  return item.options[0] ? formatArs(item.options[0].price) : '';
 }
 
 export default function MamabelDemoPage() {
@@ -95,7 +118,6 @@ export default function MamabelDemoPage() {
   const tortasRef = useRef<HTMLElement>(null);
   const cursosRef = useRef<HTMLElement>(null);
   const contactoRef = useRef<HTMLElement>(null);
-
   const sectionRefs = {
     inicio: inicioRef,
     nosotros: nosotrosRef,
@@ -118,6 +140,7 @@ export default function MamabelDemoPage() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [cardState, setCardState] = useState<CardState>({});
   const [navOpen, setNavOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const shopItems = useMemo(() => menuItems.filter(i => i.category !== 'cursos'), [menuItems]);
   const courseItems = useMemo(() => menuItems.filter(i => i.category === 'cursos'), [menuItems]);
@@ -125,22 +148,32 @@ export default function MamabelDemoPage() {
 
   useEffect(() => {
     setTheme('light');
-    document.title = `${siteSettings.brandName || 'Mamá Mabel'} — Sitio`;
-    const id = 'mm-fonts';
-    if (!document.getElementById(id)) {
+    document.title = 'Las Tortas de Mamá Mabel';
+    if (!document.getElementById('mm-fonts')) {
       const link = document.createElement('link');
-      link.id = id;
+      link.id = 'mm-fonts';
       link.rel = 'stylesheet';
       link.href =
-        'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Great+Vibes&family=Nunito+Sans:wght@400;600;700;800&display=swap';
+        'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Great+Vibes&display=swap';
       document.head.appendChild(link);
     }
-  }, [setTheme, siteSettings.brandName]);
+    if (!document.getElementById(STYLE_ID)) {
+      const style = document.createElement('style');
+      style.id = STYLE_ID;
+      style.textContent = EDITORIAL_CSS;
+      document.head.appendChild(style);
+    }
+  }, [setTheme]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(cartKey, JSON.stringify(cart));
-    } catch { /* ignore */ }
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    try { localStorage.setItem(cartKey, JSON.stringify(cart)); } catch { /* ignore */ }
   }, [cart, cartKey]);
 
   useEffect(() => {
@@ -202,8 +235,8 @@ export default function MamabelDemoPage() {
 
   if (!demo || !copy) {
     return (
-      <div className="flex min-h-screen items-center justify-center" style={{ background: MM.cream, color: MM.ink }}>
-        Demo Mamá Mabel no configurada.
+      <div className="flex min-h-screen items-center justify-center mm-paper" style={{ color: MM.ink }}>
+        Demo no configurada.
       </div>
     );
   }
@@ -213,157 +246,36 @@ export default function MamabelDemoPage() {
     ...shopCategories.map(c => ({ id: c.id, label: c.name })),
   ];
 
-  const dotted = `2px dotted ${MM.tealSoft}`;
-
-  const renderProductCard = (item: MenuItemType) => {
-    const state = cardState[item.id] ?? { optionId: item.options[0]?.id ?? '', qty: 1 };
-    const option = item.options.find(o => o.id === state.optionId) ?? item.options[0];
-    const img = item.images[0];
-    const sized = item.options.length > 1;
-
-    return (
-      <article
-        key={item.id}
-        className="flex flex-col overflow-hidden bg-white"
-        style={{ border: dotted }}
-      >
-        <div className="aspect-[4/3]" style={{ backgroundColor: MM.blush }}>
-          {img ? (
-            <img src={img} alt={item.name} className="h-full w-full object-cover" loading="lazy" />
-          ) : null}
-        </div>
-        <div className="flex flex-1 flex-col gap-3 p-4" style={{ fontFamily: FONT_UI }}>
-          <div>
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="text-lg font-semibold leading-tight" style={{ fontFamily: FONT_SERIF, color: MM.ink }}>
-                {item.name}
-              </h3>
-              {item.badge && (
-                <span
-                  className="shrink-0 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white"
-                  style={{ backgroundColor: MM.pink }}
-                >
-                  {item.badge}
-                </span>
-              )}
-            </div>
-            <p className="mt-1 text-xs leading-relaxed" style={{ color: `${MM.ink}99` }}>{item.description}</p>
-            <p className="mt-2 text-xl font-semibold" style={{ fontFamily: FONT_SERIF, color: MM.tealDeep }}>
-              {priceLabel(item)}
-            </p>
-          </div>
-          {sized && (
-            <div className="flex flex-wrap gap-1.5">
-              {item.options.map(opt => {
-                const on = state.optionId === opt.id;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    onClick={() =>
-                      setCardState(prev => ({
-                        ...prev,
-                        [item.id]: { optionId: opt.id, qty: prev[item.id]?.qty ?? 1 },
-                      }))
-                    }
-                    className="min-h-9 px-3 text-[11px] font-bold transition"
-                    style={
-                      on
-                        ? { backgroundColor: MM.teal, color: '#fff', border: `1px solid ${MM.teal}` }
-                        : { backgroundColor: MM.paper, color: `${MM.ink}99`, border: `1px solid ${MM.tealSoft}` }
-                    }
-                  >
-                    {opt.label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-          <div className="mt-auto flex items-center gap-2">
-            <div className="flex items-center border" style={{ borderColor: `${MM.teal}55` }}>
-              <button
-                type="button"
-                aria-label="Restar"
-                className="flex h-10 w-9 items-center justify-center"
-                style={{ color: MM.tealDeep }}
-                onClick={() =>
-                  setCardState(prev => ({
-                    ...prev,
-                    [item.id]: { optionId: state.optionId, qty: Math.max(1, state.qty - 1) },
-                  }))
-                }
-              >
-                <Minus size={14} />
-              </button>
-              <span className="w-7 text-center text-sm font-bold">{state.qty}</span>
-              <button
-                type="button"
-                aria-label="Sumar"
-                className="flex h-10 w-9 items-center justify-center"
-                style={{ color: MM.tealDeep }}
-                onClick={() =>
-                  setCardState(prev => ({
-                    ...prev,
-                    [item.id]: { optionId: state.optionId, qty: state.qty + 1 },
-                  }))
-                }
-              >
-                <Plus size={14} />
-              </button>
-            </div>
-            <button
-              type="button"
-              onClick={() => option && addLine(item, option, state.qty)}
-              className="flex min-h-10 flex-1 items-center justify-center text-sm font-extrabold text-white"
-              style={{ backgroundColor: MM.pink }}
-            >
-              Agregar
-            </button>
-          </div>
-        </div>
-      </article>
-    );
-  };
-
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: MM.cream, color: MM.ink, fontFamily: FONT_UI }}
-      data-demo-theme="mamabel"
-    >
+    <div className="mm-paper min-h-screen" style={{ color: MM.ink, fontFamily: FONT_SERIF }} data-demo-theme="mamabel">
       <DemoRibbon />
 
+      {/* Nav — thin, brand-led */}
       <header
-        className="sticky top-0 z-30 backdrop-blur-md"
-        style={{ backgroundColor: `${MM.cream}f2`, borderBottom: `1px solid ${MM.pinkSoft}88` }}
+        className="fixed inset-x-0 top-0 z-30 transition-colors duration-300"
+        style={{
+          backgroundColor: scrolled || navOpen ? `${MM.cream}f5` : 'transparent',
+          borderBottom: scrolled ? `1px solid ${MM.pinkSoft}55` : '1px solid transparent',
+          backdropFilter: scrolled ? 'blur(10px)' : undefined,
+        }}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          <button type="button" onClick={() => scrollTo('inicio')} className="flex items-center gap-3 text-left">
-            {siteSettings.brandLogo ? (
-              <img
-                src={siteSettings.brandLogo}
-                alt=""
-                className="h-12 w-12 object-contain bg-white p-0.5"
-                style={{ border: dotted }}
-              />
-            ) : null}
-            <div className="hidden sm:block">
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: MM.tealDeep }}>
-                Las tortas de
-              </p>
-              <p className="text-2xl leading-none" style={{ fontFamily: FONT_SCRIPT, color: MM.ink }}>
-                mamá mabel
-              </p>
-            </div>
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-8">
+          <button type="button" onClick={() => scrollTo('inicio')} className="text-left">
+            <span className="block text-[9px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.tealDeep }}>
+              Las tortas de
+            </span>
+            <span className="block text-2xl leading-none sm:text-3xl" style={{ fontFamily: FONT_SCRIPT }}>
+              mamá mabel
+            </span>
           </button>
 
-          <nav className="hidden items-center gap-1 md:flex">
+          <nav className="hidden items-center gap-6 md:flex">
             {NAV.map(n => (
               <button
                 key={n.id}
                 type="button"
                 onClick={() => scrollTo(n.id)}
-                className="px-3 py-2 text-[11px] font-bold uppercase tracking-[0.14em] transition hover:opacity-70"
+                className="text-[11px] font-semibold uppercase tracking-[0.22em] transition hover:opacity-60"
                 style={{ color: MM.tealDeep }}
               >
                 {n.label}
@@ -374,24 +286,25 @@ export default function MamabelDemoPage() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className="px-3 py-2 text-xs font-bold md:hidden"
-              style={{ border: dotted, color: MM.tealDeep }}
+              className="px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] md:hidden"
+              style={{ color: MM.tealDeep }}
               onClick={() => setNavOpen(v => !v)}
             >
-              Menú
+              {navOpen ? 'Cerrar' : 'Menú'}
             </button>
             <button
               type="button"
               onClick={() => setCartOpen(true)}
-              aria-label="Ver pedido"
-              className="relative flex h-11 w-11 items-center justify-center text-white"
+              aria-label="Encargo"
+              className="relative flex h-11 items-center gap-2 px-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-white"
               style={{ backgroundColor: MM.pink }}
             >
-              <ShoppingCart size={18} />
+              <ShoppingBag size={16} strokeWidth={1.75} />
+              <span className="hidden sm:inline">Encargo</span>
               {cartCount > 0 && (
                 <span
-                  className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center px-1 text-[10px] font-extrabold"
-                  style={{ backgroundColor: MM.teal, color: '#fff' }}
+                  className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center px-1 text-[10px] font-bold"
+                  style={{ backgroundColor: MM.tealDeep, color: MM.cream }}
                 >
                   {cartCount}
                 </span>
@@ -400,14 +313,14 @@ export default function MamabelDemoPage() {
           </div>
         </div>
         {navOpen && (
-          <div className="px-4 py-3 md:hidden" style={{ borderTop: `1px solid ${MM.pinkSoft}` }}>
+          <div className="border-t px-4 py-4 md:hidden" style={{ borderColor: `${MM.pinkSoft}88` }}>
             {NAV.map(n => (
               <button
                 key={n.id}
                 type="button"
                 onClick={() => scrollTo(n.id)}
-                className="block w-full px-3 py-3 text-left text-sm font-bold"
-                style={{ color: MM.ink }}
+                className="block w-full py-3 text-left text-lg"
+                style={{ fontFamily: FONT_SERIF }}
               >
                 {n.label}
               </button>
@@ -416,161 +329,131 @@ export default function MamabelDemoPage() {
         )}
       </header>
 
-      {/* Hero — brand first, cream + logo + canasta */}
-      <section
-        ref={sectionRefs.inicio}
-        id="inicio"
-        className="relative isolate scroll-mt-24 overflow-hidden"
-        style={{
-          background: `linear-gradient(135deg, ${MM.cream} 0%, ${MM.blush} 45%, ${MM.cream} 100%)`,
-        }}
-      >
-        <div
-          className="pointer-events-none absolute -right-16 top-10 h-64 w-64 rounded-full opacity-40 blur-3xl"
-          style={{ background: MM.tealSoft }}
+      {/* HERO — full-bleed cake, brand as the signal */}
+      <section ref={sectionRefs.inicio} id="inicio" className="relative isolate min-h-[100svh] overflow-hidden">
+        <img
+          src="/demos/mamabel/torta-canasta.jpg"
+          alt=""
+          className="mm-ken absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: 'center 35%' }}
         />
         <div
-          className="pointer-events-none absolute -left-10 bottom-0 h-48 w-48 rounded-full opacity-50 blur-3xl"
+          className="absolute inset-0"
+          style={{
+            background:
+              `linear-gradient(180deg, ${MM.cream}33 0%, transparent 28%, ${MM.cream}55 55%, ${MM.cream}f2 82%, ${MM.cream} 100%),
+               linear-gradient(90deg, ${MM.cream}cc 0%, transparent 45%)`,
+          }}
+        />
+        <div
+          className="mm-drift pointer-events-none absolute -left-20 top-24 h-72 w-72 rounded-full opacity-50 blur-3xl"
           style={{ background: MM.pinkSoft }}
         />
+        <div
+          className="mm-drift pointer-events-none absolute right-0 top-40 h-64 w-64 rounded-full opacity-40 blur-3xl"
+          style={{ background: MM.teal, animationDelay: '-4s' }}
+        />
 
-        <div className="relative mx-auto grid max-w-6xl items-center gap-8 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-2 lg:gap-12 lg:py-24">
-          <div className="flex flex-col items-start">
+        <div className="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-4 pb-16 pt-28 sm:px-8 sm:pb-20 lg:justify-center lg:pb-24">
+          <div className="max-w-xl">
             {siteSettings.brandLogo ? (
               <img
                 src={siteSettings.brandLogo}
-                alt="Las Tortas de Mamá Mabel"
-                className="mb-6 h-28 w-auto object-contain sm:h-36"
+                alt=""
+                className="mm-rise mb-6 h-20 w-auto object-contain sm:h-24"
               />
             ) : null}
             <p
-              className="text-[11px] font-bold uppercase tracking-[0.28em]"
+              className="mm-rise mm-rise-d1 text-[11px] font-semibold uppercase tracking-[0.42em]"
               style={{ color: MM.tealDeep }}
             >
               Las tortas de
             </p>
             <h1
-              className="mt-1 text-5xl leading-none sm:text-6xl lg:text-7xl"
+              className="mm-rise mm-rise-d2 mt-1 text-[4.25rem] leading-[0.85] sm:text-[6.5rem] lg:text-[7.5rem]"
               style={{ fontFamily: FONT_SCRIPT, color: MM.ink }}
             >
               mamá mabel
             </h1>
-            <p className="mt-5 max-w-md text-base leading-relaxed sm:text-lg" style={{ fontFamily: FONT_SERIF, color: `${MM.ink}cc` }}>
-              {copy.heroBody}
+            <p
+              className="mm-rise mm-rise-d3 mt-5 max-w-md text-lg leading-relaxed sm:text-xl"
+              style={{ color: `${MM.ink}cc` }}
+            >
+              Decoración a mano, desde 1979. Encargá tu torta — tamaño, fecha y dedicatoria — con el oficio de mamá.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mm-rise mm-rise-d3 mt-8 flex flex-wrap gap-3">
               <button
                 type="button"
                 onClick={() => scrollTo('tortas')}
-                className="inline-flex min-h-12 items-center justify-center px-7 text-sm font-extrabold text-white"
+                className="min-h-12 px-8 text-[12px] font-semibold uppercase tracking-[0.2em] text-white"
                 style={{ backgroundColor: MM.pink }}
               >
-                Encargar torta
+                Encargar
               </button>
               <button
                 type="button"
                 onClick={() => scrollTo('cursos')}
-                className="inline-flex min-h-12 items-center justify-center px-7 text-sm font-extrabold"
-                style={{ color: MM.tealDeep, border: `2px solid ${MM.teal}` }}
+                className="min-h-12 px-8 text-[12px] font-semibold uppercase tracking-[0.2em]"
+                style={{ color: MM.tealDeep, boxShadow: `inset 0 0 0 1.5px ${MM.teal}` }}
               >
-                Ver cursos
+                Cursos
               </button>
             </div>
           </div>
-
-          <div className="relative">
-            <div
-              className="absolute -inset-3 opacity-70"
-              style={{ border: `3px dotted ${MM.tealSoft}` }}
-            />
-            <img
-              src="/demos/mamabel/torta-canasta.jpg"
-              alt="Torta canasta — firma de Mamá Mabel"
-              className="relative w-full object-cover"
-              style={{ aspectRatio: '4 / 5', maxHeight: 560 }}
-            />
-            <p
-              className="absolute bottom-4 left-4 right-4 px-3 py-2 text-center text-xs font-bold uppercase tracking-[0.12em] text-white"
-              style={{ backgroundColor: `${MM.pink}ee` }}
-            >
-              Firma · glacé & ruffles
-            </p>
-          </div>
         </div>
       </section>
 
-      {/* Nosotros */}
-      <section ref={sectionRefs.nosotros} id="nosotros" className="scroll-mt-24" style={{ backgroundColor: MM.paper }}>
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_1fr] lg:items-center lg:py-20">
+      {/* Nosotros — one job, real gallery */}
+      <section ref={sectionRefs.nosotros} id="nosotros" className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-28">
+        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: MM.teal }}>
-              Sobre nosotros
+            <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
+              Desde la cocina
             </p>
-            <h2 className="mt-3 text-3xl leading-tight sm:text-4xl" style={{ fontFamily: FONT_SERIF, color: MM.ink }}>
-              El oficio de mamá, en cada encargue.
+            <h2 className="mt-4 text-4xl leading-[1.1] sm:text-5xl" style={{ fontFamily: FONT_SERIF }}>
+              El mismo cuidado que va a la mesa, enseñado en cada curso.
             </h2>
-            <p className="mt-4 text-sm leading-relaxed sm:text-base" style={{ color: `${MM.ink}aa` }}>
-              Pastelería familiar desde 1979: tortas clásicas, decoración artística y talleres.
-              Pedís tamaño, fecha y dedicatoria — la familia lo ve ordenado.
+            <p className="mt-6 text-lg leading-relaxed" style={{ color: `${MM.ink}aa` }}>
+              Pastelería familiar: clásicas, temáticas y piezas de vitrina.
+              Pedís claro por acá — la familia recibe el encargo ordenado.
             </p>
-            <ul className="mt-6 space-y-2 text-sm font-semibold" style={{ color: MM.tealDeep }}>
-              <li className="flex items-center gap-2"><Heart size={15} color={MM.pink} /> Decoración a mano</li>
-              <li className="flex items-center gap-2"><Heart size={15} color={MM.pink} /> Temáticas y cumpleaños</li>
-              <li className="flex items-center gap-2"><Heart size={15} color={MM.pink} /> Cursos con material incluido</li>
-            </ul>
           </div>
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            {ABOUT_GALLERY.slice(0, 5).map((src, i) => (
-              <img
-                key={src}
-                src={src}
-                alt=""
-                className={`h-36 w-full object-cover sm:h-44 ${i === 0 ? 'col-span-2 h-48 sm:h-56' : ''}`}
-                style={{ border: dotted }}
-                loading="lazy"
-              />
-            ))}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <img src={GALLERY[0]} alt="" className="aspect-[3/4] w-full object-cover" loading="lazy" />
+            <img src={GALLERY[1]} alt="" className="mt-8 aspect-[3/4] w-full object-cover sm:mt-12" loading="lazy" />
+            <img src={GALLERY[2]} alt="" className="col-span-2 aspect-[16/9] w-full object-cover" loading="lazy" />
           </div>
         </div>
-        <div className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
-          <div className="flex gap-3 overflow-x-auto pb-2">
-            {ABOUT_GALLERY.slice(5).map(src => (
-              <img
-                key={src}
-                src={src}
-                alt=""
-                className="h-28 w-40 shrink-0 object-cover sm:h-32 sm:w-48"
-                style={{ border: dotted }}
-                loading="lazy"
-              />
-            ))}
-          </div>
+        <div className="mx-auto mt-10 flex max-w-6xl gap-3 overflow-x-auto pb-2">
+          {GALLERY.slice(3).map(src => (
+            <img key={src} src={src} alt="" className="h-36 w-48 shrink-0 object-cover sm:h-44 sm:w-60" loading="lazy" />
+          ))}
         </div>
       </section>
 
-      {/* Shop */}
-      <section ref={sectionRefs.tortas} id="tortas" className="scroll-mt-24" style={{ backgroundColor: MM.cream }}>
-        <div className="mx-auto max-w-6xl px-4 pt-14 sm:px-6">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="mm-rule mx-auto max-w-3xl" />
+
+      {/* Encargos — editorial rows, not card grid */}
+      <section ref={sectionRefs.tortas} id="tortas" className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-28">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: MM.teal }}>
-                Encargos
+              <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
+                Carta
               </p>
-              <h2 className="mt-2 text-3xl" style={{ fontFamily: FONT_SERIF }}>
-                Tortas y regalos
-              </h2>
+              <h2 className="mt-3 text-4xl sm:text-5xl">Encargos</h2>
             </div>
-            <div className="flex p-1 text-xs font-bold" style={{ border: dotted, background: MM.paper }}>
+            <div className="flex text-[11px] font-semibold uppercase tracking-[0.18em]">
               {(['pickup', 'delivery'] as const).map(mode => (
                 <button
                   key={mode}
                   type="button"
                   onClick={() => setFulfillment(mode)}
-                  className="min-h-9 px-4"
+                  className="min-h-10 px-4"
                   style={
                     fulfillment === mode
-                      ? { backgroundColor: MM.teal, color: '#fff' }
-                      : { color: MM.tealDeep }
+                      ? { backgroundColor: MM.tealDeep, color: MM.cream }
+                      : { color: MM.tealDeep, boxShadow: `inset 0 0 0 1px ${MM.teal}55` }
                   }
                 >
                   {mode === 'pickup' ? 'Retiro' : 'Delivery'}
@@ -578,68 +461,56 @@ export default function MamabelDemoPage() {
               ))}
             </div>
           </div>
-        </div>
 
-        <nav className="mt-6" style={{ backgroundColor: MM.blush, borderTop: dotted, borderBottom: dotted }}>
-          <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 sm:px-6">
+          <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-b pb-1" style={{ borderColor: `${MM.pinkSoft}99` }}>
             {filters.map(f => {
-              const active = categoryId === f.id;
+              const on = categoryId === f.id;
               return (
                 <button
                   key={f.id}
                   type="button"
                   onClick={() => setCategoryId(f.id)}
-                  className="shrink-0 border-b-2 px-3 py-3.5 text-xs font-extrabold uppercase tracking-[0.08em]"
-                  style={
-                    active
-                      ? { borderColor: MM.pink, color: MM.pink }
-                      : { borderColor: 'transparent', color: `${MM.ink}66` }
-                  }
+                  className="pb-3 text-[11px] font-semibold uppercase tracking-[0.16em]"
+                  style={{
+                    color: on ? MM.pink : `${MM.ink}66`,
+                    boxShadow: on ? `inset 0 -2px 0 ${MM.pink}` : undefined,
+                  }}
                 >
                   {f.label}
                 </button>
               );
             })}
           </div>
-        </nav>
 
-        <div className="mx-auto grid max-w-6xl gap-5 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-3">
-          {visibleItems.map(renderProductCard)}
-        </div>
-      </section>
-
-      {courseItems.length > 0 && (
-        <section
-          ref={sectionRefs.cursos}
-          id="cursos"
-          className="scroll-mt-24"
-          style={{ backgroundColor: MM.blush }}
-        >
-          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-start lg:py-20">
-            <div className="space-y-4">
-              <img src="/demos/mamabel/curso-flyer.jpg" alt="Flyer curso" className="w-full object-cover" style={{ border: dotted }} />
-              <img src="/demos/mamabel/curso-ig.jpg" alt="Curso mensual" className="w-full object-cover" style={{ border: dotted }} />
-            </div>
-            <div>
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: MM.teal }}>
-                Cursos
-              </p>
-              <h2 className="mt-3 text-3xl sm:text-4xl" style={{ fontFamily: FONT_SERIF }}>
-                Iniciación a la decoración
-              </h2>
-              <p className="mt-4 text-sm leading-relaxed sm:text-base" style={{ color: `${MM.ink}aa` }}>
-                Glasé real, buttercream, picos rusos, drip y canasta de mimbre.
-                Se proveen materiales; te llevás la torta hecha por vos.
-              </p>
-              <div className="mt-8 space-y-4">
-                {courseItems.map(item => {
-                  const state = cardState[item.id] ?? { optionId: item.options[0]?.id ?? '', qty: 1 };
-                  const option = item.options.find(o => o.id === state.optionId) ?? item.options[0];
-                  return (
-                    <div key={item.id} className="bg-white p-5" style={{ border: dotted }}>
-                      <p className="text-xl" style={{ fontFamily: FONT_SERIF }}>{item.name}</p>
-                      <p className="mt-1 text-xs" style={{ color: `${MM.ink}88` }}>{item.description}</p>
-                      <div className="mt-3 flex flex-wrap gap-1.5">
+          <div className="mt-4 divide-y" style={{ borderColor: `${MM.pinkSoft}66` }}>
+            {visibleItems.map(item => {
+              const state = cardState[item.id] ?? { optionId: item.options[0]?.id ?? '', qty: 1 };
+              const option = item.options.find(o => o.id === state.optionId) ?? item.options[0];
+              const img = item.images[0];
+              return (
+                <article
+                  key={item.id}
+                  className="grid gap-5 py-8 sm:grid-cols-[minmax(0,220px)_1fr] sm:items-center lg:grid-cols-[minmax(0,280px)_1fr_auto]"
+                  style={{ borderColor: `${MM.pinkSoft}66` }}
+                >
+                  <div className="aspect-[4/5] overflow-hidden" style={{ backgroundColor: MM.blush }}>
+                    {img ? <img src={img} alt={item.name} className="h-full w-full object-cover" loading="lazy" /> : null}
+                  </div>
+                  <div>
+                    <div className="flex flex-wrap items-baseline gap-3">
+                      <h3 className="text-2xl sm:text-3xl">{item.name}</h3>
+                      {item.badge && (
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: MM.pink }}>
+                          {item.badge}
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-2 max-w-xl text-base leading-relaxed" style={{ color: `${MM.ink}99` }}>
+                      {item.description}
+                    </p>
+                    <p className="mt-3 text-xl" style={{ color: MM.tealDeep }}>{priceLabel(item)}</p>
+                    {item.options.length > 1 && (
+                      <div className="mt-4 flex flex-wrap gap-2">
                         {item.options.map(opt => {
                           const on = state.optionId === opt.id;
                           return (
@@ -649,100 +520,213 @@ export default function MamabelDemoPage() {
                               onClick={() =>
                                 setCardState(prev => ({
                                   ...prev,
-                                  [item.id]: { optionId: opt.id, qty: 1 },
+                                  [item.id]: { optionId: opt.id, qty: prev[item.id]?.qty ?? 1 },
                                 }))
                               }
-                              className="min-h-9 px-3 text-[11px] font-bold"
+                              className="min-h-9 px-3 text-[11px] font-semibold uppercase tracking-[0.12em]"
                               style={
                                 on
-                                  ? { backgroundColor: MM.teal, color: '#fff' }
-                                  : { border: `1px solid ${MM.tealSoft}`, color: MM.tealDeep }
+                                  ? { backgroundColor: MM.tealDeep, color: MM.cream }
+                                  : { color: MM.tealDeep, boxShadow: `inset 0 0 0 1px ${MM.teal}66` }
                               }
                             >
-                              {opt.label} · {formatArs(opt.price)}
+                              {opt.label}
                             </button>
                           );
                         })}
                       </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 sm:col-span-2 lg:col-span-1 lg:flex-col lg:items-stretch">
+                    <div className="flex items-center" style={{ boxShadow: `inset 0 0 0 1px ${MM.teal}44` }}>
                       <button
                         type="button"
-                        onClick={() => option && addLine(item, option, 1)}
-                        className="mt-4 flex min-h-11 w-full items-center justify-center text-sm font-extrabold text-white"
-                        style={{ backgroundColor: MM.pink }}
+                        aria-label="Restar"
+                        className="flex h-11 w-10 items-center justify-center"
+                        onClick={() =>
+                          setCardState(prev => ({
+                            ...prev,
+                            [item.id]: { optionId: state.optionId, qty: Math.max(1, state.qty - 1) },
+                          }))
+                        }
                       >
-                        Reservar seña de prueba
+                        <Minus size={14} />
+                      </button>
+                      <span className="w-8 text-center text-sm font-semibold">{state.qty}</span>
+                      <button
+                        type="button"
+                        aria-label="Sumar"
+                        className="flex h-11 w-10 items-center justify-center"
+                        onClick={() =>
+                          setCardState(prev => ({
+                            ...prev,
+                            [item.id]: { optionId: state.optionId, qty: state.qty + 1 },
+                          }))
+                        }
+                      >
+                        <Plus size={14} />
                       </button>
                     </div>
-                  );
-                })}
-              </div>
+                    <button
+                      type="button"
+                      onClick={() => option && addLine(item, option, state.qty)}
+                      className="flex min-h-11 flex-1 items-center justify-center px-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white lg:flex-none"
+                      style={{ backgroundColor: MM.pink }}
+                    >
+                      Agregar
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Cursos */}
+      {courseItems.length > 0 && (
+        <section
+          ref={sectionRefs.cursos}
+          id="cursos"
+          className="scroll-mt-24"
+          style={{ backgroundColor: MM.blush }}
+        >
+          <div className="mx-auto grid max-w-6xl gap-0 lg:grid-cols-2">
+            <img
+              src="/demos/mamabel/curso-flyer.jpg"
+              alt="Curso de iniciación"
+              className="h-full min-h-[320px] w-full object-cover lg:min-h-[560px]"
+            />
+            <div className="flex flex-col justify-center px-4 py-16 sm:px-10 sm:py-20">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
+                Talleres
+              </p>
+              <h2 className="mt-3 text-4xl sm:text-5xl">Iniciación a la decoración</h2>
+              <p className="mt-5 text-lg leading-relaxed" style={{ color: `${MM.ink}aa` }}>
+                Glasé, buttercream, picos rusos, drip y canasta de mimbre.
+                Materiales incluidos — te llevás la torta hecha por vos.
+              </p>
+              {courseItems.map(item => {
+                const state = cardState[item.id] ?? { optionId: item.options[0]?.id ?? '', qty: 1 };
+                const option = item.options.find(o => o.id === state.optionId) ?? item.options[0];
+                return (
+                  <div key={item.id} className="mt-8">
+                    <div className="flex flex-wrap gap-2">
+                      {item.options.map(opt => {
+                        const on = state.optionId === opt.id;
+                        return (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() =>
+                              setCardState(prev => ({
+                                ...prev,
+                                [item.id]: { optionId: opt.id, qty: 1 },
+                              }))
+                            }
+                            className="min-h-10 px-4 text-[11px] font-semibold uppercase tracking-[0.12em]"
+                            style={
+                              on
+                                ? { backgroundColor: MM.tealDeep, color: MM.cream }
+                                : { color: MM.tealDeep, boxShadow: `inset 0 0 0 1px ${MM.teal}` }
+                            }
+                          >
+                            {opt.label} · {formatArs(opt.price)}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => option && addLine(item, option, 1)}
+                      className="mt-5 min-h-12 px-8 text-[12px] font-semibold uppercase tracking-[0.2em] text-white"
+                      style={{ backgroundColor: MM.pink }}
+                    >
+                      Reservar seña
+                    </button>
+                  </div>
+                );
+              })}
+              <img
+                src="/demos/mamabel/curso-ig.jpg"
+                alt=""
+                className="mt-10 w-full object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </section>
       )}
 
-      <section ref={sectionRefs.contacto} id="contacto" className="scroll-mt-24" style={{ backgroundColor: MM.paper }}>
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
-          <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: MM.teal }}>
+      {/* Contacto */}
+      <section ref={sectionRefs.contacto} id="contacto" className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-28">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
             Contacto
           </p>
-          <h2 className="mt-3 text-3xl" style={{ fontFamily: FONT_SERIF }}>
-            Hablemos de tu torta
+          <h2
+            className="mt-3 text-5xl sm:text-6xl"
+            style={{ fontFamily: FONT_SCRIPT }}
+          >
+            hablemos de tu torta
           </h2>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 flex flex-col items-center gap-4 text-lg sm:flex-row sm:justify-center sm:gap-10">
             {wspHref && (
-              <a href={wspHref} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4" style={{ border: dotted }}>
-                <Phone size={18} color={MM.pink} />
-                <span className="text-sm font-bold">11 5619-6941</span>
+              <a href={wspHref} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:opacity-70">
+                <Phone size={16} color={MM.pink} strokeWidth={1.75} />
+                11 5619-6941
               </a>
             )}
-            <a href="mailto:mabelvallejos.reposteria@hotmail.com" className="flex items-center gap-3 p-4" style={{ border: dotted }}>
-              <Mail size={18} color={MM.pink} />
-              <span className="text-sm font-bold">Mail</span>
+            <a href="mailto:mabelvallejos.reposteria@hotmail.com" className="inline-flex items-center gap-2 hover:opacity-70">
+              <Mail size={16} color={MM.pink} strokeWidth={1.75} />
+              Mail
             </a>
             {siteSettings.brandInstagram && (
-              <a href={siteSettings.brandInstagram} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4" style={{ border: dotted }}>
-                <InstagramIcon size={18} color={MM.pink} />
-                <span className="text-sm font-bold">Instagram</span>
+              <a href={siteSettings.brandInstagram} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:opacity-70">
+                <InstagramIcon size={16} color={MM.pink} />
+                Instagram
               </a>
             )}
-            <a href="https://www.facebook.com/lastortasdemamamabel/" target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4" style={{ border: dotted }}>
-              <MapPin size={18} color={MM.pink} />
-              <span className="text-sm font-bold">Facebook</span>
-            </a>
           </div>
         </div>
       </section>
 
-      <footer className="py-10 text-center" style={{ backgroundColor: MM.tealDeep, color: `${MM.cream}cc` }}>
-        <p className="text-3xl" style={{ fontFamily: FONT_SCRIPT, color: MM.cream }}>mamá mabel</p>
-        <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.2em]">Las tortas de · demo Trufi</p>
+      <footer className="px-4 py-14 text-center" style={{ backgroundColor: MM.tealDeep, color: MM.cream }}>
+        {siteSettings.brandLogo ? (
+          <img src={siteSettings.brandLogo} alt="" className="mx-auto mb-4 h-16 w-auto rounded-full bg-white object-contain p-1" />
+        ) : null}
+        <p className="text-4xl" style={{ fontFamily: FONT_SCRIPT }}>mamá mabel</p>
+        <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.28em] opacity-70">
+          Las tortas de · desde 1979
+        </p>
       </footer>
 
+      {/* Cart drawer */}
       {cartOpen && (
-        <div className="fixed inset-0 z-40 flex justify-end bg-black/40">
-          <div className="flex h-full w-full max-w-md flex-col shadow-2xl" style={{ backgroundColor: MM.cream }}>
-            <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: dotted }}>
-              <h2 className="text-xl" style={{ fontFamily: FONT_SERIF }}>Tu encargo</h2>
-              <button type="button" className="text-sm font-bold" style={{ color: MM.tealDeep }} onClick={() => setCartOpen(false)}>
-                Cerrar
+        <div className="fixed inset-0 z-40 flex justify-end bg-black/35">
+          <div className="flex h-full w-full max-w-md flex-col" style={{ backgroundColor: MM.cream }}>
+            <div className="flex items-center justify-between px-5 py-5" style={{ borderBottom: `1px solid ${MM.pinkSoft}` }}>
+              <h2 className="text-2xl">Tu encargo</h2>
+              <button type="button" aria-label="Cerrar" onClick={() => setCartOpen(false)}>
+                <X size={20} />
               </button>
             </div>
             <div className="flex-1 space-y-4 overflow-y-auto p-5">
               {cart.length === 0 ? (
-                <p className="text-sm" style={{ color: `${MM.ink}88` }}>Todavía vacío.</p>
+                <p style={{ color: `${MM.ink}88` }}>Todavía vacío.</p>
               ) : (
                 cart.map((line, idx) => (
                   <div key={`${line.id}-${line.optionId}-${idx}`} className="flex justify-between gap-3 pb-3" style={{ borderBottom: `1px solid ${MM.pinkSoft}` }}>
-                    <div className="min-w-0">
-                      <p className="text-sm font-bold">{line.qty} × {line.name} · {line.optionLabel}</p>
-                      <p className="mt-1 text-xs font-bold" style={{ color: MM.pink }}>{formatArs(line.price * line.qty)}</p>
+                    <div>
+                      <p className="text-base">{line.qty} × {line.name}</p>
+                      <p className="text-sm" style={{ color: `${MM.ink}88` }}>{line.optionLabel}</p>
+                      <p className="mt-1" style={{ color: MM.pink }}>{formatArs(line.price * line.qty)}</p>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <button type="button" className="p-1" style={{ border: dotted }} onClick={() => updateCartQty(idx, -1)}>
+                    <div className="flex gap-1">
+                      <button type="button" className="p-2" style={{ boxShadow: `inset 0 0 0 1px ${MM.teal}44` }} onClick={() => updateCartQty(idx, -1)}>
                         <Minus size={14} />
                       </button>
-                      <button type="button" className="p-1" style={{ border: dotted }} onClick={() => updateCartQty(idx, 1)}>
+                      <button type="button" className="p-2" style={{ boxShadow: `inset 0 0 0 1px ${MM.teal}44` }} onClick={() => updateCartQty(idx, 1)}>
                         <Plus size={14} />
                       </button>
                     </div>
@@ -750,17 +734,17 @@ export default function MamabelDemoPage() {
                 ))
               )}
             </div>
-            <div className="p-5" style={{ borderTop: dotted }}>
-              <div className="mb-1 flex justify-between text-lg font-bold">
+            <div className="p-5" style={{ borderTop: `1px solid ${MM.pinkSoft}` }}>
+              <div className="mb-1 flex justify-between text-xl">
                 <span>{copy.totalLabel}</span>
                 <span>{formatArs(cartTotal)}</span>
               </div>
-              <p className="mb-4 text-xs" style={{ color: `${MM.ink}88` }}>{copy.totalHint}</p>
+              <p className="mb-4 text-sm" style={{ color: `${MM.ink}88` }}>{copy.totalHint}</p>
               <button
                 type="button"
                 disabled={cart.length === 0}
                 onClick={() => { setCartOpen(false); setCheckoutOpen(true); }}
-                className="flex min-h-12 w-full items-center justify-center text-sm font-extrabold text-white disabled:opacity-40"
+                className="flex min-h-12 w-full items-center justify-center text-[12px] font-semibold uppercase tracking-[0.2em] text-white disabled:opacity-40"
                 style={{ backgroundColor: MM.pink }}
               >
                 {copy.cartCta}
