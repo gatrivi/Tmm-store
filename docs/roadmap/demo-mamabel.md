@@ -1,6 +1,6 @@
 # Flagship — Las Tortas de Mamá Mabel
 
-**Estado: shipped** (v1.12.0) · etapa 2 portfolio + encargo
+**Estado: shipped** (v1.12.1) · etapa 2 + WA plain text
 
 Plan: [`mamabel-cursor-auto-plan.md`](./mamabel-cursor-auto-plan.md) — una etapa por turno.
 

@@ -35,36 +35,37 @@ export function validateMamabelEncargo(e: MamabelEncargo): MamabelEncargoErrors 
   return errors;
 }
 
+/** Plain ASCII message — no emoji (avoids %EF%BF%BD / U+FFFD in wa.me URLs). */
 export function buildMamabelEncargoMessage(e: MamabelEncargo): string {
   const fulfillment =
     e.fulfillment === 'delivery' ? 'Delivery (a coordinar)' : 'Retiro';
   const lines = [
-    '🎂 *Encargo — Las Tortas de Mamá Mabel*',
-    '━━━━━━━━━━━━━━━━━━',
+    'Encargo - Las Tortas de Mama Mabel',
+    '---',
     '',
     e.name.trim()
-      ? `👤 *Nombre:* ${sanitizeWaText(e.name.trim())}`
+      ? `Nombre: ${sanitizeWaText(e.name.trim())}`
       : null,
-    `🎉 *Ocasión:* ${sanitizeWaText(e.occasion.trim() || OCCASION_FALLBACK)}`,
-    `🍽 *Porciones:* ${sanitizeWaText(e.portions.trim())}`,
-    `🍰 *Sabor:* ${sanitizeWaText(e.flavor.trim() || FLAVOR_FALLBACK)}`,
-    `🧁 *Relleno:* ${sanitizeWaText(e.filling.trim() || FLAVOR_FALLBACK)}`,
-    `📅 *Fecha:* ${sanitizeWaText(e.dateNeeded.trim())}`,
-    `🚚 *Entrega:* ${fulfillment}`,
+    `Ocasion: ${sanitizeWaText(e.occasion.trim() || OCCASION_FALLBACK)}`,
+    `Porciones: ${sanitizeWaText(e.portions.trim())}`,
+    `Sabor: ${sanitizeWaText(e.flavor.trim() || FLAVOR_FALLBACK)}`,
+    `Relleno: ${sanitizeWaText(e.filling.trim() || FLAVOR_FALLBACK)}`,
+    `Fecha: ${sanitizeWaText(e.dateNeeded.trim())}`,
+    `Entrega: ${fulfillment}`,
   ].filter(Boolean) as string[];
 
   if (e.idea.trim()) {
-    lines.push(`💡 *Idea / tema:* ${sanitizeWaText(e.idea.trim())}`);
+    lines.push(`Idea / tema: ${sanitizeWaText(e.idea.trim())}`);
   }
   if (e.notes.trim()) {
-    lines.push(`📝 *Notas:* ${sanitizeWaText(e.notes.trim())}`);
+    lines.push(`Notas: ${sanitizeWaText(e.notes.trim())}`);
   }
 
   lines.push(
     '',
-    '📎 _Si tenés una foto de referencia, adjuntarla en este chat._',
+    'Si tenes una foto de referencia, adjuntarla en este chat.',
     '',
-    'Cotizar — sin precio cerrado online.',
+    'Cotizar - sin precio cerrado online.',
   );
 
   return lines.join('\n');

@@ -29,6 +29,8 @@ test.describe('demo mamabel encargo', () => {
     expect(text).toContain('2026-09-01');
     expect(text).toContain('Flores rosa');
     expect(text).toContain('Cotizar');
+    expect(url).not.toContain('%EF%BF%BD');
+    expect(text).not.toContain('\uFFFD');
   });
 
   test('required field errors stay visible', async ({ page }) => {
