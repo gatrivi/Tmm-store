@@ -34,3 +34,7 @@ playwright/.cache/
 __pycache__/
 *.pyc
 
+# Mamabel pick copies (local curation; originals in public/demos/mamabel)
+content/mamabel/pick/*
+!content/mamabel/pick/README.md
+
