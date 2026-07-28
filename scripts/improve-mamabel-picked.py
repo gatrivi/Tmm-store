@@ -1,5 +1,5 @@
 """
-Re-export Mamabel picked images: EXIF rotate, mild enhance, optional deskew.
+Re-export Mamabel picked images: EXIF rotate, enhance, deskew, center on black.
 Run: python scripts/improve-mamabel-picked.py
 """
 from __future__ import annotations
@@ -10,24 +10,23 @@ from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 SRC = Path("content/mamabel/better ones")
 OUT = Path("public/demos/mamabel/picked")
 
-# dest -> (source, max_edge, tilt_deg CW+, notes)
-JOBS: list[tuple[str, str, int, float]] = [
-    ("hero.jpg", "16423085_1247979501960237_6275321741240210923_o.jpg", 1920, 0.0),
-    ("black-bows.jpg", "SANY0080.JPG", 1920, 0.0),
-    ("black-elegant.jpg", "20140405_190202.jpg", 1600, -2.4),
-    ("black-cars.jpg", "SANY0091.JPG", 1600, 0.0),
-    ("black-maleficent.jpg", "IMG_20170421_092050558.jpg", 1600, 0.0),  # perspective, not horizon tilt
-    ("black-rock.jpg", "10626226_689149541176572_5720908616390328413_o.jpg", 1600, 0.0),
-    ("black-ddm.jpg", "17966385_1325778770846976_1790103810812018808_o.jpg", 1600, 0.0),
-    ("black-bluebow.jpg", "IMG-20140509-WA0041.jpg", 1200, 0.0),
-    ("black-cupcakes-books.jpg", "SANY0074.JPG", 1600, 0.0),
-    ("black-cupcakes-roses.jpg", "SANY0105.JPG", 1600, 0.0),
-    ("black-cupcakes-close.jpg", "SANY0111.JPG", 1600, 0.0),
+# dest -> (source, max_edge, tilt_deg CW+, center_on_black)
+JOBS: list[tuple[str, str, int, float, bool]] = [
+    ("hero.jpg", "16423085_1247979501960237_6275321741240210923_o.jpg", 1920, 0.0, False),
+    ("black-bows.jpg", "SANY0080.JPG", 1920, 0.0, True),
+    ("black-elegant.jpg", "20140405_190202.jpg", 1600, -2.4, True),
+    ("black-cars.jpg", "SANY0091.JPG", 1600, 0.0, True),
+    ("black-maleficent.jpg", "IMG_20170421_092050558.jpg", 1600, 0.0, True),
+    ("black-rock.jpg", "10626226_689149541176572_5720908616390328413_o.jpg", 1600, 0.0, True),
+    ("black-ddm.jpg", "17966385_1325778770846976_1790103810812018808_o.jpg", 1600, 0.0, True),
+    ("black-bluebow.jpg", "IMG-20140509-WA0041.jpg", 1200, 0.0, True),
+    ("black-cupcakes-books.jpg", "SANY0074.JPG", 1600, 0.0, True),
+    ("black-cupcakes-roses.jpg", "SANY0105.JPG", 1600, 0.0, True),
+    ("black-cupcakes-close.jpg", "SANY0111.JPG", 1600, 0.0, True),
 ]
 
 
 def compress_highlights(im: Image.Image, thresh: int = 205, amount: float = 0.4) -> Image.Image:
-    """Pull down blown whites without crushing midtones."""
     channels = []
     for ch in im.split():
         lut = []
@@ -42,7 +41,6 @@ def compress_highlights(im: Image.Image, thresh: int = 205, amount: float = 0.4)
 
 
 def lift_shadows(im: Image.Image, floor: int = 12, amount: float = 0.18) -> Image.Image:
-    """Slightly open crushed blacks (studio black bg stays dark)."""
     channels = []
     for ch in im.split():
         lut = []
@@ -58,7 +56,6 @@ def lift_shadows(im: Image.Image, floor: int = 12, amount: float = 0.18) -> Imag
 def enhance(im: Image.Image, *, hero: bool = False) -> Image.Image:
     im = compress_highlights(im, thresh=200 if hero else 210, amount=0.45 if hero else 0.35)
     if not hero:
-        # keep studio black; only tiny shadow lift for subject
         im = lift_shadows(im, floor=8, amount=0.12)
     else:
         im = lift_shadows(im, floor=10, amount=0.22)
@@ -80,13 +77,9 @@ def fit_max(im: Image.Image, max_edge: int) -> Image.Image:
 def deskew(im: Image.Image, deg: float) -> Image.Image:
     if abs(deg) < 0.05:
         return im
-    # expand with black (studio) then crop back to original aspect content
     rotated = im.rotate(-deg, resample=Image.Resampling.BICUBIC, expand=True, fillcolor=(0, 0, 0))
-    # crop center to remove rotation triangles while keeping most content
     w, h = im.size
     rw, rh = rotated.size
-    # scale factor from expand
-    # take center crop matching original aspect, as large as fits
     aspect = w / h
     if rw / rh > aspect:
         nh = rh
@@ -99,21 +92,73 @@ def deskew(im: Image.Image, deg: float) -> Image.Image:
     return rotated.crop((left, top, left + nw, top + nh))
 
 
-def process(dest: str, src_name: str, max_edge: int, tilt: float) -> None:
+def content_bbox(im: Image.Image, thresh: int = 36) -> tuple[int, int, int, int] | None:
+    """BBox of non-black pixels (studio subject)."""
+    gray = im.convert("L")
+    mask = gray.point(lambda v: 255 if v > thresh else 0)
+    return mask.getbbox()
+
+
+def center_on_black(
+    im: Image.Image,
+    *,
+    aspect: float = 0.8,
+    margin: float = 0.1,
+    max_edge: int = 1600,
+) -> Image.Image:
+    """
+    Place subject centered on a black canvas (symmetric L/R, balanced T/B).
+    aspect = width/height (0.8 → 4:5 gallery).
+    """
+    box = content_bbox(im)
+    if not box:
+        return im
+    l, t, r, b = box
+    # trim to content then add uniform margin in content space
+    subject = im.crop((l, t, r, b))
+    sw, sh = subject.size
+    pad = int(max(sw, sh) * margin)
+    inner_w, inner_h = sw + 2 * pad, sh + 2 * pad
+
+    # canvas: fit inner box into target aspect, then scale to max_edge
+    if inner_w / inner_h > aspect:
+        cw = inner_w
+        ch = int(cw / aspect)
+    else:
+        ch = inner_h
+        cw = int(ch * aspect)
+
+    scale = min(1.0, max_edge / max(cw, ch))
+    cw, ch = max(1, int(cw * scale)), max(1, int(ch * scale))
+    sub = subject.resize(
+        (max(1, int(sw * scale)), max(1, int(sh * scale))),
+        Image.Resampling.LANCZOS,
+    )
+    canvas = Image.new("RGB", (cw, ch), (0, 0, 0))
+    x = (cw - sub.size[0]) // 2
+    y = (ch - sub.size[1]) // 2
+    canvas.paste(sub, (x, y))
+    return canvas
+
+
+def process(dest: str, src_name: str, max_edge: int, tilt: float, do_center: bool) -> None:
     src = SRC / src_name
     im = ImageOps.exif_transpose(Image.open(src)).convert("RGB")
     im = deskew(im, tilt)
-    im = fit_max(im, max_edge)
+    if do_center:
+        im = center_on_black(im, aspect=0.8, margin=0.09, max_edge=max_edge)
+    else:
+        im = fit_max(im, max_edge)
     im = enhance(im, hero=(dest == "hero.jpg"))
     out = OUT / dest
     im.save(out, "JPEG", quality=90, optimize=True, progressive=True)
-    print(f"ok {dest:28} {im.size[0]}x{im.size[1]} tilt={tilt:+.1f} from {src_name}")
+    print(f"ok {dest:28} {im.size[0]}x{im.size[1]} center={do_center} from {src_name}")
 
 
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
-    for dest, src_name, max_edge, tilt in JOBS:
-        process(dest, src_name, max_edge, tilt)
+    for dest, src_name, max_edge, tilt, do_center in JOBS:
+        process(dest, src_name, max_edge, tilt, do_center)
 
 
 if __name__ == "__main__":
