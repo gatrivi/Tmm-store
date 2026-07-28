@@ -51,7 +51,7 @@ const NAV = [
 ] as const;
 
 /** Black-bg studio picks from content/mamabel/better ones (ready, no crop). */
-const HERO_IMG = '/demos/mamabel/picked/hero-black.jpg';
+const HERO_IMG = '/demos/mamabel/picked/hero.jpg';
 
 const OFICIO_PORTRAIT = '/demos/mamabel/picked/black-elegant.jpg';
 const OFICIO_GALLERY = [
@@ -65,7 +65,7 @@ const OFICIO_GALLERY = [
 
 /** Portfolio — black studio set first; more from better ones later (need crop/edit). */
 const PORTFOLIO: { src: string; alt: string }[] = [
-  { src: '/demos/mamabel/picked/hero-black.jpg', alt: 'Torta tres pisos lazos melocotón' },
+  { src: '/demos/mamabel/picked/black-bows.jpg', alt: 'Torta tres pisos lazos melocotón' },
   { src: '/demos/mamabel/picked/black-elegant.jpg', alt: 'Torta blanca quilted y rosa' },
   { src: '/demos/mamabel/picked/black-cars.jpg', alt: 'Torta temática auto' },
   { src: '/demos/mamabel/picked/black-maleficent.jpg', alt: 'Torta temática Maléfica' },
@@ -198,7 +198,7 @@ export default function MamabelDemoPage() {
     meta('description', 'Pastelería familiar desde 1979. Tortas a medida y cursos de decoración — Las Tortas de Mamá Mabel.');
     meta('og:title', 'Las Tortas de Mamá Mabel', true);
     meta('og:description', 'Tortas decoradas a mano · encargos por WhatsApp · desde 1979', true);
-    meta('og:image', `${window.location.origin}/demos/mamabel/picked/hero-black.jpg`, true);
+    meta('og:image', `${window.location.origin}/demos/mamabel/picked/hero.jpg`, true);
     meta('twitter:card', 'summary_large_image');
     if (!document.getElementById('mm-fonts')) {
       const link = document.createElement('link');
@@ -338,9 +338,9 @@ export default function MamabelDemoPage() {
       <section ref={sectionRefs.inicio} id="inicio" className="relative isolate min-h-[100svh] overflow-hidden">
         <img
           src={HERO_IMG}
-          alt="Torta decorada a mano — Las Tortas de Mamá Mabel"
+          alt="Mabel Vallejos — Las Tortas de Mamá Mabel"
           className="absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: 'center 40%' }}
+          style={{ objectPosition: 'center 22%' }}
           fetchPriority="high"
         />
         <div

@@ -6,7 +6,8 @@ Listos (fondo negro, sin crop): `public/demos/mamabel/picked/`
 
 | Archivo | Uso |
 |---------|-----|
-| `hero-black.jpg` | Hero (SANY0080 — lazos melocotón) |
+| `hero.jpg` | Hero — retrato Mabel (16423085…) |
+| `black-bows.jpg` | Portfolio (SANY0080) |
 | `black-elegant.jpg` | Oficio + portfolio |
 | `black-*.jpg` | Portfolio / oficio gallery |
 
