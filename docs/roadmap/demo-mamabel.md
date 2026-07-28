@@ -1,23 +1,57 @@
 # Flagship — Las Tortas de Mamá Mabel
 
-**Estado: shipped** (v1.11.0) · landing editorial
+**Estado: shipped** (v1.11.0) · landing editorial · live
 
-## Premisa
+## Premisa (usuario)
 
-Sitio completo con estética de marca (no template cards).
-Hero full-bleed canasta + script “mamá mabel”; carta en filas tipográficas; papel/crema + rosa CTA + teal.
+Demo de **sitio completo** (no solo carta). Cursos solo si hay material real.
+Preguntar ante dudas. Material de curso = sabor/decoración del sitio, no inventar SKUs.
 
 ## Live
 
 | Uso | URL |
 |-----|-----|
 | Cliente | https://tmm.gatrivi.com/demo/mamabel |
+| Alias typo | `/demo/mamamabel` → `/demo/mamabel` |
 | Panel | https://tmm.gatrivi.com/demo/mamabel/owner |
+| FB | https://www.facebook.com/lastortasdemamamabel/ |
+| IG | https://www.instagram.com/lastortasdemamamabel/ |
 
-## Contacto
+## Producto
 
-- WSP `5491156196941`
-- Mail `mabelvallejos.reposteria@hotmail.com`
-- IG / FB: `lastortasdemamamabel`
+- Tenant `demo-mamabel` · plan **premium** · WSP `5491156196941`
+- Page: `src/pages/MamabelDemoPage.tsx` (editorial: hero full-bleed, filas tipográficas)
+- Config: `src/data/demos/mamabel.ts`
+- Paleta (logo/flyer): cream `#FBF6F0` · pink CTA `#E87890` · teal `#70A8A0` · ink `#1C1714`
+- Fonts: Cormorant Garamond + Great Vibes
 
-See also: [`prospect-demo.md`](../ops/prospect-demo.md)
+## Assets
+
+| Path | Notas |
+|------|--------|
+| `public/demos/mamabel/` | logo, canasta, top-01…18 (likes), ig-*, cursos |
+| `public/demos/mamabel/scraped/` | dump scrape; `ig-graphql-ranked.json`, `ig-mabel-top.json` |
+| `content/mamabel/incoming/` | drop zone user fonts/PDF — wire on request |
+
+### Scripts (Brave CDP `:9222`, sesión logueada)
+
+- `scripts/scrape-mamabel-ig-graphql.ts` — rank by `like_count` (filtrar Mabel; feed del user contamina)
+- `scripts/scrape-mamabel-ig.ts` — grid download
+- `scripts/crop-mamabel-frames.py` — crop marcos blancos IG
+- FB: `scrape-mamabel-brave*.ts`, `scrape-mamabel-network.ts`
+
+### Deploy gotcha
+
+`npx vercel --prod` + **`npx vercel alias set <url> tmm.gatrivi.com`** (el dominio custom a menudo no sigue solo).
+
+## Feedback abierto (usuario)
+
+- Sitio mejoró (paleta + editorial) pero puede pedir más refinamiento visual
+- Marcos blancos: la mayoría croppeados; fondos de mesa blancos ≠ pad (no forzar)
+- IG rank: usar GraphQL + filtro caption “Mabel Vallejos”; no confiar en click `/p/`
+
+## Contacto demo
+
+- WSP `5491156196941` · mail `mabelvallejos.reposteria@hotmail.com`
+
+See also: [`AGENT_STATUS.md`](../AGENT_STATUS.md) · [`prospect-demo.md`](../ops/prospect-demo.md)

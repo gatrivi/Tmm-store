@@ -4,10 +4,10 @@
 
 | Campo | Valor |
 |-------|--------|
-| **Fecha snapshot** | 2026-07-27 |
+| **Fecha snapshot** | 2026-07-28 |
 | **Versión** | `1.11.0` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Último commit** | `d57bee2` — 2026-07-24 — `wip: backup local changes` |
+| **Último commit** | `7b23a2b` — Mamabel editorial landing (v1.11.0) |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
