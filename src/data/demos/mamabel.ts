@@ -200,7 +200,7 @@ export const MAMABEL_DEMO: DemoDefinition = {
   plan: 'premium',
   locale: 'es',
   monogram: 'MM',
-  heroImage: '/demos/mamabel/torta-canasta.jpg',
+  heroImage: '/demos/mamabel/picked/hero-black.jpg',
   heroObjectPosition: 'center 40%',
   hideLanguageSwitcher: true,
   hideThemeToggle: true,

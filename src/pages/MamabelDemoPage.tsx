@@ -50,37 +50,31 @@ const NAV = [
   { id: 'contacto', label: 'Contacto' },
 ] as const;
 
-/** Oficio: top liked IG (ig-mabel-top) — Mabel + pieza. */
-const OFICIO_PORTRAIT = '/demos/mamabel/top-03.jpg'; // 188 likes
+/** Black-bg studio picks from content/mamabel/better ones (ready, no crop). */
+const HERO_IMG = '/demos/mamabel/picked/hero-black.jpg';
+
+const OFICIO_PORTRAIT = '/demos/mamabel/picked/black-elegant.jpg';
 const OFICIO_GALLERY = [
-  '/demos/mamabel/top-02.jpg', // 217 — Frida
-  '/demos/mamabel/top-04.jpg', // 146 — barco corte
-  '/demos/mamabel/top-05.jpg', // 98
-  '/demos/mamabel/top-06.jpg', // 89
-  '/demos/mamabel/top-07.jpg', // 55 — quince
-  '/demos/mamabel/top-08.jpg', // 54 — tapestry
+  '/demos/mamabel/picked/black-cars.jpg',
+  '/demos/mamabel/picked/black-maleficent.jpg',
+  '/demos/mamabel/picked/black-rock.jpg',
+  '/demos/mamabel/picked/black-ddm.jpg',
+  '/demos/mamabel/picked/black-cupcakes-books.jpg',
+  '/demos/mamabel/picked/black-cupcakes-roses.jpg',
 ];
 
-/**
- * Portfolio by IG likes (ig-mabel-top.json) + FB gallery.
- * Skip top-01 (SORTEO, texto baked). No captions on text-in-image assets.
- * CSS: object-contain — no crop de mástil / flyer.
- */
-const PORTFOLIO: { src: string; alt: string; likes?: number }[] = [
-  { src: '/demos/mamabel/top-02.jpg', alt: 'Mabel con pieza Frida Kahlo', likes: 217 },
-  { src: '/demos/mamabel/top-03.jpg', alt: 'Mabel junto a torta barco y kraken', likes: 188 },
-  { src: '/demos/mamabel/top-04.jpg', alt: 'Torta barco — corte y estructura', likes: 146 },
-  { src: '/demos/mamabel/top-05.jpg', alt: 'Torta barco iluminada', likes: 98 },
-  { src: '/demos/mamabel/top-06.jpg', alt: 'Torta barco y kraken', likes: 89 },
-  { src: '/demos/mamabel/top-07.jpg', alt: 'Torta número 15', likes: 55 },
-  { src: '/demos/mamabel/top-08.jpg', alt: 'Torta tapestry 30', likes: 54 },
-  { src: '/demos/mamabel/top-10.jpg', alt: 'Trabajo de pastelería', likes: 51 },
-  { src: '/demos/mamabel/top-11.jpg', alt: 'Trabajo de pastelería', likes: 51 },
-  { src: '/demos/mamabel/top-12.jpg', alt: 'Trabajo de pastelería — Concordia', likes: 51 },
-  { src: '/demos/mamabel/torta-canasta.jpg', alt: 'Torta canasta glacé' },
-  { src: '/demos/mamabel/torta-nemo.jpg', alt: 'Torta temática personajes' },
-  { src: '/demos/mamabel/fb-gallery-01.jpg', alt: 'Torta artística — Facebook' },
-  { src: '/demos/mamabel/fb-gallery-02.jpg', alt: 'Trabajo — Facebook' },
+/** Portfolio — black studio set first; more from better ones later (need crop/edit). */
+const PORTFOLIO: { src: string; alt: string }[] = [
+  { src: '/demos/mamabel/picked/hero-black.jpg', alt: 'Torta tres pisos lazos melocotón' },
+  { src: '/demos/mamabel/picked/black-elegant.jpg', alt: 'Torta blanca quilted y rosa' },
+  { src: '/demos/mamabel/picked/black-cars.jpg', alt: 'Torta temática auto' },
+  { src: '/demos/mamabel/picked/black-maleficent.jpg', alt: 'Torta temática Maléfica' },
+  { src: '/demos/mamabel/picked/black-rock.jpg', alt: 'Torta rock — mano escultura' },
+  { src: '/demos/mamabel/picked/black-ddm.jpg', alt: 'Encargo TV — 1000 programas' },
+  { src: '/demos/mamabel/picked/black-bluebow.jpg', alt: 'Torta blanca con flores azules' },
+  { src: '/demos/mamabel/picked/black-cupcakes-books.jpg', alt: 'Cupcakes decorados' },
+  { src: '/demos/mamabel/picked/black-cupcakes-roses.jpg', alt: 'Cupcakes con rosas' },
+  { src: '/demos/mamabel/picked/black-cupcakes-close.jpg', alt: 'Cupcake chocolate y rosa' },
 ];
 
 const OCCASIONS = [
@@ -204,7 +198,7 @@ export default function MamabelDemoPage() {
     meta('description', 'Pastelería familiar desde 1979. Tortas a medida y cursos de decoración — Las Tortas de Mamá Mabel.');
     meta('og:title', 'Las Tortas de Mamá Mabel', true);
     meta('og:description', 'Tortas decoradas a mano · encargos por WhatsApp · desde 1979', true);
-    meta('og:image', `${window.location.origin}/demos/mamabel/torta-canasta.jpg`, true);
+    meta('og:image', `${window.location.origin}/demos/mamabel/picked/hero-black.jpg`, true);
     meta('twitter:card', 'summary_large_image');
     if (!document.getElementById('mm-fonts')) {
       const link = document.createElement('link');
@@ -343,10 +337,10 @@ export default function MamabelDemoPage() {
 
       <section ref={sectionRefs.inicio} id="inicio" className="relative isolate min-h-[100svh] overflow-hidden">
         <img
-          src="/demos/mamabel/torta-canasta.jpg"
-          alt="Torta canasta decorada a mano — Las Tortas de Mamá Mabel"
+          src={HERO_IMG}
+          alt="Torta decorada a mano — Las Tortas de Mamá Mabel"
           className="absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: 'center 28%' }}
+          style={{ objectPosition: 'center 40%' }}
           fetchPriority="high"
         />
         <div
@@ -397,13 +391,13 @@ export default function MamabelDemoPage() {
           <div className="relative">
             <img
               src={OFICIO_PORTRAIT}
-              alt="Mabel junto a una pieza de pastelería escultórica"
+              alt="Torta blanca quilted con detalles rosa"
               className="mm-shot mm-shot-tall"
               width={1440}
               height={1440}
             />
             <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: MM.teal }}>
-              Mabel · pieza escultórica
+              Studio · fondo negro
             </p>
           </div>
           <div>
@@ -443,7 +437,7 @@ export default function MamabelDemoPage() {
           </p>
           <h2 className="mt-3 text-4xl sm:text-5xl">Trabajos</h2>
           <p className="mt-4 max-w-xl text-lg leading-relaxed" style={{ color: `${MM.ink}99` }}>
-            Piezas reales ordenadas por engagement en Instagram. Cada encargo se cotiza a medida.
+            Selección studio con fondo negro. Más piezas del drop familiar vienen después (crop/edición).
           </p>
           <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
             {PORTFOLIO.map(work => (
