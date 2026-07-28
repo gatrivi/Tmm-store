@@ -70,23 +70,13 @@ const OFICIO_GALLERY = [
 const STYLE_ID = 'mm-editorial-css';
 const EDITORIAL_CSS = `
 @keyframes mm-rise {
-  from { opacity: 0; transform: translateY(18px); }
+  from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
 }
-@keyframes mm-ken {
-  from { transform: scale(1.06); }
-  to { transform: scale(1); }
-}
-@keyframes mm-drift {
-  0%, 100% { transform: translate3d(0,0,0); }
-  50% { transform: translate3d(12px,-10px,0); }
-}
-.mm-rise { animation: mm-rise 0.9s ease both; }
-.mm-rise-d1 { animation-delay: 0.12s; }
-.mm-rise-d2 { animation-delay: 0.24s; }
-.mm-rise-d3 { animation-delay: 0.36s; }
-.mm-ken { animation: mm-ken 14s ease-out both; }
-.mm-drift { animation: mm-drift 16s ease-in-out infinite; }
+.mm-rise { animation: mm-rise 0.8s ease both; }
+.mm-rise-d1 { animation-delay: 0.1s; }
+.mm-rise-d2 { animation-delay: 0.2s; }
+.mm-rise-d3 { animation-delay: 0.3s; }
 .mm-paper {
   background-color: ${MM.cream};
   background-image:
@@ -95,8 +85,12 @@ const EDITORIAL_CSS = `
     url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
 }
 .mm-rule { height: 1px; background: linear-gradient(90deg, transparent, ${MM.teal}66, transparent); }
+.mm-logo-plate {
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(28,23,20,0.08);
+}
 @media (prefers-reduced-motion: reduce) {
-  .mm-rise, .mm-ken, .mm-drift { animation: none !important; }
+  .mm-rise { animation: none !important; }
 }
 `;
 
@@ -268,10 +262,15 @@ export default function MamabelDemoPage() {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-8">
           <button type="button" onClick={() => scrollTo('inicio')} className="flex items-center gap-2.5 text-left">
-            {siteSettings.brandLogo ? (
-              <img src={siteSettings.brandLogo} alt="" className="h-9 w-9 object-contain bg-white/90 p-0.5" />
-            ) : null}
-            <span className="hidden text-xl leading-none sm:block" style={{ fontFamily: FONT_SCRIPT }}>
+            <img
+              src="/demos/mamabel/logo-large.jpg"
+              alt="Las Tortas de Mamá Mabel"
+              className="mm-logo-plate h-11 w-11 object-contain p-1 sm:h-12 sm:w-12"
+            />
+            <span
+              className="text-lg leading-none sm:text-xl"
+              style={{ fontFamily: FONT_SCRIPT, color: scrolled || navOpen ? MM.ink : MM.cream }}
+            >
               mamá mabel
             </span>
           </button>
@@ -341,15 +340,16 @@ export default function MamabelDemoPage() {
         <img
           src="/demos/mamabel/torta-canasta.jpg"
           alt="Torta canasta decorada a mano — Las Tortas de Mamá Mabel"
-          className="mm-ken absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: 'center 30%' }}
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: 'center 28%' }}
+          fetchPriority="high"
         />
-        {/* Gradiente oscuro suave solo para legibilidad — no lava la foto */}
+        {/* Solo sombra inferior para texto — sin velo claro ni zoom */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(180deg, rgba(28,23,20,0.35) 0%, rgba(28,23,20,0.15) 35%, rgba(28,23,20,0.45) 70%, rgba(28,23,20,0.82) 100%)',
+              'linear-gradient(180deg, rgba(28,23,20,0.28) 0%, rgba(28,23,20,0.08) 40%, rgba(28,23,20,0.55) 72%, rgba(28,23,20,0.88) 100%)',
           }}
         />
 

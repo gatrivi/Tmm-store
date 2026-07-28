@@ -5,7 +5,7 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-07-28 |
-| **Versión** | `1.11.1` (`package.json` → stamp UI) |
+| **Versión** | `1.11.2` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
 | **Último commit** | `7b23a2b` — Mamabel editorial landing (v1.11.0) |
 | **Live** | https://tmm.gatrivi.com |
