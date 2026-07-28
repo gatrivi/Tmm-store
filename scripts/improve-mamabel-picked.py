@@ -16,8 +16,8 @@ JOBS: list[tuple[str, str, int, float]] = [
     ("black-bows.jpg", "SANY0080.JPG", 1920, 0.0),
     ("black-elegant.jpg", "20140405_190202.jpg", 1600, -2.4),
     ("black-cars.jpg", "SANY0091.JPG", 1600, 0.0),
-    ("black-maleficent.jpg", "IMG_20170421_092050558.jpg", 1600, 5.0),
-    ("black-rock.jpg", "10626226_689149541176572_5720908616390328413_o.jpg", 1600, 1.5),
+    ("black-maleficent.jpg", "IMG_20170421_092050558.jpg", 1600, 0.0),  # perspective, not horizon tilt
+    ("black-rock.jpg", "10626226_689149541176572_5720908616390328413_o.jpg", 1600, 0.0),
     ("black-ddm.jpg", "17966385_1325778770846976_1790103810812018808_o.jpg", 1600, 0.0),
     ("black-bluebow.jpg", "IMG-20140509-WA0041.jpg", 1200, 0.0),
     ("black-cupcakes-books.jpg", "SANY0074.JPG", 1600, 0.0),
