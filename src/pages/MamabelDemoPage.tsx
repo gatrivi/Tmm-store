@@ -1,7 +1,7 @@
 /**
  * Editorial storefront — Las Tortas de Mamá Mabel
  * Brand: cream paper, cake-pink, watercolor teal, ink script (logo/flyer).
- * Etapa 2: portfolio (inspiración) + encargo guiado → WhatsApp (sin carrito).
+ * Etapa 3: likes-ranked portfolio, cursos honestos, confianza + cierre.
  */
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Mail, Phone } from 'lucide-react';
@@ -50,31 +50,38 @@ const NAV = [
   { id: 'contacto', label: 'Contacto' },
 ] as const;
 
-const OFICIO_PORTRAIT = '/demos/mamabel/top-03.jpg';
+/** Oficio: top liked IG (ig-mabel-top) — Mabel + pieza. */
+const OFICIO_PORTRAIT = '/demos/mamabel/top-03.jpg'; // 188 likes
 const OFICIO_GALLERY = [
-  '/demos/mamabel/torta-canasta.jpg',
-  '/demos/mamabel/top-08.jpg',
-  '/demos/mamabel/top-07.jpg',
-  '/demos/mamabel/top-04.jpg',
-  '/demos/mamabel/lemon-pie.jpg',
-  '/demos/mamabel/torta-violeta.jpg',
+  '/demos/mamabel/top-02.jpg', // 217 — Frida
+  '/demos/mamabel/top-04.jpg', // 146 — barco corte
+  '/demos/mamabel/top-05.jpg', // 98
+  '/demos/mamabel/top-06.jpg', // 89
+  '/demos/mamabel/top-07.jpg', // 55 — quince
+  '/demos/mamabel/top-08.jpg', // 54 — tapestry
 ];
 
-/** Portfolio — assets reales (inspiración, no comprables). */
-const PORTFOLIO = [
-  { src: '/demos/mamabel/torta-canasta.jpg', label: 'Canasta glacé' },
-  { src: '/demos/mamabel/torta-nemo.jpg', label: 'Temática personajes' },
-  { src: '/demos/mamabel/top-08.jpg', label: 'Artística' },
-  { src: '/demos/mamabel/top-07.jpg', label: 'Modelado' },
-  { src: '/demos/mamabel/top-04.jpg', label: 'Pieza escultórica' },
-  { src: '/demos/mamabel/selva-negra.jpg', label: 'Vintage' },
-  { src: '/demos/mamabel/torta-violeta.jpg', label: 'Flores' },
-  { src: '/demos/mamabel/balcarce.jpg', label: 'Pavo real' },
-  { src: '/demos/mamabel/lemon-pie.jpg', label: 'Lemon pie' },
-  { src: '/demos/mamabel/galletas.jpg', label: 'Galletas' },
-  { src: '/demos/mamabel/bombones.jpg', label: 'Bombones' },
-  { src: '/demos/mamabel/top-01.jpg', label: 'Mesa dulce' },
-] as const;
+/**
+ * Portfolio by IG likes (ig-mabel-top.json) + FB gallery.
+ * Skip top-01 (SORTEO, texto baked). No captions on text-in-image assets.
+ * CSS: object-contain — no crop de mástil / flyer.
+ */
+const PORTFOLIO: { src: string; alt: string; likes?: number }[] = [
+  { src: '/demos/mamabel/top-02.jpg', alt: 'Mabel con pieza Frida Kahlo', likes: 217 },
+  { src: '/demos/mamabel/top-03.jpg', alt: 'Mabel junto a torta barco y kraken', likes: 188 },
+  { src: '/demos/mamabel/top-04.jpg', alt: 'Torta barco — corte y estructura', likes: 146 },
+  { src: '/demos/mamabel/top-05.jpg', alt: 'Torta barco iluminada', likes: 98 },
+  { src: '/demos/mamabel/top-06.jpg', alt: 'Torta barco y kraken', likes: 89 },
+  { src: '/demos/mamabel/top-07.jpg', alt: 'Torta número 15', likes: 55 },
+  { src: '/demos/mamabel/top-08.jpg', alt: 'Torta tapestry 30', likes: 54 },
+  { src: '/demos/mamabel/top-10.jpg', alt: 'Trabajo de pastelería', likes: 51 },
+  { src: '/demos/mamabel/top-11.jpg', alt: 'Trabajo de pastelería', likes: 51 },
+  { src: '/demos/mamabel/top-12.jpg', alt: 'Trabajo de pastelería — Concordia', likes: 51 },
+  { src: '/demos/mamabel/torta-canasta.jpg', alt: 'Torta canasta glacé' },
+  { src: '/demos/mamabel/torta-nemo.jpg', alt: 'Torta temática personajes' },
+  { src: '/demos/mamabel/fb-gallery-01.jpg', alt: 'Torta artística — Facebook' },
+  { src: '/demos/mamabel/fb-gallery-02.jpg', alt: 'Trabajo — Facebook' },
+];
 
 const OCCASIONS = [
   'Cumpleaños',
@@ -136,6 +143,13 @@ const EDITORIAL_CSS = `
 .mm-field[aria-invalid="true"] {
   border-color: #c45c5c;
 }
+.mm-shot {
+  width: 100%;
+  background: #fff;
+  object-fit: contain;
+}
+.mm-shot-tall { aspect-ratio: 4 / 5; }
+.mm-flyer { width: 100%; height: auto; object-fit: contain; background: #fff; }
 @media (prefers-reduced-motion: reduce) {
   .mm-rise { animation: none !important; }
 }
@@ -177,6 +191,21 @@ export default function MamabelDemoPage() {
   useEffect(() => {
     setTheme('light');
     document.title = 'Las Tortas de Mamá Mabel';
+    const meta = (name: string, content: string, prop = false) => {
+      const attr = prop ? 'property' : 'name';
+      let el = document.head.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, name);
+        document.head.appendChild(el);
+      }
+      el.content = content;
+    };
+    meta('description', 'Pastelería familiar desde 1979. Tortas a medida y cursos de decoración — Las Tortas de Mamá Mabel.');
+    meta('og:title', 'Las Tortas de Mamá Mabel', true);
+    meta('og:description', 'Tortas decoradas a mano · encargos por WhatsApp · desde 1979', true);
+    meta('og:image', `${window.location.origin}/demos/mamabel/torta-canasta.jpg`, true);
+    meta('twitter:card', 'summary_large_image');
     if (!document.getElementById('mm-fonts')) {
       const link = document.createElement('link');
       link.id = 'mm-fonts';
@@ -234,7 +263,7 @@ export default function MamabelDemoPage() {
   const fieldLabel = 'mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.16em]';
 
   return (
-    <div className="mm-paper min-h-screen pb-20 md:pb-0" style={{ color: MM.ink, fontFamily: FONT_SERIF }} data-demo-theme="mamabel">
+    <div className="mm-paper min-h-screen overflow-x-hidden pb-20 md:pb-0" style={{ color: MM.ink, fontFamily: FONT_SERIF }} data-demo-theme="mamabel">
       {showTrufiChrome && <DemoRibbon />}
 
       <header
@@ -369,7 +398,9 @@ export default function MamabelDemoPage() {
             <img
               src={OFICIO_PORTRAIT}
               alt="Mabel junto a una pieza de pastelería escultórica"
-              className="aspect-[4/5] w-full object-cover"
+              className="mm-shot mm-shot-tall"
+              width={1440}
+              height={1440}
             />
             <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: MM.teal }}>
               Mabel · pieza escultórica
@@ -380,11 +411,10 @@ export default function MamabelDemoPage() {
               Oficio
             </p>
             <h2 className="mt-4 text-3xl leading-[1.15] sm:text-4xl lg:text-5xl">
-              Casi medio siglo haciendo lo difícil a mano.
+              Desde 1979, haciendo lo difícil a mano.
             </h2>
             <p className="mt-6 text-lg leading-relaxed" style={{ color: `${MM.ink}aa` }}>
-              Desde 1979: tortas clásicas, temáticas y trabajos de gran complejidad técnica —
-              como la pieza del barco — hechas en familia.
+              Pastelería familiar: tortas clásicas, temáticas y trabajos de gran complejidad técnica.
             </p>
           </div>
         </div>
@@ -393,9 +423,11 @@ export default function MamabelDemoPage() {
             <img
               key={src}
               src={src}
-              alt={i === 3 ? 'Pieza escultórica — barco' : `Trabajo de pastelería ${i + 1}`}
-              className="aspect-[4/5] w-full object-cover"
+              alt={`Trabajo destacado ${i + 1}`}
+              className="mm-shot mm-shot-tall"
               loading="lazy"
+              width={800}
+              height={1000}
             />
           ))}
         </div>
@@ -403,7 +435,7 @@ export default function MamabelDemoPage() {
 
       <div className="mm-rule mx-auto max-w-3xl" />
 
-      {/* Portfolio — inspiración, sin Agregar / pesos */}
+      {/* Portfolio — ranking likes IG (Mabel) + FB; contain = sin crop malo */}
       <section ref={sectionRefs.trabajos} id="trabajos" className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-28">
         <div className="mx-auto max-w-6xl">
           <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
@@ -411,23 +443,19 @@ export default function MamabelDemoPage() {
           </p>
           <h2 className="mt-3 text-4xl sm:text-5xl">Trabajos</h2>
           <p className="mt-4 max-w-xl text-lg leading-relaxed" style={{ color: `${MM.ink}99` }}>
-            Piezas reales para inspirarte. Cada encargo se cotiza a medida — no hay carrito ni precios cerrados online.
+            Piezas reales ordenadas por engagement en Instagram. Cada encargo se cotiza a medida.
           </p>
           <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
             {PORTFOLIO.map(work => (
-              <figure key={work.src} className="group">
+              <figure key={work.src}>
                 <img
                   src={work.src}
-                  alt={work.label}
-                  className="aspect-[4/5] w-full object-cover"
+                  alt={work.alt}
+                  className="mm-shot mm-shot-tall"
                   loading="lazy"
+                  width={720}
+                  height={900}
                 />
-                <figcaption
-                  className="mt-2 text-[11px] font-semibold uppercase tracking-[0.14em]"
-                  style={{ color: MM.tealDeep }}
-                >
-                  {work.label}
-                </figcaption>
               </figure>
             ))}
           </div>
@@ -610,49 +638,125 @@ export default function MamabelDemoPage() {
         </div>
       </section>
 
-      {/* Cursos — consulta, sin precios inventados como vigentes */}
+      {/* Cursos — flyer ya tiene texto: contain + sin copy duplicada */}
       <section
         ref={sectionRefs.cursos}
         id="cursos"
-        className="scroll-mt-24"
+        className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-28"
         style={{ backgroundColor: MM.blush }}
       >
-        <div className="mx-auto grid max-w-6xl gap-0 lg:grid-cols-2">
-          <img
-            src="/demos/mamabel/curso-flyer.jpg"
-            alt="Curso de iniciación"
-            className="h-full min-h-[320px] w-full object-cover lg:min-h-[560px]"
-          />
-          <div className="flex flex-col justify-center px-4 py-16 sm:px-10 sm:py-20">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
-              Talleres
-            </p>
-            <h2 className="mt-3 text-4xl sm:text-5xl">Iniciación a la decoración</h2>
-            <p className="mt-5 text-lg leading-relaxed" style={{ color: `${MM.ink}aa` }}>
-              Glasé, buttercream, picos rusos, drip y canasta de mimbre.
-              Materiales incluidos — te llevás la torta hecha por vos.
-            </p>
-            <p className="mt-3 text-sm font-semibold uppercase tracking-[0.14em]" style={{ color: MM.tealDeep }}>
-              Cotizar · consultar fechas por WhatsApp
-            </p>
-            {wspHref && (
-              <a
-                href={`${wspHref}?text=${encodeURIComponent('Hola! Quiero consultar por el curso de iniciación a la decoración.')}`}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-8 inline-flex min-h-12 items-center justify-center px-8 text-[12px] font-semibold uppercase tracking-[0.2em] text-white"
-                style={{ backgroundColor: MM.pink }}
-              >
-                Consultar curso
-              </a>
-            )}
+        <div className="mx-auto max-w-3xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
+            Talleres
+          </p>
+          <h2 className="mt-3 text-4xl sm:text-5xl">Aprendé con Mabel</h2>
+          <p className="mt-4 text-base leading-relaxed" style={{ color: `${MM.ink}99` }}>
+            Consultá la próxima fecha por WhatsApp. El encargo de tortas es otro flujo (
+            <button type="button" className="underline" style={{ color: MM.tealDeep }} onClick={() => scrollTo('encargar')}>
+              Encargar
+            </button>
+            ).
+          </p>
+
+          <div className="relative mt-10">
+            <span
+              className="absolute left-3 top-3 z-10 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white"
+              style={{ backgroundColor: MM.tealDeep }}
+            >
+              Edición anterior
+            </span>
             <img
-              src="/demos/mamabel/curso-ig.jpg"
-              alt=""
-              className="mt-10 w-full object-cover"
+              src="/demos/mamabel/curso-flyer.jpg"
+              alt="Volante de edición anterior — curso de iniciación"
+              className="mm-flyer"
               loading="lazy"
+              width={1024}
+              height={977}
             />
           </div>
+
+          <img
+            src="/demos/mamabel/curso-ig.jpg"
+            alt="Alumnas del curso con sus tortas"
+            className="mm-flyer mt-6"
+            loading="lazy"
+            width={1200}
+            height={1244}
+          />
+
+          <img
+            src="/demos/mamabel/curso-egreso.jpg"
+            alt="Egreso de taller — alumnas con certificados"
+            className="mm-flyer mt-6"
+            loading="lazy"
+            width={750}
+            height={562}
+          />
+
+          {wspHref && (
+            <a
+              href={`${wspHref}?text=${encodeURIComponent('Hola! Quiero consultar la proxima fecha del curso con Mabel.')}`}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-10 flex min-h-12 items-center justify-center px-8 text-[12px] font-semibold uppercase tracking-[0.2em] text-white"
+              style={{ backgroundColor: MM.pink }}
+            >
+              Consultar próxima fecha
+            </a>
+          )}
+        </div>
+      </section>
+
+      {/* Confianza */}
+      <section id="confianza" className="scroll-mt-24 px-4 py-16 sm:px-8 sm:py-20">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
+            Confianza
+          </p>
+          <h2 className="mt-3 text-3xl sm:text-4xl">Trabajos reales, en redes reales</h2>
+          <p className="mt-4 text-lg leading-relaxed" style={{ color: `${MM.ink}99` }}>
+            Desde 1979. Seguinos en Instagram para ver encargos y aulas.
+          </p>
+          {siteSettings.brandInstagram && (
+            <a
+              href={siteSettings.brandInstagram}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-8 inline-flex min-h-12 items-center gap-2 px-8 text-[12px] font-semibold uppercase tracking-[0.18em] text-white"
+              style={{ backgroundColor: MM.tealDeep }}
+            >
+              <InstagramIcon size={16} color="#fff" />
+              @lastortasdemamamabel
+            </a>
+          )}
+        </div>
+      </section>
+
+      <div className="mm-rule mx-auto max-w-3xl" />
+
+      {/* Info práctica — solo CTAs si no hay datos confirmados */}
+      <section id="info" className="scroll-mt-24 px-4 py-16 sm:px-8 sm:py-20">
+        <div className="mx-auto max-w-3xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
+            Antes de encargar
+          </p>
+          <h2 className="mt-3 text-3xl sm:text-4xl">Lo coordinamos por WhatsApp</h2>
+          <ul className="mt-8 space-y-4 text-base leading-relaxed" style={{ color: `${MM.ink}aa` }}>
+            <li>Anticipación, retiro y delivery — consultar.</li>
+            <li>Pagos y seña — consultar.</li>
+            <li>Conservación y porciones — consultar según el encargo.</li>
+          </ul>
+          {wspHref && (
+            <a
+              href={wspHref}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-8 inline-flex min-h-12 items-center px-8 text-[12px] font-semibold uppercase tracking-[0.18em] text-white"
+              style={{ backgroundColor: MM.pink }}
+            >
+              Consultar por WhatsApp
+            </a>
+          )}
         </div>
       </section>
 
@@ -664,24 +768,48 @@ export default function MamabelDemoPage() {
           <h2 className="mt-3 text-5xl sm:text-6xl" style={{ fontFamily: FONT_SCRIPT }}>
             hablemos de tu torta
           </h2>
-          <div className="mt-10 flex flex-col items-center gap-4 text-lg sm:flex-row sm:justify-center sm:gap-10">
+          <div className="mt-10 flex flex-col items-stretch gap-3 sm:mx-auto sm:max-w-md">
             {wspHref && (
-              <a href={wspHref} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:opacity-70">
-                <Phone size={16} color={MM.pink} strokeWidth={1.75} />
-                11 5619-6941
+              <a
+                href={wspHref}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-14 items-center justify-center gap-3 text-lg hover:opacity-70"
+                style={{ boxShadow: `inset 0 0 0 1px ${MM.teal}55` }}
+              >
+                <Phone size={18} color={MM.pink} strokeWidth={1.75} />
+                WhatsApp · 11 5619-6941
               </a>
             )}
-            <a href="mailto:mabelvallejos.reposteria@hotmail.com" className="inline-flex items-center gap-2 hover:opacity-70">
-              <Mail size={16} color={MM.pink} strokeWidth={1.75} />
-              Mail
+            <a
+              href="mailto:mabelvallejos.reposteria@hotmail.com"
+              className="inline-flex min-h-14 items-center justify-center gap-3 text-lg hover:opacity-70"
+              style={{ boxShadow: `inset 0 0 0 1px ${MM.teal}55` }}
+            >
+              <Mail size={18} color={MM.pink} strokeWidth={1.75} />
+              Mail · mabelvallejos.reposteria@hotmail.com
             </a>
             {siteSettings.brandInstagram && (
-              <a href={siteSettings.brandInstagram} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:opacity-70">
-                <InstagramIcon size={16} color={MM.pink} />
-                Instagram
+              <a
+                href={siteSettings.brandInstagram}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-14 items-center justify-center gap-3 text-lg hover:opacity-70"
+                style={{ boxShadow: `inset 0 0 0 1px ${MM.teal}55` }}
+              >
+                <InstagramIcon size={18} color={MM.pink} />
+                Instagram · @lastortasdemamamabel
               </a>
             )}
           </div>
+          <button
+            type="button"
+            onClick={() => scrollTo('encargar')}
+            className="mt-12 min-h-14 w-full max-w-md px-8 text-[12px] font-semibold uppercase tracking-[0.18em] text-white sm:w-auto"
+            style={{ backgroundColor: MM.pink }}
+          >
+            Encargar por WhatsApp
+          </button>
         </div>
       </section>
 
@@ -693,6 +821,7 @@ export default function MamabelDemoPage() {
         <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.28em] opacity-70">
           Las tortas de · desde 1979
         </p>
+        <p className="mt-4 text-sm opacity-80">11 5619-6941 · mabelvallejos.reposteria@hotmail.com</p>
       </footer>
 
       {/* Móvil: un solo CTA persistente */}

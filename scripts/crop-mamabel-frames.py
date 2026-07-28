@@ -71,7 +71,8 @@ def crop_until_stable(path: Path, max_passes: int = 6) -> int:
 def main() -> None:
     patterns = ["top-*.jpg", "rank-*.jpg", "ig-*.jpg", "torta-*.jpg", "galletas*.jpg",
                 "lemon-pie.jpg", "selva-negra.jpg", "balcarce.jpg", "bombones.jpg",
-                "curso-*.jpg", "hero.jpg", "fb-gallery-*.jpg"]
+                "hero.jpg", "fb-gallery-*.jpg"]
+    # ponytail: never crop curso-* — text-in-image (flyer/IG) gets clipped
     files: list[Path] = []
     for pat in patterns:
         files.extend(DEST.glob(pat))

@@ -5,7 +5,7 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-07-28 |
-| **Versión** | `1.12.1` (`package.json` → stamp UI) |
+| **Versión** | `1.13.0` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
 | **Último commit** | `a5ad2a9` — Mamabel etapa 2 portfolio+encargo (v1.12.0) |
 | **Live** | https://tmm.gatrivi.com |

@@ -29,6 +29,7 @@ Agent manifest: read this first, then one targeted file.
 | **Prospect demo (3 min)** | [ops/prospect-demo.md](./ops/prospect-demo.md) |
 | **Release gate publicitar (Hito A)** | [roadmap/advertising-readiness.md](./roadmap/advertising-readiness.md) |
 | **Demo flagship Mamá Mabel** | [roadmap/demo-mamabel.md](./roadmap/demo-mamabel.md) · `/demo/mamabel` |
+| **Mabel content gaps** | [mamabel-content-gaps.md](./mamabel-content-gaps.md) |
 | **Demo panadería La Magdalena** | [roadmap/demo-panaderia.md](./roadmap/demo-panaderia.md) · `/demo/panaderia` |
 | **Demo pizzería Fit A (live)** | [roadmap/demo-pizzeria.md](./roadmap/demo-pizzeria.md) · `/demo/pizzeria` |
 | **Demo carnicería (live)** | [roadmap/demo-carniceria-gabriel.md](./roadmap/demo-carniceria-gabriel.md) · `/demo/carniceria` |
