@@ -5,9 +5,9 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-07-28 |
-| **Versión** | `1.11.2` (`package.json` → stamp UI) |
+| **Versión** | `1.12.0` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Último commit** | `7b23a2b` — Mamabel editorial landing (v1.11.0) |
+| **Último commit** | (pendiente) — Mamabel etapa 2 portfolio+encargo (v1.12.0) |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |

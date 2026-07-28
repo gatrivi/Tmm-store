@@ -2,7 +2,16 @@ import type { MenuItemType } from '../menu';
 import type { OrderRecord } from '../../types/order';
 import type { DemoDefinition } from './types';
 
-/** Cake sizes by finished weight — AR pastelería. */
+/**
+ * Precios ilustrativos (admin / AI / ?trufi=1). Cliente ve Cotizar — no publicados como vigentes.
+ * Actualizado: 2026-07-28 · no usar en storefront cliente.
+ */
+export const MAMABEL_PRICES_NOTE = {
+  updatedAt: '2026-07-28',
+  status: 'illustrative' as const,
+};
+
+/** Cake sizes by finished weight — AR pastelería (solo referencia interna). */
 function cakeSizes(half: number, kilo: number, kiloHalf: number) {
   return [
     { id: 'half', label: '½ kg', price: half },

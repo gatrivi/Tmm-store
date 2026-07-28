@@ -1,19 +1,24 @@
 /**
  * Editorial storefront — Las Tortas de Mamá Mabel
  * Brand: cream paper, cake-pink, watercolor teal, ink script (logo/flyer).
+ * Etapa 2: portfolio (inspiración) + encargo guiado → WhatsApp (sin carrito).
  */
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Mail, Minus, Phone, Plus, ShoppingBag, X } from 'lucide-react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { Mail, Phone } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { AIAssistant } from '../components/AIAssistant';
-import CheckoutModal from '../components/CheckoutModal';
 import { DemoRibbon } from '../components/DemoRibbon';
 import { useMenu } from '../context/MenuContext';
 import { usePlan } from '../context/PlanContext';
 import { useTheme } from '../context/ThemeContext';
-import type { MenuItemType, MenuOption } from '../data/menu';
 import { getDemoByTenantId } from '../utils/demoRegistry';
-import { playAddToCartSound } from '../utils/sounds';
+import {
+  buildMamabelWaUrl,
+  MAMABEL_WSP,
+  validateMamabelEncargo,
+  type MamabelEncargo,
+  type MamabelEncargoErrors,
+} from '../utils/mamabelEncargo';
 
 const MM = {
   cream: '#FBF6F0',
@@ -23,7 +28,6 @@ const MM = {
   teal: '#70A8A0',
   tealDeep: '#3F6F6A',
   ink: '#1C1714',
-  mustard: '#C9A24B',
 } as const;
 
 const FONT_SERIF = '"Cormorant Garamond", "Times New Roman", serif';
@@ -37,35 +41,61 @@ const InstagramIcon = ({ size = 18, color }: { size?: number; color?: string }) 
   </svg>
 );
 
-type CartLine = {
-  id: string;
-  name: string;
-  optionId: string;
-  optionLabel: string;
-  price: number;
-  qty: number;
-};
-
-type CardState = Record<string, { optionId: string; qty: number }>;
-
 const NAV = [
   { id: 'inicio', label: 'Inicio' },
   { id: 'oficio', label: 'Oficio' },
-  { id: 'tortas', label: 'Encargos' },
+  { id: 'trabajos', label: 'Trabajos' },
+  { id: 'encargar', label: 'Encargar' },
   { id: 'cursos', label: 'Cursos' },
   { id: 'contacto', label: 'Contacto' },
 ] as const;
 
-/** Prueba de oficio — fotos reales fuertes, sin duplicar */
-const OFICIO_PORTRAIT = '/demos/mamabel/top-03.jpg'; // Mabel con pieza escultórica
+const OFICIO_PORTRAIT = '/demos/mamabel/top-03.jpg';
 const OFICIO_GALLERY = [
   '/demos/mamabel/torta-canasta.jpg',
   '/demos/mamabel/top-08.jpg',
   '/demos/mamabel/top-07.jpg',
-  '/demos/mamabel/top-04.jpg', // barco — amplitud técnica
+  '/demos/mamabel/top-04.jpg',
   '/demos/mamabel/lemon-pie.jpg',
   '/demos/mamabel/torta-violeta.jpg',
 ];
+
+/** Portfolio — assets reales (inspiración, no comprables). */
+const PORTFOLIO = [
+  { src: '/demos/mamabel/torta-canasta.jpg', label: 'Canasta glacé' },
+  { src: '/demos/mamabel/torta-nemo.jpg', label: 'Temática personajes' },
+  { src: '/demos/mamabel/top-08.jpg', label: 'Artística' },
+  { src: '/demos/mamabel/top-07.jpg', label: 'Modelado' },
+  { src: '/demos/mamabel/top-04.jpg', label: 'Pieza escultórica' },
+  { src: '/demos/mamabel/selva-negra.jpg', label: 'Vintage' },
+  { src: '/demos/mamabel/torta-violeta.jpg', label: 'Flores' },
+  { src: '/demos/mamabel/balcarce.jpg', label: 'Pavo real' },
+  { src: '/demos/mamabel/lemon-pie.jpg', label: 'Lemon pie' },
+  { src: '/demos/mamabel/galletas.jpg', label: 'Galletas' },
+  { src: '/demos/mamabel/bombones.jpg', label: 'Bombones' },
+  { src: '/demos/mamabel/top-01.jpg', label: 'Mesa dulce' },
+] as const;
+
+const OCCASIONS = [
+  'Cumpleaños',
+  'Casamiento / 15',
+  'Bautismo / comunión',
+  'Aniversario',
+  'Empresa / evento',
+  'Otro',
+] as const;
+
+const EMPTY_ENCARGO: MamabelEncargo = {
+  name: '',
+  occasion: 'Cumpleaños',
+  portions: '',
+  flavor: 'A definir',
+  filling: 'A definir',
+  dateNeeded: '',
+  fulfillment: 'pickup',
+  idea: '',
+  notes: '',
+};
 
 const STYLE_ID = 'mm-editorial-css';
 const EDITORIAL_CSS = `
@@ -89,22 +119,30 @@ const EDITORIAL_CSS = `
   background: #fff;
   box-shadow: 0 1px 0 rgba(28,23,20,0.08);
 }
+.mm-field {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.85rem;
+  background: #fff;
+  border: 1px solid ${MM.pinkSoft}99;
+  color: ${MM.ink};
+  font-family: ${FONT_SERIF};
+  font-size: 1rem;
+}
+.mm-field:focus {
+  outline: 2px solid ${MM.teal};
+  outline-offset: 1px;
+}
+.mm-field[aria-invalid="true"] {
+  border-color: #c45c5c;
+}
 @media (prefers-reduced-motion: reduce) {
   .mm-rise { animation: none !important; }
 }
 `;
 
-function formatArs(n: number): string {
-  return `$${n.toLocaleString('es-AR')}`;
-}
-
-function priceLabel(item: MenuItemType): string {
-  if (item.options.length > 1) return `desde ${formatArs(item.options[0].price)}`;
-  return item.options[0] ? formatArs(item.options[0].price) : '';
-}
-
 export default function MamabelDemoPage() {
-  const { menuItems, menuCategories, siteSettings } = useMenu();
+  const { siteSettings } = useMenu();
   const { tenantId } = usePlan();
   const { setTheme } = useTheme();
   const demo = getDemoByTenantId(tenantId);
@@ -115,36 +153,26 @@ export default function MamabelDemoPage() {
 
   const inicioRef = useRef<HTMLElement>(null);
   const oficioRef = useRef<HTMLElement>(null);
-  const tortasRef = useRef<HTMLElement>(null);
+  const trabajosRef = useRef<HTMLElement>(null);
+  const encargarRef = useRef<HTMLElement>(null);
   const cursosRef = useRef<HTMLElement>(null);
   const contactoRef = useRef<HTMLElement>(null);
   const sectionRefs = {
     inicio: inicioRef,
     oficio: oficioRef,
-    tortas: tortasRef,
+    trabajos: trabajosRef,
+    encargar: encargarRef,
     cursos: cursosRef,
     contacto: contactoRef,
   };
 
-  const cartKey = `trufi_cart:${tenantId}`;
-  const [cart, setCart] = useState<CartLine[]>(() => {
-    try {
-      const raw = localStorage.getItem(cartKey);
-      if (raw) return JSON.parse(raw) as CartLine[];
-    } catch { /* ignore */ }
-    return [];
-  });
-  const [fulfillment, setFulfillment] = useState<'delivery' | 'pickup'>('pickup');
-  const [categoryId, setCategoryId] = useState('decoradas');
-  const [cartOpen, setCartOpen] = useState(false);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [cardState, setCardState] = useState<CardState>({});
   const [navOpen, setNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [encargo, setEncargo] = useState<MamabelEncargo>(EMPTY_ENCARGO);
+  const [errors, setErrors] = useState<MamabelEncargoErrors>({});
 
-  const shopItems = useMemo(() => menuItems.filter(i => i.category !== 'cursos'), [menuItems]);
-  const courseItems = useMemo(() => menuItems.filter(i => i.category === 'cursos'), [menuItems]);
-  const shopCategories = useMemo(() => menuCategories.filter(c => c.id !== 'cursos'), [menuCategories]);
+  const wsp = siteSettings.whatsappNumber || MAMABEL_WSP;
+  const wspHref = wsp ? `https://wa.me/${wsp}` : undefined;
 
   useEffect(() => {
     setTheme('light');
@@ -172,65 +200,27 @@ export default function MamabelDemoPage() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
-    try { localStorage.setItem(cartKey, JSON.stringify(cart)); } catch { /* ignore */ }
-  }, [cart, cartKey]);
-
-  useEffect(() => {
-    if (!menuItems.length) return;
-    setCardState(prev => {
-      const next = { ...prev };
-      for (const item of menuItems) {
-        if (!next[item.id]) next[item.id] = { optionId: item.options[0]?.id ?? '', qty: 1 };
-      }
-      return next;
-    });
-  }, [menuItems]);
-
-  const visibleItems = useMemo(() => {
-    if (categoryId === 'todos') return shopItems;
-    return shopItems.filter(i => i.category === categoryId);
-  }, [shopItems, categoryId]);
-
-  const cartCount = cart.reduce((s, l) => s + l.qty, 0);
-  const cartTotal = cart.reduce((s, l) => s + l.price * l.qty, 0);
-  const wsp = siteSettings.whatsappNumber || '';
-  const wspHref = wsp ? `https://wa.me/${wsp}` : undefined;
-
   const scrollTo = (id: keyof typeof sectionRefs) => {
     setNavOpen(false);
     sectionRefs[id].current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const addLine = (item: MenuItemType, option: MenuOption, qty: number) => {
-    if (!option || qty < 1) return;
-    playAddToCartSound();
-    setCart(prev => {
-      const idx = prev.findIndex(l => l.id === item.id && l.optionId === option.id);
-      if (idx >= 0) return prev.map((l, i) => (i === idx ? { ...l, qty: l.qty + qty } : l));
-      return [...prev, {
-        id: item.id,
-        name: item.name,
-        optionId: option.id,
-        optionLabel: option.label,
-        price: option.price,
-        qty,
-      }];
+  const patch = (partial: Partial<MamabelEncargo>) => {
+    setEncargo(prev => ({ ...prev, ...partial }));
+    setErrors(prev => {
+      const next = { ...prev };
+      if (partial.portions !== undefined) delete next.portions;
+      if (partial.dateNeeded !== undefined) delete next.dateNeeded;
+      return next;
     });
   };
 
-  const handleAIAddToCart = (itemId: string, optionId: string, qty: number) => {
-    const item = menuItems.find(m => m.id === itemId);
-    const option = item?.options.find(o => o.id === optionId);
-    if (!item || !option) return;
-    addLine(item, option, qty || 1);
-    setCartOpen(true);
-  };
-
-  const updateCartQty = (index: number, delta: number) => {
-    setCart(prev =>
-      prev.map((l, i) => (i === index ? { ...l, qty: l.qty + delta } : l)).filter(l => l.qty > 0),
-    );
+  const openWhatsApp = (e: FormEvent) => {
+    e.preventDefault();
+    const nextErrors = validateMamabelEncargo(encargo);
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length) return;
+    window.open(buildMamabelWaUrl(encargo, wsp), '_blank', 'noopener,noreferrer');
   };
 
   if (!demo || !copy) {
@@ -241,16 +231,12 @@ export default function MamabelDemoPage() {
     );
   }
 
-  const filters = [
-    { id: 'todos', label: 'Todas' },
-    ...shopCategories.map(c => ({ id: c.id, label: c.name })),
-  ];
+  const fieldLabel = 'mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.16em]';
 
   return (
-    <div className="mm-paper min-h-screen" style={{ color: MM.ink, fontFamily: FONT_SERIF }} data-demo-theme="mamabel">
+    <div className="mm-paper min-h-screen pb-20 md:pb-0" style={{ color: MM.ink, fontFamily: FONT_SERIF }} data-demo-theme="mamabel">
       {showTrufiChrome && <DemoRibbon />}
 
-      {/* Nav — discreta */}
       <header
         className="fixed inset-x-0 z-30 transition-colors duration-300"
         style={{
@@ -275,7 +261,7 @@ export default function MamabelDemoPage() {
             </span>
           </button>
 
-          <nav className="hidden items-center gap-5 md:flex">
+          <nav className="hidden items-center gap-5 lg:flex">
             {NAV.map(n => (
               <button
                 key={n.id}
@@ -292,34 +278,25 @@ export default function MamabelDemoPage() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className="px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] md:hidden"
+              className="px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] lg:hidden"
               style={{ color: scrolled ? MM.tealDeep : MM.cream }}
               onClick={() => setNavOpen(v => !v)}
+              aria-expanded={navOpen}
             >
               {navOpen ? 'Cerrar' : 'Menú'}
             </button>
             <button
               type="button"
-              onClick={() => setCartOpen(true)}
-              aria-label="Encargo"
-              className="relative flex h-10 items-center gap-2 px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white"
+              onClick={() => scrollTo('encargar')}
+              className="hidden min-h-10 px-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-white sm:inline-flex sm:items-center"
               style={{ backgroundColor: MM.pink }}
             >
-              <ShoppingBag size={15} strokeWidth={1.75} />
-              <span className="hidden sm:inline">Encargo</span>
-              {cartCount > 0 && (
-                <span
-                  className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center px-1 text-[10px] font-bold"
-                  style={{ backgroundColor: MM.tealDeep, color: MM.cream }}
-                >
-                  {cartCount}
-                </span>
-              )}
+              Encargar
             </button>
           </div>
         </div>
         {navOpen && (
-          <div className="border-t px-4 py-4 md:hidden" style={{ borderColor: `${MM.pinkSoft}88`, backgroundColor: MM.cream }}>
+          <div className="border-t px-4 py-4 lg:hidden" style={{ borderColor: `${MM.pinkSoft}88`, backgroundColor: MM.cream }}>
             {NAV.map(n => (
               <button
                 key={n.id}
@@ -335,7 +312,6 @@ export default function MamabelDemoPage() {
         )}
       </header>
 
-      {/* HERO — foto real, contraste sin velo blanco */}
       <section ref={sectionRefs.inicio} id="inicio" className="relative isolate min-h-[100svh] overflow-hidden">
         <img
           src="/demos/mamabel/torta-canasta.jpg"
@@ -344,7 +320,6 @@ export default function MamabelDemoPage() {
           style={{ objectPosition: 'center 28%' }}
           fetchPriority="high"
         />
-        {/* Solo sombra inferior para texto — sin velo claro ni zoom */}
         <div
           className="absolute inset-0"
           style={{
@@ -352,12 +327,9 @@ export default function MamabelDemoPage() {
               'linear-gradient(180deg, rgba(28,23,20,0.28) 0%, rgba(28,23,20,0.08) 40%, rgba(28,23,20,0.55) 72%, rgba(28,23,20,0.88) 100%)',
           }}
         />
-
-        <div className="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-4 pb-16 pt-28 sm:px-8 sm:pb-24 lg:justify-end">
+        <div className="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-4 pb-16 pt-28 sm:px-8 sm:pb-24">
           <div className="max-w-2xl text-white">
-            <p
-              className="mm-rise text-[11px] font-semibold uppercase tracking-[0.32em] text-white/85"
-            >
+            <p className="mm-rise text-[11px] font-semibold uppercase tracking-[0.32em] text-white/85">
               Pastelería familiar · desde 1979
             </p>
             <h1
@@ -372,7 +344,7 @@ export default function MamabelDemoPage() {
             <div className="mm-rise mm-rise-d3 mt-8 flex flex-wrap gap-3">
               <button
                 type="button"
-                onClick={() => scrollTo('tortas')}
+                onClick={() => scrollTo('encargar')}
                 className="min-h-12 px-8 text-[12px] font-semibold uppercase tracking-[0.18em] text-white"
                 style={{ backgroundColor: MM.pink }}
               >
@@ -380,7 +352,7 @@ export default function MamabelDemoPage() {
               </button>
               <button
                 type="button"
-                onClick={() => scrollTo('oficio')}
+                onClick={() => scrollTo('trabajos')}
                 className="min-h-12 px-8 text-[12px] font-semibold uppercase tracking-[0.18em] text-white"
                 style={{ boxShadow: 'inset 0 0 0 1.5px rgba(255,255,255,0.7)' }}
               >
@@ -391,7 +363,6 @@ export default function MamabelDemoPage() {
         </div>
       </section>
 
-      {/* Oficio — prueba, no historia inventada */}
       <section ref={sectionRefs.oficio} id="oficio" className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-28">
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-14">
           <div className="relative">
@@ -400,10 +371,7 @@ export default function MamabelDemoPage() {
               alt="Mabel junto a una pieza de pastelería escultórica"
               className="aspect-[4/5] w-full object-cover"
             />
-            <p
-              className="mt-3 text-[11px] font-semibold uppercase tracking-[0.2em]"
-              style={{ color: MM.teal }}
-            >
+            <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: MM.teal }}>
               Mabel · pieza escultórica
             </p>
           </div>
@@ -420,14 +388,13 @@ export default function MamabelDemoPage() {
             </p>
           </div>
         </div>
-
         <div className="mx-auto mt-14 grid max-w-6xl grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
           {OFICIO_GALLERY.map((src, i) => (
             <img
               key={src}
               src={src}
               alt={i === 3 ? 'Pieza escultórica — barco' : `Trabajo de pastelería ${i + 1}`}
-              className={`aspect-[4/5] w-full object-cover ${i === 0 ? 'md:col-span-1' : ''}`}
+              className="aspect-[4/5] w-full object-cover"
               loading="lazy"
             />
           ))}
@@ -436,241 +403,265 @@ export default function MamabelDemoPage() {
 
       <div className="mm-rule mx-auto max-w-3xl" />
 
-      {/* Encargos — editorial rows, not card grid */}
-      <section ref={sectionRefs.tortas} id="tortas" className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-28">
+      {/* Portfolio — inspiración, sin Agregar / pesos */}
+      <section ref={sectionRefs.trabajos} id="trabajos" className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-28">
         <div className="mx-auto max-w-6xl">
-          <div className="flex flex-wrap items-end justify-between gap-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
+            Portfolio
+          </p>
+          <h2 className="mt-3 text-4xl sm:text-5xl">Trabajos</h2>
+          <p className="mt-4 max-w-xl text-lg leading-relaxed" style={{ color: `${MM.ink}99` }}>
+            Piezas reales para inspirarte. Cada encargo se cotiza a medida — no hay carrito ni precios cerrados online.
+          </p>
+          <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {PORTFOLIO.map(work => (
+              <figure key={work.src} className="group">
+                <img
+                  src={work.src}
+                  alt={work.label}
+                  className="aspect-[4/5] w-full object-cover"
+                  loading="lazy"
+                />
+                <figcaption
+                  className="mt-2 text-[11px] font-semibold uppercase tracking-[0.14em]"
+                  style={{ color: MM.tealDeep }}
+                >
+                  {work.label}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => scrollTo('encargar')}
+            className="mt-12 min-h-12 px-8 text-[12px] font-semibold uppercase tracking-[0.18em] text-white"
+            style={{ backgroundColor: MM.pink }}
+          >
+            Quiero una así
+          </button>
+        </div>
+      </section>
+
+      <div className="mm-rule mx-auto max-w-3xl" />
+
+      {/* Encargar — configurador → WhatsApp */}
+      <section ref={sectionRefs.encargar} id="encargar" className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-28">
+        <div className="mx-auto max-w-xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
+            Pedido
+          </p>
+          <h2 className="mt-3 text-4xl sm:text-5xl">Encargar</h2>
+          <p className="mt-4 text-lg leading-relaxed" style={{ color: `${MM.ink}99` }}>
+            Contanos lo esencial. Abrimos WhatsApp con el pedido listo — vos enviás cuando quieras.
+            Si tenés una foto de referencia, adjuntála en el chat.
+          </p>
+          <p className="mt-2 text-sm" style={{ color: MM.tealDeep }}>
+            Precio: Cotizar · sin pago online
+          </p>
+
+          <form className="mt-10 space-y-5" onSubmit={openWhatsApp} noValidate>
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
-                Carta
-              </p>
-              <h2 className="mt-3 text-4xl sm:text-5xl">Encargos</h2>
+              <label htmlFor="mm-name" className={fieldLabel} style={{ color: MM.tealDeep }}>Nombre</label>
+              <input
+                id="mm-name"
+                className="mm-field"
+                value={encargo.name}
+                onChange={e => patch({ name: e.target.value })}
+                autoComplete="name"
+              />
             </div>
-            <div className="flex text-[11px] font-semibold uppercase tracking-[0.18em]">
-              {(['pickup', 'delivery'] as const).map(mode => (
-                <button
-                  key={mode}
-                  type="button"
-                  onClick={() => setFulfillment(mode)}
-                  className="min-h-10 px-4"
-                  style={
-                    fulfillment === mode
-                      ? { backgroundColor: MM.tealDeep, color: MM.cream }
-                      : { color: MM.tealDeep, boxShadow: `inset 0 0 0 1px ${MM.teal}55` }
-                  }
-                >
-                  {mode === 'pickup' ? 'Retiro' : 'Delivery'}
-                </button>
-              ))}
+
+            <div>
+              <label htmlFor="mm-occasion" className={fieldLabel} style={{ color: MM.tealDeep }}>Ocasión</label>
+              <select
+                id="mm-occasion"
+                className="mm-field"
+                value={encargo.occasion}
+                onChange={e => patch({ occasion: e.target.value })}
+              >
+                {OCCASIONS.map(o => (
+                  <option key={o} value={o}>{o}</option>
+                ))}
+              </select>
             </div>
-          </div>
 
-          <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-b pb-1" style={{ borderColor: `${MM.pinkSoft}99` }}>
-            {filters.map(f => {
-              const on = categoryId === f.id;
-              return (
-                <button
-                  key={f.id}
-                  type="button"
-                  onClick={() => setCategoryId(f.id)}
-                  className="pb-3 text-[11px] font-semibold uppercase tracking-[0.16em]"
-                  style={{
-                    color: on ? MM.pink : `${MM.ink}66`,
-                    boxShadow: on ? `inset 0 -2px 0 ${MM.pink}` : undefined,
-                  }}
-                >
-                  {f.label}
-                </button>
-              );
-            })}
-          </div>
+            <div>
+              <label htmlFor="mm-portions" className={fieldLabel} style={{ color: MM.tealDeep }}>
+                Porciones (aprox.) *
+              </label>
+              <input
+                id="mm-portions"
+                className="mm-field"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={encargo.portions}
+                aria-invalid={!!errors.portions}
+                aria-describedby={errors.portions ? 'mm-portions-err' : undefined}
+                onChange={e => patch({ portions: e.target.value })}
+              />
+              {errors.portions && (
+                <p id="mm-portions-err" className="mt-1.5 text-sm" style={{ color: '#c45c5c' }} role="alert">
+                  {errors.portions}
+                </p>
+              )}
+            </div>
 
-          <div className="mt-4 divide-y" style={{ borderColor: `${MM.pinkSoft}66` }}>
-            {visibleItems.map(item => {
-              const state = cardState[item.id] ?? { optionId: item.options[0]?.id ?? '', qty: 1 };
-              const option = item.options.find(o => o.id === state.optionId) ?? item.options[0];
-              const img = item.images[0];
-              return (
-                <article
-                  key={item.id}
-                  className="grid gap-5 py-8 sm:grid-cols-[minmax(0,220px)_1fr] sm:items-center lg:grid-cols-[minmax(0,280px)_1fr_auto]"
-                  style={{ borderColor: `${MM.pinkSoft}66` }}
-                >
-                  <div className="aspect-[4/5] overflow-hidden" style={{ backgroundColor: MM.blush }}>
-                    {img ? <img src={img} alt={item.name} className="h-full w-full object-cover" loading="lazy" /> : null}
-                  </div>
-                  <div>
-                    <div className="flex flex-wrap items-baseline gap-3">
-                      <h3 className="text-2xl sm:text-3xl">{item.name}</h3>
-                      {item.badge && (
-                        <span className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: MM.pink }}>
-                          {item.badge}
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-2 max-w-xl text-base leading-relaxed" style={{ color: `${MM.ink}99` }}>
-                      {item.description}
-                    </p>
-                    <p className="mt-3 text-xl" style={{ color: MM.tealDeep }}>{priceLabel(item)}</p>
-                    {item.options.length > 1 && (
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {item.options.map(opt => {
-                          const on = state.optionId === opt.id;
-                          return (
-                            <button
-                              key={opt.id}
-                              type="button"
-                              onClick={() =>
-                                setCardState(prev => ({
-                                  ...prev,
-                                  [item.id]: { optionId: opt.id, qty: prev[item.id]?.qty ?? 1 },
-                                }))
-                              }
-                              className="min-h-9 px-3 text-[11px] font-semibold uppercase tracking-[0.12em]"
-                              style={
-                                on
-                                  ? { backgroundColor: MM.tealDeep, color: MM.cream }
-                                  : { color: MM.tealDeep, boxShadow: `inset 0 0 0 1px ${MM.teal}66` }
-                              }
-                            >
-                              {opt.label}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2 sm:col-span-2 lg:col-span-1 lg:flex-col lg:items-stretch">
-                    <div className="flex items-center" style={{ boxShadow: `inset 0 0 0 1px ${MM.teal}44` }}>
-                      <button
-                        type="button"
-                        aria-label="Restar"
-                        className="flex h-11 w-10 items-center justify-center"
-                        onClick={() =>
-                          setCardState(prev => ({
-                            ...prev,
-                            [item.id]: { optionId: state.optionId, qty: Math.max(1, state.qty - 1) },
-                          }))
-                        }
-                      >
-                        <Minus size={14} />
-                      </button>
-                      <span className="w-8 text-center text-sm font-semibold">{state.qty}</span>
-                      <button
-                        type="button"
-                        aria-label="Sumar"
-                        className="flex h-11 w-10 items-center justify-center"
-                        onClick={() =>
-                          setCardState(prev => ({
-                            ...prev,
-                            [item.id]: { optionId: state.optionId, qty: state.qty + 1 },
-                          }))
-                        }
-                      >
-                        <Plus size={14} />
-                      </button>
-                    </div>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="mm-flavor" className={fieldLabel} style={{ color: MM.tealDeep }}>Sabor</label>
+                <input
+                  id="mm-flavor"
+                  className="mm-field"
+                  value={encargo.flavor}
+                  placeholder="A definir"
+                  onChange={e => patch({ flavor: e.target.value })}
+                />
+              </div>
+              <div>
+                <label htmlFor="mm-filling" className={fieldLabel} style={{ color: MM.tealDeep }}>Relleno</label>
+                <input
+                  id="mm-filling"
+                  className="mm-field"
+                  value={encargo.filling}
+                  placeholder="A definir"
+                  onChange={e => patch({ filling: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="mm-date" className={fieldLabel} style={{ color: MM.tealDeep }}>
+                Fecha necesaria *
+              </label>
+              <input
+                id="mm-date"
+                type="date"
+                className="mm-field"
+                value={encargo.dateNeeded}
+                aria-invalid={!!errors.dateNeeded}
+                aria-describedby={errors.dateNeeded ? 'mm-date-err' : undefined}
+                onChange={e => patch({ dateNeeded: e.target.value })}
+              />
+              {errors.dateNeeded && (
+                <p id="mm-date-err" className="mt-1.5 text-sm" role="alert" style={{ color: '#c45c5c' }}>
+                  {errors.dateNeeded}
+                </p>
+              )}
+            </div>
+
+            <fieldset>
+              <legend className={fieldLabel} style={{ color: MM.tealDeep }}>Entrega</legend>
+              <div className="mt-1 flex">
+                {([
+                  ['pickup', 'Retiro'],
+                  ['delivery', 'Delivery'],
+                ] as const).map(([id, label]) => {
+                  const on = encargo.fulfillment === id;
+                  return (
                     <button
+                      key={id}
                       type="button"
-                      onClick={() => option && addLine(item, option, state.qty)}
-                      className="flex min-h-11 flex-1 items-center justify-center px-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white lg:flex-none"
-                      style={{ backgroundColor: MM.pink }}
+                      aria-pressed={on}
+                      onClick={() => patch({ fulfillment: id })}
+                      className="min-h-11 flex-1 text-[11px] font-semibold uppercase tracking-[0.16em]"
+                      style={
+                        on
+                          ? { backgroundColor: MM.tealDeep, color: MM.cream }
+                          : { color: MM.tealDeep, boxShadow: `inset 0 0 0 1px ${MM.teal}55` }
+                      }
                     >
-                      Agregar
+                      {label}
                     </button>
-                  </div>
-                </article>
-              );
-            })}
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            <div>
+              <label htmlFor="mm-idea" className={fieldLabel} style={{ color: MM.tealDeep }}>Idea / tema</label>
+              <input
+                id="mm-idea"
+                className="mm-field"
+                value={encargo.idea}
+                onChange={e => patch({ idea: e.target.value })}
+                placeholder="Ej. flores celestes, personaje…"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="mm-notes" className={fieldLabel} style={{ color: MM.tealDeep }}>Notas</label>
+              <textarea
+                id="mm-notes"
+                className="mm-field min-h-24"
+                rows={3}
+                value={encargo.notes}
+                onChange={e => patch({ notes: e.target.value })}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="flex min-h-12 w-full items-center justify-center text-[12px] font-semibold uppercase tracking-[0.18em] text-white"
+              style={{ backgroundColor: MM.pink }}
+            >
+              Encargar por WhatsApp
+            </button>
+          </form>
+        </div>
+      </section>
+
+      {/* Cursos — consulta, sin precios inventados como vigentes */}
+      <section
+        ref={sectionRefs.cursos}
+        id="cursos"
+        className="scroll-mt-24"
+        style={{ backgroundColor: MM.blush }}
+      >
+        <div className="mx-auto grid max-w-6xl gap-0 lg:grid-cols-2">
+          <img
+            src="/demos/mamabel/curso-flyer.jpg"
+            alt="Curso de iniciación"
+            className="h-full min-h-[320px] w-full object-cover lg:min-h-[560px]"
+          />
+          <div className="flex flex-col justify-center px-4 py-16 sm:px-10 sm:py-20">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
+              Talleres
+            </p>
+            <h2 className="mt-3 text-4xl sm:text-5xl">Iniciación a la decoración</h2>
+            <p className="mt-5 text-lg leading-relaxed" style={{ color: `${MM.ink}aa` }}>
+              Glasé, buttercream, picos rusos, drip y canasta de mimbre.
+              Materiales incluidos — te llevás la torta hecha por vos.
+            </p>
+            <p className="mt-3 text-sm font-semibold uppercase tracking-[0.14em]" style={{ color: MM.tealDeep }}>
+              Cotizar · consultar fechas por WhatsApp
+            </p>
+            {wspHref && (
+              <a
+                href={`${wspHref}?text=${encodeURIComponent('Hola! Quiero consultar por el curso de iniciación a la decoración.')}`}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-8 inline-flex min-h-12 items-center justify-center px-8 text-[12px] font-semibold uppercase tracking-[0.2em] text-white"
+                style={{ backgroundColor: MM.pink }}
+              >
+                Consultar curso
+              </a>
+            )}
+            <img
+              src="/demos/mamabel/curso-ig.jpg"
+              alt=""
+              className="mt-10 w-full object-cover"
+              loading="lazy"
+            />
           </div>
         </div>
       </section>
 
-      {/* Cursos */}
-      {courseItems.length > 0 && (
-        <section
-          ref={sectionRefs.cursos}
-          id="cursos"
-          className="scroll-mt-24"
-          style={{ backgroundColor: MM.blush }}
-        >
-          <div className="mx-auto grid max-w-6xl gap-0 lg:grid-cols-2">
-            <img
-              src="/demos/mamabel/curso-flyer.jpg"
-              alt="Curso de iniciación"
-              className="h-full min-h-[320px] w-full object-cover lg:min-h-[560px]"
-            />
-            <div className="flex flex-col justify-center px-4 py-16 sm:px-10 sm:py-20">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
-                Talleres
-              </p>
-              <h2 className="mt-3 text-4xl sm:text-5xl">Iniciación a la decoración</h2>
-              <p className="mt-5 text-lg leading-relaxed" style={{ color: `${MM.ink}aa` }}>
-                Glasé, buttercream, picos rusos, drip y canasta de mimbre.
-                Materiales incluidos — te llevás la torta hecha por vos.
-              </p>
-              {courseItems.map(item => {
-                const state = cardState[item.id] ?? { optionId: item.options[0]?.id ?? '', qty: 1 };
-                const option = item.options.find(o => o.id === state.optionId) ?? item.options[0];
-                return (
-                  <div key={item.id} className="mt-8">
-                    <div className="flex flex-wrap gap-2">
-                      {item.options.map(opt => {
-                        const on = state.optionId === opt.id;
-                        return (
-                          <button
-                            key={opt.id}
-                            type="button"
-                            onClick={() =>
-                              setCardState(prev => ({
-                                ...prev,
-                                [item.id]: { optionId: opt.id, qty: 1 },
-                              }))
-                            }
-                            className="min-h-10 px-4 text-[11px] font-semibold uppercase tracking-[0.12em]"
-                            style={
-                              on
-                                ? { backgroundColor: MM.tealDeep, color: MM.cream }
-                                : { color: MM.tealDeep, boxShadow: `inset 0 0 0 1px ${MM.teal}` }
-                            }
-                          >
-                            {opt.label} · {formatArs(opt.price)}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => option && addLine(item, option, 1)}
-                      className="mt-5 min-h-12 px-8 text-[12px] font-semibold uppercase tracking-[0.2em] text-white"
-                      style={{ backgroundColor: MM.pink }}
-                    >
-                      Reservar seña
-                    </button>
-                  </div>
-                );
-              })}
-              <img
-                src="/demos/mamabel/curso-ig.jpg"
-                alt=""
-                className="mt-10 w-full object-cover"
-                loading="lazy"
-              />
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Contacto */}
       <section ref={sectionRefs.contacto} id="contacto" className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-28">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.35em]" style={{ color: MM.teal }}>
             Contacto
           </p>
-          <h2
-            className="mt-3 text-5xl sm:text-6xl"
-            style={{ fontFamily: FONT_SCRIPT }}
-          >
+          <h2 className="mt-3 text-5xl sm:text-6xl" style={{ fontFamily: FONT_SCRIPT }}>
             hablemos de tu torta
           </h2>
           <div className="mt-10 flex flex-col items-center gap-4 text-lg sm:flex-row sm:justify-center sm:gap-10">
@@ -704,74 +695,22 @@ export default function MamabelDemoPage() {
         </p>
       </footer>
 
-      {/* Cart drawer */}
-      {cartOpen && (
-        <div className="fixed inset-0 z-40 flex justify-end bg-black/35">
-          <div className="flex h-full w-full max-w-md flex-col" style={{ backgroundColor: MM.cream }}>
-            <div className="flex items-center justify-between px-5 py-5" style={{ borderBottom: `1px solid ${MM.pinkSoft}` }}>
-              <h2 className="text-2xl">Tu encargo</h2>
-              <button type="button" aria-label="Cerrar" onClick={() => setCartOpen(false)}>
-                <X size={20} />
-              </button>
-            </div>
-            <div className="flex-1 space-y-4 overflow-y-auto p-5">
-              {cart.length === 0 ? (
-                <p style={{ color: `${MM.ink}88` }}>Todavía vacío.</p>
-              ) : (
-                cart.map((line, idx) => (
-                  <div key={`${line.id}-${line.optionId}-${idx}`} className="flex justify-between gap-3 pb-3" style={{ borderBottom: `1px solid ${MM.pinkSoft}` }}>
-                    <div>
-                      <p className="text-base">{line.qty} × {line.name}</p>
-                      <p className="text-sm" style={{ color: `${MM.ink}88` }}>{line.optionLabel}</p>
-                      <p className="mt-1" style={{ color: MM.pink }}>{formatArs(line.price * line.qty)}</p>
-                    </div>
-                    <div className="flex gap-1">
-                      <button type="button" className="p-2" style={{ boxShadow: `inset 0 0 0 1px ${MM.teal}44` }} onClick={() => updateCartQty(idx, -1)}>
-                        <Minus size={14} />
-                      </button>
-                      <button type="button" className="p-2" style={{ boxShadow: `inset 0 0 0 1px ${MM.teal}44` }} onClick={() => updateCartQty(idx, 1)}>
-                        <Plus size={14} />
-                      </button>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-            <div className="p-5" style={{ borderTop: `1px solid ${MM.pinkSoft}` }}>
-              <div className="mb-1 flex justify-between text-xl">
-                <span>{copy.totalLabel}</span>
-                <span>{formatArs(cartTotal)}</span>
-              </div>
-              <p className="mb-4 text-sm" style={{ color: `${MM.ink}88` }}>{copy.totalHint}</p>
-              <button
-                type="button"
-                disabled={cart.length === 0}
-                onClick={() => { setCartOpen(false); setCheckoutOpen(true); }}
-                className="flex min-h-12 w-full items-center justify-center text-[12px] font-semibold uppercase tracking-[0.2em] text-white disabled:opacity-40"
-                style={{ backgroundColor: MM.pink }}
-              >
-                {copy.cartCta}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Móvil: un solo CTA persistente */}
+      <div
+        className="fixed inset-x-0 bottom-0 z-40 border-t p-3 md:hidden"
+        style={{ backgroundColor: `${MM.cream}f8`, borderColor: `${MM.pinkSoft}88`, backdropFilter: 'blur(8px)' }}
+      >
+        <button
+          type="button"
+          onClick={() => scrollTo('encargar')}
+          className="flex min-h-12 w-full items-center justify-center text-[12px] font-semibold uppercase tracking-[0.16em] text-white"
+          style={{ backgroundColor: MM.pink }}
+        >
+          Encargar por WhatsApp
+        </button>
+      </div>
 
-      <CheckoutModal
-        isOpen={checkoutOpen}
-        onClose={() => setCheckoutOpen(false)}
-        cart={cart}
-        total={cartTotal}
-        subtotal={cartTotal}
-        discount={0}
-        whatsappNumber=""
-        bankAlias=""
-        mpEnabled={false}
-        initialDeliveryType={fulfillment}
-        onOrderSent={() => setCart([])}
-      />
-
-      {showTrufiChrome && <AIAssistant onAddToCart={handleAIAddToCart} />}
+      {showTrufiChrome && <AIAssistant onAddToCart={() => { /* etapa 2: sin carrito cliente */ }} />}
     </div>
   );
 }
