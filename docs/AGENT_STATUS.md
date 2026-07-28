@@ -7,7 +7,7 @@
 | **Fecha snapshot** | 2026-07-28 |
 | **Versión** | `1.13.4` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Último commit** | `3aad6fe` — Mamabel etapa 3 likes+cursos (v1.13.0) |
+| **Último commit** | `05e4581` — Mamabel picked cakes center/symmetry (v1.13.4) |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
@@ -81,7 +81,7 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/order/:orderId` | Seguimiento pedido real/tenant |
 | `/super-admin` | Provisioning tenants |
 
-Live sales URLs: `/` · `/demo/pizzeria` · `/demo/pizzeria/owner` · `/demo/armar` · `/demo/carniceria` (+ owner) · `/demo` legacy.
+Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/armar` · `/demo` legacy.
 
 ---
 
@@ -96,9 +96,11 @@ Live sales URLs: `/` · `/demo/pizzeria` · `/demo/pizzeria/owner` · `/demo/arm
 - Armado wizard (~10 min) en admin
 - Multi-tenant URL `/s/:slug` + SuperAdmin
 - **Orders v2 Hito 1:** demo coherente, una acción primaria, store demo compartido cliente/owner/seguimiento
+- **Demo Mamá Mabel flagship (v1.11–1.13.4):** portada marca · portfolio likes · encargo WA · cursos honestos · hero/portfolio black-bg studio picks (EXIF/glare/tilt/center)
 - **Demo pizzería Fit A:** carta pizza/empanadas, tenant `demo-pizzeria`, storage aislado
-- **Demo carnicería Hito 1:** peso/packs, total estimado, tenant `demo-carniceria`, storage `trufi_demo_orders_v2:carniceria`
-- **Advertising Hito A (v1.9.0):** OG propio `demo-carniceria.html` + rewrite Vercel; copy demo segura; E2E Playwright `e2e/demo-carniceria.spec.ts` + `e2e/og-carniceria.spec.ts`
+- **Demo panadería La Magdalena (v1.9.3):** tenant `demo-panaderia`, storage `trufi_demo_orders_v2:panaderia`
+- **Demo carnicería Hito 1:** peso/packs, total estimado, tenant `demo-carniceria`
+- **Advertising Hito A (v1.9.0):** OG carnicería + rewrite Vercel; E2E Playwright
 - Self-check: `npm run check:demo`
 - Leads ZN docs + script `npm run leads:scan`
 
@@ -112,13 +114,12 @@ Live sales URLs: `/` · `/demo/pizzeria` · `/demo/pizzeria/owner` · `/demo/arm
 | WhatsApp Business API | Roadmap P3 — hoy handoff wa.me / mensaje estructurado |
 | Gaucho mode / Premium CX desk | Spec only |
 | Pedidos reales de cliente pagando | Hito B advertising — **no** hasta auth dueño en Firestore |
-| Verticales verdulería/panadería | Plan only → [`roadmap/vertical-demos-plan.md`](./roadmap/vertical-demos-plan.md) |
+| Vertical verdulería | Plan only → [`roadmap/vertical-demos-plan.md`](./roadmap/vertical-demos-plan.md) |
 
 ### Guardrails demos
 
-- Demo **nunca** abre WSP real ni cobra
-- No usar teléfono de comercio real en `/demo*`
-- Carnicería: precios/nombre/cobertura son **demostración** (no datos reales de Gabriel)
+- Demo **nunca** abre WSP real ni cobra (excepto demos prospect con tel explícito en doc — Mamabel/Magdalena)
+- No inventar datos de comercios reales fuera de demos documentados
 - `sessionStorage` aislado por vertical; no mezclar con tenant Firebase
 
 ---
@@ -131,9 +132,11 @@ Live sales URLs: `/` · `/demo/pizzeria` · `/demo/pizzeria/owner` · `/demo/arm
 | Tenant real con Firebase | Firestore |
 | Demo gastronomía | `sessionStorage` `trufi_demo_orders_v2` |
 | Demo pizzería | `sessionStorage` `trufi_demo_orders_v2:pizzeria` |
+| Demo mamabel | `sessionStorage` `trufi_demo_orders_v2:mamabel` |
+| Demo panadería | `sessionStorage` `trufi_demo_orders_v2:panaderia` |
 | Demo carnicería | `sessionStorage` `trufi_demo_orders_v2:carniceria` |
 
-Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan: `/demo/carniceria` antes que `/demo`).
+Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 
 ---
 
@@ -150,7 +153,7 @@ Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan: `
 
 ## 7. Ventas — foco actual
 
-**Perfil que compra:** pizza / empanadas / roti / food truck — dueño cocina, alto WSP, sin web propia, odia comisión.
+**Perfil que compra:** pizza / empanadas / roti / food truck — dueño cocina, alto WSP, sin web propia, odia comisión. + pastelería/panadería como flagship demo.
 
 **Zona:** Olivos → Vicente López (anillos) — [`ops/leads-rings-routine.md`](./ops/leads-rings-routine.md), shortlist [`ops/propuesta-olivos-vl.md`](./ops/propuesta-olivos-vl.md).
 
@@ -158,11 +161,13 @@ Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan: `
 
 **Demos a mostrar:**
 
-1. **Default Fit A** → `/demo/pizzeria` + `/demo/pizzeria/owner` (script [`ops/prospect-demo.md`](./ops/prospect-demo.md))
-2. Personalizar al toque → `/demo/armar`
-3. Vertical carnicería → `/demo/carniceria`
-4. Legacy choripán → `/demo` (solo si aplica)
-5. Post-depósito → tenant real `/s/<slug>` (no clonar app)
+1. **Flagship** → `/demo/mamabel` ([`roadmap/demo-mamabel.md`](./roadmap/demo-mamabel.md))
+2. **Default Fit A** → `/demo/pizzeria` + owner ([`ops/prospect-demo.md`](./ops/prospect-demo.md))
+3. Panadería → `/demo/panaderia`
+4. Personalizar al toque → `/demo/armar`
+5. Vertical carnicería → `/demo/carniceria`
+6. Legacy choripán → `/demo` (solo si aplica)
+7. Post-depósito → tenant real `/s/<slug>` (no clonar app)
 
 **Próxima vertical recomendada (no buildeada):** verdulería. Plan: [`roadmap/vertical-demos-plan.md`](./roadmap/vertical-demos-plan.md).
 
@@ -178,7 +183,8 @@ Publicitar “busco pilotos”: Hito A OK. Tráfico frío prometiendo sistema li
 |-----------|-----|--------|
 | 1 | [`order-processing-v2.md`](./roadmap/order-processing-v2.md) | Hito 1 done; 2–5 pending |
 | 2 | [`advertising-readiness.md`](./roadmap/advertising-readiness.md) | Hito A done; Hito B (auth Firestore) pending |
-| 3 | [`vertical-demos-plan.md`](./roadmap/vertical-demos-plan.md) | Plan; build bajo demanda |
+| 3 | [`demo-mamabel.md`](./roadmap/demo-mamabel.md) | Flagship shipped v1.13.x; polish fotos ongoing |
+| 4 | [`vertical-demos-plan.md`](./roadmap/vertical-demos-plan.md) | Plan; verdulería bajo demanda |
 | — | competitive-parity, print-tickets, wsp-cx, gaucho, premium-cx | Spec / diferido |
 
 Índice: [`roadmap/README.md`](./roadmap/README.md).
@@ -195,6 +201,8 @@ Publicitar “busco pilotos”: Hito A OK. Tráfico frío prometiendo sistema li
 | Órdenes admin | componentes admin + `orderService` |
 | Máquina estados | `src/services/orderStateMachine` (vía services) |
 | Demo registry | `src/utils/demoRegistry.ts` |
+| Config Mamabel | `src/data/demos/mamabel.ts` · página `MamabelDemoPage` |
+| Config panadería | `src/data/demos/panaderia.ts` |
 | Config carnicería | `src/data/demos/carniceria.ts` |
 | Página carnicería | `src/pages/CarniceriaDemoPage.tsx` |
 | Planes | `src/config/plans.ts` |
@@ -210,18 +218,16 @@ Publicitar “busco pilotos”: Hito A OK. Tráfico frío prometiendo sistema li
 3. No crear MD en raíz; actualizar docs existentes o `docs/**`.
 4. Tras feature visible: bump `package.json` version + actualizar stamp en respuestas humanas (`— Trufi vX.Y.Z`).
 5. Commit/push solo si el humano lo pide (salvo regla explícita del usuario).
-6. Demos: no Firebase, no WSP real, no MP real, no inventar datos de comercios reales.
+6. Demos: no Firebase, no inventar datos de comercios reales; WSP/MP reales solo donde el doc del demo lo permite.
 7. Laconic: bullets > párrafos.
 
 ---
 
 ## 11. Estado git al snapshot
 
-- Branch limpia respecto a origin salvo **docs locales sin commit**:
-  - `docs/roadmap/vertical-demos-plan.md` (nuevo)
-  - edits a `docs/README.md`, `docs/roadmap/README.md`
-  - este archivo `docs/AGENT_STATUS.md`
-- WIP commit `d57bee2` en remoto/local: backup 2026-07-24
+- Branch `trabajo` al día con `origin/trabajo`
+- HEAD = `05e4581` (v1.13.4)
+- WIP local sin track (no mergear): `.playwright-mcp/*.yml`, `public/demos/mamabel/scraped/ig-ranked.json`
 
 ---
 
@@ -234,10 +240,12 @@ npm run check:demo
 
 Abrir:
 
+- https://tmm.gatrivi.com/demo/mamabel  
 - https://tmm.gatrivi.com/demo/pizzeria  
 - https://tmm.gatrivi.com/demo/pizzeria/owner  
+- https://tmm.gatrivi.com/demo/panaderia  
 - https://tmm.gatrivi.com/demo/carniceria  
-- Stamp / `package.json` = **1.9.1**
+- Stamp / `package.json` = **1.13.4**
 
 ---
 
