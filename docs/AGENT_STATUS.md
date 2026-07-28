@@ -7,7 +7,7 @@
 | **Fecha snapshot** | 2026-07-28 |
 | **Versión** | `1.12.0` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Último commit** | (pendiente) — Mamabel etapa 2 portfolio+encargo (v1.12.0) |
+| **Último commit** | `a5ad2a9` — Mamabel etapa 2 portfolio+encargo (v1.12.0) |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
