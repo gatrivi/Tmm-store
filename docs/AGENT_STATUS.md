@@ -96,6 +96,7 @@ Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/
 - Armado wizard (~10 min) en admin
 - Multi-tenant URL `/s/:slug` + SuperAdmin
 - **Orders v2 Hito 1:** demo coherente, una acción primaria, store demo compartido cliente/owner/seguimiento
+- **Demo Express presets (v1.14.0):** 7 rubros data-driven (`demoPresets.ts`) — prioridad molino + distribuidora lácteos; ver [`roadmap/usd50-tomorrow-demo-plan.md`](./roadmap/usd50-tomorrow-demo-plan.md)
 - **Demo Mamá Mabel flagship (v1.11–1.13.4):** portada marca · portfolio likes · encargo WA · cursos honestos · hero/portfolio black-bg studio picks (EXIF/glare/tilt/center)
 - **Demo pizzería Fit A:** carta pizza/empanadas, tenant `demo-pizzeria`, storage aislado
 - **Demo panadería La Magdalena (v1.9.3):** tenant `demo-panaderia`, storage `trufi_demo_orders_v2:panaderia`
