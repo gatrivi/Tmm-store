@@ -8,6 +8,7 @@ Purpose: future Trufi work — competitive parity with PedidoDirecto, then Premi
 
 | Topic | Doc |
 |-------|-----|
+| **USD 50 tomorrow demo plan (active now)** | [usd50-tomorrow-demo-plan.md](./usd50-tomorrow-demo-plan.md) |
 | **Revenue-ready Cursor plan (active)** | [revenue-ready-cursor-plan.md](./revenue-ready-cursor-plan.md) |
 | **Order processing v2 (active)** | [order-processing-v2.md](./order-processing-v2.md) |
 | **Advertising readiness (Hito A)** | [advertising-readiness.md](./advertising-readiness.md) |
