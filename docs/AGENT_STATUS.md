@@ -5,9 +5,9 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-07-29 |
-| **Versión** | `1.15.1` (`package.json` → stamp UI) |
+| **Versión** | `1.15.2` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Cambio actual** | marca pública Gatrivi.com + oferta de lanzamiento |
+| **Cambio actual** | flyers A6 print + marca pública Gatrivi.com |
 | **Live objetivo** | https://gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |

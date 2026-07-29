@@ -24,6 +24,7 @@ Agent manifest: read this first, then one targeted file.
 | Utils | [modules/utils.md](./modules/utils.md) |
 | Vercel API | [api/vercel-functions.md](./api/vercel-functions.md) |
 | Env vars | [ops/env-vars.md](./ops/env-vars.md) |
+| **Flyers A6 (print)** | [ops/flyer-a6.md](./ops/flyer-a6.md) · `/print/flyer-a6.html` |
 | Firebase production | [ops/firebase-setup.md](./ops/firebase-setup.md) |
 | Production smoke test | [ops/smoke-test.md](./ops/smoke-test.md) |
 | **Prospect demo (3 min)** | [ops/prospect-demo.md](./ops/prospect-demo.md) |
