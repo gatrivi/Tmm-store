@@ -53,7 +53,7 @@ Cobro mañana: transferencia o link manual de Mercado Pago. No integrar pagos en
 
 ---
 
-## 2. Diez rubros, cuatro moldes
+## 2. Once rubros, cuatro moldes
 
 No construir ocho aplicaciones.
 
@@ -61,7 +61,7 @@ No construir ocho aplicaciones.
 |---|---|---|
 | **Peso / unidad** | carnicería, pollería, verdulería | cantidad, presentación y total estimado |
 | **Preparación / horario** | panadería, cafetería, pizzería | variantes, retiro/delivery y pedido ordenado |
-| **Catálogo / cotización** | librería, gráfica/imprenta | producto, medida, cantidad y especificación |
+| **Catálogo / cotización** | librería, gráfica/imprenta, pet shop | producto, presentación, stock, cantidad y especificación |
 | **Mayorista / reposición** | distribuidora de lácteos, molino/insumos | bultos, formatos, pedido repetido y reparto |
 
 ### Ya existen
@@ -81,6 +81,7 @@ Agregar presets livianos a Demo Express:
 - `cafeteria`
 - `libreria`
 - `grafica`
+- `petshop`
 - `distribuidora-lacteos`
 - `molino-mayorista`
 
@@ -91,7 +92,7 @@ Todos reutilizan:
 /demo/owner?negocio=...&barrio=...&rubro=...&color=...
 ```
 
-No crear siete rutas, siete páginas owner ni siete arquitecturas.
+No crear ocho rutas, ocho páginas owner ni ocho arquitecturas.
 
 ---
 
@@ -180,6 +181,28 @@ CTA: `Consultar disponibilidad`.
 CTA: `Pedir cotización`.  
 Usar notas para medida, papel, terminación y fecha. No implementar upload esta noche.
 
+### Pet shop
+
+`petshop` ya existe en `PROSPECT_CATEGORIES`, pero necesita un preset real.
+
+- alimento para perro 3 kg / 15 kg;
+- alimento para gato 1,5 kg / 7,5 kg;
+- alimento húmedo unidad / pack;
+- arena sanitaria 4 kg / 10 kg;
+- shampoo 250 ml / 500 ml;
+- collar S / M / L;
+- correa corta / larga;
+- snacks o juguete unidad / pack.
+
+Categorías: `Alimento`, `Higiene`, `Paseo y juego`.  
+CTA: `Armar pedido`.  
+Aviso: stock, precio y entrega a confirmar.
+
+No agregar medicamentos, consejo veterinario ni suscripciones. La compra habitual puede aparecer como copy/atajo, no como recurrencia automática.
+
+La implementación y la landing autónoma están especificadas en:
+[`passive-sales-petshop-landing.md`](./passive-sales-petshop-landing.md).
+
 ### Distribuidora de lácteos
 
 Usar el preset genérico `distribuidora-lacteos`. Hasta confirmar el negocio, mostrar **“Distribuidora de lácteos”** y no publicar “Seralac” como dato cierto.
@@ -250,7 +273,7 @@ Todos los datos deben decir claramente `muestra ilustrativa`.
 
 ## Pasada A — presets
 
-**Estado (2026-07-28):** shipped en código — 7 presets + wire MenuContext/Storefront. Corte mayorista (`distribuidora-lacteos`, `molino-mayorista`) primero.
+**Estado (2026-07-28):** shipped en código — 7 presets + wire MenuContext/Storefront. Corte mayorista (`distribuidora-lacteos`, `molino-mayorista`) primero. **Pendiente:** sumar `PRESET_PETSHOP` mediante el plan de landing pasiva.
 
 URLs humo:
 
@@ -279,7 +302,7 @@ Cambios mínimos:
 
 ## Pasada B — galería y conversión
 
-Crear `/demos` con diez cards agrupadas en cuatro familias.
+Crear `/demos` con once cards agrupadas en cuatro familias.
 
 Cada card:
 
@@ -289,13 +312,13 @@ Cada card:
 - `Personalizar` → `/demo/armar` con rubro preseleccionado;
 - `Quiero una así` → WhatsApp comercial con rubro y URL.
 
-Usar rutas dedicadas para carnicería, panadería y pizzería. Usar presets Demo Express para las otras siete.
+Usar rutas dedicadas para carnicería, panadería y pizzería. Usar presets Demo Express para las otras ocho.
 
 Añadir link `/demos` en landing y footer. No rediseñar la landing.
 
 ### Prompt Cursor B
 
-> Implementá únicamente “Pasada B — galería y conversión” del plan USD 50. Creá `/demos` con diez rubros, agrupados en cuatro moldes, usando rutas existentes o presets reales. Cada card debe abrir la muestra, permitir personalizarla y generar CTA WhatsApp con rubro/origen. Enlazá la galería desde landing/footer sin rediseñar. Agregá metadata genérica suficiente, E2E de links/CTA y capturas 390/1440. Lint, build, tests y stop.
+> Implementá únicamente “Pasada B — galería y conversión” del plan USD 50. Creá `/demos` con once rubros, agrupados en cuatro moldes, usando rutas existentes o presets reales. Cada card debe abrir la muestra, permitir personalizarla y generar CTA de reserva/formulario con rubro/origen; WhatsApp queda como fallback. Enlazá la galería desde landing/footer sin rediseñar. Agregá metadata genérica suficiente, E2E de links/CTA y capturas 390/1440. Lint, build, tests y stop.
 
 ---
 
@@ -303,8 +326,8 @@ Añadir link `/demos` en landing y footer. No rediseñar la landing.
 
 Detener código cuando:
 
-- los diez rubros tienen una muestra accesible;
-- los siete presets cambian productos, categorías y copy, no solo el nombre;
+- los once rubros tienen una muestra accesible;
+- los ocho presets cambian productos, categorías y copy, no solo el nombre;
 - las dos muestras mayoristas muestran formatos/bultos, reposición y reparto/retiro;
 - cliente ↔ local conserva rubro y personalización;
 - `/demos` no tiene links muertos;
@@ -374,4 +397,4 @@ Hasta cobrar la primera reserva, no hacer:
 - planes nuevos;
 - rediseño de Mamabel o landing.
 
-La próxima acción después de dos pasadas verdes es vender, no programar.
+La próxima acción después de la landing, formulario, pago y QR verdes es distribuir, no programar.
