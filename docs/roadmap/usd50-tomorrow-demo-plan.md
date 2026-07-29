@@ -250,6 +250,18 @@ Todos los datos deben decir claramente `muestra ilustrativa`.
 
 ## Pasada A — presets
 
+**Estado (2026-07-28):** shipped en código — 7 presets + wire MenuContext/Storefront. Corte mayorista (`distribuidora-lacteos`, `molino-mayorista`) primero.
+
+URLs humo:
+
+```text
+/demo?rubro=molino-mayorista&negocio=Molino%20Florida&barrio=Florida&color=carbon
+/demo/owner?rubro=molino-mayorista&negocio=Molino%20Florida&barrio=Florida&color=carbon
+/demo?rubro=distribuidora-lacteos&barrio=Olivos&color=azul
+```
+
+Self-check: `npm run check:demo` incluye `demoPresets.selfcheck.ts`.
+
 Cambios mínimos:
 
 1. Extender `PROSPECT_CATEGORIES` con los siete rubros; implementar primero `distribuidora-lacteos` y `molino-mayorista`.

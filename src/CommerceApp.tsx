@@ -29,14 +29,23 @@ function RedirectMamabelOrder() {
   return <Navigate to={`/demo/mamabel/order/${orderId}`} replace />;
 }
 
+/** Remount Express menu when `rubro` changes (same tenant `demo`). */
+function demoMenuScope(pathname: string, search: string): string {
+  const tenant = resolveTenantIdFromPath(pathname);
+  if (tenant !== 'demo') return tenant;
+  const rubro = new URLSearchParams(search).get('rubro') || 'gastronomia';
+  return `demo:${rubro}`;
+}
+
 export default function CommerceApp() {
   const location = useLocation();
   const providerScope = resolveTenantIdFromPath(location.pathname);
+  const menuScope = demoMenuScope(location.pathname, location.search);
 
   return (
     <PlanProvider key={providerScope}>
       <AdminProvider>
-        <MenuProvider>
+        <MenuProvider key={menuScope}>
           <LanguageProvider>
             <AppVersionStamp />
             <Routes>

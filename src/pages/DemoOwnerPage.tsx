@@ -40,10 +40,10 @@ export default function DemoOwnerPage() {
   const paths = resolveDemoPaths(location.pathname);
   const prospect = parseProspectDemo(location.search);
   const businessName = vertical?.siteSettings.brandName || prospect.businessName;
-  const ownerTitle = vertical?.copy.ownerTitle || businessName;
-  const ownerSubtitle = vertical?.copy.ownerSubtitle || 'Panel del local · demo';
-  const totalLabel = vertical?.copy.totalLabel || 'Total';
-  const revenueLabel = vertical?.copy.revenueLabel || 'Total sesión';
+  const ownerTitle = vertical?.copy.ownerTitle || prospect.preset?.copy.ownerTitle || businessName;
+  const ownerSubtitle = vertical?.copy.ownerSubtitle || prospect.preset?.copy.ownerSubtitle || 'Panel del local · demo';
+  const totalLabel = vertical?.copy.totalLabel || prospect.preset?.copy.totalLabel || 'Total';
+  const revenueLabel = vertical?.copy.revenueLabel || prospect.preset?.copy.revenueLabel || 'Total sesión';
   const theme = vertical?.theme;
   const [orders, setOrders] = useState<OrderRecord[]>([]);
   const [filter, setFilter] = useState<Filter>('todos');
@@ -105,9 +105,9 @@ export default function DemoOwnerPage() {
         order: selected,
         tone: 'light' as const,
         totalLabel: totalLabel === 'Total estimado' ? 'Estimado' : totalLabel,
-        totalHint: vertical?.copy.totalHint,
-        pickupLabel: vertical?.copy.pickupLabel,
-        deliveryLabel: vertical?.copy.deliveryLabel,
+        totalHint: vertical?.copy.totalHint || prospect.preset?.copy.totalHint,
+        pickupLabel: vertical?.copy.pickupLabel || prospect.preset?.copy.pickupLabel,
+        deliveryLabel: vertical?.copy.deliveryLabel || prospect.preset?.copy.deliveryLabel,
         statusLinkHref: paths.orderPath(selected.id),
       }
     : null;

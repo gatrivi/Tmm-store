@@ -22,6 +22,7 @@ import { getInitialMenuCategories } from '../utils/menuImport';
 import type { MenuLayoutId } from '../utils/menuLayouts';
 import { DEFAULT_MENU_LAYOUT, parseMenuLayout } from '../utils/menuLayouts';
 import { buildProspectLogoDataUrl, parseProspectDemo } from '../utils/prospectDemo';
+import { getDemoPreset } from '../data/demoPresets';
 import { getDemoByTenantId, isDemoTenant, resolveTenantIdFromPath } from '../utils/demoRegistry';
 
 /** Keys de localStorage */
@@ -140,14 +141,16 @@ const DEMO_SITE_SETTINGS: SiteSettings = {
 
 function getDemoSiteSettings(): SiteSettings {
   const prospect = parseProspectDemo(window.location.search);
+  const preset = prospect.preset;
   return {
     ...DEMO_SITE_SETTINGS,
     brandName: prospect.businessName,
     brandAddress: `${prospect.categoryLabel} · ${prospect.area}`,
     brandColor: prospect.colorValue,
-    brandLogo: prospect.customized
+    brandLogo: prospect.customized || preset
       ? buildProspectLogoDataUrl(prospect)
       : DEMO_SITE_SETTINGS.brandLogo,
+    menuLayout: preset?.menuLayout ?? DEMO_SITE_SETTINGS.menuLayout,
   };
 }
 
@@ -197,10 +200,21 @@ interface MenuContextProps {
 
 const MenuContext = createContext<MenuContextProps | undefined>(undefined);
 
+function getExpressPreset() {
+  if (typeof window === 'undefined') return null;
+  return parseProspectDemo(window.location.search).preset ?? getDemoPreset(
+    new URLSearchParams(window.location.search).get('rubro'),
+  );
+}
+
 /** Demo menu for the public showcase and local development. */
 function getDefaultMenuSeed(tenantId: string): MenuItemType[] {
   const vertical = getDemoByTenantId(tenantId);
   if (vertical) return JSON.parse(JSON.stringify(vertical.menuItems));
+  if (tenantId === 'demo') {
+    const preset = getExpressPreset();
+    if (preset) return JSON.parse(JSON.stringify(preset.menuItems));
+  }
   const isLocalDemo = import.meta.env.DEV
     && tenantId === 'default'
     && !import.meta.env.VITE_TENANT_ID?.trim();
@@ -212,6 +226,10 @@ function getDefaultMenuSeed(tenantId: string): MenuItemType[] {
 function getDefaultCategories(tenantId: string): MenuCategory[] {
   const vertical = getDemoByTenantId(tenantId);
   if (vertical) return JSON.parse(JSON.stringify(vertical.menuCategories));
+  if (tenantId === 'demo') {
+    const preset = getExpressPreset();
+    if (preset) return JSON.parse(JSON.stringify(preset.menuCategories));
+  }
   return getInitialMenuCategories();
 }
 
