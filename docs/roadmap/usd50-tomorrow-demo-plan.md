@@ -53,7 +53,7 @@ Cobro mañana: transferencia o link manual de Mercado Pago. No integrar pagos en
 
 ---
 
-## 2. Ocho rubros, tres moldes
+## 2. Diez rubros, cuatro moldes
 
 No construir ocho aplicaciones.
 
@@ -62,6 +62,7 @@ No construir ocho aplicaciones.
 | **Peso / unidad** | carnicería, pollería, verdulería | cantidad, presentación y total estimado |
 | **Preparación / horario** | panadería, cafetería, pizzería | variantes, retiro/delivery y pedido ordenado |
 | **Catálogo / cotización** | librería, gráfica/imprenta | producto, medida, cantidad y especificación |
+| **Mayorista / reposición** | distribuidora de lácteos, molino/insumos | bultos, formatos, pedido repetido y reparto |
 
 ### Ya existen
 
@@ -80,6 +81,8 @@ Agregar presets livianos a Demo Express:
 - `cafeteria`
 - `libreria`
 - `grafica`
+- `distribuidora-lacteos`
+- `molino-mayorista`
 
 Todos reutilizan:
 
@@ -88,7 +91,7 @@ Todos reutilizan:
 /demo/owner?negocio=...&barrio=...&rubro=...&color=...
 ```
 
-No crear cinco rutas, cinco páginas owner ni cinco arquitecturas.
+No crear siete rutas, siete páginas owner ni siete arquitecturas.
 
 ---
 
@@ -177,30 +180,94 @@ CTA: `Consultar disponibilidad`.
 CTA: `Pedir cotización`.  
 Usar notas para medida, papel, terminación y fecha. No implementar upload esta noche.
 
+### Distribuidora de lácteos
+
+Usar el preset genérico `distribuidora-lacteos`. Hasta confirmar el negocio, mostrar **“Distribuidora de lácteos”** y no publicar “Seralac” como dato cierto.
+
+- leche larga vida por unidad / pack / caja;
+- crema por unidad / pack;
+- manteca por unidad / caja;
+- yogur por pack;
+- queso cremoso por media horma / horma;
+- mozzarella por barra / horma;
+- dulce de leche por pote / balde;
+- combo de reposición.
+
+CTA: `Armar reposición`.
+
+Mostrar, sin implementar lógica nueva:
+
+- presentación o bulto;
+- cantidad;
+- retiro o reparto;
+- zona y día preferido;
+- observaciones;
+- aviso de pedido mínimo y precio a confirmar.
+
+No construir cuentas B2B, listas por cliente, facturación, CUIT, cadena de frío ni rutas de reparto esta noche.
+
+### Molino / insumos
+
+Usar el preset reutilizable `molino-mayorista`. Para la muestra dirigida, precargar el nombre **“Molino Florida”** y agregar **“Propuesta conceptual no oficial”**.
+
+Catálogo ilustrativo:
+
+- harina blanca 000 en 1 kg / 5 kg / 25 kg;
+- harina integral en 1 kg / 5 kg / 25 kg;
+- harina de centeno en 1 kg / 5 kg / 25 kg;
+- avena en 1 kg / 5 kg;
+- semillas en 500 g / 1 kg;
+- frutos secos en 500 g / 1 kg;
+- legumbres en 1 kg / 5 kg;
+- insumos de panificación.
+
+CTA: `Armar pedido mayorista`.
+
+La propuesta no debe competir como “otra tienda online”. Debe mostrar un flujo rápido para:
+
+- repetir una reposición;
+- pedir por bolsa, bulto o formato;
+- elegir retiro/reparto;
+- indicar zona y día;
+- pedir confirmación de precio y stock por WhatsApp.
+
+Referencia pública para orientar categorías, sin copiar fotos, textos ni precios:
+`https://molinoflorida.mitiendanube.com/`.
+
+### Regla para negocios reales
+
+En ambas muestras incluir:
+
+> Propuesta conceptual no oficial. Productos, precios y condiciones ilustrativas.
+
+No copiar logos, fotos, catálogos completos ni afirmar relación comercial. El nombre “Seralac” se usa solo después de que Gastón confirme un enlace, foto o contacto correcto.
+
 Todos los datos deben decir claramente `muestra ilustrativa`.
 
 ---
 
-## 4. Dos pasadas Cursor
+## 4. Dos pasadas Cursor, con corte vendible temprano
 
 ## Pasada A — presets
 
 Cambios mínimos:
 
-1. Extender `PROSPECT_CATEGORIES` con los cinco rubros.
+1. Extender `PROSPECT_CATEGORIES` con los siete rubros; implementar primero `distribuidora-lacteos` y `molino-mayorista`.
 2. Crear `demoPresets.ts`.
 3. Hacer que `MenuContext` seleccione menú/categorías/settings según `rubro` cuando `tenantId === demo`.
 4. Mantener nombre, barrio, color y query al pasar cliente ↔ local.
 5. Ajustar CTA/total por preset usando los puntos de configuración existentes; no crear subsistemas.
 6. Monograma/placeholder editorial cuando no haya foto. No reutilizar una foto incorrecta.
+7. Agregar presentación/bulto y copy de reposición como datos del preset, sin crear un subsistema B2B.
+8. Marcar el corte vendible cuando las dos muestras mayoristas, cliente ↔ local y WhatsApp estén verdes; recién entonces completar los otros cinco presets.
 
 ### Prompt Cursor A
 
-> Leé `docs/AGENT_STATUS.md` y `docs/roadmap/usd50-tomorrow-demo-plan.md`. Implementá únicamente “Pasada A — presets”. Conservá intactas las demos dedicadas de carnicería, panadería y pizzería. Añadí cinco presets data-driven a Demo Express: pollería, verdulería, cafetería, librería y gráfica. Reutilizá Storefront, Checkout, owner y query existente; no crees rutas ni páginas duplicadas, backend, Firebase, MP, uploads o un motor nuevo de variantes. Usá placeholders editoriales cuando falten fotos. Agregá self-check del parser/presets y smoke de un preset por familia. Ejecutá lint, build y checks; reportá evidencia y detenete.
+> Leé `docs/AGENT_STATUS.md` y `docs/roadmap/usd50-tomorrow-demo-plan.md`. Implementá únicamente “Pasada A — presets”. Conservá intactas las demos dedicadas de carnicería, panadería y pizzería. Añadí siete presets data-driven a Demo Express. Empezá por `distribuidora-lacteos` y `molino-mayorista`; validá ese corte antes de continuar con pollería, verdulería, cafetería, librería y gráfica. Reutilizá Storefront, Checkout, owner y query existente; modelá presentación/bulto, reparto/retiro y reposición como datos/copy, sin crear cuentas B2B, rutas duplicadas, backend, Firebase, MP, uploads o un motor nuevo de variantes. Para Molino Florida usá “Propuesta conceptual no oficial”; para la distribuidora mantené nombre genérico hasta confirmar Seralac. Usá placeholders editoriales y no copies marcas/fotos. Agregá self-check del parser/presets y smoke de un preset por familia. Ejecutá lint, build y checks; reportá evidencia y detenete.
 
 ## Pasada B — galería y conversión
 
-Crear `/demos` con ocho cards agrupadas en tres familias.
+Crear `/demos` con diez cards agrupadas en cuatro familias.
 
 Cada card:
 
@@ -210,13 +277,13 @@ Cada card:
 - `Personalizar` → `/demo/armar` con rubro preseleccionado;
 - `Quiero una así` → WhatsApp comercial con rubro y URL.
 
-Usar rutas dedicadas para carnicería, panadería y pizzería. Usar presets Demo Express para las otras cinco.
+Usar rutas dedicadas para carnicería, panadería y pizzería. Usar presets Demo Express para las otras siete.
 
 Añadir link `/demos` en landing y footer. No rediseñar la landing.
 
 ### Prompt Cursor B
 
-> Implementá únicamente “Pasada B — galería y conversión” del plan USD 50. Creá `/demos` con ocho rubros, agrupados en tres moldes, usando rutas existentes o presets reales. Cada card debe abrir la muestra, permitir personalizarla y generar CTA WhatsApp con rubro/origen. Enlazá la galería desde landing/footer sin rediseñar. Agregá metadata genérica suficiente, E2E de links/CTA y capturas 390/1440. Lint, build, tests y stop.
+> Implementá únicamente “Pasada B — galería y conversión” del plan USD 50. Creá `/demos` con diez rubros, agrupados en cuatro moldes, usando rutas existentes o presets reales. Cada card debe abrir la muestra, permitir personalizarla y generar CTA WhatsApp con rubro/origen. Enlazá la galería desde landing/footer sin rediseñar. Agregá metadata genérica suficiente, E2E de links/CTA y capturas 390/1440. Lint, build, tests y stop.
 
 ---
 
@@ -224,8 +291,9 @@ Añadir link `/demos` en landing y footer. No rediseñar la landing.
 
 Detener código cuando:
 
-- los ocho rubros tienen una muestra accesible;
-- los cinco presets cambian productos, categorías y copy, no solo el nombre;
+- los diez rubros tienen una muestra accesible;
+- los siete presets cambian productos, categorías y copy, no solo el nombre;
+- las dos muestras mayoristas muestran formatos/bultos, reposición y reparto/retiro;
 - cliente ↔ local conserva rubro y personalización;
 - `/demos` no tiene links muertos;
 - CTA comercial abre `wa.me`, no email;
@@ -240,21 +308,33 @@ No dedicar tiempo a OG individual, dominio, imágenes perfectas o pixel polish a
 
 Orden de probabilidad:
 
-1. **Contactos cálidos:** familia de Mamabel, Gabriel, Magdalena y conocidos de comercios.
-2. Referidos de esos contactos.
-3. Comercios fríos de Olivos/Vicente López con Instagram/WhatsApp pero sin web útil.
+1. **Molino Florida:** muestra personalizada de reposición mayorista. Ya tiene presencia online; vender ahorro de tiempo para pedidos repetidos, no “una web”.
+2. **Distribuidora de lácteos:** confirmar si realmente se llama Seralac y enviar una muestra de catálogo por bulto/reparto.
+3. **Contactos cálidos:** familia de Mamabel, Gabriel, Magdalena y conocidos de comercios.
+4. Referidos de esos contactos.
+5. Comercios fríos de Olivos/Vicente López con Instagram/WhatsApp pero sin flujo útil.
 
 ### Meta
 
+- 2 muestras B2B personalizadas listas;
+- contactar Molino Florida y la distribuidora antes de las 11:00;
 - 5 contactos cálidos;
-- 20 contactos locales dirigidos;
-- 6 respuestas;
+- 10 contactos locales dirigidos si los dos prioritarios no cierran;
+- 4 respuestas;
 - 3 demos de 3 minutos;
 - 1 reserva equivalente a USD 50.
 
 ### Mensaje inicial
 
 > Hola. Armé una muestra de cómo podría verse un negocio de [RUBRO] para que los pedidos/consultas lleguen más ordenados: [URL]. Es ilustrativa, no usé datos tuyos. Si te interesa, mañana te preparo una versión con tu marca y hasta 8 productos. La reserva es el equivalente a USD 50 y se descuenta completa si después hacemos el sitio final. ¿Te la muestro en 3 minutos?
+
+### Mensaje para Molino Florida
+
+> Hola. Vi que ya tienen tienda online, así que no les preparé “otra web”. Armé una propuesta conceptual para que un cliente mayorista repita pedidos por bolsa/bulto, indique reparto y mande la reposición ordenada por WhatsApp: [URL]. No es oficial y los datos son ilustrativos. Si les sirve la idea, mañana la adapto con sus productos y condiciones reales. La reserva es el equivalente a USD 50 y se descuenta completa del proyecto. ¿Se las muestro en 3 minutos?
+
+### Mensaje para la distribuidora
+
+> Hola. Armé una muestra conceptual para una distribuidora de lácteos: pedido por pack/caja, zona de reparto y reposición rápida por WhatsApp: [URL]. No usé datos reales de ustedes. Si les sirve, mañana la adapto con su marca y hasta 8 productos. La reserva es el equivalente a USD 50 y se descuenta completa del proyecto. ¿Se las muestro en 3 minutos?
 
 ### Demo de 3 minutos
 
@@ -274,7 +354,7 @@ Hasta cobrar la primera reserva, no hacer:
 
 - auth/Firebase;
 - Mercado Pago dentro del producto;
-- otra vertical;
+- otra vertical fuera de este plan;
 - imágenes perfectas;
 - dominio por demo;
 - WhatsApp Business API;
