@@ -1,10 +1,10 @@
-const SALES_EMAIL = (
-  import.meta.env.VITE_SALES_EMAIL as string | undefined
-)?.trim() || 'devtrivi@zengasoft.com';
+const env = (typeof import.meta !== 'undefined' ? import.meta.env : undefined) as
+  | Record<string, string | undefined>
+  | undefined;
 
-const SALES_WHATSAPP = (
-  import.meta.env.VITE_SALES_WHATSAPP_NUMBER as string | undefined
-)?.replace(/\D/g, '') || '';
+const SALES_EMAIL = env?.VITE_SALES_EMAIL?.trim() || 'devtrivi@zengasoft.com';
+
+const SALES_WHATSAPP = (env?.VITE_SALES_WHATSAPP_NUMBER || '').replace(/\D/g, '');
 
 const DEFAULT_MESSAGE =
   'Hola, vi la demo de Trufi y quiero una versión para mi negocio.';

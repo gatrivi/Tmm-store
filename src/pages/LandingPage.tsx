@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   ArrowRight,
@@ -10,6 +10,7 @@ import {
   Clock3,
   MessageCircle,
   PackageCheck,
+  PawPrint,
   Printer,
   QrCode,
   ShieldCheck,
@@ -18,9 +19,23 @@ import {
   Store,
   Tags,
   UtensilsCrossed,
+  Warehouse,
+  WandSparkles,
   Zap,
 } from 'lucide-react';
 import { buildSalesContactHref } from '../utils/salesContact';
+import {
+  buildReserveHref,
+  captureAttribution,
+  getDemoPriceLabel,
+  reserveCtaLabel,
+  withAttribution,
+} from '../utils/demoIntake';
+import {
+  buildProspectDemoSearch,
+  PROSPECT_CATEGORIES,
+  type ProspectCategory,
+} from '../utils/prospectDemo';
 
 const outcomes = [
   {
@@ -36,7 +51,7 @@ const outcomes = [
   {
     icon: CircleDollarSign,
     title: 'Venta directa',
-    copy: 'El cliente compra desde tu link y la relación sigue siendo tuya. Cero comisión por pedido.',
+    copy: 'El cliente compra desde tu link y la relación sigue siendo tuya. Cero comisión por venta.',
   },
 ];
 
@@ -115,9 +130,13 @@ const faqs = [
   },
   {
     question: '¿Sirve fuera de gastronomía?',
-    answer: 'Sí para catálogos con variantes y pedidos simples: dietéticas, pet shops, fiambrerías y comercios similares. Primero validamos el flujo.',
+    answer: 'Sí: pet shops, librerías, gráficas, mayoristas y comercios con catálogo y variantes. Primero validamos el flujo con una muestra.',
   },
 ];
+
+const HERO_RUBROS = (Object.keys(PROSPECT_CATEGORIES) as ProspectCategory[]).filter(id =>
+  ['petshop', 'pizzeria', 'polleria', 'verduleria', 'cafeteria', 'libreria', 'grafica', 'distribuidora-lacteos', 'molino-mayorista', 'panaderia', 'gastronomia'].includes(id),
+);
 
 function SectionEyebrow({ children }: { children: React.ReactNode }) {
   return (
@@ -130,13 +149,35 @@ function SectionEyebrow({ children }: { children: React.ReactNode }) {
 export default function LandingPage() {
   const location = useLocation();
   const contactHref = buildSalesContactHref('landing Trufi');
+  const priceLabel = getDemoPriceLabel();
+  const reserveHref = buildReserveHref({ source: 'landing reserva' });
+  const reserveLabel = reserveCtaLabel();
+
+  const [negocio, setNegocio] = useState('');
+  const [rubro, setRubro] = useState<ProspectCategory>('petshop');
+  const [barrio, setBarrio] = useState('Olivos');
+
+  const samplePath = useMemo(() => {
+    const name = negocio.trim() || 'Tu negocio';
+    const search = buildProspectDemoSearch({
+      businessName: name,
+      area: barrio.trim() || 'Zona Norte',
+      category: rubro,
+      color: 'carbon',
+    });
+    return withAttribution(`/demo${search}`);
+  }, [negocio, barrio, rubro]);
 
   useEffect(() => {
-    document.title = 'Trufi — Pedidos directos para tu negocio';
+    captureAttribution(location.search);
+  }, [location.search]);
+
+  useEffect(() => {
+    document.title = 'Trufi — Tu negocio listo para vender online';
     const description = document.querySelector('meta[name="description"]');
     description?.setAttribute(
       'content',
-      'Carta digital y pedidos directos para comercios. Implementación personalizada, sin comisión por venta.',
+      'Catálogo, pedidos o cotizaciones desde un link. Tu marca, tu WhatsApp, cero comisión. Muestra a medida en 24 h.',
     );
   }, []);
 
@@ -158,60 +199,103 @@ export default function LandingPage() {
           </Link>
 
           <nav className="hidden items-center gap-7 text-sm font-bold text-black/60 md:flex">
-            <a href="#como-funciona" className="transition hover:text-black">Cómo funciona</a>
-            <a href="#incluye" className="transition hover:text-black">Qué incluye</a>
+            <a href="#probar" className="transition hover:text-black">Probar</a>
+            <Link to={withAttribution('/demos')} className="transition hover:text-black">Muestras</Link>
+            <a href="#reserva" className="transition hover:text-black">Reserva</a>
             <a href="#planes" className="transition hover:text-black">Planes</a>
           </nav>
 
           <a
-            href={contactHref}
+            href={reserveHref}
             className="rounded-full bg-[#171814] px-4 py-2.5 text-xs font-black text-white transition hover:-translate-y-0.5 hover:bg-[#ee6847] sm:text-sm"
           >
-            Pedir demo
+            Reservar
           </a>
         </div>
       </header>
 
-      <main>
-        <section className="relative border-b border-black/8">
+      <main className="pb-24 md:pb-0">
+        <section id="probar" className="relative scroll-mt-24 border-b border-black/8">
           <div className="pointer-events-none absolute inset-0 opacity-45 [background-image:radial-gradient(#171814_0.7px,transparent_0.7px)] [background-size:18px_18px]" />
           <div className="relative mx-auto grid max-w-7xl gap-14 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:gap-20 lg:px-8 lg:py-28">
             <div>
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/55 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-black/65 shadow-sm">
                 <span className="h-2 w-2 rounded-full bg-[#ee6847]" />
-                Zona Norte · listo en 48–72 hs
+                Zona Norte · muestra personalizada en 24 h
               </div>
 
-              <h1 className="max-w-3xl text-[clamp(3rem,8vw,6.8rem)] font-black leading-[0.89] tracking-[-0.075em]">
-                Tus pedidos,
-                <span className="block text-[#ee6847]">sin el caos.</span>
+              <h1 className="max-w-3xl text-[clamp(2.6rem,7vw,5.6rem)] font-black leading-[0.92] tracking-[-0.07em]">
+                Tu negocio,
+                <span className="block text-[#ee6847]">listo para vender online.</span>
               </h1>
 
               <p className="mt-7 max-w-xl text-lg leading-relaxed text-black/66 sm:text-xl">
-                Te armamos una carta con carrito para que tus clientes pidan bien desde el primer mensaje. Tu marca, tu WhatsApp, cero comisión por venta.
+                Catálogo, pedidos o cotizaciones desde un link. Tu marca, tu WhatsApp y cero comisión por venta.
               </p>
 
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  to="/demo/mamabel"
-                  className="group inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#171814] px-6 text-sm font-black text-white transition hover:-translate-y-0.5 hover:shadow-xl"
-                >
-                  Ver flagship · Mamá Mabel
-                  <ArrowRight size={18} className="transition group-hover:translate-x-1" />
-                </Link>
-                <Link
-                  to="/demo/mamabel/owner"
-                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-black/15 bg-white/50 px-6 text-sm font-black transition hover:border-black hover:bg-white"
-                >
-                  <Store size={18} />
-                  Panel familia
-                </Link>
-              </div>
+              <form
+                className="mt-9 space-y-3 rounded-[1.75rem] border border-black/10 bg-white/70 p-4 shadow-sm sm:p-5"
+                onSubmit={event => {
+                  event.preventDefault();
+                  window.location.assign(samplePath);
+                }}
+              >
+                <p className="text-[10px] font-black uppercase tracking-[0.14em] text-black/40">
+                  <WandSparkles size={12} className="mr-1 inline" /> Mini muestra al instante
+                </p>
+                <label className="block">
+                  <span className="sr-only">Nombre del negocio</span>
+                  <input
+                    value={negocio}
+                    onChange={e => setNegocio(e.target.value.slice(0, 60))}
+                    placeholder="Nombre del negocio"
+                    className="min-h-12 w-full rounded-2xl border border-black/10 bg-white px-4 text-sm font-bold outline-none focus:border-black/35"
+                  />
+                </label>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="block">
+                    <span className="sr-only">Rubro</span>
+                    <select
+                      value={rubro}
+                      onChange={e => setRubro(e.target.value as ProspectCategory)}
+                      className="min-h-12 w-full rounded-2xl border border-black/10 bg-white px-4 text-sm font-bold outline-none focus:border-black/35"
+                    >
+                      {HERO_RUBROS.map(id => (
+                        <option key={id} value={id}>{PROSPECT_CATEGORIES[id]}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="block">
+                    <span className="sr-only">Barrio</span>
+                    <input
+                      value={barrio}
+                      onChange={e => setBarrio(e.target.value.slice(0, 60))}
+                      placeholder="Barrio (opcional)"
+                      className="min-h-12 w-full rounded-2xl border border-black/10 bg-white px-4 text-sm font-bold outline-none focus:border-black/35"
+                    />
+                  </label>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <button
+                    type="submit"
+                    className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full bg-[#171814] px-5 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-[#ee6847]"
+                  >
+                    Ver mi muestra
+                    <ArrowRight size={16} className="transition group-hover:translate-x-1" />
+                  </button>
+                  <Link
+                    to={withAttribution('/demos')}
+                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-black/15 bg-white/80 px-5 text-sm font-black transition hover:border-black"
+                  >
+                    Ver las 11 muestras
+                  </Link>
+                </div>
+              </form>
 
               <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold text-black/55">
                 <span className="flex items-center gap-1.5"><Check size={14} /> Sin app</span>
                 <span className="flex items-center gap-1.5"><Check size={14} /> Sin comisión</span>
-                <span className="flex items-center gap-1.5"><Check size={14} /> Soporte humano</span>
+                <span className="flex items-center gap-1.5"><Check size={14} /> Hecho por Trufi</span>
               </div>
             </div>
 
@@ -221,50 +305,34 @@ export default function LandingPage() {
                 <div className="rounded-[1.45rem] bg-[#fbfaf6] p-3 sm:p-5">
                   <div className="mb-4 flex items-center justify-between border-b border-black/8 pb-4">
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-[0.16em] text-black/40">Club Social Olivos</p>
-                      <p className="mt-1 text-sm font-black">Pedí directo</p>
+                      <p className="text-[10px] font-black uppercase tracking-[0.16em] text-black/40">Tu marca · demo</p>
+                      <p className="mt-1 text-sm font-black">Catálogo listo para pedir</p>
                     </div>
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#171814] text-white">
-                      <UtensilsCrossed size={18} />
+                      <Store size={18} />
                     </div>
                   </div>
-
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="overflow-hidden rounded-2xl border border-black/8 bg-white">
-                      <img
-                        src="/Fotos%20menu/choripan/1.JPG"
-                        alt="Sándwich del menú de demostración"
-                        className="h-32 w-full object-cover sm:h-44"
-                      />
-                      <div className="p-3">
-                        <p className="text-sm font-black">Sándwich de la casa</p>
+                    {[
+                      ['Alimento 15 kg', '$68.900'],
+                      ['Arena 10 kg', '$21.500'],
+                    ].map(([title, price]) => (
+                      <div key={title} className="overflow-hidden rounded-2xl border border-black/8 bg-white p-3">
+                        <div className="mb-3 flex h-20 items-center justify-center rounded-xl bg-[#f2eee6] text-[10px] font-black uppercase tracking-wider text-black/35">
+                          Foto
+                        </div>
+                        <p className="text-sm font-black">{title}</p>
                         <div className="mt-3 flex items-center justify-between">
-                          <span className="text-sm font-black">$14.500</span>
+                          <span className="text-sm font-black">{price}</span>
                           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#171814] text-white">+</span>
                         </div>
                       </div>
-                    </div>
-
-                    <div className="overflow-hidden rounded-2xl border border-black/8 bg-white">
-                      <img
-                        src="/Fotos%20menu/hamburguesa/1.JPG"
-                        alt="Hamburguesa del menú de demostración"
-                        className="h-32 w-full object-cover sm:h-44"
-                      />
-                      <div className="p-3">
-                        <p className="text-sm font-black">Burger completa</p>
-                        <div className="mt-3 flex items-center justify-between">
-                          <span className="text-sm font-black">$19.000</span>
-                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#171814] text-white">+</span>
-                        </div>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-
                   <div className="mt-3 rounded-2xl bg-[#d7ff64] p-4">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.14em] text-black/50">Pedido #K7P4</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.14em] text-black/50">Pedido #P7K2</p>
                         <p className="mt-1 text-sm font-black">Listo para enviar por WhatsApp</p>
                       </div>
                       <CheckCircle2 size={24} />
@@ -272,7 +340,6 @@ export default function LandingPage() {
                   </div>
                 </div>
               </div>
-
               <div className="relative -mt-6 ml-auto mr-2 w-[82%] -rotate-2 rounded-2xl border border-black/10 bg-white p-4 shadow-2xl sm:mr-8 sm:w-[70%]">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#25d366]/15 text-[#159447]">
@@ -280,7 +347,7 @@ export default function LandingPage() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] font-black uppercase tracking-[0.12em] text-black/40">El local recibe</p>
-                    <p className="truncate text-sm font-black">2 productos · retiro · transferencia</p>
+                    <p className="truncate text-sm font-black">2 ítems · delivery · transferencia</p>
                   </div>
                 </div>
               </div>
@@ -291,7 +358,7 @@ export default function LandingPage() {
         <section className="border-b border-black/8 bg-[#171814] text-white">
           <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-white/10 px-4 sm:grid-cols-3 sm:px-6 lg:grid-cols-6 lg:px-8">
             {[
-              ['Carta', Smartphone],
+              ['Catálogo', Smartphone],
               ['QR + link', QrCode],
               ['Carrito', PackageCheck],
               ['WhatsApp', MessageCircle],
@@ -338,6 +405,55 @@ export default function LandingPage() {
           </div>
         </section>
 
+        <section className="border-b border-black/8 bg-[#171814] py-20 text-white sm:py-28">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+              <div>
+                <SectionEyebrow>Prueba visual</SectionEyebrow>
+                <h2 className="text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-6xl">
+                  Cuatro rubros. Demos reales.
+                </h2>
+              </div>
+              <p className="max-w-2xl text-lg leading-relaxed text-white/60 lg:justify-self-end">
+                Abrí una muestra funcionando. Después mirá cómo llega el pedido al local.
+              </p>
+            </div>
+
+            <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { to: '/demo/pizzeria', icon: UtensilsCrossed, label: 'Comida', hint: 'Pizzería Fit A' },
+                { to: '/demo?rubro=petshop', icon: PawPrint, label: 'Pet shop', hint: 'Alimento y paseo' },
+                { to: '/demo?rubro=molino-mayorista&negocio=Molino%20Florida', icon: Warehouse, label: 'Mayorista', hint: 'Bultos y reposición' },
+                { to: '/demo?rubro=grafica', icon: Printer, label: 'Cotización', hint: 'Gráfica / imprenta' },
+              ].map(item => (
+                <Link
+                  key={item.label}
+                  to={withAttribution(item.to)}
+                  className="group rounded-[1.75rem] border border-white/12 bg-white/6 p-6 transition hover:-translate-y-1 hover:bg-white/10"
+                >
+                  <item.icon size={26} className="text-[#d7ff64]" />
+                  <p className="mt-8 text-xs font-black uppercase tracking-[0.14em] text-white/40">{item.hint}</p>
+                  <h3 className="mt-2 text-2xl font-black tracking-[-0.04em]">{item.label}</h3>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-[#d7ff64]">
+                    Ver muestra <ChevronRight size={16} className="transition group-hover:translate-x-1" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+
+            <Link
+              to={withAttribution('/demo/pizzeria/owner')}
+              className="mt-4 flex items-center justify-between gap-4 rounded-[1.75rem] bg-[#d7ff64] p-6 text-[#171814] transition hover:-translate-y-0.5 hover:bg-white"
+            >
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-black/40">Vista del local</p>
+                <p className="mt-1 text-xl font-black">Recibí, prepará y entregá el pedido.</p>
+              </div>
+              <BarChart3 size={28} />
+            </Link>
+          </div>
+        </section>
+
         <section id="incluye" className="scroll-mt-24 border-b border-black/8 py-20 sm:py-28">
           <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-20 lg:px-8">
             <div>
@@ -348,7 +464,6 @@ export default function LandingPage() {
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-black/62">
                 El producto es el local funcionando, no el acceso a una plataforma. Tomamos tu material actual y lo convertimos en una experiencia lista para vender.
               </p>
-
               <ul className="mt-8 space-y-4">
                 {setupItems.map(item => (
                   <li key={item} className="flex items-start gap-3 font-bold">
@@ -386,53 +501,68 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="border-b border-black/8 bg-[#171814] py-20 text-white sm:py-28">
+        <section id="reserva" className="scroll-mt-24 border-b border-black/8 bg-[#fbfaf6] py-20 sm:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
-              <div>
-                <SectionEyebrow>Demo completa</SectionEyebrow>
-                <h2 className="text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-6xl">
-                  Miralo de los dos lados.
-                </h2>
-              </div>
-              <p className="max-w-2xl text-lg leading-relaxed text-white/60 lg:justify-self-end">
-                Hacé un pedido como cliente. Después pasá al panel del local y mirá cómo deja de ser un chat ambiguo para convertirse en trabajo concreto.
+            <article className="rounded-[2rem] border-2 border-[#171814] bg-[#171814] p-6 text-white shadow-2xl sm:p-10">
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-[#d7ff64]">Entrada accesible</p>
+              <h2 className="mt-4 max-w-3xl text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl">
+                Muestra a medida 24 h
+              </h2>
+              <p className="mt-4 text-3xl font-black text-[#d7ff64]">{priceLabel}</p>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/65">
+                Reserva descontada 100% si después contratás el proyecto completo. Las 24 h empiezan cuando están completos los materiales.
               </p>
-            </div>
-
-            <div className="mt-12 grid gap-4 md:grid-cols-2">
-              <Link to="/demo/pizzeria" className="group rounded-[2rem] border border-white/12 bg-white/6 p-7 transition hover:-translate-y-1 hover:bg-white/10 sm:p-9">
-                <div className="flex items-start justify-between">
-                  <Smartphone size={28} className="text-[#d7ff64]" />
-                  <ChevronRight size={24} className="transition group-hover:translate-x-1" />
-                </div>
-                <p className="mt-12 text-xs font-black uppercase tracking-[0.14em] text-white/40">Vista cliente</p>
-                <h3 className="mt-2 text-3xl font-black tracking-[-0.04em]">Elegí, armá y pedí.</h3>
-                <p className="mt-3 text-white/55">Carta real, variantes, carrito y checkout.</p>
-              </Link>
-
-              <Link to="/demo/pizzeria/owner" className="group rounded-[2rem] bg-[#d7ff64] p-7 text-[#171814] transition hover:-translate-y-1 hover:bg-white sm:p-9">
-                <div className="flex items-start justify-between">
-                  <BarChart3 size={28} />
-                  <ChevronRight size={24} className="transition group-hover:translate-x-1" />
-                </div>
-                <p className="mt-12 text-xs font-black uppercase tracking-[0.14em] text-black/40">Vista del local</p>
-                <h3 className="mt-2 text-3xl font-black tracking-[-0.04em]">Recibí, prepará y entregá.</h3>
-                <p className="mt-3 text-black/55">Pedidos ordenados, estados y métricas básicas.</p>
-              </Link>
-            </div>
+              <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+                {[
+                  'Nombre, colores y logo recibido',
+                  'Hasta 8 productos o servicios',
+                  'Catálogo móvil compartible',
+                  'CTA a tu WhatsApp',
+                  'Una ronda breve de cambios',
+                  'Demos públicas = conceptuales',
+                ].map(item => (
+                  <li key={item} className="flex items-start gap-2 text-sm font-bold text-white/80">
+                    <Check size={16} className="mt-0.5 shrink-0 text-[#d7ff64]" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-xs font-bold text-white/45">
+                No incluye dominio, panel productivo, Mercado Pago del comercio ni carga masiva.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href={buildReserveHref({
+                    source: 'landing oferta 24h',
+                    demoUrl: typeof window !== 'undefined' ? `${window.location.origin}${samplePath}` : samplePath,
+                    rubro,
+                    businessName: negocio.trim() || undefined,
+                  })}
+                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#d7ff64] px-6 text-sm font-black text-[#171814] transition hover:-translate-y-0.5 hover:bg-white"
+                >
+                  {reserveLabel}
+                  <ArrowRight size={16} />
+                </a>
+                <a
+                  href="#probar"
+                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-white/20 px-6 text-sm font-black text-white transition hover:border-white"
+                >
+                  Probar gratis primero
+                </a>
+              </div>
+            </article>
           </div>
         </section>
 
-        <section id="planes" className="scroll-mt-24 border-b border-black/8 bg-[#fbfaf6] py-20 sm:py-28">
+        <section id="planes" className="scroll-mt-24 border-b border-black/8 bg-[#fbfaf6] pb-20 sm:pb-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl">
-              <SectionEyebrow>Oferta de lanzamiento</SectionEyebrow>
+            <div className="max-w-3xl pt-4">
+              <SectionEyebrow>Siguiente paso</SectionEyebrow>
               <h2 className="text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-6xl">
-                Empezá donde duele hoy.
+                Planes completos
               </h2>
               <p className="mt-5 text-lg leading-relaxed text-black/60">
-                Todos incluyen armado inicial y soporte directo. Sin comisión por venta. Valores piloto en ARS para Zona Norte.
+                Después de la muestra. Sin comisión por venta. Valores piloto en ARS para Zona Norte.
               </p>
             </div>
 
@@ -475,14 +605,14 @@ export default function LandingPage() {
                   </ul>
 
                   <a
-                    href={buildSalesContactHref(`plan ${offer.name}`)}
+                    href={reserveHref}
                     className={`mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-full text-sm font-black transition hover:-translate-y-0.5 ${
                       offer.featured
                         ? 'bg-[#d7ff64] text-[#171814] hover:bg-white'
                         : 'bg-[#171814] text-white hover:bg-[#ee6847]'
                     }`}
                   >
-                    Pedir demo de mi negocio
+                    Empezar por la muestra
                     <ArrowRight size={16} />
                   </a>
                 </article>
@@ -525,15 +655,23 @@ export default function LandingPage() {
               Primero te mostramos. Después decidís.
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
-              Mandanos tu menú o Instagram. Preparamos una primera muestra con tu identidad y vemos juntos si vale la pena avanzar.
+              Probá una muestra gratis o reservá la versión a medida en 24 h. Sin comisión por venta.
             </p>
-            <a
-              href={contactHref}
-              className="mt-9 inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#171814] px-7 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-[#d7ff64] hover:text-[#171814]"
-            >
-              Quiero ver mi negocio
-              <ArrowRight size={18} />
-            </a>
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <a
+                href={reserveHref}
+                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#171814] px-7 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-[#d7ff64] hover:text-[#171814]"
+              >
+                {reserveLabel}
+                <ArrowRight size={18} />
+              </a>
+              <a
+                href="#probar"
+                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-white/30 px-7 text-sm font-black text-white"
+              >
+                Probar gratis
+              </a>
+            </div>
           </div>
         </section>
 
@@ -559,13 +697,32 @@ export default function LandingPage() {
             <p className="mt-2 text-sm text-white/45">Pedidos directos para negocios reales · por ZengaSoft</p>
           </div>
           <div className="flex flex-wrap gap-5 text-xs font-bold text-white/55">
-            <Link to="/demo/pizzeria" className="hover:text-white">Demo cliente</Link>
-            <Link to="/demo/pizzeria/owner" className="hover:text-white">Demo local</Link>
-            <a href="#planes" className="hover:text-white">Planes</a>
+            <Link to={withAttribution('/demos')} className="hover:text-white">11 muestras</Link>
+            <Link to={withAttribution('/demo/pizzeria')} className="hover:text-white">Demo cliente</Link>
+            <Link to={withAttribution('/demo/pizzeria/owner')} className="hover:text-white">Demo local</Link>
+            <a href="#reserva" className="hover:text-white">Reserva</a>
             <a href={contactHref} className="hover:text-white">Contacto</a>
           </div>
         </div>
       </footer>
+
+      {/* Mobile sticky CTAs — safe area */}
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-black/10 bg-[#f2eee6]/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden">
+        <div className="mx-auto grid max-w-lg grid-cols-2 gap-2">
+          <a
+            href="#probar"
+            className="inline-flex min-h-12 items-center justify-center rounded-full border border-black/15 bg-white text-sm font-black"
+          >
+            Probar
+          </a>
+          <a
+            href={reserveHref}
+            className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#171814] text-sm font-black text-white"
+          >
+            Reservar
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

@@ -445,6 +445,64 @@ export const PRESET_GRAFICA: DemoPreset = {
   }),
 };
 
+export const PRESET_PETSHOP: DemoPreset = {
+  id: 'petshop',
+  label: 'Pet shop',
+  family: 'catalogo',
+  suggestedColor: 'verde',
+  menuLayout: 'grid',
+  defaultBusinessName: 'Pet shop del barrio',
+  menuCategories: cats(['alimento', 'Alimento'], ['higiene', 'Higiene'], ['paseo', 'Paseo y juego']),
+  menuItems: [
+    item('alimento-perro', 'Alimento para perro', 'alimento', 'Muestra ilustrativa · marca genérica', [
+      { id: '3kg', label: '3 kg', price: 18500 },
+      { id: '15kg', label: '15 kg', price: 68900 },
+    ], 'Habitual'),
+    item('alimento-gato', 'Alimento para gato', 'alimento', 'Presentación ilustrativa', [
+      { id: '15', label: '1,5 kg', price: 14200 },
+      { id: '75', label: '7,5 kg', price: 52400 },
+    ]),
+    item('humedo', 'Alimento húmedo', 'alimento', 'Unidad o pack', [
+      { id: 'u', label: 'Unidad', price: 1800 },
+      { id: 'pack', label: 'Pack x12', price: 18900 },
+    ]),
+    item('arena', 'Arena sanitaria', 'higiene', '4 kg / 10 kg', [
+      { id: '4kg', label: '4 kg', price: 9800 },
+      { id: '10kg', label: '10 kg', price: 21500 },
+    ]),
+    item('shampoo', 'Shampoo', 'higiene', '250 ml / 500 ml', [
+      { id: '250', label: '250 ml', price: 6500 },
+      { id: '500', label: '500 ml', price: 9800 },
+    ]),
+    item('collar', 'Collar', 'paseo', 'Talles ilustrativos', [
+      { id: 's', label: 'S', price: 4200 },
+      { id: 'm', label: 'M', price: 4800 },
+      { id: 'l', label: 'L', price: 5500 },
+    ]),
+    item('correa', 'Correa', 'paseo', 'Corta / larga', [
+      { id: 'corta', label: 'Corta', price: 5900 },
+      { id: 'larga', label: 'Larga', price: 7800 },
+    ]),
+    item('snack', 'Snacks / juguete', 'paseo', 'Unidad o pack · atajo “compra habitual” en notas', [
+      { id: 'u', label: 'Unidad', price: 3200 },
+      { id: 'pack', label: 'Pack', price: 8900 },
+    ]),
+  ],
+  copy: baseCopy({
+    heroTitle: 'Pedí alimento y accesorios sin audio eterno',
+    heroBody: 'Muestra conceptual. Productos, precios, stock y condiciones ilustrativas. Confirmamos entrega por WhatsApp.',
+    checkoutCta: 'Armar pedido',
+    cartCta: 'Armar pedido',
+    totalLabel: 'Total estimado',
+    totalHint: 'Confirmamos stock y entrega por WhatsApp.',
+    notesPlaceholder: 'Barrio · retiro/delivery · repetir compra habitual · observaciones',
+    pickupLabel: 'Retiro',
+    deliveryLabel: 'Delivery',
+    chips: ['Stock', 'Compra habitual'],
+    weightNotice: 'Muestra conceptual. Productos, precios, stock y condiciones ilustrativas.',
+  }),
+};
+
 export const DEMO_PRESETS: Record<string, DemoPreset> = {
   'distribuidora-lacteos': PRESET_DISTRIBUIDORA_LACTEOS,
   'molino-mayorista': PRESET_MOLINO_MAYORISTA,
@@ -453,6 +511,7 @@ export const DEMO_PRESETS: Record<string, DemoPreset> = {
   cafeteria: PRESET_CAFETERIA,
   libreria: PRESET_LIBRERIA,
   grafica: PRESET_GRAFICA,
+  petshop: PRESET_PETSHOP,
 };
 
 export function getDemoPreset(rubro: string | null | undefined): DemoPreset | null {

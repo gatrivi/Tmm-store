@@ -284,7 +284,9 @@ Formato: ocho tarjetas por A4, blanco y negro legible. El QR comercial debe esta
 
 ## Pasada A — corte vendible
 
-1. Agregar el preset real de pet shop.
+**Estado (2026-07-28):** shipped v1.15.0 — `PRESET_PETSHOP`, landing funnel, `/demos`, UTM+Tally helpers.
+
+Pendiente ops (humano): crear Tally + Link de pago MP y setear `VITE_DEMO_INTAKE_URL` / `VITE_DEMO_PRICE_LABEL` en Vercel Production.
 2. Generalizar hero/copy de la landing sin rediseñarla.
 3. Integrar el mini personalizador existente.
 4. Añadir oferta de entrada y CTA al formulario.

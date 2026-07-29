@@ -5,9 +5,9 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-07-28 |
-| **Versión** | `1.14.0` (`package.json` → stamp UI) |
+| **Versión** | `1.15.0` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Último commit** | (Pasada A USD50 presets) |
+| **Último commit** | passive sales Pasada A — petshop + landing |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
@@ -96,7 +96,7 @@ Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/
 - Armado wizard (~10 min) en admin
 - Multi-tenant URL `/s/:slug` + SuperAdmin
 - **Orders v2 Hito 1:** demo coherente, una acción primaria, store demo compartido cliente/owner/seguimiento
-- **Demo Express presets (v1.14.0):** 7 rubros data-driven (`demoPresets.ts`) — prioridad molino + distribuidora lácteos; ver [`roadmap/usd50-tomorrow-demo-plan.md`](./roadmap/usd50-tomorrow-demo-plan.md)
+- **Demo Express presets (v1.15.0):** 8 rubros + petshop; landing funnel Tally/UTM; `/demos`; ver [`roadmap/passive-sales-petshop-landing.md`](./roadmap/passive-sales-petshop-landing.md)
 - **Demo Mamá Mabel flagship (v1.11–1.13.4):** portada marca · portfolio likes · encargo WA · cursos honestos · hero/portfolio black-bg studio picks (EXIF/glare/tilt/center)
 - **Demo pizzería Fit A:** carta pizza/empanadas, tenant `demo-pizzeria`, storage aislado
 - **Demo panadería La Magdalena (v1.9.3):** tenant `demo-panaderia`, storage `trufi_demo_orders_v2:panaderia`

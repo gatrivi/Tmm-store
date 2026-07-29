@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage';
 const CommerceApp = lazy(() => import('./CommerceApp'));
 const DemoOwnerPage = lazy(() => import('./pages/DemoOwnerPage'));
 const ProspectDemoBuilderPage = lazy(() => import('./pages/ProspectDemoBuilderPage'));
+const DemosGalleryPage = lazy(() => import('./pages/DemosGalleryPage'));
 
 function RouteLoader() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
       <Suspense fallback={<RouteLoader />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/demos" element={<DemosGalleryPage />} />
           <Route path="/pricing" element={<Navigate to="/#planes" replace />} />
           <Route path="/demo/armar" element={<ProspectDemoBuilderPage />} />
           <Route path="/demo/owner" element={<DemoOwnerPage />} />

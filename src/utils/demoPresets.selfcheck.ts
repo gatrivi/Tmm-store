@@ -20,6 +20,7 @@ function main() {
     'cafeteria',
     'libreria',
     'grafica',
+    'petshop',
   ] as const;
 
   for (const id of ids) {
@@ -33,7 +34,7 @@ function main() {
     assert.ok(p.menuItems.every(i => i.images.length === 0), `${id} editorial placeholders`);
   }
 
-  assert.equal(listDemoPresets().length, 7);
+  assert.equal(listDemoPresets().length, 8);
   assert.equal(getDemoPreset('molino-mayorista')?.id, 'molino-mayorista');
   assert.equal(getDemoPreset('nope'), null);
 
@@ -56,6 +57,7 @@ function main() {
   assert.equal(getDemoPreset('verduleria')?.family, 'peso');
   assert.equal(getDemoPreset('cafeteria')?.family, 'preparacion');
   assert.equal(getDemoPreset('libreria')?.family, 'catalogo');
+  assert.equal(getDemoPreset('petshop')?.family, 'catalogo');
   assert.equal(getDemoPreset('distribuidora-lacteos')?.family, 'mayorista');
 
   console.log('demoPresets.selfcheck: ok');
