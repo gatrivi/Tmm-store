@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = join(root, 'public', 'print');
 const url =
-  'https://gatrivi.com/?utm_source=recorrida&utm_medium=qr&utm_campaign=zona_norte&utm_content=petshop';
+  'https://tmm.gatrivi.com/?utm_source=recorrida&utm_medium=qr&utm_campaign=zona_norte&utm_content=petshop';
 
 mkdirSync(outDir, { recursive: true });
 const png = await QR.toBuffer(url, {

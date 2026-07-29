@@ -5,10 +5,10 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-07-29 |
-| **Versión** | `1.15.2` (`package.json` → stamp UI) |
+| **Versión** | `1.15.4` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Cambio actual** | flyers A6 print + marca pública Gatrivi.com |
-| **Live objetivo** | https://gatrivi.com |
+| **Cambio actual** | live URL fija en `tmm.gatrivi.com` (apex diferido) |
+| **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
 
@@ -145,7 +145,7 @@ Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 
 ## 6. Deploy / ops (gotchas reales)
 
-- Dominio público objetivo: `gatrivi.com` vía Vercel. Mantener `tmm.gatrivi.com` sólo como origen heredado y redirigirlo cuando el dominio nuevo esté activo.
+- Dominio live: `tmm.gatrivi.com` vía Vercel. Apex `gatrivi.com` diferido hasta resolver DNS/branch.
 - Histórico: push a `trabajo` creaba solo **Preview**; Production necesitaba `vercel promote` / `--prod`. Verificar branch Production en Vercel antes de asumir que un push actualizó live.
 - Stamp bottom-left = `package.json` version (oculto en UI pública demo post-Hito A; admin/DEV/`?debug=1` puede mostrarlo)
 - Env: `.env.example` + [`ops/env-vars.md`](./ops/env-vars.md)
@@ -243,11 +243,11 @@ npm run check:demo
 
 Abrir:
 
-- https://gatrivi.com/demo/mamabel
-- https://gatrivi.com/demo/pizzeria
-- https://gatrivi.com/demo/pizzeria/owner
-- https://gatrivi.com/demo/panaderia
-- https://gatrivi.com/demo/carniceria
+- https://tmm.gatrivi.com/demo/mamabel
+- https://tmm.gatrivi.com/demo/pizzeria
+- https://tmm.gatrivi.com/demo/pizzeria/owner
+- https://tmm.gatrivi.com/demo/panaderia
+- https://tmm.gatrivi.com/demo/carniceria
 - Stamp / `package.json` = **1.15.1**
 
 ---

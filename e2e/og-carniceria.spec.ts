@@ -8,8 +8,8 @@ test.describe('carnicería OG HTML', () => {
     expect(html).toContain('<title>Demo de tienda para carnicerías — Gatrivi.com</title>');
     expect(html).toContain('name="robots" content="noindex,follow"');
     expect(html).toContain('og:title" content="Demo de tienda para carnicerías — Gatrivi.com"');
-    expect(html).toContain('og:image" content="https://gatrivi.com/demos/carniceria/og.png"');
-    expect(html).not.toContain('og:image" content="https://gatrivi.com/gatrivi-og.png"');
+    expect(html).toContain('og:image" content="https://tmm.gatrivi.com/demos/carniceria/og.png"');
+    expect(html).not.toContain('og:image" content="https://tmm.gatrivi.com/gatrivi-og.png"');
     expect(html).toContain('twitter:title" content="Demo de tienda para carnicerías — Gatrivi.com"');
   });
 

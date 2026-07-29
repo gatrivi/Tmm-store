@@ -24,7 +24,7 @@ npm run dev
 - Tenant store: http://localhost:5173/s/demo-shop
 - Admin: http://localhost:5173/admin
 
-Public target: [gatrivi.com/demo/panaderia](https://gatrivi.com/demo/panaderia)
+Public target: [tmm.gatrivi.com/demo/panaderia](https://tmm.gatrivi.com/demo/panaderia)
 
 ## Scripts
 
