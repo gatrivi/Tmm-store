@@ -159,7 +159,7 @@ export function AdminPanel() {
         >
           <aside className="hidden lg:flex flex-col w-64 bg-white/3 border-r border-white/5 p-4">
             <div className="flex items-center gap-3 px-2 py-3 mb-4">
-              <img src={siteSettings.brandLogo || '/puestito.png'} alt={siteSettings.brandName || 'Trufi'} className="w-32 h-auto object-contain" />
+              <img src={siteSettings.brandLogo || '/puestito.png'} alt={siteSettings.brandName || 'Gatrivi.com'} className="w-32 h-auto object-contain" />
             </div>
             <span className="mx-2 mb-4 inline-flex self-start px-2 py-1 rounded-lg bg-white/10 text-[10px] font-black uppercase tracking-wider text-gray-300">
               Plan {planLabel}
@@ -195,7 +195,7 @@ export function AdminPanel() {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-center justify-between px-2 py-3 mb-4">
-                    <img src={siteSettings.brandLogo || '/puestito.png'} alt={siteSettings.brandName || 'Trufi'} className="w-28 h-auto object-contain" />
+                    <img src={siteSettings.brandLogo || '/puestito.png'} alt={siteSettings.brandName || 'Gatrivi.com'} className="w-28 h-auto object-contain" />
                     <button onClick={() => setMobileMenuOpen(false)} aria-label="Cerrar menú" className="text-gray-400 hover:text-white p-1">
                       <X size={20} />
                     </button>

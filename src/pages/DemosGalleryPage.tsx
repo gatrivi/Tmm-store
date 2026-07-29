@@ -64,7 +64,7 @@ export default function DemosGalleryPage() {
       <header className="border-b border-black/10 bg-[#171814] text-white">
         <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link to={withAttribution('/')} className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-white/70 hover:text-white">
-            <ArrowLeft size={15} /> Trufi
+            <ArrowLeft size={15} /> Gatrivi.com
           </Link>
           <p className="text-sm font-black">11 muestras</p>
           <Link to={withAttribution('/#reserva')} className="rounded-full bg-[#d7ff64] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.1em] text-[#171814]">

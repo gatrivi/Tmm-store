@@ -40,73 +40,47 @@ import {
 const outcomes = [
   {
     icon: MessageCircle,
-    title: 'Pedidos legibles',
-    copy: 'Producto, variante, entrega, pago y observaciones llegan ordenados. Menos ida y vuelta.',
+    title: 'Compra clara',
+    copy: 'El cliente elige productos, ve el total y encuentra tu alias para transferir.',
   },
   {
     icon: Tags,
-    title: 'Precios al día',
-    copy: 'Cambiás precios, disponibilidad y promos sin volver a imprimir ni depender de terceros.',
+    title: 'Catálogo al día',
+    copy: 'Cargás, editás, pausás o borrás productos cuando cambian el precio o el stock.',
   },
   {
     icon: CircleDollarSign,
-    title: 'Venta directa',
-    copy: 'El cliente compra desde tu link y la relación sigue siendo tuya. Cero comisión por venta.',
+    title: 'Cobro verificable',
+    copy: 'La tienda genera un comprobante y te lo manda por WhatsApp para compararlo con la transferencia.',
   },
 ];
 
 const setupItems = [
-  'Cargamos productos, fotos y precios',
-  'Adaptamos colores, logo y tono del local',
-  'Probamos el recorrido completo en celular',
+  'Diseño personalizado con tu marca',
+  'Carga inicial de hasta 300 productos',
+  'Dominio propio incluido durante un año',
+  'Probamos carrito, total, alias y comprobante',
   'Te dejamos link, QR y panel listos',
   'Te enseñamos a actualizarlo',
 ];
 
 const offers = [
   {
-    name: 'Carta Premium',
-    eyebrow: 'Para empezar',
-    setup: 'desde $180.000',
-    monthly: '$15.000/mes',
-    copy: 'Una carta que parece hecha por una agencia, no una plantilla genérica.',
-    features: [
-      'Carta con fotos y categorías',
-      'Link + QR compartible',
-      'Branding personalizado',
-      'Panel para editar precios',
-      'Contacto directo por WhatsApp',
-    ],
-  },
-  {
-    name: 'Pedidos Directos',
-    eyebrow: 'Recomendado',
-    setup: 'desde $320.000',
-    monthly: '$25.000/mes',
-    copy: 'Para dejar de reconstruir cada pedido entre audios y mensajes sueltos.',
+    name: 'Tienda online',
+    eyebrow: '90% OFF · primeros 10',
+    previousSetup: '$650.000',
+    setup: '$65.000',
+    monthly: 'Planes desde $35.000/mes',
+    copy: 'Implementación inicial completa para los primeros diez negocios.',
     featured: true,
     features: [
-      'Todo Carta Premium',
-      'Carrito y checkout guiado',
-      'Retiro o delivery',
-      'Efectivo, transferencia y Mercado Pago',
-      'Pedido ordenado por WhatsApp',
-      'Bandeja de pedidos del local',
-    ],
-  },
-  {
-    name: 'Operación',
-    eyebrow: 'Para crecer',
-    setup: 'desde $480.000',
-    monthly: '$45.000/mes',
-    copy: 'Más control para locales con volumen, cocina o varias personas atendiendo.',
-    features: [
-      'Todo Pedidos Directos',
-      'Estados y seguimiento',
-      'Comandas imprimibles',
-      'Promociones y reportes',
-      'Respuestas rápidas',
-      'Asistente de consultas opcional',
+      'Diseño personalizado',
+      'Carga inicial de hasta 300 productos',
+      'Dominio propio gratis por un año',
+      'Carrito con total automático',
+      'Alias y comprobante por WhatsApp',
+      'Panel para productos y disponibilidad',
+      'Sin comisión por venta',
     ],
   },
 ];
@@ -114,7 +88,7 @@ const offers = [
 const faqs = [
   {
     question: '¿Tengo que cargar todo yo?',
-    answer: 'No. La implementación incluye la primera carga, el armado visual y las pruebas. Recibís el sistema listo para usar.',
+    answer: 'No. La implementación incluye el diseño, las pruebas y la carga inicial de hasta 300 productos.',
   },
   {
     question: '¿El cliente necesita una app?',
@@ -122,7 +96,7 @@ const faqs = [
   },
   {
     question: '¿Cobran comisión por venta?',
-    answer: 'No. Trufi cobra implementación y mantenimiento. No toma un porcentaje de tus pedidos.',
+    answer: 'No. Gatrivi.com cobra la implementación y el plan mensual. No toma un porcentaje de tus ventas.',
   },
   {
     question: '¿Puedo cambiar precios?',
@@ -131,6 +105,10 @@ const faqs = [
   {
     question: '¿Sirve fuera de gastronomía?',
     answer: 'Sí: pet shops, librerías, gráficas, mayoristas y comercios con catálogo y variantes. Primero validamos el flujo con una muestra.',
+  },
+  {
+    question: '¿Qué dirección tiene la tienda?',
+    answer: 'Incluye una dirección como tunegocio.zengasoft.shop. Para los primeros diez, también regalamos un dominio propio por un año.',
   },
 ];
 
@@ -148,7 +126,7 @@ function SectionEyebrow({ children }: { children: React.ReactNode }) {
 
 export default function LandingPage() {
   const location = useLocation();
-  const contactHref = buildSalesContactHref('landing Trufi');
+  const contactHref = buildSalesContactHref('landing Gatrivi.com');
   const priceLabel = getDemoPriceLabel();
   const reserveHref = buildReserveHref({ source: 'landing reserva' });
   const reserveLabel = reserveCtaLabel();
@@ -173,11 +151,11 @@ export default function LandingPage() {
   }, [location.search]);
 
   useEffect(() => {
-    document.title = 'Trufi — Tu negocio listo para vender online';
+    document.title = 'Soluciones Web Gatrivi.com — Tu tienda online';
     const description = document.querySelector('meta[name="description"]');
     description?.setAttribute(
       'content',
-      'Catálogo, pedidos o cotizaciones desde un link. Tu marca, tu WhatsApp, cero comisión. Muestra a medida en 24 h.',
+      'Tienda online personalizada con catálogo, carrito, total, alias y comprobante por WhatsApp. Sin comisión por venta.',
     );
   }, []);
 
@@ -192,9 +170,9 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 border-b border-black/8 bg-[#f2eee6]/92 backdrop-blur-xl">
         <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link to="/" className="flex items-baseline gap-2">
-            <span className="text-xl font-black tracking-[-0.04em]">TRUFI</span>
+            <span className="text-xl font-black tracking-[-0.04em]">GATRIVI.COM</span>
             <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">
-              por ZengaSoft
+              Soluciones web · de ZengaSoft
             </span>
           </Link>
 
@@ -225,12 +203,12 @@ export default function LandingPage() {
               </div>
 
               <h1 className="max-w-3xl text-[clamp(2.6rem,7vw,5.6rem)] font-black leading-[0.92] tracking-[-0.07em]">
-                Tu negocio,
-                <span className="block text-[#ee6847]">listo para vender online.</span>
+                Tu tienda,
+                <span className="block text-[#ee6847]">lista para vender online.</span>
               </h1>
 
               <p className="mt-7 max-w-xl text-lg leading-relaxed text-black/66 sm:text-xl">
-                Catálogo, pedidos o cotizaciones desde un link. Tu marca, tu WhatsApp y cero comisión por venta.
+                Catálogo, carrito, total, alias y comprobante desde un link. Tu marca y cero comisión por venta.
               </p>
 
               <form
@@ -295,7 +273,7 @@ export default function LandingPage() {
               <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold text-black/55">
                 <span className="flex items-center gap-1.5"><Check size={14} /> Sin app</span>
                 <span className="flex items-center gap-1.5"><Check size={14} /> Sin comisión</span>
-                <span className="flex items-center gap-1.5"><Check size={14} /> Hecho por Trufi</span>
+                <span className="flex items-center gap-1.5"><Check size={14} /> Hecho por Gatrivi.com</span>
               </div>
             </div>
 
@@ -306,7 +284,7 @@ export default function LandingPage() {
                   <div className="mb-4 flex items-center justify-between border-b border-black/8 pb-4">
                     <div>
                       <p className="text-[10px] font-black uppercase tracking-[0.16em] text-black/40">Tu marca · demo</p>
-                      <p className="mt-1 text-sm font-black">Catálogo listo para pedir</p>
+                      <p className="mt-1 text-sm font-black">Catálogo listo para comprar</p>
                     </div>
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#171814] text-white">
                       <Store size={18} />
@@ -332,8 +310,8 @@ export default function LandingPage() {
                   <div className="mt-3 rounded-2xl bg-[#d7ff64] p-4">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.14em] text-black/50">Pedido #P7K2</p>
-                        <p className="mt-1 text-sm font-black">Listo para enviar por WhatsApp</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.14em] text-black/50">Compra #P7K2</p>
+                        <p className="mt-1 text-sm font-black">Comprobante listo para WhatsApp</p>
                       </div>
                       <CheckCircle2 size={24} />
                     </div>
@@ -347,7 +325,7 @@ export default function LandingPage() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] font-black uppercase tracking-[0.12em] text-black/40">El local recibe</p>
-                    <p className="truncate text-sm font-black">2 ítems · delivery · transferencia</p>
+                    <p className="truncate text-sm font-black">2 ítems · total · transferencia</p>
                   </div>
                 </div>
               </div>
@@ -359,11 +337,11 @@ export default function LandingPage() {
           <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-white/10 px-4 sm:grid-cols-3 sm:px-6 lg:grid-cols-6 lg:px-8">
             {[
               ['Catálogo', Smartphone],
-              ['QR + link', QrCode],
               ['Carrito', PackageCheck],
-              ['WhatsApp', MessageCircle],
+              ['Total', CircleDollarSign],
+              ['Alias', QrCode],
+              ['Comprobante', MessageCircle],
               ['Panel', BarChart3],
-              ['Comandas', Printer],
             ].map(([label, Icon]) => {
               const ItemIcon = Icon as typeof Smartphone;
               return (
@@ -381,10 +359,10 @@ export default function LandingPage() {
             <div className="max-w-3xl">
               <SectionEyebrow>El resultado</SectionEyebrow>
               <h2 className="text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-6xl">
-                El WhatsApp queda. El desorden no.
+                El cliente compra. Vos verificás.
               </h2>
               <p className="mt-5 max-w-2xl text-lg leading-relaxed text-black/60">
-                Trufi prepara el pedido antes de abrir el chat. Vos recibís algo que se puede leer, cobrar y producir.
+                La tienda calcula el total, muestra tu alias y genera un comprobante por WhatsApp para comparar con la transferencia.
               </p>
             </div>
 
@@ -415,7 +393,7 @@ export default function LandingPage() {
                 </h2>
               </div>
               <p className="max-w-2xl text-lg leading-relaxed text-white/60 lg:justify-self-end">
-                Abrí una muestra funcionando. Después mirá cómo llega el pedido al local.
+                Abrí una muestra funcionando. Después probá el carrito y el panel.
               </p>
             </div>
 
@@ -447,7 +425,7 @@ export default function LandingPage() {
             >
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-black/40">Vista del local</p>
-                <p className="mt-1 text-xl font-black">Recibí, prepará y entregá el pedido.</p>
+                <p className="mt-1 text-xl font-black">Cargá, editá, pausá o borrá productos.</p>
               </div>
               <BarChart3 size={28} />
             </Link>
@@ -462,7 +440,7 @@ export default function LandingPage() {
                 No te damos una cuenta vacía.
               </h2>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-black/62">
-                El producto es el local funcionando, no el acceso a una plataforma. Tomamos tu material actual y lo convertimos en una experiencia lista para vender.
+                El producto es tu tienda funcionando, no una cuenta vacía. Tomamos tu material y la dejamos lista para compartir y vender.
               </p>
               <ul className="mt-8 space-y-4">
                 {setupItems.map(item => (
@@ -484,7 +462,7 @@ export default function LandingPage() {
               <div className="mt-10 space-y-3">
                 {[
                   ['Día 1', 'Recibimos menú, fotos y datos'],
-                  ['Día 2', 'Armamos marca, carta y pedidos'],
+                  ['Día 2', 'Armamos marca, catálogo y tienda'],
                   ['Día 3', 'Probamos, ajustamos y entregamos'],
                 ].map(([day, task]) => (
                   <div key={day} className="grid grid-cols-[70px_1fr] items-center gap-3 rounded-2xl bg-white/12 p-4">
@@ -495,7 +473,7 @@ export default function LandingPage() {
               </div>
               <div className="mt-5 rounded-2xl bg-[#171814] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.12em] text-[#d7ff64]">Entrega real</p>
-                <p className="mt-2 text-xl font-black">Link, QR, panel y una prueba completa.</p>
+                <p className="mt-2 text-xl font-black">Link, QR, panel y una compra de prueba.</p>
               </div>
             </div>
           </div>
@@ -504,22 +482,22 @@ export default function LandingPage() {
         <section id="reserva" className="scroll-mt-24 border-b border-black/8 bg-[#fbfaf6] py-20 sm:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <article className="rounded-[2rem] border-2 border-[#171814] bg-[#171814] p-6 text-white shadow-2xl sm:p-10">
-              <p className="text-xs font-black uppercase tracking-[0.14em] text-[#d7ff64]">Entrada accesible</p>
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-[#d7ff64]">Promoción de lanzamiento</p>
               <h2 className="mt-4 max-w-3xl text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl">
-                Muestra a medida 24 h
+                Primeros 10 negocios
               </h2>
               <p className="mt-4 text-3xl font-black text-[#d7ff64]">{priceLabel}</p>
               <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/65">
-                Reserva descontada 100% si después contratás el proyecto completo. Las 24 h empiezan cuando están completos los materiales.
+                90% de descuento sobre el valor de implementación de $650.000.
               </p>
               <ul className="mt-8 grid gap-3 sm:grid-cols-2">
                 {[
-                  'Nombre, colores y logo recibido',
-                  'Hasta 8 productos o servicios',
-                  'Catálogo móvil compartible',
-                  'CTA a tu WhatsApp',
-                  'Una ronda breve de cambios',
-                  'Demos públicas = conceptuales',
+                  'Diseño personalizado',
+                  'Carga de hasta 300 productos',
+                  'Catálogo, carrito y total',
+                  'Alias y comprobante por WhatsApp',
+                  'Panel para administrar productos',
+                  'Dominio propio por un año',
                 ].map(item => (
                   <li key={item} className="flex items-start gap-2 text-sm font-bold text-white/80">
                     <Check size={16} className="mt-0.5 shrink-0 text-[#d7ff64]" />
@@ -527,13 +505,10 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 text-xs font-bold text-white/45">
-                No incluye dominio, panel productivo, Mercado Pago del comercio ni carga masiva.
-              </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a
                   href={buildReserveHref({
-                    source: 'landing oferta 24h',
+                    source: 'landing primeros 10',
                     demoUrl: typeof window !== 'undefined' ? `${window.location.origin}${samplePath}` : samplePath,
                     rubro,
                     businessName: negocio.trim() || undefined,
@@ -547,7 +522,7 @@ export default function LandingPage() {
                   href="#probar"
                   className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-white/20 px-6 text-sm font-black text-white transition hover:border-white"
                 >
-                  Probar gratis primero
+                  Probar la tienda
                 </a>
               </div>
             </article>
@@ -559,14 +534,14 @@ export default function LandingPage() {
             <div className="max-w-3xl pt-4">
               <SectionEyebrow>Siguiente paso</SectionEyebrow>
               <h2 className="text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-6xl">
-                Planes completos
+                Tienda y mantenimiento
               </h2>
               <p className="mt-5 text-lg leading-relaxed text-black/60">
-                Después de la muestra. Sin comisión por venta. Valores piloto en ARS para Zona Norte.
+                Implementación promocional para los primeros diez. Planes mensuales desde $35.000. Sin comisión por venta.
               </p>
             </div>
 
-            <div className="mt-12 grid gap-5 lg:grid-cols-3">
+            <div className="mx-auto mt-12 grid max-w-2xl gap-5">
               {offers.map(offer => (
                 <article
                   key={offer.name}
@@ -591,8 +566,11 @@ export default function LandingPage() {
 
                   <div className={`my-6 border-y py-5 ${offer.featured ? 'border-white/12' : 'border-black/10'}`}>
                     <p className={`text-xs font-bold ${offer.featured ? 'text-white/45' : 'text-black/45'}`}>Implementación</p>
+                    <p className={`mt-1 text-sm font-bold ${offer.featured ? 'text-white/45' : 'text-black/45'}`}>
+                      <s>{offer.previousSetup}</s>
+                    </p>
                     <p className="mt-1 text-2xl font-black">{offer.setup}</p>
-                    <p className={`mt-2 text-sm font-bold ${offer.featured ? 'text-white/55' : 'text-black/55'}`}>+ {offer.monthly} de mantenimiento</p>
+                    <p className={`mt-2 text-sm font-bold ${offer.featured ? 'text-white/55' : 'text-black/55'}`}>{offer.monthly}</p>
                   </div>
 
                   <ul className="flex-1 space-y-3">
@@ -621,7 +599,7 @@ export default function LandingPage() {
 
             <div className="mt-8 flex flex-col gap-3 rounded-2xl border border-black/10 bg-white p-5 text-sm sm:flex-row sm:items-center sm:justify-between">
               <p className="font-bold text-black/60">
-                <strong className="text-black">Forma simple:</strong> 50% para empezar, saldo contra entrega. El alcance final depende del menú y las integraciones.
+                <strong className="text-black">Dirección incluida:</strong> tunegocio.zengasoft.shop. El dominio propio se incluye durante el primer año para los primeros diez.
               </p>
               <ShieldCheck className="shrink-0 text-[#ee6847]" />
             </div>
@@ -655,7 +633,7 @@ export default function LandingPage() {
               Primero te mostramos. Después decidís.
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
-              Probá una muestra gratis o reservá la versión a medida en 24 h. Sin comisión por venta.
+              Probá una muestra o reservá la implementación para uno de los primeros diez. Sin comisión por venta.
             </p>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
@@ -693,8 +671,8 @@ export default function LandingPage() {
       <footer className="border-t border-white/10 bg-[#10110e] px-4 py-10 text-white sm:px-6">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-2xl font-black tracking-[-0.04em]">TRUFI</p>
-            <p className="mt-2 text-sm text-white/45">Pedidos directos para negocios reales · por ZengaSoft</p>
+            <p className="text-2xl font-black tracking-[-0.04em]">GATRIVI.COM</p>
+            <p className="mt-2 text-sm text-white/45">Soluciones web para negocios · de ZengaSoft</p>
           </div>
           <div className="flex flex-wrap gap-5 text-xs font-bold text-white/55">
             <Link to={withAttribution('/demos')} className="hover:text-white">11 muestras</Link>

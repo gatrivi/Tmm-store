@@ -123,7 +123,7 @@ export default function Storefront() {
   // Dynamic page title from branding
   useEffect(() => {
     const name = siteSettings.brandName?.trim();
-    document.title = name ? `${name} — Menú online` : 'Trufi — Menú online';
+    document.title = name ? `${name} — Menú online` : 'Gatrivi.com — Tienda online';
   }, [siteSettings.brandName]);
 
   // Carnicería: light only (no restaurante oscuro)

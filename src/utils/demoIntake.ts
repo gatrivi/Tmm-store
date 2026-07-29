@@ -99,7 +99,7 @@ export function buildReserveHref(opts: {
     });
   }
   const bits = [
-    'Hola, quiero reservar la muestra a medida 24 h de Trufi.',
+    'Hola, quiero reservar una tienda de Soluciones Web Gatrivi.com.',
     opts.businessName ? `Negocio: ${opts.businessName}` : '',
     opts.rubro ? `Rubro: ${opts.rubro}` : '',
     opts.demoUrl ? `Demo: ${opts.demoUrl}` : '',
@@ -108,5 +108,5 @@ export function buildReserveHref(opts: {
 }
 
 export function reserveCtaLabel(): string {
-  return hasDemoIntake() ? 'Reservar mi muestra' : (hasSalesWhatsApp() ? 'Reservar por WhatsApp' : 'Reservar (escribir)');
+  return hasDemoIntake() ? 'Reservar mi tienda' : (hasSalesWhatsApp() ? 'Reservar por WhatsApp' : 'Reservar (escribir)');
 }

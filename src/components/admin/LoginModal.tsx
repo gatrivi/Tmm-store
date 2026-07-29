@@ -136,7 +136,7 @@ export function LoginModal() {
               </button>
               <img
                 src="/puestito.png"
-                alt="Trufi Admin"
+                alt="Gatrivi.com Admin"
                 className="w-48 h-auto object-contain"
               />
               <div className="w-12 h-0.5 bg-white/30 rounded-full mt-4" />

@@ -1,24 +1,26 @@
-# AGENT STATUS — Trufi (TMM Store)
+# AGENT STATUS — Soluciones Web Gatrivi.com (TMM Store)
 
 **Léeme primero.** Snapshot preciso del producto para agentes cloud / Cursor.
 
 | Campo | Valor |
 |-------|--------|
-| **Fecha snapshot** | 2026-07-28 |
-| **Versión** | `1.15.0` (`package.json` → stamp UI) |
+| **Fecha snapshot** | 2026-07-29 |
+| **Versión** | `1.15.1` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Último commit** | passive sales Pasada A — petshop + landing |
-| **Live** | https://tmm.gatrivi.com |
+| **Cambio actual** | marca pública Gatrivi.com + oferta de lanzamiento |
+| **Live objetivo** | https://gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
 
 Si este archivo y el stamp on-screen no coinciden → deploy/HMR desfasado.
 
+**Política de marca pública:** mostrar siempre **Gatrivi.com · de ZengaSoft**. `Trufi`, `TMM` y nombres `trufi:*` quedan sólo como identificadores técnicos heredados; no exponerlos en copy, títulos ni metadatos.
+
 ---
 
 ## 1. Qué es el producto
 
-**Trufi** = suite white-label de pedidos online para comercios barriales (AR / Zona Norte).
+**Gatrivi.com** = tienda online white-label para comercios barriales (AR / Zona Norte).
 
 Flujo core:
 
@@ -143,7 +145,7 @@ Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 
 ## 6. Deploy / ops (gotchas reales)
 
-- Dominio: `tmm.gatrivi.com` vía Vercel
+- Dominio público objetivo: `gatrivi.com` vía Vercel. Mantener `tmm.gatrivi.com` sólo como origen heredado y redirigirlo cuando el dominio nuevo esté activo.
 - Histórico: push a `trabajo` creaba solo **Preview**; Production necesitaba `vercel promote` / `--prod`. Verificar branch Production en Vercel antes de asumir que un push actualizó live.
 - Stamp bottom-left = `package.json` version (oculto en UI pública demo post-Hito A; admin/DEV/`?debug=1` puede mostrarlo)
 - Env: `.env.example` + [`ops/env-vars.md`](./ops/env-vars.md)
@@ -217,7 +219,7 @@ Publicitar “busco pilotos”: Hito A OK. Tráfico frío prometiendo sistema li
 1. Leer este archivo → luego **un** doc de `docs/features/` o `docs/roadmap/` — no barrer el repo.
 2. Diffs chicos; no reescribir arquitectura.
 3. No crear MD en raíz; actualizar docs existentes o `docs/**`.
-4. Tras feature visible: bump `package.json` version + actualizar stamp en respuestas humanas (`— Trufi vX.Y.Z`).
+4. Tras feature visible: bump `package.json` version + actualizar stamp en respuestas humanas (`— Gatrivi.com vX.Y.Z`).
 5. Commit/push solo si el humano lo pide (salvo regla explícita del usuario).
 6. Demos: no Firebase, no inventar datos de comercios reales; WSP/MP reales solo donde el doc del demo lo permite.
 7. Laconic: bullets > párrafos.
@@ -241,12 +243,12 @@ npm run check:demo
 
 Abrir:
 
-- https://tmm.gatrivi.com/demo/mamabel  
-- https://tmm.gatrivi.com/demo/pizzeria  
-- https://tmm.gatrivi.com/demo/pizzeria/owner  
-- https://tmm.gatrivi.com/demo/panaderia  
-- https://tmm.gatrivi.com/demo/carniceria  
-- Stamp / `package.json` = **1.13.4**
+- https://gatrivi.com/demo/mamabel
+- https://gatrivi.com/demo/pizzeria
+- https://gatrivi.com/demo/pizzeria/owner
+- https://gatrivi.com/demo/panaderia
+- https://gatrivi.com/demo/carniceria
+- Stamp / `package.json` = **1.15.1**
 
 ---
 

@@ -50,7 +50,7 @@ export default function ProspectDemoBuilderPage() {
   const outreachMessage = `Hola, armé una muestra rápida de cómo podría verse ${normalizedName} con pedidos directos:\n${customerUrl}\n\nEs una demo visual con productos de ejemplo. Si te sirve, la adapto a tu menú real.`;
 
   useEffect(() => {
-    document.title = 'Armar demo para prospecto — Trufi';
+    document.title = 'Armar demo para prospecto — Gatrivi.com';
   }, []);
 
   const handleCopy = async (target: Exclude<CopiedTarget, null>, value: string) => {
@@ -70,7 +70,7 @@ export default function ProspectDemoBuilderPage() {
       <header className="border-b border-black/10 bg-[#171814] text-white">
         <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-white/70 hover:text-white">
-            <ArrowLeft size={15} /> Trufi
+            <ArrowLeft size={15} /> Gatrivi.com
           </Link>
           <p className="text-sm font-black">Demo Express</p>
           <span className="rounded-full bg-[#d7ff64] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.1em] text-[#171814]">
@@ -239,7 +239,7 @@ export default function ProspectDemoBuilderPage() {
       </main>
 
       <footer className="border-t border-black/8 px-4 py-6 text-center text-xs font-bold text-black/40">
-        Demo Express · herramienta comercial de Trufi <ArrowRight size={13} className="ml-1 inline" />
+        Demo Express · herramienta comercial de Gatrivi.com <ArrowRight size={13} className="ml-1 inline" />
       </footer>
     </div>
   );

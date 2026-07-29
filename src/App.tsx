@@ -12,7 +12,7 @@ function RouteLoader() {
     <div className="flex min-h-screen items-center justify-center bg-[#f2eee6] text-[#171814]">
       <div className="flex items-center gap-3 text-sm font-black">
         <span className="h-3 w-3 animate-pulse rounded-full bg-[#ee6847]" />
-        Cargando Trufi…
+        Cargando Gatrivi.com…
       </div>
     </div>
   );

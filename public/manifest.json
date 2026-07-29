@@ -1,7 +1,7 @@
 {
-  "name": "Trufi",
-  "short_name": "Trufi",
-  "description": "Carta digital y pedidos directos para negocios, sin comisión por venta.",
+  "name": "Soluciones Web Gatrivi.com",
+  "short_name": "Gatrivi",
+  "description": "Catálogo, carrito, total, alias y comprobante por WhatsApp para negocios.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0d0d0d",
@@ -14,14 +14,14 @@
       "type": "image/svg+xml"
     },
     {
-      "src": "/favicon.jpg",
+      "src": "/favicon.png",
       "sizes": "192x192",
-      "type": "image/jpeg"
+      "type": "image/png"
     },
     {
-      "src": "/favicon.jpg",
+      "src": "/favicon.png",
       "sizes": "512x512",
-      "type": "image/jpeg"
+      "type": "image/png"
     }
   ]
 }

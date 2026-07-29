@@ -1,9 +1,9 @@
-# Trufi
+# Soluciones Web Gatrivi.com
 
-Done-for-you, white-label ordering suite for local businesses: sales landing, digital menu, cart, checkout, WhatsApp, MercadoPago, owner panel, and three product tiers (Menu / Pedidos / Premium).
+Tienda online white-label para comercios: catálogo, carrito, total, alias, comprobante por WhatsApp y panel de productos. Marca pública: **Gatrivi.com · de ZengaSoft**.
 
 > **Agentes (Grok / Cursor / cloud):** leer primero  
-> **[`docs/AGENT_STATUS.md`](docs/AGENT_STATUS.md)** — snapshot preciso del estado del producto (v1.9.3).
+> **[`docs/AGENT_STATUS.md`](docs/AGENT_STATUS.md)** — snapshot preciso del estado del producto (v1.15.1).
 
 ## Quick start
 
@@ -24,7 +24,7 @@ npm run dev
 - Tenant store: http://localhost:5173/s/demo-shop
 - Admin: http://localhost:5173/admin
 
-Live: [tmm.gatrivi.com/demo/panaderia](https://tmm.gatrivi.com/demo/panaderia)
+Public target: [gatrivi.com/demo/panaderia](https://gatrivi.com/demo/panaderia)
 
 ## Scripts
 
@@ -70,4 +70,4 @@ Push to Vercel. Set env vars in the project dashboard. Serverless functions in `
 
 ---
 
-Developed by **DevSalz**
+Developed by **ZengaSoft**
