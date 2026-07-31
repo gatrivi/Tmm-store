@@ -4,10 +4,10 @@
 
 | Campo | Valor |
 |-------|--------|
-| **Fecha snapshot** | 2026-07-29 |
-| **Versión** | `1.15.4` (`package.json` → stamp UI) |
+| **Fecha snapshot** | 2026-07-31 |
+| **Versión** | `1.15.5` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Cambio actual** | live URL fija en `tmm.gatrivi.com` (apex diferido) |
+| **Cambio actual** | Gate A ventas — checklist + E2E landing CTAs |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
@@ -156,6 +156,10 @@ Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 
 ## 7. Ventas — foco actual
 
+**Listo para vender:** Tienda online (Gate A). Ver [`ops/sales-readiness.md`](./ops/sales-readiness.md).
+
+**No vender aún:** Pedidos reales multi-dispositivo (Gate B), MP integrado (Gate C).
+
 **Perfil que compra:** pizza / empanadas / roti / food truck — dueño cocina, alto WSP, sin web propia, odia comisión. + pastelería/panadería como flagship demo.
 
 **Zona:** Olivos → Vicente López (anillos) — [`ops/leads-rings-routine.md`](./ops/leads-rings-routine.md), shortlist [`ops/propuesta-olivos-vl.md`](./ops/propuesta-olivos-vl.md).
@@ -176,7 +180,7 @@ Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 
 **Fuera de foco:** zapatería, ropa, café solo mesa, resto fino/sushi (fit C).
 
-Publicitar “busco pilotos”: Hito A OK. Tráfico frío prometiendo sistema listo para pedidos reales: **no** (falta Hito B seguridad).
+Publicitar “busco pilotos” o vender Tienda online: **Gate A OK** (verificar `VITE_SALES_WHATSAPP_NUMBER` o `VITE_DEMO_INTAKE_URL` en Production). Tráfico frío prometiendo pedidos reales: **no** (falta Gate B).
 
 ---
 

@@ -4,10 +4,6 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { createRequire } from 'node:module';
-
-const require = createRequire(import.meta.url);
-// use sharp if present, else sharp via dynamic — fall back to jimp? Check package.json
 const DEST = path.resolve('public/demos/mamabel');
 
 async function loadSharp(): Promise<typeof import('sharp') | null> {

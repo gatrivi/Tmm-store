@@ -10,11 +10,11 @@ Purpose: onboard first two live shops before selling to five more in the same zo
 
 Avoid for pilots: full restaurant with mesas, dark kitchen with many integrations, shops happy on PedidoDirecto.
 
-## Offer (armado sin cargo)
+## Offer (piloto controlado)
 
 | Item | Action |
 |------|--------|
-| Plan | Pedidos — 3 months pilot gratis or $15–18k/mes after success |
+| Plan | Pedidos — piloto acotado o $15–18k/mes tras validación |
 | Setup | Load menu, logo, WhatsApp, alias, QR en mostrador |
 | Support | WhatsApp group with owner; visit once in week 1 |
 | Success | >30 pedidos/semana for 2 weeks; owner opens admin daily |

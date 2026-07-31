@@ -52,6 +52,12 @@ const serverRecommended = [
   'TENANT_ID',
 ];
 
+const salesRecommended = [
+  'VITE_SALES_WHATSAPP_NUMBER',
+  'VITE_DEMO_INTAKE_URL',
+  'VITE_DEMO_PRICE_LABEL',
+];
+
 function status(key) {
   const v = process.env[key];
   return v && v.length > 0 ? 'ok' : 'missing';
@@ -79,6 +85,18 @@ console.log('\nServer (Vercel — MP webhook):');
 for (const key of serverRecommended) {
   const s = status(key);
   console.log(`  ${s === 'ok' ? '✓' : '○'} ${key}${s === 'missing' ? ' (optional if no MP)' : ''}`);
+}
+
+console.log('\nSales landing (Vercel Production — at least one CTA channel):');
+let salesChannelOk = false;
+for (const key of salesRecommended) {
+  const s = status(key);
+  if (key === 'VITE_SALES_WHATSAPP_NUMBER' && s === 'ok') salesChannelOk = true;
+  if (key === 'VITE_DEMO_INTAKE_URL' && s === 'ok') salesChannelOk = true;
+  console.log(`  ${s === 'ok' ? '✓' : '○'} ${key}${s === 'missing' ? ' (recommended)' : ''}`);
+}
+if (!salesChannelOk) {
+  console.log('\n→ Sales CTAs fall back to email. Set VITE_SALES_WHATSAPP_NUMBER or VITE_DEMO_INTAKE_URL.');
 }
 
 if (!firebaseOk) {
