@@ -1,6 +1,6 @@
 # Menu onboarding (photo import)
 
-Purpose: armado sin cargo — upload printed menu photo, AI extract, review, import.
+Purpose: upload printed menu photo, AI extract, review, import (included in paid implementation).
 
 Paths: `AdminMenuOnboarding.tsx`, `api/parse-menu.ts`, `utils/menuImport.ts`, `MenuCategoryNav.tsx`
 

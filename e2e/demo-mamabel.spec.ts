@@ -6,7 +6,7 @@ test.describe('demo mamabel encargo', () => {
     await page.goto('/demo/mamabel');
     await expect(page.getByRole('heading', { name: 'Tortas que se recuerdan' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Agregar' })).toHaveCount(0);
-    await expect(page.getByRole('heading', { name: 'Trabajos' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Trabajos', exact: true })).toBeVisible();
 
     await page.getByRole('button', { name: 'Contanos tu idea' }).first().click();
     await expect(page.locator('#encargar')).toBeInViewport();

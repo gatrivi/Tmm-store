@@ -28,6 +28,7 @@ Agent manifest: read this first, then one targeted file.
 | Firebase production | [ops/firebase-setup.md](./ops/firebase-setup.md) |
 | Production smoke test | [ops/smoke-test.md](./ops/smoke-test.md) |
 | **Prospect demo (3 min)** | [ops/prospect-demo.md](./ops/prospect-demo.md) |
+| **Sales readiness gate** | [ops/sales-readiness.md](./ops/sales-readiness.md) |
 | **Release gate publicitar (Hito A)** | [roadmap/advertising-readiness.md](./roadmap/advertising-readiness.md) |
 | **Demo flagship Mamá Mabel** | [roadmap/demo-mamabel.md](./roadmap/demo-mamabel.md) · `/demo/mamabel` |
 | **Mabel content gaps** | [mamabel-content-gaps.md](./mamabel-content-gaps.md) |
