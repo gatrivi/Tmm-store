@@ -18,12 +18,18 @@ Versión gate: `1.15.5`
 
 ## Gate A — checklist (conversión)
 
-### Vercel Production (manual)
+### Vercel Production (opcional si ya está en código)
 
-- [ ] `VITE_SALES_WHATSAPP_NUMBER=54911...` **o** `VITE_DEMO_INTAKE_URL` (Tally)
+- [x] WhatsApp comercial: `5491156199363` (default en `salesContact.ts`)
+- [x] Email: `devtrivi@zengasoft.com`
+- [ ] `VITE_DEMO_INTAKE_URL` (Tally) si querés formulario antes de WSP
 - [ ] `VITE_DEMO_PRICE_LABEL=$65.000` coincide con link MP
-- [ ] Redeploy Production (no confiar solo en Preview)
-- [ ] CTA desde celular abre `wa.me` o Tally, no `mailto:`
+- [ ] Redeploy Production tras merge
+- [ ] CTA desde celular abre `wa.me/5491156199363`
+
+### Firebase (proyecto `tmm-store`)
+
+`.firebaserc` ya apunta a `tmm-store`. Pegar en Vercel las 6 `VITE_FIREBASE_*` desde [Firebase Console](https://console.firebase.google.com/) → Project settings → Web app.
 
 ```bash
 npm run check:env   # avisa si faltan vars de venta

@@ -2,6 +2,9 @@ const env = (typeof import.meta !== 'undefined' ? import.meta.env : undefined) a
   | Record<string, string | undefined>
   | undefined;
 
+const DEFAULT_SALES_WHATSAPP = '5491156199363';
+const DEFAULT_SALES_EMAIL = 'devtrivi@zengasoft.com';
+
 const DEFAULT_MESSAGE =
   'Hola, vi una demo de Soluciones Web Gatrivi.com y quiero una tienda para mi negocio.';
 
@@ -10,12 +13,20 @@ export interface SalesContactConfig {
   email?: string;
 }
 
+function resolveSalesConfig(overrides: SalesContactConfig = {}): SalesContactConfig {
+  return {
+    whatsappNumber:
+      overrides.whatsappNumber ?? env?.VITE_SALES_WHATSAPP_NUMBER ?? DEFAULT_SALES_WHATSAPP,
+    email: overrides.email ?? env?.VITE_SALES_EMAIL ?? DEFAULT_SALES_EMAIL,
+  };
+}
+
 export function buildSalesContactHrefFrom(
   config: SalesContactConfig,
   source = 'sitio',
 ): string {
   const whatsapp = (config.whatsappNumber || '').replace(/\D/g, '');
-  const email = config.email?.trim() || 'devtrivi@zengasoft.com';
+  const email = config.email?.trim() || DEFAULT_SALES_EMAIL;
   const message = `${DEFAULT_MESSAGE}\n\nOrigen: ${source}`;
 
   if (whatsapp) {
@@ -27,10 +38,7 @@ export function buildSalesContactHrefFrom(
 }
 
 export function buildSalesContactHref(source = 'sitio'): string {
-  return buildSalesContactHrefFrom(
-    { whatsappNumber: env?.VITE_SALES_WHATSAPP_NUMBER, email: env?.VITE_SALES_EMAIL },
-    source,
-  );
+  return buildSalesContactHrefFrom(resolveSalesConfig(), source);
 }
 
 export function hasSalesWhatsAppFrom(config: SalesContactConfig): boolean {
@@ -38,5 +46,5 @@ export function hasSalesWhatsAppFrom(config: SalesContactConfig): boolean {
 }
 
 export function hasSalesWhatsApp(): boolean {
-  return hasSalesWhatsAppFrom({ whatsappNumber: env?.VITE_SALES_WHATSAPP_NUMBER });
+  return hasSalesWhatsAppFrom(resolveSalesConfig());
 }

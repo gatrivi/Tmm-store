@@ -3,7 +3,9 @@
  */
 import assert from 'node:assert/strict';
 import {
+  buildSalesContactHref,
   buildSalesContactHrefFrom,
+  hasSalesWhatsApp,
   hasSalesWhatsAppFrom,
 } from './salesContact';
 
@@ -15,9 +17,12 @@ function main() {
   assert.match(decodeURIComponent(wa), /Gatrivi\.com/);
 
   assert.equal(hasSalesWhatsAppFrom({}), false);
-  const mail = buildSalesContactHrefFrom({}, 'email fallback');
+  const mail = buildSalesContactHrefFrom({ whatsappNumber: '', email: 'test@example.com' }, 'email fallback');
   assert.match(mail, /^mailto:/);
   assert.match(decodeURIComponent(mail), /Origen: email fallback/);
+
+  assert.equal(hasSalesWhatsApp(), true);
+  assert.match(buildSalesContactHref('default line'), /wa\.me\/5491156199363/);
 
   console.log('salesContact.selfcheck: ok');
 }
