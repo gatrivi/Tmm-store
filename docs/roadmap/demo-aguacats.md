@@ -11,7 +11,7 @@
 | IG | [@aguacats21](https://www.instagram.com/aguacats21/) · ~814 followers |
 | WSP | +54 11 7139-5174 → `541171395174` |
 | Ubicación | **AR / AMBA** (no GB). Envios a domicilio |
-| Rubro | Despensa + fresco · mayor y menor |
+| Rubro | **Distribuidora de paltas** (foodservice) · mayor y menor |
 | Mascota | Yaguacat / jaguar antropomorfo · logo aguacate+yaguareté |
 | Assets | `public/demos/aguacats/` |
 
@@ -29,7 +29,7 @@ Font: `"Trebuchet MS", "Segoe UI", system-ui, sans-serif`
 
 ## Problema (60s)
 
-> Audio “mandame 2 botellas y un cajón” → pedido estructurado + delivery.
+> Pedido por WhatsApp sin audios → palta + combo armado + envío AMBA.
 
 ## Rutas
 
@@ -50,7 +50,7 @@ Font: `"Trebuchet MS", "Segoe UI", system-ui, sans-serif`
 
 ## Carta demo (ilustrativa)
 
-Despensa: aceite oliva, salsa soja, miel · Fresco: cajón frescura, frutillas, palta · Bebidas: jugo.
+Paltas: Hass + combo frescura · Complementos: frutillas, miel, aceite.
 
 Imágenes = creativos IG (AI/marketing), **no** fotos de stock reales del local.
 

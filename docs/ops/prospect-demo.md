@@ -33,7 +33,7 @@ Tenant `demo-panaderia` · WSP prospect `549116563860` · logo blueprint. Brief:
 
 Tenant `demo-aguacats` · WSP `541171395174` · IG `@aguacats21` · contact Fermín. Brief: [demo-aguacats.md](../roadmap/demo-aguacats.md) · gaps: [aguacats-content-gaps.md](../aguacats-content-gaps.md).
 
-60s: `/demo/aguacats` → cajón frescura + aceite → `/demo/aguacats/owner`.
+60s: `/demo/aguacats` → palta + combo frescura → `/demo/aguacats/owner`.
 
 ### Vertical pizzería (Fit A — default pitch)
 

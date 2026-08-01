@@ -125,9 +125,10 @@ function main() {
   assert.equal(ac.siteSettings.brandName, 'Aguacats');
   assert.equal(ac.siteSettings.whatsappNumber, '541171395174');
   assert.equal(ac.siteSettings.brandInstagram, 'aguacats21');
-  assert.ok(ac.menuItems.some(i => i.id === 'aceite-oliva'));
-  assert.ok(ac.menuItems.some(i => i.id === 'cajon-frescura'));
-  assert.equal(ac.menuCategories.length, 3);
+  assert.ok(ac.menuItems.some(i => i.id === 'palta-hass'));
+  assert.ok(ac.menuItems.some(i => i.id === 'combo-frescura'));
+  assert.equal(ac.menuCategories[0].id, 'paltas');
+  assert.equal(ac.menuCategories.length, 2);
   assert.equal(ac.seedOrders.length, 3);
   assert.equal(getDemoByTenantId('demo-aguacats')?.id, 'aguacats');
   assert.equal(AGUACATS_DEMO.siteSettings.brandLogo, '/demos/aguacats/logo.jpg');
