@@ -15,6 +15,7 @@ Purpose: future Trufi work — competitive parity with PedidoDirecto, then Premi
 | **Advertising readiness (Hito A)** | [advertising-readiness.md](./advertising-readiness.md) |
 | **Demo flagship Mamá Mabel** | [demo-mamabel.md](./demo-mamabel.md) |
 | **Demo panadería La Magdalena** | [demo-panaderia.md](./demo-panaderia.md) |
+| **Demo Aguacats (ex Refcurcum)** | [demo-aguacats.md](./demo-aguacats.md) |
 | **Demo pizzería Fit A (shipped)** | [demo-pizzeria.md](./demo-pizzeria.md) |
 | **Demo carnicería Gabriel (Hito 1 done)** | [demo-carniceria-gabriel.md](./demo-carniceria-gabriel.md) |
 | **Plan verticales (quién compra + demos)** | [vertical-demos-plan.md](./vertical-demos-plan.md) |

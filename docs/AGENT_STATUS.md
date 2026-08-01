@@ -5,7 +5,7 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-07-31 |
-| **Versión** | `1.16.0` (`package.json` → stamp UI) |
+| **Versión** | `1.16.1` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
 | **Cambio actual** | demo Aguacats (ex Refcurcum) `/demo/aguacats` |
 | **Live** | https://tmm.gatrivi.com |
@@ -176,10 +176,11 @@ Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 1. **Flagship** → `/demo/mamabel` ([`roadmap/demo-mamabel.md`](./roadmap/demo-mamabel.md))
 2. **Default Fit A** → `/demo/pizzeria` + owner ([`ops/prospect-demo.md`](./ops/prospect-demo.md))
 3. Panadería → `/demo/panaderia`
-4. Personalizar al toque → `/demo/armar`
-5. Vertical carnicería → `/demo/carniceria`
-6. Legacy choripán → `/demo` (solo si aplica)
-7. Post-depósito → tenant real `/s/<slug>` (no clonar app)
+4. Aguacats (prospect amigo) → `/demo/aguacats` ([`roadmap/demo-aguacats.md`](./roadmap/demo-aguacats.md))
+5. Personalizar al toque → `/demo/armar`
+6. Vertical carnicería → `/demo/carniceria`
+7. Legacy choripán → `/demo` (solo si aplica)
+8. Post-depósito → tenant real `/s/<slug>` (no clonar app)
 
 **Próxima vertical recomendada (no buildeada):** verdulería. Plan: [`roadmap/vertical-demos-plan.md`](./roadmap/vertical-demos-plan.md).
 
@@ -239,7 +240,7 @@ Publicitar “busco pilotos” o vender Tienda online: **Gate A OK** (verificar 
 ## 11. Estado git al snapshot
 
 - Branch `trabajo` al día con `origin/trabajo`
-- HEAD = `05e4581` (v1.13.4)
+- HEAD = demo Aguacats v1.16.x
 - WIP local sin track (no mergear): `.playwright-mcp/*.yml`, `public/demos/mamabel/scraped/ig-ranked.json`
 
 ---

@@ -1,16 +1,31 @@
 # Demo vertical — Aguacats (ex Refcurcum)
 
-**Estado: shipped** (v1.16.0) · prospect amigo
+**Estado: shipped** (v1.16.1) · prospect amigo · flavor IG (pocas fotos reales de producto)
 
 ## Prospect
 
 | Campo | Valor |
 |-------|--------|
-| Marca | Aguacats · display IG aún dice Refcurcum |
-| IG | [@aguacats21](https://www.instagram.com/aguacats21/) |
+| Contacto | Fermín Ibáñez (amigo) |
+| Marca pública | **Aguacats** · display IG aún **Refcurcum** 🥑 |
+| IG | [@aguacats21](https://www.instagram.com/aguacats21/) · ~814 followers |
 | WSP | +54 11 7139-5174 → `541171395174` |
-| Rubro | Despensa / fresco · mayor y menor · delivery AMBA |
-| Assets | `public/demos/aguacats/` (logo + hero + IG scrape) |
+| Ubicación | **AR / AMBA** (no GB). Envios a domicilio |
+| Rubro | Despensa + fresco · mayor y menor |
+| Mascota | Yaguacat / jaguar antropomorfo · logo aguacate+yaguareté |
+| Assets | `public/demos/aguacats/` |
+
+## Brand tokens (demo)
+
+| Token | Hex |
+|-------|-----|
+| Leaf / bordo | `#3D6B2A` |
+| Carbon | `#1A2E14` |
+| Cream / hueso | `#F4F7E8` |
+| Salvia | `#6BA84F` |
+| Gold accent | `#C4A035` |
+
+Font: `"Trebuchet MS", "Segoe UI", system-ui, sans-serif`
 
 ## Problema (60s)
 
@@ -23,14 +38,27 @@
 | Cliente | `/demo/aguacats` |
 | Panel | `/demo/aguacats/owner` |
 | Seguimiento | `/demo/aguacats/order/:id` |
+| Live | https://tmm.gatrivi.com/demo/aguacats |
 
 - Config: `src/data/demos/aguacats.ts`
 - Storage: `trufi_demo_orders_v2:aguacats`
 - Tenant: `demo-aguacats`
-- Theme: leaf green / cream / gold accent
-- Scrape: `npx --yes tsx scripts/scrape-aguacats-brave.ts` (Brave CDP :9222)
+- UI: `CustomerDemo` genérico (Storefront + ribbon) — no página custom
+- Scrape: `npx --yes tsx scripts/scrape-aguacats-brave.ts` (Brave CDP `:9222`)
 - Check: `npm run check:demo`
+- Gaps: [`aguacats-content-gaps.md`](../aguacats-content-gaps.md)
 
-Demo checkout **no envía** WSP real (`demoMode`). Precios ilustrativos (IG casi sin fotos de producto reales).
+## Carta demo (ilustrativa)
+
+Despensa: aceite oliva, salsa soja, miel · Fresco: cajón frescura, frutillas, palta · Bebidas: jugo.
+
+Imágenes = creativos IG (AI/marketing), **no** fotos de stock reales del local.
+
+## Guardrails
+
+- Checkout **no** envía WSP real (`demoMode`)
+- No inventar domicilio físico / CUIT / precios “oficiales”
+- No afirmar presencia UK/GB
+- No inventar empresa a nombre de Fermín sin fuente
 
 See also: [`prospect-demo.md`](../ops/prospect-demo.md)
