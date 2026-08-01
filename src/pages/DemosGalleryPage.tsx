@@ -43,6 +43,7 @@ const FAMILIES: Family[] = [
     cards: [
       { name: 'Distribuidora lácteos', problem: 'Pack/caja, reparto y reposición.', samplePath: '/demo?rubro=distribuidora-lacteos', rubro: 'distribuidora-lacteos' },
       { name: 'Molino / insumos', problem: 'Bolsa/bulto y pedido repetido.', samplePath: '/demo?rubro=molino-mayorista&negocio=Molino%20Florida', rubro: 'molino-mayorista' },
+      { name: 'Aguacats', problem: 'Mayor/menor + delivery sin audio eterno.', samplePath: '/demo/aguacats' },
     ],
   },
 ];
@@ -66,7 +67,7 @@ export default function DemosGalleryPage() {
           <Link to={withAttribution('/')} className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-white/70 hover:text-white">
             <ArrowLeft size={15} /> Gatrivi.com
           </Link>
-          <p className="text-sm font-black">11 muestras</p>
+          <p className="text-sm font-black">12 muestras</p>
           <Link to={withAttribution('/#reserva')} className="rounded-full bg-[#d7ff64] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.1em] text-[#171814]">
             Reservar
           </Link>

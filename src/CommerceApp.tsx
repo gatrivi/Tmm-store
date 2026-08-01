@@ -54,6 +54,8 @@ export default function CommerceApp() {
               <Route path="/demo/pizzeria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/panaderia" element={<CustomerDemo />} />
               <Route path="/demo/panaderia/order/:orderId" element={<OrderStatusPage />} />
+              <Route path="/demo/aguacats" element={<CustomerDemo />} />
+              <Route path="/demo/aguacats/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/mamabel" element={<MamabelDemoPage />} />
               <Route path="/demo/mamabel/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/mamamabel" element={<Navigate to="/demo/mamabel" replace />} />

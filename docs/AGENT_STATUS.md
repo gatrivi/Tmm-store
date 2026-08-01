@@ -5,9 +5,9 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-07-31 |
-| **Versión** | `1.15.5` (`package.json` → stamp UI) |
+| **Versión** | `1.16.0` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Cambio actual** | Gate A ventas — checklist + E2E landing CTAs |
+| **Cambio actual** | demo Aguacats (ex Refcurcum) `/demo/aguacats` |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
@@ -78,12 +78,15 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/demo/carniceria` | Vertical carnicería (cliente) |
 | `/demo/carniceria/owner` | Panel Gabriel |
 | `/demo/carniceria/order/:id` | Seguimiento |
+| `/demo/aguacats` | **Aguacats** despensa/fresco (ex Refcurcum) |
+| `/demo/aguacats/owner` | Panel Aguacats |
+| `/demo/aguacats/order/:id` | Seguimiento |
 | `/s/:slug` | Storefront tenant |
 | `/s/:slug/admin` · `/admin` | Admin dueño |
 | `/order/:orderId` | Seguimiento pedido real/tenant |
 | `/super-admin` | Provisioning tenants |
 
-Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/armar` · `/demo` legacy.
+Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/aguacats` · `/demo/armar` · `/demo` legacy.
 
 ---
 
@@ -102,6 +105,7 @@ Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/
 - **Demo Mamá Mabel flagship (v1.11–1.13.4):** portada marca · portfolio likes · encargo WA · cursos honestos · hero/portfolio black-bg studio picks (EXIF/glare/tilt/center)
 - **Demo pizzería Fit A:** carta pizza/empanadas, tenant `demo-pizzeria`, storage aislado
 - **Demo panadería La Magdalena (v1.9.3):** tenant `demo-panaderia`, storage `trufi_demo_orders_v2:panaderia`
+- **Demo Aguacats (v1.16.0):** tenant `demo-aguacats`, IG @aguacats21, storage `trufi_demo_orders_v2:aguacats`
 - **Demo carnicería Hito 1:** peso/packs, total estimado, tenant `demo-carniceria`
 - **Advertising Hito A (v1.9.0):** OG carnicería + rewrite Vercel; E2E Playwright
 - Self-check: `npm run check:demo`
@@ -137,6 +141,7 @@ Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/
 | Demo pizzería | `sessionStorage` `trufi_demo_orders_v2:pizzeria` |
 | Demo mamabel | `sessionStorage` `trufi_demo_orders_v2:mamabel` |
 | Demo panadería | `sessionStorage` `trufi_demo_orders_v2:panaderia` |
+| Demo aguacats | `sessionStorage` `trufi_demo_orders_v2:aguacats` |
 | Demo carnicería | `sessionStorage` `trufi_demo_orders_v2:carniceria` |
 
 Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
@@ -210,6 +215,7 @@ Publicitar “busco pilotos” o vender Tienda online: **Gate A OK** (verificar 
 | Demo registry | `src/utils/demoRegistry.ts` |
 | Config Mamabel | `src/data/demos/mamabel.ts` · página `MamabelDemoPage` |
 | Config panadería | `src/data/demos/panaderia.ts` |
+| Config aguacats | `src/data/demos/aguacats.ts` |
 | Config carnicería | `src/data/demos/carniceria.ts` |
 | Página carnicería | `src/pages/CarniceriaDemoPage.tsx` |
 | Planes | `src/config/plans.ts` |
@@ -252,6 +258,7 @@ Abrir:
 - https://tmm.gatrivi.com/demo/pizzeria/owner
 - https://tmm.gatrivi.com/demo/panaderia
 - https://tmm.gatrivi.com/demo/carniceria
+- https://tmm.gatrivi.com/demo/aguacats
 - Stamp / `package.json` = **1.15.1**
 
 ---

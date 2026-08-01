@@ -11,6 +11,7 @@ import {
   resolveDemoStorageKey,
   resolveTenantIdFromPath,
 } from './demoRegistry';
+import { AGUACATS_DEMO } from '../data/demos/aguacats';
 import { CARNICERIA_DEMO } from '../data/demos/carniceria';
 import { MAMABEL_DEMO } from '../data/demos/mamabel';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
@@ -112,12 +113,32 @@ function main() {
   assert.equal(getDemoByTenantId('demo-mamabel')?.id, 'mamabel');
   assert.equal(MAMABEL_DEMO.siteSettings.brandLogo, '/demos/mamabel/logo.jpg');
 
+  // Aguacats (ex Refcurcum) — despensa + fresco, IG assets
+  assert.equal(resolveTenantIdFromPath('/demo/aguacats'), 'demo-aguacats');
+  assert.equal(resolveTenantIdFromPath('/demo/aguacats/owner'), 'demo-aguacats');
+  assert.equal(resolveTenantIdFromPath('/demo/aguacats/order/AC21'), 'demo-aguacats');
+  assert.equal(resolveDemoIdFromPath('/demo/aguacats'), 'aguacats');
+  assert.equal(resolveDemoStorageKey('aguacats'), 'trufi_demo_orders_v2:aguacats');
+  const ac = resolveDemoFromPath('/demo/aguacats');
+  assert.ok(ac);
+  assert.equal(ac.tenantId, 'demo-aguacats');
+  assert.equal(ac.siteSettings.brandName, 'Aguacats');
+  assert.equal(ac.siteSettings.whatsappNumber, '541171395174');
+  assert.equal(ac.siteSettings.brandInstagram, 'aguacats21');
+  assert.ok(ac.menuItems.some(i => i.id === 'aceite-oliva'));
+  assert.ok(ac.menuItems.some(i => i.id === 'cajon-frescura'));
+  assert.equal(ac.menuCategories.length, 3);
+  assert.equal(ac.seedOrders.length, 3);
+  assert.equal(getDemoByTenantId('demo-aguacats')?.id, 'aguacats');
+  assert.equal(AGUACATS_DEMO.siteSettings.brandLogo, '/demos/aguacats/logo.jpg');
+
   // Storage isolation keys must differ
   assert.notEqual(resolveDemoStorageKey('demo'), resolveDemoStorageKey('carniceria'));
   assert.notEqual(resolveDemoStorageKey('pizzeria'), resolveDemoStorageKey('carniceria'));
   assert.notEqual(resolveDemoStorageKey('pizzeria'), resolveDemoStorageKey('demo'));
   assert.notEqual(resolveDemoStorageKey('panaderia'), resolveDemoStorageKey('pizzeria'));
   assert.notEqual(resolveDemoStorageKey('mamabel'), resolveDemoStorageKey('panaderia'));
+  assert.notEqual(resolveDemoStorageKey('aguacats'), resolveDemoStorageKey('mamabel'));
 
   console.log('demoRegistry.selfcheck: ok');
 }
