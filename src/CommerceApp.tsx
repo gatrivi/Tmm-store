@@ -2,6 +2,7 @@ import { Navigate, Route, Routes, useLocation, useParams } from 'react-router-do
 import AdminPage from './pages/AdminPage';
 import NotFound from './pages/NotFound';
 import OrderStatusPage from './pages/OrderStatusPage';
+import AguacatsDemoPage from './pages/AguacatsDemoPage';
 import CarniceriaDemoPage from './pages/CarniceriaDemoPage';
 import MamabelDemoPage from './pages/MamabelDemoPage';
 import Storefront from './pages/Storefront';
@@ -54,7 +55,7 @@ export default function CommerceApp() {
               <Route path="/demo/pizzeria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/panaderia" element={<CustomerDemo />} />
               <Route path="/demo/panaderia/order/:orderId" element={<OrderStatusPage />} />
-              <Route path="/demo/aguacats" element={<CustomerDemo />} />
+              <Route path="/demo/aguacats" element={<AguacatsDemoPage />} />
               <Route path="/demo/aguacats/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/mamabel" element={<MamabelDemoPage />} />
               <Route path="/demo/mamabel/order/:orderId" element={<OrderStatusPage />} />

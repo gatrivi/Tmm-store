@@ -1,6 +1,6 @@
 # Demo vertical — Aguacats (ex Refcurcum)
 
-**Estado: shipped** (v1.16.1) · prospect amigo · flavor IG (pocas fotos reales de producto)
+**Estado: shipped** (v1.17.0) · prospect amigo · página dedicada + assets IG
 
 ## Prospect
 
@@ -43,7 +43,7 @@ Font: `"Trebuchet MS", "Segoe UI", system-ui, sans-serif`
 - Config: `src/data/demos/aguacats.ts`
 - Storage: `trufi_demo_orders_v2:aguacats`
 - Tenant: `demo-aguacats`
-- UI: `CustomerDemo` genérico (Storefront + ribbon) — no página custom
+- UI: `AguacatsDemoPage` dedicada (hero, combo destacado, grid, galería IG) — no Storefront genérico
 - Scrape: `npx --yes tsx scripts/scrape-aguacats-brave.ts` (Brave CDP `:9222`)
 - Check: `npm run check:demo`
 - Gaps: [`aguacats-content-gaps.md`](../aguacats-content-gaps.md)
