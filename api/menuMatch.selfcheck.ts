@@ -2,7 +2,7 @@
  * Run: npx --yes tsx api/menuMatch.selfcheck.ts
  */
 import assert from 'node:assert/strict';
-import { catalogReplyWithTag, findBestMenuMatch } from './menuMatch';
+import { catalogReplyWithTag, findBestMenuMatch } from './menuMatch.js';
 
 const menu = [
   {
