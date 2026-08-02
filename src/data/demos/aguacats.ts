@@ -188,7 +188,7 @@ export const AGUACATS_DEMO: DemoDefinition = {
   seedOrders: SEED_ORDERS,
   copy: {
     heroTitle: 'Paltas premium para tu negocio y tu mesa.',
-    heroBody: 'Foodservice y hogar · pedido armado en un click. Sin audios eternos — confirmás stock y entrega por WhatsApp.',
+    heroBody: 'Distribución mayor y menor en AMBA. Pedido armado por web o WhatsApp — sin audios eternos, con confirmación de stock y entrega.',
     checkoutCta: 'Enviar pedido de prueba',
     cartCta: 'Agregar',
     totalLabel: 'Total',
