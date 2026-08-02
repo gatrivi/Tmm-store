@@ -12,7 +12,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'paltas',
     badge: 'Reina divina',
     description: 'Premium · elegí el punto de maduración en notas',
-    images: [`${A}/frescura.jpg`],
+    images: [`${A}/scraped/ig_05.jpg`],
     options: [
       { id: 'kg', label: '1 kg aprox.', price: 5500 },
       { id: 'caja4', label: 'Caja ~4 kg', price: 19000 },
@@ -187,8 +187,8 @@ export const AGUACATS_DEMO: DemoDefinition = {
   ],
   seedOrders: SEED_ORDERS,
   copy: {
-    heroTitle: 'Distribuidora de paltas · mayor y menor.',
-    heroBody: 'Alimentación saludable y nutritiva. Energía vital. Pedí por WhatsApp con el pedido armado — sin audios eternos.',
+    heroTitle: 'Paltas premium para tu negocio y tu mesa.',
+    heroBody: 'Distribución mayor y menor en AMBA. Pedido armado por web o WhatsApp — sin audios eternos, con confirmación de stock y entrega.',
     checkoutCta: 'Enviar pedido de prueba',
     cartCta: 'Agregar',
     totalLabel: 'Total',

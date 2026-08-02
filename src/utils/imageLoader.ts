@@ -75,11 +75,9 @@ export function getDynamicImagesForProduct(productId: string): string[] {
  * con imágenes subidas (Base64), aplicando ocultamientos y el orden definido.
  */
 export function resolveImagesForProduct(item: MenuItemType): string[] {
-  // Obtener imágenes estáticas base
+  const configured = item.images ?? [];
   const staticImages = getDynamicImagesForProduct(item.id);
-  
-  // Combinar con imágenes subidas
-  const allImages = [...staticImages, ...(item.customImages || [])];
+  const allImages = [...configured, ...staticImages, ...(item.customImages || [])];
   
   // Filtrar ocultas
   const hiddenSet = new Set(item.hiddenImages || []);
