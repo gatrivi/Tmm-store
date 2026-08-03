@@ -12,7 +12,8 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'paltas',
     badge: 'Reina divina',
     description: 'Premium · elegí el punto de maduración en notas',
-    images: [`${A}/scraped/ig_05.jpg`],
+    images: [`${A}/scraped/ig_11.jpg`],
+    imagePositions: { [`${A}/scraped/ig_11.jpg`]: 'center 92%' },
     options: [
       { id: 'kg', label: '1 kg aprox.', price: 5500 },
       { id: 'caja4', label: 'Caja ~4 kg', price: 19000 },
@@ -26,6 +27,7 @@ const MENU_ITEMS: MenuItemType[] = [
     badge: 'Más pedido',
     description: 'Paltas premium, frutillas y miel pura de campo',
     images: [`${A}/frescura.jpg`],
+    imagePositions: { [`${A}/frescura.jpg`]: 'center 94%' },
     options: [
       { id: 'combo', label: 'Combo armado', price: 18500 },
       { id: 'mayor', label: 'Combo mayorista', price: 42000 },
@@ -37,6 +39,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'complementos',
     description: 'Dulzura natural · bandeja del día',
     images: [`${A}/frutillas.jpg`],
+    imagePositions: { [`${A}/frutillas.jpg`]: 'center 90%' },
     options: [
       { id: 'bandeja', label: 'Bandeja 1 kg', price: 4800 },
       { id: 'caja', label: 'Caja mayorista', price: 28000 },
@@ -48,7 +51,8 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'complementos',
     badge: 'Energía vital',
     description: 'Argentina · pote con dipper',
-    images: [`${A}/miel.jpg`],
+    images: [`${A}/frescura.jpg`],
+    imagePositions: { [`${A}/frescura.jpg`]: '28% 78%' },
     options: [
       { id: 'pote', label: 'Pote 500 g', price: 6500 },
       { id: 'caja6', label: 'Caja ×6', price: 36000 },
@@ -60,6 +64,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'complementos',
     description: 'Extra virgen · complemento del combo',
     images: [`${A}/aceite.jpg`],
+    imagePositions: { [`${A}/aceite.jpg`]: 'center 78%' },
     options: [
       { id: 'botella', label: 'Botella 500 ml', price: 8900 },
       { id: 'caja6', label: 'Caja ×6', price: 48000 },
@@ -146,8 +151,8 @@ export const AGUACATS_DEMO: DemoDefinition = {
   plan: 'pedidos',
   locale: 'es',
   monogram: 'AC',
-  heroImage: `${A}/frescura.jpg`,
-  heroObjectPosition: 'center 42%',
+  heroImage: `${A}/scraped/ig_11.jpg`,
+  heroObjectPosition: 'center 88%',
   hideLanguageSwitcher: true,
   hideThemeToggle: true,
   hideShare: true,
