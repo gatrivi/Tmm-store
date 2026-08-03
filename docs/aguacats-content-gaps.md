@@ -3,9 +3,8 @@
 Pendientes de confirmación con Fermín. Demo usa flavor IG; no inventar.
 
 ## Fotos
-- [ ] Fotos reales de producto (hoy: creativos IG / mascota)
-- [x] Palta Hass → `ig_11` (cajas); **no** `ig_05` (salsa soja)
-- [x] Crop catálogo → `imagePositions` + zoom al producto (no cara Yaguacat)
+- [x] Catálogo demo: `products/*.jpg` — producto centrado, leopardo solo en bg
+- [ ] Fotos reales de Fermín (cajón / entrega) para producción
 - [ ] Foto de cajón / entrega real
 - [ ] Logo vector hi-res (hoy: crop perfil IG ~320px)
 

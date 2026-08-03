@@ -47,13 +47,14 @@ const SERVICES = [
   { title: 'Envío y retiro', body: 'Zona Norte y CABA. Coordinás horario en notas del pedido.' },
 ] as const;
 
+const PRODUCTS = '/demos/aguacats/products';
+
 const PORTFOLIO = [
-  { src: '/demos/aguacats/scraped/ig_11.jpg', label: 'Palta Hass', pos: 'center 92%' },
-  { src: '/demos/aguacats/frutillas.jpg', label: 'Frutillas', pos: 'center 90%' },
-  { src: '/demos/aguacats/frescura.jpg', label: 'Combo frescura', pos: 'center 94%' },
-  { src: '/demos/aguacats/aceite.jpg', label: 'Aceite oliva', pos: 'center 78%' },
-  { src: '/demos/aguacats/scraped/ig_11.jpg', label: 'Cajas mayorista', pos: 'center 95%' },
-  { src: '/demos/aguacats/frescura.jpg', label: 'Miel de campo', pos: '28% 78%' },
+  { src: `${PRODUCTS}/palta-hass.jpg`, label: 'Palta Hass' },
+  { src: `${PRODUCTS}/combo-frescura.jpg`, label: 'Combo frescura' },
+  { src: `${PRODUCTS}/frutillas.jpg`, label: 'Frutillas' },
+  { src: `${PRODUCTS}/miel.jpg`, label: 'Miel de campo' },
+  { src: `${PRODUCTS}/aceite.jpg`, label: 'Aceite oliva' },
 ] as const;
 
 const TESTIMONIALS = [
@@ -73,7 +74,6 @@ const PAGE_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 .ac-site { font-family: ${FONT}; }
 .ac-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; }
-.ac-prod-shot img { transform: scale(1.22); transform-origin: center bottom; }
 `;
 
 type CartLine = { id: string; name: string; optionId: string; optionLabel: string; price: number; qty: number };
@@ -88,8 +88,8 @@ function itemImg(item: MenuItemType): string {
   return r[0] ?? '/demos/aguacats/frescura.jpg';
 }
 
-function itemImgPos(item: MenuItemType, src: string): string {
-  return item.imagePositions?.[src] ?? 'center 85%';
+function itemImgPos(_item: MenuItemType, _src: string): string {
+  return 'center center';
 }
 
 function ProductShot({ item, className = 'aspect-[16/10]' }: { item: MenuItemType; className?: string }) {
@@ -269,7 +269,7 @@ export default function AguacatsDemoPage() {
           <div className="grid grid-cols-2 gap-3">
             {PORTFOLIO.slice(0, 4).map(p => (
               <div key={`${p.src}-${p.label}`} className="ac-prod-shot overflow-hidden rounded-2xl border border-black/8">
-                <img src={p.src} alt={p.label} className="aspect-square w-full object-cover" style={{ objectPosition: p.pos }} loading="lazy" />
+                <img src={p.src} alt={p.label} className="aspect-square w-full object-cover" loading="lazy" />
               </div>
             ))}
           </div>
@@ -347,7 +347,7 @@ export default function AguacatsDemoPage() {
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {PORTFOLIO.map(p => (
               <div key={`${p.label}-${p.src}`} className="group ac-prod-shot overflow-hidden rounded-2xl border border-black/8 bg-white">
-                <img src={p.src} alt={p.label} className="aspect-[4/3] w-full object-cover transition group-hover:scale-[1.02]" style={{ objectPosition: p.pos }} loading="lazy" />
+                <img src={p.src} alt={p.label} className="aspect-[4/3] w-full object-cover transition group-hover:scale-[1.02]" loading="lazy" />
                 <p className="px-3 py-2 text-xs font-bold text-black/50">{p.label}</p>
               </div>
             ))}

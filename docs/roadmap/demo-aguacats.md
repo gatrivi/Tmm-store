@@ -52,7 +52,7 @@ Font: `"Trebuchet MS", "Segoe UI", system-ui, sans-serif`
 
 Paltas: Hass + combo frescura · Complementos: frutillas, miel, aceite.
 
-Imágenes = creativos IG (AI/marketing), **no** fotos de stock reales del local.
+Imágenes catálogo: `public/demos/aguacats/products/` (generadas demo · producto centro · leopardo bg sutil).
 
 ## Guardrails
 
