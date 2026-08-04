@@ -1,9 +1,9 @@
-# Trufi
+# Soluciones Web Gatrivi.com
 
-Done-for-you, white-label ordering suite for local businesses: sales landing, digital menu, cart, checkout, WhatsApp, MercadoPago, owner panel, and three product tiers (Menu / Pedidos / Premium).
+Tienda online white-label para comercios: catálogo, carrito, total, alias, comprobante por WhatsApp y panel de productos. Marca pública: **Gatrivi.com · de ZengaSoft**.
 
 > **Agentes (Grok / Cursor / cloud):** leer primero  
-> **[`docs/AGENT_STATUS.md`](docs/AGENT_STATUS.md)** — snapshot preciso del estado del producto (v1.9.1).
+> **[`docs/AGENT_STATUS.md`](docs/AGENT_STATUS.md)** — snapshot preciso del estado del producto (v1.15.1).
 
 ## Quick start
 
@@ -17,13 +17,14 @@ npm run dev
 
 - Sales landing: http://localhost:5173/
 - **Pizzería Fit A:** http://localhost:5173/demo/pizzeria · owner `/demo/pizzeria/owner`
+- **Panadería La Magdalena:** http://localhost:5173/demo/panaderia · owner `/demo/panaderia/owner`
 - Customer demo (legacy choripán): http://localhost:5173/demo
 - Owner demo: http://localhost:5173/demo/owner
 - **Carnicería vertical:** http://localhost:5173/demo/carniceria · owner `/demo/carniceria/owner`
 - Tenant store: http://localhost:5173/s/demo-shop
 - Admin: http://localhost:5173/admin
 
-Live: [tmm.gatrivi.com/demo/pizzeria](https://tmm.gatrivi.com/demo/pizzeria)
+Public target: [tmm.gatrivi.com/demo/panaderia](https://tmm.gatrivi.com/demo/panaderia)
 
 ## Scripts
 
@@ -69,4 +70,4 @@ Push to Vercel. Set env vars in the project dashboard. Serverless functions in `
 
 ---
 
-Developed by **DevSalz**
+Developed by **ZengaSoft**

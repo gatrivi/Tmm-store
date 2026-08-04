@@ -25,7 +25,7 @@ Trufi gana cuando hay **pedido recurrente por WSP desordenado** + dueño que ati
 | 1 | **Pizzería / empanadas / roti** | ★★★★★ | Fit A playbook; WSP caos; pitch 0 comisión | `/demo/pizzeria` (v1.9.1) |
 | 2 | **Carnicería barrial** | ★★★★☆ | Cortes + “confirmo peso”; sin Rappi típico | `/demo/carniceria` |
 | 3 | **Verdulería / frutería** | ★★★★☆ | Pedido semanal por WSP; peso/unidad; mismo patrón carnicería | — |
-| 4 | **Panadería / facturas** | ★★★☆☆ | Encargos mañana; lista fija; pico 6–9h | lead: [`lead-magdalena.md`](../ops/lead-magdalena.md) |
+| 4 | **Panadería / facturas** | ★★★☆☆ | Encargos mañana; lista fija; pico 6–9h | `/demo/panaderia` · lead: [`lead-magdalena.md`](../ops/lead-magdalena.md) |
 | 5 | **Pollería / rotisería pollos** | ★★★☆☆ | Igual pizza/roti; half/pollo + guarnición | cubierto por `/demo` + armar |
 | 6 | **Heladería / sandwiches** | ★★★☆☆ | Pedido WSP fin de semana; sabores/combos | — |
 | 7 | **Café takeaway / dark kitchen** | ★★☆☆☆ | Solo si delivery propio; mesa = no | — |
@@ -48,11 +48,10 @@ Cada demo = **un dolor en 60s**, no feature dump. Patrón carnicería: config `s
 
 ## Orden de build (lazy)
 
-1. **Done:** `/demo/pizzeria` (Fit A) + carnicería + `/demo` legacy.
+1. **Done:** `/demo/pizzeria` · `/demo/panaderia` (La Magdalena) · carnicería · `/demo` legacy.
 2. **Siguiente vertical real:** verdulería (mismo motor peso/unidad que carnicería; alto WSP barrio ZN).
-3. **Después:** panadería (horario retiro = un campo; bajo diff).
-4. **Pollería/heladería:** primero probar con `/demo/armar` (nombre+color); solo vertical si cierra lead.
-5. **Café / farmacia / zapatería:** no build hasta lead pagando depósito.
+3. **Pollería/heladería:** primero `/demo/armar`; solo vertical si cierra lead.
+4. **Café / farmacia / zapatería:** no build hasta lead pagando depósito.
 
 ## Criterio “armar vertical nueva”
 

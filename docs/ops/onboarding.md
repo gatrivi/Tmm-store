@@ -2,7 +2,7 @@
 
 Purpose: internal playbook to provision Menu, Pedidos, Premium tiers.
 
-## "Armado sin cargo" flow
+## Implementación pagada (post-depósito)
 
 **Primary (tablet):** leave device with client → [tablet-armado.md](./tablet-armado.md) — Admin → **Armado** wizard.
 

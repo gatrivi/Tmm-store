@@ -9,6 +9,7 @@ import { createOrder } from '../services/orderService';
 import { createDemoOrder } from '../services/demoOrderRepository';
 import { buildOrderRecord } from '../utils/orderBuilder';
 import { getDemoByTenantId, isDemoTenant, resolveDemoPaths } from '../utils/demoRegistry';
+import { resolveProspectPresetCopy } from '../utils/prospectDemo';
 import { useLocation } from 'react-router-dom';
 import type { OrderRecord } from '../types/order';
 
@@ -67,21 +68,25 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
   const vertical = getDemoByTenantId(tenantId);
   const demoPaths = resolveDemoPaths(location.pathname);
   const demoMode = isDemoTenant(tenantId);
+  const presetCopy = !vertical && tenantId === 'demo'
+    ? resolveProspectPresetCopy(location.search)
+    : null;
+  const copy = vertical?.copy ?? presetCopy;
   const showPromos = features.canUsePromotions && onApplyPromo && !vertical?.hidePromos;
-  const totalLabel = vertical?.copy.totalLabel ?? t.total;
-  const totalHint = vertical?.copy.totalHint;
-  const pickupLabel = vertical?.copy.pickupLabel ?? t.pickup;
-  const deliveryLabel = vertical?.copy.deliveryLabel ?? t.delivery;
-  const cashLabel = vertical?.copy.cashLabel ?? t.cash;
-  const transferLabel = vertical?.copy.transferLabel ?? t.transfer;
-  const submitLabel = vertical?.copy.submitLabel ?? t.whatsappSend;
-  const notesPlaceholder = vertical?.copy.notesPlaceholder ?? t.notesPlaceholder;
+  const totalLabel = copy?.totalLabel ?? t.total;
+  const totalHint = copy?.totalHint;
+  const pickupLabel = copy?.pickupLabel ?? t.pickup;
+  const deliveryLabel = copy?.deliveryLabel ?? t.delivery;
+  const cashLabel = copy?.cashLabel ?? t.cash;
+  const transferLabel = copy?.transferLabel ?? t.transfer;
+  const submitLabel = copy?.submitLabel ?? t.whatsappSend;
+  const notesPlaceholder = copy?.notesPlaceholder ?? t.notesPlaceholder;
   const theme = vertical?.theme;
-  const reviewTitle = vertical?.copy.reviewTitle ?? t.confirmTitle;
-  const reviewBody = vertical?.copy.reviewBody ?? t.successSubtitle;
-  const addressPlaceholder = vertical?.copy.addressPlaceholder ?? t.addressPlaceholder;
-  const successEyebrow = vertical?.copy.successEyebrow ?? 'Pedido de prueba creado';
-  const transferAliasPending = vertical?.copy.transferAliasPending ?? 'Te enviamos el alias al confirmar';
+  const reviewTitle = copy?.reviewTitle ?? t.confirmTitle;
+  const reviewBody = copy?.reviewBody ?? t.successSubtitle;
+  const addressPlaceholder = copy?.addressPlaceholder ?? t.addressPlaceholder;
+  const successEyebrow = copy?.successEyebrow ?? 'Pedido de prueba creado';
+  const transferAliasPending = copy?.transferAliasPending ?? 'Te enviamos el alias al confirmar';
   const hasAlias = Boolean(bankAlias.trim());
   const accentBtnStyle = theme ? { backgroundColor: theme.bordo, borderColor: theme.bordo } : undefined;
   const modalShellStyle = theme
@@ -369,7 +374,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
             )}
             <h2 id="checkout-modal-title" className="text-lg font-black text-text-primary">
               {step === 'demo-success'
-                ? (vertical?.copy.successTitle ?? 'Pedido de demostración listo')
+                ? (copy?.successTitle ?? 'Pedido de demostración listo')
                 : step === 'confirm'
                   ? (demoMode ? reviewTitle : t.confirmTitle)
                   : t.title}
@@ -442,9 +447,9 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                   <MapPin size={16} /> {deliveryLabel}
                 </button>
               </div>
-              {vertical && (
+              {copy && (
                 <p className="mt-2 text-xs font-medium text-text-secondary">
-                  {deliveryType === 'delivery' ? vertical.copy.deliveryHint : vertical.copy.pickupHint}
+                  {deliveryType === 'delivery' ? copy.deliveryHint : copy.pickupHint}
                 </p>
               )}
             </div>
@@ -607,10 +612,10 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 {successEyebrow} #{confirmedOrder?.id ?? orderId}
               </p>
               <h3 className="mt-2 text-2xl font-black text-text-primary">
-                {vertical?.copy.successTitle ?? 'El local ya lo tiene en la bandeja.'}
+                {copy?.successTitle ?? 'El local ya lo tiene en la bandeja.'}
               </h3>
               <p className="mt-3 max-w-sm text-sm leading-relaxed text-text-secondary">
-                {vertical?.copy.successBody ?? 'Demo segura · no se envió WhatsApp. El ID y el total coinciden con el panel del local.'}
+                {copy?.successBody ?? 'Demo segura · no se envió WhatsApp. El ID y el total coinciden con el panel del local.'}
               </p>
             </div>
 
@@ -634,20 +639,20 @@ export default function CheckoutModal({ isOpen, onClose, cart, total, whatsappNu
                 className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-[#171814] px-4 py-3.5 text-sm font-black text-white transition hover:bg-[#ee6847]"
               >
                 <Store size={18} />
-                {vertical?.copy.ownerLinkLabel ?? 'Ver cómo lo recibe el local'}
+                {copy?.ownerLinkLabel ?? 'Ver cómo lo recibe el local'}
               </a>
               <a
                 href={demoPaths.orderPath(confirmedOrder?.id ?? orderId)}
                 className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-border px-4 py-3 text-sm font-black text-text-primary transition hover:bg-white/5"
               >
-                {vertical?.copy.statusLinkLabel ?? 'Ver estado del pedido'}
+                {copy?.statusLinkLabel ?? 'Ver estado del pedido'}
               </a>
               <button
                 type="button"
                 onClick={resetAndClose}
                 className="w-full rounded-xl py-3 text-sm font-bold text-text-secondary transition hover:text-text-primary"
               >
-                {vertical?.copy.continueLabel ?? 'Seguir viendo la carta'}
+                {copy?.continueLabel ?? 'Seguir viendo la carta'}
               </button>
             </div>
           </div>

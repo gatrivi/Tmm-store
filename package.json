@@ -1,7 +1,7 @@
 {
   "name": "trufi-tmm",
   "private": true,
-  "version": "1.9.3",
+  "version": "1.18.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "check:demo": "npx --yes tsx src/utils/demoRegistry.selfcheck.ts && npx --yes tsx src/services/demoOrderFlow.selfcheck.ts",
+    "check:demo": "npx --yes tsx src/utils/demoRegistry.selfcheck.ts && npx --yes tsx src/services/demoOrderFlow.selfcheck.ts && npx --yes tsx src/utils/mamabelEncargo.selfcheck.ts && npx --yes tsx src/utils/demoPresets.selfcheck.ts && npx --yes tsx src/utils/demoIntake.selfcheck.ts && npx --yes tsx src/utils/salesContact.selfcheck.ts",
     "check:ai": "npx --yes tsx api/menuMatch.selfcheck.ts",
     "test:e2e:demo": "playwright test",
     "check:env": "node scripts/check-env.mjs",

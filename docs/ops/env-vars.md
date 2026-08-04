@@ -14,6 +14,10 @@ Copy from `.env.example` at repo root.
 | VITE_ADMIN_PASS_HASH | admin | SHA-256 of password |
 | VITE_WHATSAPP_NUMBER | yes | No `+` prefix |
 | VITE_BANK_ALIAS | transfer | Default transfer alias |
+| VITE_SALES_WHATSAPP_NUMBER | sales | Default `5491156199363` in code if unset |
+| VITE_SALES_EMAIL | sales | Default `devtrivi@zengasoft.com` |
+| VITE_DEMO_PRICE_LABEL | sales | Promo label on landing (e.g. `$65.000`) |
+| VITE_DEMO_INTAKE_URL | sales | Tally/form URL; else WhatsApp reserve CTA |
 | VITE_SUPER_ADMIN_KEY | super-admin | Protects `/super-admin` |
 | VITE_FIREBASE_API_KEY | sync | With full Firebase set |
 | VITE_FIREBASE_AUTH_DOMAIN | sync | |

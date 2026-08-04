@@ -24,10 +24,17 @@ Agent manifest: read this first, then one targeted file.
 | Utils | [modules/utils.md](./modules/utils.md) |
 | Vercel API | [api/vercel-functions.md](./api/vercel-functions.md) |
 | Env vars | [ops/env-vars.md](./ops/env-vars.md) |
+| **Flyers A6 (print)** | [ops/flyer-a6.md](./ops/flyer-a6.md) · `/print/flyer-a6.html` |
 | Firebase production | [ops/firebase-setup.md](./ops/firebase-setup.md) |
 | Production smoke test | [ops/smoke-test.md](./ops/smoke-test.md) |
 | **Prospect demo (3 min)** | [ops/prospect-demo.md](./ops/prospect-demo.md) |
+| **Sales readiness gate** | [ops/sales-readiness.md](./ops/sales-readiness.md) |
 | **Release gate publicitar (Hito A)** | [roadmap/advertising-readiness.md](./roadmap/advertising-readiness.md) |
+| **Demo flagship Mamá Mabel** | [roadmap/demo-mamabel.md](./roadmap/demo-mamabel.md) · `/demo/mamabel` |
+| **Mabel content gaps** | [mamabel-content-gaps.md](./mamabel-content-gaps.md) |
+| **Demo panadería La Magdalena** | [roadmap/demo-panaderia.md](./roadmap/demo-panaderia.md) · `/demo/panaderia` |
+| **Demo Aguacats (ex Refcurcum)** | [roadmap/demo-aguacats.md](./roadmap/demo-aguacats.md) · `/demo/aguacats` |
+| **Aguacats content gaps** | [aguacats-content-gaps.md](./aguacats-content-gaps.md) |
 | **Demo pizzería Fit A (live)** | [roadmap/demo-pizzeria.md](./roadmap/demo-pizzeria.md) · `/demo/pizzeria` |
 | **Demo carnicería (live)** | [roadmap/demo-carniceria-gabriel.md](./roadmap/demo-carniceria-gabriel.md) · `/demo/carniceria` |
 | **Plan verticales + demos** | [roadmap/vertical-demos-plan.md](./roadmap/vertical-demos-plan.md) |

@@ -1,3 +1,7 @@
+import type { DemoCopy } from '../data/demos/types';
+import { getDemoPreset } from '../data/demoPresets';
+import type { DemoPreset } from '../data/demoPresets';
+
 export interface ProspectDemoConfig {
   businessName: string;
   area: string;
@@ -6,6 +10,8 @@ export interface ProspectDemoConfig {
   color: ProspectColor;
   colorValue: string;
   customized: boolean;
+  /** Present when rubro maps to a Demo Express preset */
+  preset: DemoPreset | null;
 }
 
 export type ProspectCategory = keyof typeof PROSPECT_CATEGORIES;
@@ -17,6 +23,12 @@ export const PROSPECT_CATEGORIES = {
   rotiseria: 'Rotisería',
   cafeteria: 'Cafetería',
   panaderia: 'Panadería',
+  polleria: 'Pollería',
+  verduleria: 'Verdulería',
+  libreria: 'Librería',
+  grafica: 'Gráfica / imprenta',
+  'distribuidora-lacteos': 'Distribuidora de lácteos',
+  'molino-mayorista': 'Molino / insumos',
   almacen: 'Almacén',
   dietetica: 'Dietética',
   petshop: 'Pet shop',
@@ -55,16 +67,21 @@ export function parseProspectDemo(search = ''): ProspectDemoConfig {
   const categoryParam = params.get('rubro');
   const colorParam = params.get('color');
   const category = isCategory(categoryParam) ? categoryParam : DEFAULT_CONFIG.category;
-  const color = isColor(colorParam) ? colorParam : DEFAULT_CONFIG.color;
+  const preset = getDemoPreset(category);
+  const color = isColor(colorParam)
+    ? colorParam
+    : (preset?.suggestedColor ?? DEFAULT_CONFIG.color);
+  const nameFallback = preset?.defaultBusinessName ?? DEFAULT_CONFIG.businessName;
 
   return {
-    businessName: cleanText(params.get('negocio'), DEFAULT_CONFIG.businessName, 60),
+    businessName: cleanText(params.get('negocio'), nameFallback, 60),
     area: cleanText(params.get('barrio'), DEFAULT_CONFIG.area, 60),
     category,
     categoryLabel: PROSPECT_CATEGORIES[category],
     color,
     colorValue: PROSPECT_COLORS[color],
     customized: ['negocio', 'barrio', 'rubro', 'color'].some(key => params.has(key)),
+    preset,
   };
 }
 
@@ -102,4 +119,9 @@ export function buildProspectLogoDataUrl(config: ProspectDemoConfig): string {
     '</svg>',
   ].join('');
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+/** Copy for Demo Express presets when no dedicated vertical tenant. */
+export function resolveProspectPresetCopy(search = ''): DemoCopy | null {
+  return parseProspectDemo(search).preset?.copy ?? null;
 }

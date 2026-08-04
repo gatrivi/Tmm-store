@@ -1,4 +1,7 @@
+import { AGUACATS_DEMO } from '../data/demos/aguacats';
 import { CARNICERIA_DEMO } from '../data/demos/carniceria';
+import { MAMABEL_DEMO } from '../data/demos/mamabel';
+import { PANADERIA_DEMO } from '../data/demos/panaderia';
 import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
 import type { DemoDefinition } from '../data/demos/types';
 
@@ -11,7 +14,7 @@ const GASTRONOMY_DEMO: Pick<DemoDefinition, 'id' | 'tenantId' | 'customerPath' |
   orderPath: (orderId: string) => `/order/${orderId}`,
 };
 
-const DEMOS: DemoDefinition[] = [CARNICERIA_DEMO, PIZZERIA_DEMO];
+const DEMOS: DemoDefinition[] = [CARNICERIA_DEMO, PIZZERIA_DEMO, PANADERIA_DEMO, MAMABEL_DEMO, AGUACATS_DEMO];
 
 export function listVerticalDemos(): DemoDefinition[] {
   return DEMOS;

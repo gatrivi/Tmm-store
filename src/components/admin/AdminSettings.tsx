@@ -511,10 +511,10 @@ export function AdminSettings() {
           <span className="text-xs font-bold uppercase tracking-wider">Créditos</span>
         </div>
         <p className="text-sm font-medium text-gray-500">
-          Desarrollado por <span className="text-brand-green font-bold">DevSalz</span>
+          Desarrollado por <span className="text-brand-green font-bold">ZengaSoft</span>
         </p>
         <p className="text-[10px] text-gray-600">
-          Panel de Administración — Trufi © {new Date().getFullYear()}
+          Panel de Administración — Gatrivi.com · de ZengaSoft © {new Date().getFullYear()}
         </p>
       </div>
     </div>

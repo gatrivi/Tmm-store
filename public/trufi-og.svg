@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">Trufi — pedidos directos</title>
-  <desc id="desc">Carta digital y pedidos directos para negocios gastronómicos</desc>
+  <title id="title">Soluciones Web Gatrivi.com — tu tienda online</title>
+  <desc id="desc">Catálogo, carrito, total, alias y comprobante por WhatsApp para negocios</desc>
   <rect width="1200" height="630" fill="#f2eee6"/>
   <defs>
     <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -15,11 +15,11 @@
   <rect x="815" y="180" width="230" height="118" rx="20" fill="#e2dfd7" transform="rotate(4 930 315)"/>
   <rect x="815" y="324" width="230" height="54" rx="16" fill="#d7ff64" transform="rotate(4 930 315)"/>
   <rect x="815" y="395" width="230" height="54" rx="16" fill="#171814" transform="rotate(4 930 315)"/>
-  <text x="72" y="90" fill="#171814" font-family="Arial,sans-serif" font-size="34" font-weight="900" letter-spacing="-1">TRUFI</text>
-  <text x="72" y="245" fill="#171814" font-family="Arial,sans-serif" font-size="86" font-weight="900" letter-spacing="-5">Tus pedidos,</text>
-  <text x="72" y="334" fill="#ee6847" font-family="Arial,sans-serif" font-size="86" font-weight="900" letter-spacing="-5">sin el caos.</text>
-  <text x="76" y="405" fill="#171814" opacity=".64" font-family="Arial,sans-serif" font-size="29">Carta, carrito y WhatsApp para tu negocio.</text>
+  <text x="72" y="90" fill="#171814" font-family="Arial,sans-serif" font-size="34" font-weight="900" letter-spacing="-1">GATRIVI.COM</text>
+  <text x="72" y="245" fill="#171814" font-family="Arial,sans-serif" font-size="86" font-weight="900" letter-spacing="-5">Tu tienda,</text>
+  <text x="72" y="334" fill="#ee6847" font-family="Arial,sans-serif" font-size="68" font-weight="900" letter-spacing="-4">lista para vender.</text>
+  <text x="76" y="405" fill="#171814" opacity=".64" font-family="Arial,sans-serif" font-size="27">Catálogo, carrito, alias y comprobante.</text>
   <rect x="72" y="465" width="360" height="64" rx="32" fill="#171814"/>
   <text x="252" y="506" fill="#fff" font-family="Arial,sans-serif" font-size="22" font-weight="700" text-anchor="middle">Sin comisión por venta</text>
-  <text x="76" y="586" fill="#171814" opacity=".46" font-family="Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="2">POR ZENGASOFT · ZONA NORTE</text>
+  <text x="76" y="586" fill="#171814" opacity=".46" font-family="Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="2">SOLUCIONES WEB · DE ZENGASOFT</text>
 </svg>

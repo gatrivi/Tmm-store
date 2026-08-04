@@ -9,7 +9,7 @@ export function AppVersionBadge({ className = '' }: AppVersionBadgeProps) {
   return (
     <span
       className={`inline-block font-mono text-[10px] font-bold tracking-wider uppercase ${className}`}
-      title="Trufi build version"
+      title="Gatrivi.com build version"
     >
       v{APP_VERSION}
     </span>

@@ -442,7 +442,7 @@ export default function CarniceriaDemoPage() {
           ))}
         </div>
         <p className="pb-8 text-center text-[11px] font-bold uppercase tracking-[0.14em] text-black/35">
-          Trufi · demo
+          Gatrivi.com · demo
         </p>
       </footer>
 

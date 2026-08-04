@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import type { ParsedMenuResult } from '../src/types/menuCategory';
+import type { ParsedMenuResult } from '../src/types/menuCategory.js';
 
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 
@@ -184,7 +184,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const validated = validateParsed(parsed);
-    if (!validated.ok) {
+    if (validated.ok === false) {
       setCors(res);
       return res.status(422).json({ error: validated.error });
     }

@@ -23,6 +23,7 @@ import type { MenuLayoutId } from '../utils/menuLayouts';
 import { BrandLogoMark } from '../components/BrandLogoMark';
 import { useTheme } from '../context/ThemeContext';
 import { getDemoByTenantId, isDemoTenant, resolveTenantIdFromPath } from '../utils/demoRegistry';
+import { parseProspectDemo } from '../utils/prospectDemo';
 
 export default function Storefront() {
   const { menuItems, menuCategories, siteSettings, promotions } = useMenu();
@@ -32,6 +33,13 @@ export default function Storefront() {
   const canOrder = features.canOrder;
   const mpEnabled = features.canUseMercadoPago && siteSettings.mpEnabled;
   const vertical = getDemoByTenantId(tenantId);
+  const prospect = useMemo(
+    () => (tenantId === 'demo' && !vertical ? parseProspectDemo(window.location.search) : null),
+    [tenantId, vertical],
+  );
+  const preset = prospect?.preset ?? null;
+  const demoCopy = vertical?.copy ?? preset?.copy;
+  const forceOpen = Boolean(vertical?.forceOpen || preset);
   const cartStorageKey = isDemoTenant(tenantId)
     ? `trufi_cart:${tenantId}`
     : 'elpuestito_cart';
@@ -110,12 +118,12 @@ export default function Storefront() {
   const lang = language || 'es';
 
   const { hours: businessHours, isOpen: isOpenNowRaw, nextOpening: nextOpeningText, summary: hoursSummary } = useBusinessHours(lang);
-  const isOpenNow = vertical?.forceOpen ? true : isOpenNowRaw;
+  const isOpenNow = forceOpen ? true : isOpenNowRaw;
 
   // Dynamic page title from branding
   useEffect(() => {
     const name = siteSettings.brandName?.trim();
-    document.title = name ? `${name} — Menú online` : 'Trufi — Menú online';
+    document.title = name ? `${name} — Menú online` : 'Gatrivi.com — Tienda online';
   }, [siteSettings.brandName]);
 
   // Carnicería: light only (no restaurante oscuro)
@@ -488,12 +496,15 @@ export default function Storefront() {
         </div>
       )}
 
-      {vertical && (
+      {(vertical || preset) && demoCopy && (
         <div
           className="px-4 py-2 text-center text-[11px] font-black uppercase tracking-[0.12em]"
-          style={{ backgroundColor: vertical.theme.carbon, color: vertical.theme.hueso }}
+          style={{
+            backgroundColor: vertical?.theme.carbon ?? siteSettings.brandColor ?? '#171814',
+            color: vertical?.theme.hueso ?? '#f2eee6',
+          }}
         >
-          {vertical.copy.ribbonLabel}
+          {demoCopy.ribbonLabel}
         </div>
       )}
 
@@ -597,7 +608,7 @@ export default function Storefront() {
       </header>
 
       {/* Closed Banner */}
-      {!isOpenNow && businessHours.enabled && !vertical && (
+      {!isOpenNow && businessHours.enabled && !vertical && !preset && (
         <div className="bg-red-500/10 border-b border-red-500/20 px-4 py-3">
           <div className="max-w-5xl mx-auto flex items-center gap-2 text-red-300 text-sm font-bold">
             <Clock size={16} />
@@ -606,7 +617,7 @@ export default function Storefront() {
         </div>
       )}
 
-      {vertical && (
+      {vertical && demoCopy && (
         <section className="max-w-5xl mx-auto px-4 pt-6 pb-2">
           <div
             className="overflow-hidden rounded-2xl border border-black/8"
@@ -638,13 +649,13 @@ export default function Storefront() {
                 className="text-2xl font-bold leading-tight tracking-[-0.03em] sm:text-3xl"
                 style={{ fontFamily: siteSettings.brandFont, color: vertical.theme.carbon }}
               >
-                {vertical.copy.heroTitle}
+                {demoCopy.heroTitle}
               </h1>
               <p className="text-sm leading-relaxed" style={{ color: `${vertical.theme.carbon}cc` }}>
-                {vertical.copy.heroBody}
+                {demoCopy.heroBody}
               </p>
               <div className="flex flex-wrap gap-2">
-                {vertical.copy.chips.map(chip => (
+                {demoCopy.chips.map(chip => (
                   <span
                     key={chip}
                     className="rounded-full border px-3 py-1 text-xs font-bold"
@@ -659,9 +670,31 @@ export default function Storefront() {
                 ))}
               </div>
               <p className="text-xs font-medium" style={{ color: vertical.theme.salvia }}>
-                {vertical.copy.weightNotice}
+                {demoCopy.weightNotice}
               </p>
             </div>
+          </div>
+        </section>
+      )}
+
+      {!vertical && preset && demoCopy && (
+        <section className="max-w-5xl mx-auto px-4 pt-6 pb-2">
+          <div className="overflow-hidden rounded-2xl border border-border bg-surface-elevated p-5 space-y-3">
+            <h1 className="text-2xl font-bold leading-tight tracking-[-0.03em] sm:text-3xl">
+              {demoCopy.heroTitle}
+            </h1>
+            <p className="text-sm leading-relaxed text-text-secondary">{demoCopy.heroBody}</p>
+            <div className="flex flex-wrap gap-2">
+              {demoCopy.chips.map(chip => (
+                <span
+                  key={chip}
+                  className="rounded-full border border-border px-3 py-1 text-xs font-bold text-text-secondary"
+                >
+                  {chip}
+                </span>
+              ))}
+            </div>
+            <p className="text-xs font-medium text-text-muted">{demoCopy.weightNotice}</p>
           </div>
         </section>
       )}
@@ -775,11 +808,11 @@ export default function Storefront() {
 
             <div className="p-6 border-t border-border bg-surface-muted">
               <div className="flex justify-between items-center text-xl font-black mb-2">
-                <span>{vertical?.copy.totalLabel ?? t.total}</span>
+                <span>{demoCopy?.totalLabel ?? t.total}</span>
                 <span>${total.toLocaleString('es-AR')}</span>
               </div>
-              {vertical?.copy.totalHint && (
-                <p className="mb-4 text-xs font-medium text-text-secondary">{vertical.copy.totalHint}</p>
+              {demoCopy?.totalHint && (
+                <p className="mb-4 text-xs font-medium text-text-secondary">{demoCopy.totalHint}</p>
               )}
               <button
                 disabled={cart.length === 0 || !isOpenNow}
@@ -788,7 +821,7 @@ export default function Storefront() {
                 style={vertical?.theme && cart.length > 0 && isOpenNow ? { backgroundColor: vertical.theme.bordo } : undefined}
               >
                 <Send size={20} />
-                {isOpenNow ? (vertical?.copy.cartCta ?? t.order) : t.closed}
+                {isOpenNow ? (demoCopy?.cartCta ?? t.order) : t.closed}
               </button>
               {!isOpenNow && cart.length > 0 && (
                 <p className="text-xs text-center text-red-400 font-medium mt-2">
@@ -820,7 +853,7 @@ export default function Storefront() {
       />
       )}
 
-      {!vertical && <AIAssistant onAddToCart={canOrder ? handleAIAddToCart : undefined} />}
+      {!vertical && !preset && <AIAssistant onAddToCart={canOrder ? handleAIAddToCart : undefined} />}
 
       {/* Share Modal */}
       {!vertical?.hideShare && (
