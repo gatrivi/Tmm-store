@@ -40,49 +40,50 @@ const SITE_DOMAIN_EXAMPLE = `tunegocio.${SITE_DOMAIN}`;
 const solutions = [
   {
     id: 'catalogo',
-    title: 'Catálogo digital',
-    ideal: 'Ideal para: cuando solo necesitás que vean los productos y precios.',
+    title: 'Catálogo Digital',
+    ideal: 'Ideal cuando solo necesitás que vean tus productos y precios.',
     bullets: [
-      'Lista de productos con fotos y precios',
-      'Fácil de actualizar',
-      'Link o QR para compartir',
-      'Sin carrito ni pagos',
+      'Todos tus productos con foto y precio en un solo link',
+      'Fácil de actualizar cuando cambian precios o stock',
+      'Se comparte por WhatsApp, Instagram o QR',
+      'Sin carrito ni complicaciones',
     ],
-    priceHint: 'Precio orientativo: más económico',
+    closing: 'Perfecto para dejar de mandar fotos sueltas.',
     cta: 'Ver ejemplo de catálogo',
     demoPath: '/demo?rubro=libreria',
     icon: Tags,
   },
   {
     id: 'landing',
-    title: 'Landing de producto / negocio',
-    ideal: 'Ideal para: página profesional con tu marca + productos destacados.',
+    title: 'Landing de negocio',
+    ideal: 'Ideal cuando querés una página profesional que presente tu negocio.',
     bullets: [
-      'Página moderna con tu marca',
-      'Secciones de productos, beneficios, contacto',
+      'Página moderna con tu marca y estilo',
+      'Productos destacados + beneficios + contacto',
       'Botón directo a WhatsApp',
-      'Perfecta para Instagram y Google',
+      'Ideal para Instagram, Google y publicidad',
     ],
-    priceHint: null,
+    closing: 'Tu negocio se ve profesional desde el primer click.',
     cta: 'Ver ejemplo de landing',
     demoPath: '/demo/mamabel',
     icon: LayoutTemplate,
   },
   {
     id: 'tienda',
-    title: 'Tienda online completa',
-    ideal: 'Ideal para: cuando querés que el cliente compre solo.',
+    title: 'Tienda Online Completa',
+    ideal: 'Ideal cuando querés que el cliente compre solo.',
     bullets: [
       'Catálogo + carrito + total automático',
       'Alias bancario + comprobante por WhatsApp',
-      'Panel para administrar productos y stock',
+      'Panel simple para administrar productos',
       'Sin comisión por venta',
     ],
-    priceHint: null,
+    closing: 'El cliente elige, paga y vos solo verificás.',
     cta: 'Ver demo de tienda',
     demoPath: '/demo/pizzeria',
     icon: Store,
     featured: true,
+    badge: 'Recomendada',
   },
 ];
 
@@ -381,7 +382,10 @@ export default function LandingPage() {
             <div className="max-w-3xl">
               <SectionEyebrow>Tres soluciones</SectionEyebrow>
               <h2 className="text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl">
-                Tres formas de mostrar tus productos (y dejar de contestar siempre lo mismo)
+                Tres formas de mostrar tus productos
+                <span className="mt-2 block text-2xl font-black text-black/55 sm:text-3xl">
+                  (y dejar de contestar siempre lo mismo)
+                </span>
               </h2>
             </div>
 
@@ -389,12 +393,21 @@ export default function LandingPage() {
               {solutions.map(sol => (
                 <article
                   key={sol.id}
-                  className={`flex flex-col rounded-[2rem] border p-6 sm:p-8 ${
+                  className={`relative flex flex-col rounded-[2rem] border p-6 sm:p-8 ${
                     sol.featured
                       ? 'border-[#171814] bg-[#171814] text-white shadow-2xl'
                       : 'border-black/10 bg-[#f2eee6]'
                   }`}
                 >
+                  {'badge' in sol && sol.badge && (
+                    <span
+                      className={`absolute right-6 top-6 rounded-full px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] ${
+                        sol.featured ? 'bg-[#d7ff64] text-[#171814]' : 'bg-[#ee6847] text-white'
+                      }`}
+                    >
+                      {sol.badge}
+                    </span>
+                  )}
                   <div
                     className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
                       sol.featured ? 'bg-[#d7ff64] text-[#171814]' : 'bg-[#171814] text-[#d7ff64]'
@@ -417,11 +430,13 @@ export default function LandingPage() {
                       </li>
                     ))}
                   </ul>
-                  {sol.priceHint && (
-                    <p className="mt-4 text-xs font-black uppercase tracking-[0.12em] text-[#ee6847]">
-                      {sol.priceHint}
-                    </p>
-                  )}
+                  <p
+                    className={`mt-5 text-sm font-bold leading-relaxed ${
+                      sol.featured ? 'text-white/70' : 'text-black/60'
+                    }`}
+                  >
+                    {sol.closing}
+                  </p>
                   <Link
                     to={withAttribution(sol.demoPath)}
                     className={`mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full text-sm font-black transition hover:-translate-y-0.5 ${
@@ -438,7 +453,9 @@ export default function LandingPage() {
             </div>
 
             <p className="mt-10 text-center text-sm font-bold text-black/55">
-              Empezá por lo que necesitás hoy. Después podés subir de nivel cuando quieras.
+              Empezá por lo que necesitás hoy.
+              <br />
+              Después podés subir de nivel cuando quieras.
             </p>
           </div>
         </section>
