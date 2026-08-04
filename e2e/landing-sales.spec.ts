@@ -3,13 +3,12 @@ import { expect, test } from '@playwright/test';
 test.describe('landing sales CTAs', () => {
   test('reserve and contact links carry sales origin', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByRole('heading', { name: /Tu tienda/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Ver soluciones' }).first()).toBeVisible();
 
-    const reserve = page.locator('header a', { hasText: 'Reservar' });
-    await expect(reserve).toBeVisible();
-    const reserveHref = await reserve.getAttribute('href');
-    expect(reserveHref).toBeTruthy();
-    expect(reserveHref).not.toBe('#');
+    const consult = page.locator('header a', { hasText: 'Consultar' });
+    await expect(consult).toBeVisible();
+    const consultHref = await consult.getAttribute('href');
+    expect(consultHref).toMatch(/^(https:\/\/wa\.me\/|mailto:)/);
 
     const footerContact = page.locator('footer a', { hasText: 'Contacto' });
     await expect(footerContact).toBeVisible();
