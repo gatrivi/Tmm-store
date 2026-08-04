@@ -33,6 +33,8 @@ Agent manifest: read this first, then one targeted file.
 | **Demo flagship Mamá Mabel** | [roadmap/demo-mamabel.md](./roadmap/demo-mamabel.md) · `/demo/mamabel` |
 | **Mabel content gaps** | [mamabel-content-gaps.md](./mamabel-content-gaps.md) |
 | **Demo panadería La Magdalena** | [roadmap/demo-panaderia.md](./roadmap/demo-panaderia.md) · `/demo/panaderia` |
+| **Demo Aguacats (ex Refcurcum)** | [roadmap/demo-aguacats.md](./roadmap/demo-aguacats.md) · `/demo/aguacats` |
+| **Aguacats content gaps** | [aguacats-content-gaps.md](./aguacats-content-gaps.md) |
 | **Demo pizzería Fit A (live)** | [roadmap/demo-pizzeria.md](./roadmap/demo-pizzeria.md) · `/demo/pizzeria` |
 | **Demo carnicería (live)** | [roadmap/demo-carniceria-gabriel.md](./roadmap/demo-carniceria-gabriel.md) · `/demo/carniceria` |
 | **Plan verticales + demos** | [roadmap/vertical-demos-plan.md](./roadmap/vertical-demos-plan.md) |
