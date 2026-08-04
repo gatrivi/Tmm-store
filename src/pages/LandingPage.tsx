@@ -20,6 +20,8 @@ import {
   WandSparkles,
   Zap,
 } from 'lucide-react';
+import LandingThemeBar from '../components/landing/LandingThemeBar';
+import { useTheme } from '../context/ThemeContext';
 import { buildSalesContactHref } from '../utils/salesContact';
 import {
   buildReserveHref,
@@ -28,6 +30,18 @@ import {
   reserveCtaLabel,
   withAttribution,
 } from '../utils/demoIntake';
+import {
+  HERO_VARIANTS,
+  heroContactSource,
+  resolveHeroVariant,
+  setHeroVariant,
+  type HeroVariant,
+} from '../utils/landingAb';
+import {
+  paletteStyleVars,
+  readLandingPalette,
+  type LandingPaletteId,
+} from '../utils/landingPalettes';
 import {
   buildProspectDemoSearch,
   PROSPECT_CATEGORIES,
@@ -229,7 +243,7 @@ const HERO_RUBROS = (Object.keys(PROSPECT_CATEGORIES) as ProspectCategory[]).fil
 
 function SectionEyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-[#ee6847]">
+    <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-[var(--lp-accent)]">
       {children}
     </p>
   );
@@ -237,13 +251,18 @@ function SectionEyebrow({ children }: { children: React.ReactNode }) {
 
 export default function LandingPage() {
   const location = useLocation();
+  const { isDark } = useTheme();
+  const [heroVariant, setHeroVariantState] = useState<HeroVariant>(() =>
+    resolveHeroVariant(location.search),
+  );
+  const [paletteId, setPaletteId] = useState<LandingPaletteId>(() => readLandingPalette());
+
+  const hero = HERO_VARIANTS[heroVariant];
   const contactHref = buildSalesContactHref('landing consulta Gatrivi.com');
   const priceLabel = getDemoPriceLabel();
   const reserveHref = buildReserveHref({ source: 'landing reserva' });
   const reserveLabel = reserveCtaLabel();
-  const consultHref = buildSalesContactHref(
-    'landing consulta: catálogo, landing o tienda completa',
-  );
+  const consultHref = buildSalesContactHref(heroContactSource(heroVariant));
 
   const [negocio, setNegocio] = useState('');
   const [rubro, setRubro] = useState<ProspectCategory>('petshop');
@@ -262,7 +281,13 @@ export default function LandingPage() {
 
   useEffect(() => {
     captureAttribution(location.search);
+    setHeroVariantState(resolveHeroVariant(location.search));
   }, [location.search]);
+
+  const onHeroVariant = (v: HeroVariant) => {
+    setHeroVariant(v);
+    setHeroVariantState(v);
+  };
 
   useEffect(() => {
     document.title = 'Gatrivi.com — Catálogo, landing y tienda online';
@@ -280,81 +305,117 @@ export default function LandingPage() {
   }, [location.hash]);
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#f2eee6] text-[#171814] selection:bg-[#d7ff64] selection:text-[#171814]">
-      <header className="sticky top-0 z-50 border-b border-black/8 bg-[#f2eee6]/92 backdrop-blur-xl">
-        <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <div
+      className="landing-page min-h-screen overflow-x-hidden bg-[var(--lp-bg)] text-[var(--lp-text)] selection:bg-[var(--lp-highlight)] selection:text-[var(--lp-text)]"
+      style={paletteStyleVars(paletteId, isDark)}
+      data-palette={paletteId}
+      data-hero={heroVariant}
+    >
+      <header
+        className="sticky top-0 z-50 border-b border-[color:var(--lp-border)] bg-[color:var(--lp-header-bg)] backdrop-blur-xl"
+      >
+        <div className="mx-auto flex min-h-16 max-w-7xl flex-wrap items-center justify-between gap-2 px-4 sm:px-6 lg:px-8">
           <Link to="/" className="flex items-baseline gap-2">
             <span className="text-xl font-black tracking-[-0.04em]">GATRIVI.COM</span>
-            <span className="hidden text-[10px] font-bold uppercase tracking-[0.16em] text-black/45 sm:inline">
+            <span className="hidden text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--lp-text-muted)] sm:inline">
               de ZengaSoft
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-6 text-sm font-bold text-black/60 md:flex">
-            <a href="#soluciones" className="transition hover:text-black">Soluciones</a>
-            <Link to={withAttribution('/demos')} className="transition hover:text-black">Muestras</Link>
-            <a href="#planes" className="transition hover:text-black">Planes</a>
-            <a href={contactHref} className="transition hover:text-black">Contacto</a>
+          <nav className="hidden items-center gap-6 text-sm font-bold text-[var(--lp-text-muted)] md:flex">
+            <a href="#soluciones" className="transition hover:text-[var(--lp-text)]">Soluciones</a>
+            <Link to={withAttribution('/demos')} className="transition hover:text-[var(--lp-text)]">Muestras</Link>
+            <a href="#planes" className="transition hover:text-[var(--lp-text)]">Planes</a>
+            <a href={contactHref} className="transition hover:text-[var(--lp-text)]">Contacto</a>
           </nav>
 
-          <a
-            href={consultHref}
-            className="rounded-full bg-[#171814] px-4 py-2.5 text-xs font-black text-white transition hover:-translate-y-0.5 hover:bg-[#ee6847] sm:text-sm"
-          >
-            Consultar
-          </a>
+          <div className="flex flex-wrap items-center gap-2">
+            <LandingThemeBar
+              heroVariant={heroVariant}
+              onHeroVariant={onHeroVariant}
+              paletteId={paletteId}
+              onPalette={setPaletteId}
+            />
+            <a
+              href={consultHref}
+              className="rounded-full bg-[var(--lp-ink)] px-4 py-2.5 text-xs font-black text-[var(--lp-on-ink)] transition hover:-translate-y-0.5 hover:bg-[var(--lp-accent)] sm:text-sm"
+            >
+              Consultar
+            </a>
+          </div>
         </div>
       </header>
 
       <main className="pb-24 md:pb-0">
         {/* Hero */}
-        <section id="hero" className="relative scroll-mt-24 border-b border-black/8">
-          <div className="pointer-events-none absolute inset-0 opacity-45 [background-image:radial-gradient(#171814_0.7px,transparent_0.7px)] [background-size:18px_18px]" />
+        <section id="hero" className="relative scroll-mt-24 border-b border-[color:var(--lp-border)]">
+          <div
+            className="pointer-events-none absolute inset-0 opacity-45 [background-image:radial-gradient(color-mix(in_srgb,var(--lp-ink)_70%,transparent)_0.7px,transparent_0.7px)] [background-size:18px_18px]"
+          />
           <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
             <div className="max-w-4xl">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/55 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-black/65 shadow-sm">
-                Soluciones web para negocios · de ZengaSoft
+              <div
+                className="mb-6 inline-flex items-center gap-2 rounded-full border border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-[var(--lp-text-muted)] shadow-sm"
+              >
+                {hero.badge}
               </div>
 
               <h1 className="text-[clamp(2.4rem,6.5vw,5rem)] font-black leading-[0.92] tracking-[-0.07em]">
-                Dejá de contestar siempre lo mismo.
-                <span className="mt-2 block text-[#ee6847]">Mostrá tus productos online en minutos.</span>
+                {hero.headline.map((line, i) => (
+                  <span
+                    key={line}
+                    className={
+                      i === hero.headlineAccentLine
+                        ? 'mt-2 block text-[var(--lp-accent)]'
+                        : i > 0
+                          ? 'mt-2 block'
+                          : undefined
+                    }
+                  >
+                    {line}
+                  </span>
+                ))}
               </h1>
 
-              <p className="mt-7 max-w-2xl text-lg leading-relaxed text-black/66 sm:text-xl">
-                Catálogos, landings y tiendas online listas para vender.
-                <br className="hidden sm:block" />
-                Tu marca, tu dominio en {SITE_DOMAIN}, sin comisión por venta.
+              <p className="mt-7 max-w-2xl text-lg leading-relaxed text-[var(--lp-text-muted)] sm:text-xl">
+                {hero.subheadline.map((line, i) => (
+                  <span key={line}>
+                    {i > 0 && <br className="hidden sm:block" />}
+                    {line}
+                  </span>
+                ))}
               </p>
 
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <a
                   href="#soluciones"
-                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#171814] px-7 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-[#ee6847]"
+                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[var(--lp-ink)] px-7 text-sm font-black text-[var(--lp-on-ink)] transition hover:-translate-y-0.5 hover:bg-[var(--lp-accent)]"
                 >
                   Ver soluciones
                   <ArrowRight size={18} />
                 </a>
                 <a
                   href="#probar"
-                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border-2 border-black/15 bg-white/80 px-7 text-sm font-black transition hover:border-black"
+                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border-2 border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-7 text-sm font-black transition hover:border-[var(--lp-ink)]"
                 >
                   Probar una muestra
                 </a>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold text-black/55">
-                <span className="flex items-center gap-1.5"><Check size={14} /> Sin app</span>
-                <span className="flex items-center gap-1.5"><Check size={14} /> Sin comisión</span>
-                <span className="flex items-center gap-1.5"><Check size={14} /> Listo en 3 días</span>
-                <span className="flex items-center gap-1.5"><Check size={14} /> Dominio propio incluido</span>
+              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold text-[var(--lp-text-muted)]">
+                {hero.trust.map(item => (
+                  <span key={item} className="flex items-center gap-1.5">
+                    <Check size={14} />
+                    {item}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
         {/* Social proof bar */}
-        <section className="border-b border-black/8 bg-[#171814] text-white">
+        <section className="border-b border-[color:var(--lp-border)] bg-[var(--lp-ink)] text-white">
           <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-white/10 px-4 sm:grid-cols-4 lg:px-8">
             {[
               ['Catálogo', Tags],
@@ -366,9 +427,9 @@ export default function LandingPage() {
               return (
                 <div
                   key={label as string}
-                  className="flex items-center justify-center gap-2 bg-[#171814] px-3 py-5 text-xs font-black uppercase tracking-[0.1em] text-white/70"
+                  className="flex items-center justify-center gap-2 bg-[var(--lp-ink)] px-3 py-5 text-xs font-black uppercase tracking-[0.1em] text-white/70"
                 >
-                  <ItemIcon size={16} className="text-[#d7ff64]" />
+                  <ItemIcon size={16} className="text-[var(--lp-highlight)]" />
                   {label as string}
                 </div>
               );
@@ -377,13 +438,13 @@ export default function LandingPage() {
         </section>
 
         {/* Qué ofrecemos */}
-        <section id="soluciones" className="scroll-mt-24 border-b border-black/8 bg-[#fbfaf6] py-20 sm:py-28">
+        <section id="soluciones" className="scroll-mt-24 border-b border-[color:var(--lp-border)] bg-[var(--lp-surface)] py-20 sm:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl">
               <SectionEyebrow>Tres soluciones</SectionEyebrow>
               <h2 className="text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl">
                 Tres formas de mostrar tus productos
-                <span className="mt-2 block text-2xl font-black text-black/55 sm:text-3xl">
+                <span className="mt-2 block text-2xl font-black text-[var(--lp-text-muted)] sm:text-3xl">
                   (y dejar de contestar siempre lo mismo)
                 </span>
               </h2>
@@ -395,14 +456,14 @@ export default function LandingPage() {
                   key={sol.id}
                   className={`relative flex flex-col rounded-[2rem] border p-6 sm:p-8 ${
                     sol.featured
-                      ? 'border-[#171814] bg-[#171814] text-white shadow-2xl'
-                      : 'border-black/10 bg-[#f2eee6]'
+                      ? 'border-[var(--lp-ink)] bg-[var(--lp-ink)] text-white shadow-2xl'
+                      : 'border-[color:var(--lp-border)] bg-[var(--lp-bg)]'
                   }`}
                 >
                   {'badge' in sol && sol.badge && (
                     <span
                       className={`absolute right-6 top-6 rounded-full px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] ${
-                        sol.featured ? 'bg-[#d7ff64] text-[#171814]' : 'bg-[#ee6847] text-white'
+                        sol.featured ? 'bg-[var(--lp-highlight)] text-[var(--lp-text)]' : 'bg-[var(--lp-accent)] text-white'
                       }`}
                     >
                       {sol.badge}
@@ -410,13 +471,13 @@ export default function LandingPage() {
                   )}
                   <div
                     className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
-                      sol.featured ? 'bg-[#d7ff64] text-[#171814]' : 'bg-[#171814] text-[#d7ff64]'
+                      sol.featured ? 'bg-[var(--lp-highlight)] text-[var(--lp-text)]' : 'bg-[var(--lp-ink)] text-[var(--lp-highlight)]'
                     }`}
                   >
                     <sol.icon size={24} />
                   </div>
                   <h3 className="mt-6 text-2xl font-black tracking-[-0.04em]">{sol.title}</h3>
-                  <p className={`mt-3 text-sm font-bold ${sol.featured ? 'text-white/65' : 'text-black/55'}`}>
+                  <p className={`mt-3 text-sm font-bold ${sol.featured ? 'text-white/65' : 'text-[var(--lp-text-muted)]'}`}>
                     {sol.ideal}
                   </p>
                   <ul className="mt-5 flex-1 space-y-2.5">
@@ -424,15 +485,15 @@ export default function LandingPage() {
                       <li key={b} className="flex items-start gap-2 text-sm font-bold">
                         <Check
                           size={16}
-                          className={`mt-0.5 shrink-0 ${sol.featured ? 'text-[#d7ff64]' : 'text-[#ee6847]'}`}
+                          className={`mt-0.5 shrink-0 ${sol.featured ? 'text-[var(--lp-highlight)]' : 'text-[var(--lp-accent)]'}`}
                         />
-                        <span className={sol.featured ? 'text-white/80' : 'text-black/70'}>{b}</span>
+                        <span className={sol.featured ? 'text-white/80' : 'text-[var(--lp-text-muted)]'}>{b}</span>
                       </li>
                     ))}
                   </ul>
                   <p
                     className={`mt-5 text-sm font-bold leading-relaxed ${
-                      sol.featured ? 'text-white/70' : 'text-black/60'
+                      sol.featured ? 'text-white/70' : 'text-[var(--lp-text-muted)]'
                     }`}
                   >
                     {sol.closing}
@@ -441,8 +502,8 @@ export default function LandingPage() {
                     to={withAttribution(sol.demoPath)}
                     className={`mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full text-sm font-black transition hover:-translate-y-0.5 ${
                       sol.featured
-                        ? 'bg-[#d7ff64] text-[#171814] hover:bg-white'
-                        : 'bg-[#171814] text-white hover:bg-[#ee6847]'
+                        ? 'bg-[var(--lp-highlight)] text-[var(--lp-text)] hover:bg-[var(--lp-on-ink)]'
+                        : 'bg-[var(--lp-ink)] text-white hover:bg-[var(--lp-accent)]'
                     }`}
                   >
                     {sol.cta}
@@ -452,7 +513,7 @@ export default function LandingPage() {
               ))}
             </div>
 
-            <p className="mt-10 text-center text-sm font-bold text-black/55">
+            <p className="mt-10 text-center text-sm font-bold text-[var(--lp-text-muted)]">
               Empezá por lo que necesitás hoy.
               <br />
               Después podés subir de nivel cuando quieras.
@@ -461,7 +522,7 @@ export default function LandingPage() {
         </section>
 
         {/* Cómo funciona */}
-        <section id="como-funciona" className="scroll-mt-24 border-b border-black/8 py-20 sm:py-28">
+        <section id="como-funciona" className="scroll-mt-24 border-b border-[color:var(--lp-border)] py-20 sm:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl">
               <SectionEyebrow>Cómo funciona</SectionEyebrow>
@@ -474,16 +535,16 @@ export default function LandingPage() {
               {howItWorks.map(({ icon: Icon, title, copy }, index) => (
                 <article
                   key={title}
-                  className="rounded-[1.75rem] border border-black/10 bg-[#fbfaf6] p-6 sm:p-8"
+                  className="rounded-[1.75rem] border border-[color:var(--lp-border)] bg-[var(--lp-surface)] p-6 sm:p-8"
                 >
                   <div className="flex items-start justify-between">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#171814] text-[#d7ff64]">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--lp-ink)] text-[var(--lp-highlight)]">
                       <Icon size={22} />
                     </div>
-                    <span className="text-xs font-black text-black/25">0{index + 1}</span>
+                    <span className="text-xs font-black text-[var(--lp-text-muted)] opacity-40">0{index + 1}</span>
                   </div>
                   <h3 className="mt-8 text-xl font-black tracking-[-0.035em]">{title}</h3>
-                  <p className="mt-3 leading-relaxed text-black/58">{copy}</p>
+                  <p className="mt-3 leading-relaxed text-[var(--lp-text-muted)]">{copy}</p>
                 </article>
               ))}
             </div>
@@ -491,7 +552,7 @@ export default function LandingPage() {
         </section>
 
         {/* Beneficios / mensajes clave */}
-        <section id="beneficios" className="scroll-mt-24 border-b border-black/8 bg-[#171814] py-16 text-white sm:py-20">
+        <section id="beneficios" className="scroll-mt-24 border-b border-[color:var(--lp-border)] bg-[var(--lp-ink)] py-16 text-white sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid gap-4 sm:grid-cols-2">
               {keyMessages.map(msg => (
@@ -507,7 +568,7 @@ export default function LandingPage() {
         </section>
 
         {/* Muestras reales */}
-        <section id="muestras" className="scroll-mt-24 border-b border-black/8 bg-[#171814] py-20 text-white sm:py-28">
+        <section id="muestras" className="scroll-mt-24 border-b border-[color:var(--lp-border)] bg-[var(--lp-ink)] py-20 text-white sm:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
               <div>
@@ -528,10 +589,10 @@ export default function LandingPage() {
                   to={withAttribution(item.to)}
                   className="group rounded-[1.75rem] border border-white/12 bg-white/6 p-6 transition hover:-translate-y-1 hover:bg-white/10"
                 >
-                  <item.icon size={26} className="text-[#d7ff64]" />
+                  <item.icon size={26} className="text-[var(--lp-highlight)]" />
                   <p className="mt-8 text-xs font-black uppercase tracking-[0.14em] text-white/40">{item.hint}</p>
                   <h3 className="mt-2 text-2xl font-black tracking-[-0.04em]">{item.type}</h3>
-                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-[#d7ff64]">
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-[var(--lp-highlight)]">
                     Ver muestra <ChevronRight size={16} className="transition group-hover:translate-x-1" />
                   </span>
                 </Link>
@@ -549,23 +610,23 @@ export default function LandingPage() {
                   className="group flex items-center justify-between gap-4 rounded-[1.75rem] border border-white/12 bg-white/6 p-5 transition hover:bg-white/10"
                 >
                   <div className="flex items-center gap-3">
-                    <item.icon size={22} className="text-[#d7ff64]" />
+                    <item.icon size={22} className="text-[var(--lp-highlight)]" />
                     <div>
                       <p className="text-xs font-black uppercase tracking-[0.12em] text-white/40">{item.hint}</p>
                       <p className="font-black">{item.label}</p>
                     </div>
                   </div>
-                  <ChevronRight size={18} className="text-[#d7ff64] transition group-hover:translate-x-1" />
+                  <ChevronRight size={18} className="text-[var(--lp-highlight)] transition group-hover:translate-x-1" />
                 </Link>
               ))}
             </div>
 
             <Link
               to={withAttribution('/demo/pizzeria/owner')}
-              className="mt-4 flex items-center justify-between gap-4 rounded-[1.75rem] bg-[#d7ff64] p-6 text-[#171814] transition hover:-translate-y-0.5 hover:bg-white"
+              className="mt-4 flex items-center justify-between gap-4 rounded-[1.75rem] bg-[var(--lp-highlight)] p-6 text-[var(--lp-text)] transition hover:-translate-y-0.5 hover:bg-[var(--lp-on-ink)]"
             >
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.14em] text-black/40">Vista del local</p>
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--lp-text-muted)] opacity-40">Vista del local</p>
                 <p className="mt-1 text-xl font-black">Panel para cargar, editar y pausar productos.</p>
               </div>
               <BarChart3 size={28} />
@@ -574,14 +635,14 @@ export default function LandingPage() {
         </section>
 
         {/* Probar muestra (mini builder) */}
-        <section id="probar" className="scroll-mt-24 border-b border-black/8 py-20 sm:py-28">
+        <section id="probar" className="scroll-mt-24 border-b border-[color:var(--lp-border)] py-20 sm:py-28">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
             <SectionEyebrow>Probar ahora</SectionEyebrow>
             <h2 className="text-3xl font-black tracking-[-0.05em] sm:text-4xl">
               Personalizá una muestra en segundos
             </h2>
             <form
-              className="mt-8 space-y-3 rounded-[1.75rem] border border-black/10 bg-white p-5 shadow-sm"
+              className="mt-8 space-y-3 rounded-[1.75rem] border border-[color:var(--lp-border)] bg-[var(--lp-surface)] p-5 shadow-sm"
               onSubmit={event => {
                 event.preventDefault();
                 window.location.assign(samplePath);
@@ -593,14 +654,14 @@ export default function LandingPage() {
                   value={negocio}
                   onChange={e => setNegocio(e.target.value.slice(0, 60))}
                   placeholder="Nombre del negocio"
-                  className="min-h-12 w-full rounded-2xl border border-black/10 bg-[#fbfaf6] px-4 text-sm font-bold outline-none focus:border-black/35"
+                  className="min-h-12 w-full rounded-2xl border border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-4 text-sm font-bold outline-none focus:border-[var(--lp-accent)]"
                 />
               </label>
               <div className="grid gap-3 sm:grid-cols-2">
                 <select
                   value={rubro}
                   onChange={e => setRubro(e.target.value as ProspectCategory)}
-                  className="min-h-12 w-full rounded-2xl border border-black/10 bg-[#fbfaf6] px-4 text-sm font-bold outline-none"
+                  className="min-h-12 w-full rounded-2xl border border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-4 text-sm font-bold outline-none"
                 >
                   {HERO_RUBROS.map(id => (
                     <option key={id} value={id}>{PROSPECT_CATEGORIES[id]}</option>
@@ -610,19 +671,19 @@ export default function LandingPage() {
                   value={barrio}
                   onChange={e => setBarrio(e.target.value.slice(0, 60))}
                   placeholder="Barrio (opcional)"
-                  className="min-h-12 w-full rounded-2xl border border-black/10 bg-[#fbfaf6] px-4 text-sm font-bold outline-none"
+                  className="min-h-12 w-full rounded-2xl border border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-4 text-sm font-bold outline-none"
                 />
               </div>
               <button
                 type="submit"
-                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#171814] text-sm font-black text-white hover:bg-[#ee6847]"
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--lp-ink)] text-sm font-black text-white hover:bg-[var(--lp-accent)]"
               >
                 <WandSparkles size={16} /> Ver mi muestra
               </button>
             </form>
-            <p className="mt-4 text-center text-sm font-bold text-black/50">
+            <p className="mt-4 text-center text-sm font-bold text-[var(--lp-text)]/50">
               O explorá{' '}
-              <Link to={withAttribution('/demos')} className="text-[#ee6847] hover:underline">
+              <Link to={withAttribution('/demos')} className="text-[var(--lp-accent)] hover:underline">
                 las 11 muestras por rubro
               </Link>
             </p>
@@ -630,20 +691,20 @@ export default function LandingPage() {
         </section>
 
         {/* Implementación */}
-        <section id="incluye" className="scroll-mt-24 border-b border-black/8 bg-[#fbfaf6] py-20 sm:py-28">
+        <section id="incluye" className="scroll-mt-24 border-b border-[color:var(--lp-border)] bg-[var(--lp-surface)] py-20 sm:py-28">
           <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-20 lg:px-8">
             <div>
               <SectionEyebrow>Hecho por nosotros</SectionEyebrow>
               <h2 className="text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-6xl">
                 Listo en 3 días
               </h2>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-black/62">
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-[var(--lp-text-muted)]">
                 No te damos una cuenta vacía. Armamos tu catálogo, landing o tienda en {SITE_DOMAIN} y te entregamos link y QR.
               </p>
               <ul className="mt-8 space-y-4">
                 {setupItems.map(item => (
                   <li key={item} className="flex items-start gap-3 font-bold">
-                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#d7ff64]">
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--lp-highlight)]">
                       <Check size={14} strokeWidth={3} />
                     </span>
                     {item}
@@ -652,7 +713,7 @@ export default function LandingPage() {
               </ul>
             </div>
 
-            <div className="rounded-[2rem] bg-[#ee6847] p-5 text-white shadow-2xl sm:p-8">
+            <div className="rounded-[2rem] bg-[var(--lp-accent)] p-5 text-white shadow-2xl sm:p-8">
               <div className="flex items-center justify-between">
                 <span className="rounded-full bg-black/15 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.13em]">
                   Implementación
@@ -671,8 +732,8 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <div className="mt-5 rounded-2xl bg-[#171814] p-5">
-                <p className="text-xs font-black uppercase tracking-[0.12em] text-[#d7ff64]">Entrega</p>
+              <div className="mt-5 rounded-2xl bg-[var(--lp-ink)] p-5">
+                <p className="text-xs font-black uppercase tracking-[0.12em] text-[var(--lp-highlight)]">Entrega</p>
                 <p className="mt-2 text-xl font-black">
                   Link en {SITE_DOMAIN}, QR y prueba desde el celular.
                 </p>
@@ -682,14 +743,14 @@ export default function LandingPage() {
         </section>
 
         {/* Promo primeros 10 */}
-        <section id="reserva" className="scroll-mt-24 border-b border-black/8 py-20 sm:py-28">
+        <section id="reserva" className="scroll-mt-24 border-b border-[color:var(--lp-border)] py-20 sm:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <article className="rounded-[2rem] border-2 border-[#171814] bg-[#171814] p-6 text-white shadow-2xl sm:p-10">
-              <p className="text-xs font-black uppercase tracking-[0.14em] text-[#d7ff64]">Tienda completa · primeros 10</p>
+            <article className="rounded-[2rem] border-2 border-[var(--lp-ink)] bg-[var(--lp-ink)] p-6 text-white shadow-2xl sm:p-10">
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--lp-highlight)]">Tienda completa · primeros 10</p>
               <h2 className="mt-4 max-w-3xl text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl">
                 Promoción tienda online completa
               </h2>
-              <p className="mt-4 text-3xl font-black text-[#d7ff64]">{priceLabel}</p>
+              <p className="mt-4 text-3xl font-black text-[var(--lp-highlight)]">{priceLabel}</p>
               <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/65">
                 90% de descuento sobre implementación de $650.000. Catálogo y landing: consultar.
               </p>
@@ -700,7 +761,7 @@ export default function LandingPage() {
                   rubro,
                   businessName: negocio.trim() || undefined,
                 })}
-                className="mt-8 inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#d7ff64] px-6 text-sm font-black text-[#171814] transition hover:-translate-y-0.5 hover:bg-white"
+                className="mt-8 inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[var(--lp-highlight)] px-6 text-sm font-black text-[var(--lp-text)] transition hover:-translate-y-0.5 hover:bg-[var(--lp-on-ink)]"
               >
                 {reserveLabel}
                 <ArrowRight size={16} />
@@ -710,14 +771,14 @@ export default function LandingPage() {
         </section>
 
         {/* Pricing */}
-        <section id="planes" className="scroll-mt-24 border-b border-black/8 pb-20 sm:pb-28">
+        <section id="planes" className="scroll-mt-24 border-b border-[color:var(--lp-border)] pb-20 sm:pb-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl pt-4">
               <SectionEyebrow>Planes</SectionEyebrow>
               <h2 className="text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-6xl">
                 Elegí tu nivel
               </h2>
-              <p className="mt-5 text-lg leading-relaxed text-black/60">
+              <p className="mt-5 text-lg leading-relaxed text-[var(--lp-text-muted)]">
                 Catálogo, landing o tienda completa. Sin comisión por venta.
               </p>
             </div>
@@ -728,38 +789,38 @@ export default function LandingPage() {
                   key={tier.name}
                   className={`relative flex flex-col rounded-[2rem] border p-6 sm:p-8 ${
                     tier.featured
-                      ? 'border-[#171814] bg-[#171814] text-white shadow-2xl lg:-translate-y-2'
-                      : 'border-black/10 bg-[#f2eee6]'
+                      ? 'border-[var(--lp-ink)] bg-[var(--lp-ink)] text-white shadow-2xl lg:-translate-y-2'
+                      : 'border-[color:var(--lp-border)] bg-[var(--lp-bg)]'
                   }`}
                 >
                   {tier.featured && (
-                    <span className="absolute right-6 top-6 rounded-full bg-[#d7ff64] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-[#171814]">
+                    <span className="absolute right-6 top-6 rounded-full bg-[var(--lp-highlight)] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-[var(--lp-text)]">
                       Más completa
                     </span>
                   )}
                   <p
                     className={`text-xs font-black uppercase tracking-[0.14em] ${
-                      tier.featured ? 'text-[#d7ff64]' : 'text-[#ee6847]'
+                      tier.featured ? 'text-[var(--lp-highlight)]' : 'text-[var(--lp-accent)]'
                     }`}
                   >
                     {tier.eyebrow}
                   </p>
                   <h3 className="mt-4 text-2xl font-black tracking-[-0.045em]">{tier.name}</h3>
-                  <p className={`mt-3 leading-relaxed ${tier.featured ? 'text-white/58' : 'text-black/58'}`}>
+                  <p className={`mt-3 leading-relaxed ${tier.featured ? 'text-white/58' : 'text-[var(--lp-text-muted)]'}`}>
                     {tier.copy}
                   </p>
 
-                  <div className={`my-6 border-y py-5 ${tier.featured ? 'border-white/12' : 'border-black/10'}`}>
-                    <p className={`text-xs font-bold ${tier.featured ? 'text-white/45' : 'text-black/45'}`}>
+                  <div className={`my-6 border-y py-5 ${tier.featured ? 'border-white/12' : 'border-[color:var(--lp-border)]'}`}>
+                    <p className={`text-xs font-bold ${tier.featured ? 'text-white/45' : 'text-[var(--lp-text-muted)]'}`}>
                       Implementación
                     </p>
                     {'previousSetup' in tier && tier.previousSetup && (
-                      <p className={`mt-1 text-sm font-bold ${tier.featured ? 'text-white/45' : 'text-black/45'}`}>
+                      <p className={`mt-1 text-sm font-bold ${tier.featured ? 'text-white/45' : 'text-[var(--lp-text-muted)]'}`}>
                         <s>{tier.previousSetup}</s>
                       </p>
                     )}
                     <p className="mt-1 text-2xl font-black">{tier.setup}</p>
-                    <p className={`mt-2 text-sm font-bold ${tier.featured ? 'text-white/55' : 'text-black/55'}`}>
+                    <p className={`mt-2 text-sm font-bold ${tier.featured ? 'text-white/55' : 'text-[var(--lp-text-muted)]'}`}>
                       {tier.monthly}
                     </p>
                   </div>
@@ -769,7 +830,7 @@ export default function LandingPage() {
                       <li key={feature} className="flex items-start gap-2.5 text-sm font-bold">
                         <Check
                           size={16}
-                          className={tier.featured ? 'mt-0.5 text-[#d7ff64]' : 'mt-0.5 text-[#ee6847]'}
+                          className={tier.featured ? 'mt-0.5 text-[var(--lp-highlight)]' : 'mt-0.5 text-[var(--lp-accent)]'}
                         />
                         {feature}
                       </li>
@@ -784,8 +845,8 @@ export default function LandingPage() {
                     }
                     className={`mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-full text-sm font-black transition hover:-translate-y-0.5 ${
                       tier.featured
-                        ? 'bg-[#d7ff64] text-[#171814] hover:bg-white'
-                        : 'bg-[#171814] text-white hover:bg-[#ee6847]'
+                        ? 'bg-[var(--lp-highlight)] text-[var(--lp-text)] hover:bg-[var(--lp-on-ink)]'
+                        : 'bg-[var(--lp-ink)] text-white hover:bg-[var(--lp-accent)]'
                     }`}
                   >
                     {tier.cta}
@@ -795,31 +856,31 @@ export default function LandingPage() {
               ))}
             </div>
 
-            <div className="mt-8 flex flex-col gap-3 rounded-2xl border border-black/10 bg-white p-5 text-sm sm:flex-row sm:items-center sm:justify-between">
-              <p className="font-bold text-black/60">
-                <strong className="text-black">Dirección incluida:</strong> {SITE_DOMAIN_EXAMPLE}. Dominio propio 1 año
+            <div className="mt-8 flex flex-col gap-3 rounded-2xl border border-[color:var(--lp-border)] bg-[var(--lp-surface)] p-5 text-sm sm:flex-row sm:items-center sm:justify-between">
+              <p className="font-bold text-[var(--lp-text-muted)]">
+                <strong className="text-[var(--lp-text)]">Dirección incluida:</strong> {SITE_DOMAIN_EXAMPLE}. Dominio propio 1 año
                 para los primeros diez de tienda completa.
               </p>
-              <ShieldCheck className="shrink-0 text-[#ee6847]" />
+              <ShieldCheck className="shrink-0 text-[var(--lp-accent)]" />
             </div>
           </div>
         </section>
 
         {/* FAQ */}
-        <section className="border-b border-black/8 py-20 sm:py-28">
+        <section className="border-b border-[color:var(--lp-border)] py-20 sm:py-28">
           <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
             <div>
               <SectionEyebrow>Preguntas</SectionEyebrow>
               <h2 className="text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl">Antes de hablar.</h2>
             </div>
-            <div className="divide-y divide-black/10 border-y border-black/10">
+            <div className="divide-y divide-[color:var(--lp-border)] border-y border-[color:var(--lp-border)]">
               {faqs.map(item => (
                 <details key={item.question} className="group py-5">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-black">
                     {item.question}
                     <span className="text-2xl font-light transition group-open:rotate-45">+</span>
                   </summary>
-                  <p className="max-w-2xl pr-10 pt-3 leading-relaxed text-black/60">{item.answer}</p>
+                  <p className="max-w-2xl pr-10 pt-3 leading-relaxed text-[var(--lp-text-muted)]">{item.answer}</p>
                 </details>
               ))}
             </div>
@@ -827,9 +888,9 @@ export default function LandingPage() {
         </section>
 
         {/* CTA final */}
-        <section className="bg-[#ee6847] py-20 text-white sm:py-28">
+        <section className="bg-[var(--lp-accent)] py-20 text-white sm:py-28">
           <div className="mx-auto max-w-5xl px-4 text-center sm:px-6">
-            <Sparkles className="mx-auto text-[#d7ff64]" size={34} />
+            <Sparkles className="mx-auto text-[var(--lp-highlight)]" size={34} />
             <h2 className="mx-auto mt-6 max-w-4xl text-4xl font-black leading-[0.92] tracking-[-0.065em] sm:text-6xl">
               Contanos qué necesitás: catálogo, landing o tienda completa.
             </h2>
@@ -839,7 +900,7 @@ export default function LandingPage() {
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
                 href={consultHref}
-                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#171814] px-7 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-[#d7ff64] hover:text-[#171814]"
+                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[var(--lp-ink)] px-7 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-[var(--lp-highlight)] hover:text-[var(--lp-text)]"
               >
                 Hablar por WhatsApp
                 <ArrowRight size={18} />
@@ -854,17 +915,17 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="bg-[#171814] py-8 text-white">
+        <section className="bg-[var(--lp-ink)] py-8 text-white">
           <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
             <div className="flex items-center gap-3">
-              <Zap size={18} className="text-[#d7ff64]" />
+              <Zap size={18} className="text-[var(--lp-highlight)]" />
               <p className="text-sm font-bold text-white/65">
                 ¿Manejás varios comercios? Implementación marca blanca para agencias.
               </p>
             </div>
             <a
               href={buildSalesContactHref('partner white-label')}
-              className="flex shrink-0 items-center gap-2 text-sm font-black text-[#d7ff64] hover:text-white"
+              className="flex shrink-0 items-center gap-2 text-sm font-black text-[var(--lp-highlight)] hover:text-white"
             >
               Consultar partners <ChevronRight size={16} />
             </a>
@@ -872,7 +933,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="border-t border-white/10 bg-[#10110e] px-4 py-10 text-white sm:px-6">
+      <footer className="border-t border-white/10 bg-[var(--lp-footer)] px-4 py-10 text-white sm:px-6">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-2xl font-black tracking-[-0.04em]">GATRIVI.COM</p>
@@ -889,17 +950,17 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-black/10 bg-[#f2eee6]/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-[color:var(--lp-border)] bg-[var(--lp-bg)]/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden">
         <div className="mx-auto grid max-w-lg grid-cols-2 gap-2">
           <a
             href="#soluciones"
-            className="inline-flex min-h-12 items-center justify-center rounded-full border border-black/15 bg-white text-sm font-black"
+            className="inline-flex min-h-12 items-center justify-center rounded-full border border-[color:var(--lp-border)] bg-[var(--lp-surface)] text-sm font-black"
           >
             Soluciones
           </a>
           <a
             href={consultHref}
-            className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#171814] text-sm font-black text-white"
+            className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--lp-ink)] text-sm font-black text-white"
           >
             Consultar
           </a>
