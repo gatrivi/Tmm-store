@@ -37,6 +37,7 @@ Agent manifest: read this first, then one targeted file.
 | **Aguacats content gaps** | [aguacats-content-gaps.md](./aguacats-content-gaps.md) |
 | **Demo pizzería Fit A (live)** | [roadmap/demo-pizzeria.md](./roadmap/demo-pizzeria.md) · `/demo/pizzeria` |
 | **Demo carnicería (live)** | [roadmap/demo-carniceria-gabriel.md](./roadmap/demo-carniceria-gabriel.md) · `/demo/carniceria` |
+| **Demo Canavesi (live)** | [roadmap/demo-canavesi.md](./roadmap/demo-canavesi.md) · `/demo/canavesi` · gaps [canavesi-content-gaps.md](./canavesi-content-gaps.md) |
 | **Demo verdulería La Inmaculada** | [roadmap/demo-verduleria.md](./roadmap/demo-verduleria.md) · `/demo/verduleria` |
 | **Plan verticales + demos** | [roadmap/vertical-demos-plan.md](./roadmap/vertical-demos-plan.md) |
 | **30-day sales audit + Demo Express decision** | [ops/audit-sales-30-days-2026-07-11.md](./ops/audit-sales-30-days-2026-07-11.md) |

@@ -162,12 +162,17 @@ export default function WeightedCatalogDemoPage() {
 
       <header className="sticky top-0 z-30 border-b border-black/8 bg-[#fffdf9]/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          <p
-            className="text-xl font-bold tracking-[-0.03em] sm:text-2xl"
-            style={{ fontFamily: siteSettings.brandFont, color: theme.bordo }}
-          >
-            {siteSettings.brandName}
-          </p>
+          <div>
+            <p
+              className="text-xl font-bold tracking-[-0.03em] sm:text-2xl"
+              style={{ fontFamily: siteSettings.brandFont, color: theme.bordo }}
+            >
+              {siteSettings.brandName}
+            </p>
+            {!demo.hideAddress && siteSettings.brandAddress ? (
+              <p className="mt-0.5 text-[11px] font-bold text-black/45">{siteSettings.brandAddress}</p>
+            ) : null}
+          </div>
 
           <div className="flex items-center gap-2">
             <div className="flex rounded-full border border-black/10 bg-white p-1 text-xs font-bold">
@@ -239,6 +244,16 @@ export default function WeightedCatalogDemoPage() {
           <p className="max-w-md text-sm leading-relaxed text-white/85 sm:text-base">
             {copy.heroBody}
           </p>
+          <div className="flex flex-wrap gap-2">
+            {copy.chips.map(chip => (
+              <span
+                key={chip}
+                className="rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-white/90"
+              >
+                {chip}
+              </span>
+            ))}
+          </div>
           <button
             type="button"
             onClick={() => catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}

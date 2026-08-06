@@ -12,6 +12,7 @@ import {
   resolveTenantIdFromPath,
 } from './demoRegistry';
 import { AGUACATS_DEMO } from '../data/demos/aguacats';
+import { CANAVESI_DEMO } from '../data/demos/canavesi';
 import { CARNICERIA_DEMO } from '../data/demos/carniceria';
 import { MAMABEL_DEMO } from '../data/demos/mamabel';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
@@ -134,6 +135,26 @@ function main() {
   assert.equal(getDemoByTenantId('demo-aguacats')?.id, 'aguacats');
   assert.equal(AGUACATS_DEMO.siteSettings.brandLogo, '/demos/aguacats/logo.jpg');
 
+  // Canavesi Carnes (Olivos Borges) — prospect carnicería
+  assert.equal(resolveTenantIdFromPath('/demo/canavesi'), 'demo-canavesi');
+  assert.equal(resolveTenantIdFromPath('/demo/canavesi/owner'), 'demo-canavesi');
+  assert.equal(resolveTenantIdFromPath('/demo/canavesi/order/C8K1'), 'demo-canavesi');
+  assert.equal(resolveDemoIdFromPath('/demo/canavesi'), 'canavesi');
+  assert.equal(resolveDemoStorageKey('canavesi'), 'trufi_demo_orders_v2:canavesi');
+  const cv = resolveDemoFromPath('/demo/canavesi');
+  assert.ok(cv);
+  assert.equal(cv.tenantId, 'demo-canavesi');
+  assert.equal(cv.siteSettings.brandName, 'Canavesi Carnes');
+  assert.equal(cv.siteSettings.brandInstagram, 'canavesioficial');
+  assert.equal(cv.siteSettings.brandAddress, 'Francisco Borges 2376, Olivos');
+  assert.ok(cv.menuItems.some(i => i.id === 'vacio'));
+  assert.ok(cv.menuItems.some(i => i.id === 'pollo-relleno'));
+  assert.ok(cv.menuItems.length >= 12);
+  assert.equal(cv.seedOrders.length, 3);
+  assert.equal(getDemoByTenantId('demo-canavesi')?.id, 'canavesi');
+  assert.equal(CANAVESI_DEMO.siteSettings.brandLogo, '/demos/canavesi/monogram.svg');
+  assert.equal(cv.copy.totalLabel, 'Total estimado');
+
   // Storage isolation keys must differ
   assert.notEqual(resolveDemoStorageKey('demo'), resolveDemoStorageKey('carniceria'));
   assert.notEqual(resolveDemoStorageKey('pizzeria'), resolveDemoStorageKey('carniceria'));
@@ -141,6 +162,8 @@ function main() {
   assert.notEqual(resolveDemoStorageKey('panaderia'), resolveDemoStorageKey('pizzeria'));
   assert.notEqual(resolveDemoStorageKey('mamabel'), resolveDemoStorageKey('panaderia'));
   assert.notEqual(resolveDemoStorageKey('aguacats'), resolveDemoStorageKey('mamabel'));
+  assert.notEqual(resolveDemoStorageKey('canavesi'), resolveDemoStorageKey('carniceria'));
+  assert.notEqual(resolveDemoStorageKey('canavesi'), resolveDemoStorageKey('aguacats'));
 
   // Verdulería La Inmaculada — peso/unidad
   assert.equal(resolveTenantIdFromPath('/demo/verduleria'), 'demo-verduleria');

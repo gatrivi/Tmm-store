@@ -5,9 +5,9 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-08-06 |
-| **Versión** | `1.21.0` (`package.json` → stamp UI) |
+| **Versión** | `1.21.1` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Cambio actual** | demo La Inmaculada `/demo/verduleria` |
+| **Cambio actual** | demos Canavesi + La Inmaculada; WeightedCatalog shared |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
@@ -78,6 +78,9 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/demo/carniceria` | Vertical carnicería (cliente) |
 | `/demo/carniceria/owner` | Panel Gabriel |
 | `/demo/carniceria/order/:id` | Seguimiento |
+| `/demo/canavesi` | **Canavesi Carnes** Olivos Borges |
+| `/demo/canavesi/owner` | Panel Canavesi |
+| `/demo/canavesi/order/:id` | Seguimiento |
 | `/demo/aguacats` | **Aguacats** despensa/fresco (ex Refcurcum) |
 | `/demo/aguacats/owner` | Panel Aguacats |
 | `/demo/aguacats/order/:id` | Seguimiento |
@@ -89,7 +92,7 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/order/:orderId` | Seguimiento pedido real/tenant |
 | `/super-admin` | Provisioning tenants |
 
-Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/verduleria` · `/demo/aguacats` · `/demo/armar` · `/demo` legacy.
+Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/canavesi` · `/demo/verduleria` · `/demo/aguacats` · `/demo/armar` · `/demo` legacy.
 
 ---
 
@@ -147,6 +150,7 @@ Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/
 | Demo aguacats | `sessionStorage` `trufi_demo_orders_v2:aguacats` |
 | Demo verdulería | `sessionStorage` `trufi_demo_orders_v2:verduleria` |
 | Demo carnicería | `sessionStorage` `trufi_demo_orders_v2:carniceria` |
+| Demo Canavesi | `sessionStorage` `trufi_demo_orders_v2:canavesi` |
 
 Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 
@@ -182,10 +186,11 @@ Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 3. Panadería → `/demo/panaderia`
 4. Aguacats (prospect amigo) → `/demo/aguacats` ([`roadmap/demo-aguacats.md`](./roadmap/demo-aguacats.md))
 5. Personalizar al toque → `/demo/armar`
-6. Vertical carnicería → `/demo/carniceria`
-7. **Verdulería La Inmaculada** → `/demo/verduleria` ([`roadmap/demo-verduleria.md`](./roadmap/demo-verduleria.md))
-8. Legacy choripán → `/demo` (solo si aplica)
-9. Post-depósito → tenant real `/s/<slug>` (no clonar app)
+6. Vertical Canavesi → `/demo/canavesi` ([`roadmap/demo-canavesi.md`](./roadmap/demo-canavesi.md))
+7. Vertical carnicería → `/demo/carniceria`
+8. **Verdulería La Inmaculada** → `/demo/verduleria` ([`roadmap/demo-verduleria.md`](./roadmap/demo-verduleria.md))
+9. Legacy choripán → `/demo` (solo si aplica)
+10. Post-depósito → tenant real `/s/<slug>` (no clonar app)
 
 **Próxima vertical recomendada:** pollería/heladería solo con lead; verdulería shipped.
 
@@ -224,7 +229,8 @@ Publicitar “busco pilotos” o vender Tienda online: **Gate A OK** (verificar 
 | Config aguacats | `src/data/demos/aguacats.ts` |
 | Config verdulería | `src/data/demos/verduleria.ts` |
 | Config carnicería | `src/data/demos/carniceria.ts` |
-| Página peso (carnicería/verdulería) | `src/pages/WeightedCatalogDemoPage.tsx` |
+| Config Canavesi | `src/data/demos/canavesi.ts` |
+| Página peso (carnicería/Canavesi/verdulería) | `src/pages/WeightedCatalogDemoPage.tsx` |
 | Página carnicería | re-export → WeightedCatalogDemoPage |
 | Planes | `src/config/plans.ts` |
 | Versión inyectada | `src/config/version.ts` ← vite |
@@ -266,9 +272,10 @@ Abrir:
 - https://tmm.gatrivi.com/demo/pizzeria/owner
 - https://tmm.gatrivi.com/demo/panaderia
 - https://tmm.gatrivi.com/demo/carniceria
+- https://tmm.gatrivi.com/demo/canavesi
 - https://tmm.gatrivi.com/demo/verduleria
 - https://tmm.gatrivi.com/demo/aguacats
-- Stamp / `package.json` = **1.21.0**
+- Stamp / `package.json` = **1.21.1**
 
 ---
 

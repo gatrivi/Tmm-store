@@ -29,6 +29,7 @@ export default function App() {
           <Route path="/demo/armar" element={<ProspectDemoBuilderPage />} />
           <Route path="/demo/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/carniceria/owner" element={<DemoOwnerPage />} />
+          <Route path="/demo/canavesi/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/pizzeria/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/panaderia/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/mamabel/owner" element={<DemoOwnerPage />} />

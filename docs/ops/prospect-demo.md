@@ -11,6 +11,7 @@ Purpose: show the outcome, not a feature inventory.
 - **Panadería La Magdalena:** `/demo/panaderia` · `/demo/panaderia/owner` · `/demo/panaderia/order/:id`
 - **Aguacats (ex Refcurcum):** `/demo/aguacats` · `/demo/aguacats/owner` · `/demo/aguacats/order/:id`
 - Legacy gastronomía (choripán): `/demo` · `/demo/owner`
+- **Canavesi Carnes (Olivos):** `/demo/canavesi` · `/demo/canavesi/owner` · `/demo/canavesi/order/:id`
 - **Vertical carnicería:** `/demo/carniceria` · `/demo/carniceria/owner` · `/demo/carniceria/order/:id`
 - **Verdulería La Inmaculada:** `/demo/verduleria` · `/demo/verduleria/owner` · `/demo/verduleria/order/:id`
 
@@ -35,6 +36,12 @@ Tenant `demo-panaderia` · WSP prospect `549116563860` · logo blueprint. Brief:
 Tenant `demo-aguacats` · WSP `541171395174` · IG `@aguacats21` · contact Fermín. Brief: [demo-aguacats.md](../roadmap/demo-aguacats.md) · gaps: [aguacats-content-gaps.md](../aguacats-content-gaps.md).
 
 60s: `/demo/aguacats` → palta + combo frescura → `/demo/aguacats/owner`.
+
+### Prospect Canavesi Carnes (Olivos)
+
+Tenant `demo-canavesi` · IG `@canavesioficial` · Borges 2376. Brief: [demo-canavesi.md](../roadmap/demo-canavesi.md) · gaps: [canavesi-content-gaps.md](../canavesi-content-gaps.md).
+
+60s: `/demo/canavesi` → vacío 1 kg + combo → `/demo/canavesi/owner`.
 
 ### Vertical pizzería (Fit A — default pitch)
 
