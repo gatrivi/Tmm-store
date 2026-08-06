@@ -5,12 +5,13 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-08-06 |
-| **Versión** | `1.22.0` (`package.json` → stamp UI) |
+| **Versión** | `1.22.1` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
 | **Cambio actual** | Demo Express público OFF — solo demos pulidas |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
+| **Mapa sitio** | [`ops/site-map.md`](./ops/site-map.md) |
 
 Si este archivo y el stamp on-screen no coinciden → deploy/HMR desfasado.
 
@@ -276,7 +277,7 @@ Abrir:
 - https://tmm.gatrivi.com/demo/canavesi
 - https://tmm.gatrivi.com/demo/verduleria
 - https://tmm.gatrivi.com/demo/aguacats
-- Stamp / `package.json` = **1.22.0**
+- Stamp / `package.json` = **1.22.1**
 
 ---
 
