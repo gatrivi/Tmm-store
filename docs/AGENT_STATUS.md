@@ -63,9 +63,9 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 |------|-----|
 | `/` | Landing de ventas |
 | `/#planes` | Precios (redirect desde `/pricing`) |
-| `/demo` | Demo cliente gastronomía legacy (choripán) |
-| `/demo/owner` | Panel demo gastronomía |
-| `/demo/armar` | Demo Express: personaliza nombre/color en URL (sin Firebase) |
+| `/demo` | Legacy Express — **público OFF** → `/demos` |
+| `/demo/owner` | Legacy Express panel — **público OFF** → `/demos` |
+| `/demo/armar` | Demo Express builder — **público OFF** → `/demos` |
 | `/demo/pizzeria` | **Fit A** pizzería/empanadas (cliente) |
 | `/demo/pizzeria/owner` | Panel pizzería |
 | `/demo/pizzeria/order/:id` | Seguimiento pizzería |
