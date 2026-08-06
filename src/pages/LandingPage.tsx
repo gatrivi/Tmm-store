@@ -368,29 +368,43 @@ export default function LandingPage() {
       </header>
 
       <main className="pb-24 md:pb-0">
-        {/* Hero */}
-        <section id="hero" className="relative scroll-mt-24 overflow-hidden border-b border-[color:var(--lp-border)]">
+        {/* Hero — full-bleed product plane (mobile first) */}
+        <section id="hero" className="relative isolate min-h-[100svh] scroll-mt-24 overflow-hidden border-b border-[color:var(--lp-border)]">
+          <div className="absolute inset-0 grid grid-cols-3" aria-hidden>
+            {HERO_PREVIEWS.map(item => (
+              <div key={item.to} className="relative min-h-full overflow-hidden">
+                <img
+                  src={item.src}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  loading="eager"
+                />
+              </div>
+            ))}
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--lp-bg)] via-[color:var(--lp-bg)]/92 to-[color:var(--lp-bg)]" />
           <div
-            className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:radial-gradient(color-mix(in_srgb,var(--lp-text)_55%,transparent)_0.7px,transparent_0.7px)] [background-size:18px_18px]"
-          />
-          <div
-            className="pointer-events-none absolute -left-24 top-[-10%] h-[70%] w-[70%] rounded-full blur-3xl"
+            className="pointer-events-none absolute -left-20 top-0 h-[55%] w-[70%] rounded-full blur-3xl"
             style={{ background: 'radial-gradient(circle, var(--lp-glow), transparent 68%)' }}
           />
           <div
-            className="pointer-events-none absolute -right-16 bottom-[-20%] h-[55%] w-[60%] rounded-full blur-3xl"
+            className="pointer-events-none absolute -right-10 bottom-10 h-[40%] w-[55%] rounded-full blur-3xl"
             style={{ background: 'radial-gradient(circle, var(--lp-glow-2), transparent 70%)' }}
           />
-          <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-14 sm:px-6 sm:pb-16 sm:pt-20 lg:px-8 lg:pb-20 lg:pt-24">
+
+          <div className="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-4 pb-28 pt-20 sm:px-6 sm:pb-16 sm:pt-24 lg:px-8 lg:pb-20">
             <div className="max-w-4xl">
+              <p className="mb-3 text-[10px] font-black uppercase tracking-[0.22em] text-[var(--lp-text-muted)] sm:mb-4">
+                GATRIVI.COM
+              </p>
               <div
-                className="mb-5 inline-flex items-center gap-2 rounded-full border border-[color:var(--lp-border)] bg-[var(--lp-surface)]/90 px-3 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-[var(--lp-text-muted)] shadow-sm backdrop-blur-sm sm:mb-6 sm:text-xs"
+                className="mb-5 inline-flex items-center gap-2 rounded-full border border-[color:var(--lp-border)] bg-[var(--lp-surface)]/85 px-3 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-[var(--lp-text-muted)] shadow-sm backdrop-blur-md sm:mb-6 sm:text-xs"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--lp-accent)]" />
                 {hero.badge}
               </div>
 
-              <h1 className="text-[clamp(2.15rem,8.2vw,5rem)] font-black leading-[0.94] tracking-[-0.07em]">
+              <h1 className="text-[clamp(2.2rem,8.5vw,5rem)] font-black leading-[0.94] tracking-[-0.07em]">
                 {hero.headline.map((line, i) => (
                   <span
                     key={line}
@@ -431,7 +445,7 @@ export default function LandingPage() {
                 </a>
                 <a
                   href="#probar"
-                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border-2 border-[color:var(--lp-border)] bg-[var(--lp-surface)]/80 px-7 text-sm font-black backdrop-blur-sm transition hover:border-[var(--lp-ink)]"
+                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border-2 border-[color:var(--lp-border)] bg-[var(--lp-surface)]/85 px-7 text-sm font-black backdrop-blur-md transition hover:border-[var(--lp-ink)]"
                 >
                   Probar una muestra
                 </a>
@@ -445,30 +459,6 @@ export default function LandingPage() {
                   </span>
                 ))}
               </div>
-            </div>
-
-            <div className="mt-10 grid grid-cols-3 gap-2 sm:mt-14 sm:gap-3 md:max-w-3xl">
-              {HERO_PREVIEWS.map((item, i) => (
-                <Link
-                  key={item.to}
-                  to={withAttribution(item.to)}
-                  className={`group relative aspect-[3/4] overflow-hidden rounded-[1.25rem] border border-[color:var(--lp-border)] bg-[var(--lp-surface)] shadow-[0_18px_40px_-24px_rgba(0,0,0,0.55)] transition hover:-translate-y-1 sm:aspect-[4/5] sm:rounded-[1.5rem] ${
-                    i === 1 ? 'translate-y-2 sm:translate-y-3' : ''
-                  }`}
-                >
-                  <img
-                    src={item.src}
-                    alt=""
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
-                    loading="eager"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-2.5 sm:p-3.5">
-                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/70">{item.label}</p>
-                    <p className="text-xs font-black text-white sm:text-sm">{item.hint}</p>
-                  </div>
-                </Link>
-              ))}
             </div>
           </div>
         </section>
