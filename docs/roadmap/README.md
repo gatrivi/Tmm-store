@@ -18,6 +18,7 @@ Purpose: future Trufi work — competitive parity with PedidoDirecto, then Premi
 | **Demo Aguacats (ex Refcurcum)** | [demo-aguacats.md](./demo-aguacats.md) |
 | **Demo pizzería Fit A (shipped)** | [demo-pizzeria.md](./demo-pizzeria.md) |
 | **Demo carnicería Gabriel (Hito 1 done)** | [demo-carniceria-gabriel.md](./demo-carniceria-gabriel.md) |
+| **Demo Canavesi Carnes (plan)** | [demo-canavesi.md](./demo-canavesi.md) · gaps [../canavesi-content-gaps.md](../canavesi-content-gaps.md) |
 | **Plan verticales (quién compra + demos)** | [vertical-demos-plan.md](./vertical-demos-plan.md) |
 | vs PedidoDirecto today | [competitive-parity.md](./competitive-parity.md) |
 | Delivery sequence | [phases.md](./phases.md) |

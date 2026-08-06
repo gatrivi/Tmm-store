@@ -7,7 +7,7 @@
 | **Fecha snapshot** | 2026-07-31 |
 | **Versión** | `1.16.1` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Cambio actual** | demo Aguacats (ex Refcurcum) `/demo/aguacats` |
+| **Cambio actual** | plan demo Canavesi Carnes (Olivos Borges) — docs |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
