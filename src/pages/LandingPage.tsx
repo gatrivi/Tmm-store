@@ -237,6 +237,27 @@ const faqs = [
   },
 ];
 
+const HERO_PREVIEWS = [
+  {
+    label: 'Tienda',
+    hint: 'Pizzería',
+    src: '/demos/pizzeria/muzza.jpg',
+    to: '/demo/pizzeria',
+  },
+  {
+    label: 'Landing',
+    hint: 'Mamá Mabel',
+    src: '/demos/mamabel/picked/hero.jpg',
+    to: '/demo/mamabel',
+  },
+  {
+    label: 'Catálogo',
+    hint: 'Librería',
+    src: '/demos/presets/libreria/cuaderno.jpg',
+    to: '/demo?rubro=libreria',
+  },
+] as const;
+
 const HERO_RUBROS = (Object.keys(PROSPECT_CATEGORIES) as ProspectCategory[]).filter(id =>
   ['petshop', 'pizzeria', 'polleria', 'verduleria', 'cafeteria', 'libreria', 'grafica', 'distribuidora-lacteos', 'molino-mayorista', 'panaderia', 'gastronomia'].includes(id),
 );
@@ -347,20 +368,44 @@ export default function LandingPage() {
       </header>
 
       <main className="pb-24 md:pb-0">
-        {/* Hero */}
-        <section id="hero" className="relative scroll-mt-24 border-b border-[color:var(--lp-border)]">
+        {/* Hero — full-bleed product plane (mobile first) */}
+        <section id="hero" className="relative isolate min-h-[100svh] scroll-mt-24 overflow-hidden border-b border-[color:var(--lp-border)]">
+          <div className="absolute inset-0 grid grid-cols-3" aria-hidden>
+            {HERO_PREVIEWS.map(item => (
+              <div key={item.to} className="relative min-h-full overflow-hidden">
+                <img
+                  src={item.src}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  loading="eager"
+                />
+              </div>
+            ))}
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--lp-bg)]/55 via-[color:var(--lp-bg)]/72 to-[color:var(--lp-bg)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,color-mix(in_srgb,var(--lp-bg)_35%,transparent)_100%)]" />
           <div
-            className="pointer-events-none absolute inset-0 opacity-45 [background-image:radial-gradient(color-mix(in_srgb,var(--lp-ink)_70%,transparent)_0.7px,transparent_0.7px)] [background-size:18px_18px]"
+            className="pointer-events-none absolute -left-20 top-0 h-[55%] w-[70%] rounded-full blur-3xl"
+            style={{ background: 'radial-gradient(circle, var(--lp-glow), transparent 68%)' }}
           />
-          <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+          <div
+            className="pointer-events-none absolute -right-10 bottom-10 h-[40%] w-[55%] rounded-full blur-3xl"
+            style={{ background: 'radial-gradient(circle, var(--lp-glow-2), transparent 70%)' }}
+          />
+
+          <div className="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-4 pb-28 pt-20 sm:px-6 sm:pb-16 sm:pt-24 lg:px-8 lg:pb-20">
             <div className="max-w-4xl">
+              <p className="mb-3 text-[10px] font-black uppercase tracking-[0.22em] text-[var(--lp-text-muted)] sm:mb-4">
+                GATRIVI.COM
+              </p>
               <div
-                className="mb-6 inline-flex items-center gap-2 rounded-full border border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-[var(--lp-text-muted)] shadow-sm"
+                className="mb-5 inline-flex items-center gap-2 rounded-full border border-[color:var(--lp-border)] bg-[var(--lp-surface)]/85 px-3 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-[var(--lp-text-muted)] shadow-sm backdrop-blur-md sm:mb-6 sm:text-xs"
               >
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--lp-accent)]" />
                 {hero.badge}
               </div>
 
-              <h1 className="text-[clamp(2.4rem,6.5vw,5rem)] font-black leading-[0.92] tracking-[-0.07em]">
+              <h1 className="text-[clamp(2.2rem,8.5vw,5rem)] font-black leading-[0.94] tracking-[-0.07em]">
                 {hero.headline.map((line, i) => (
                   <span
                     key={line}
@@ -377,16 +422,21 @@ export default function LandingPage() {
                 ))}
               </h1>
 
-              <p className="mt-7 max-w-2xl text-lg leading-relaxed text-[var(--lp-text-muted)] sm:text-xl">
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-[var(--lp-text-muted)] sm:mt-7 sm:text-xl">
                 {hero.subheadline.map((line, i) => (
                   <span key={line}>
-                    {i > 0 && <br className="hidden sm:block" />}
+                    {i > 0 && (
+                      <>
+                        <br className="hidden sm:block" />
+                        <span className="sm:hidden"> </span>
+                      </>
+                    )}
                     {line}
                   </span>
                 ))}
               </p>
 
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:items-center">
                 <a
                   href="#soluciones"
                   className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[var(--lp-ink)] px-7 text-sm font-black text-[var(--lp-on-ink)] transition hover:-translate-y-0.5 hover:bg-[var(--lp-accent)]"
@@ -396,16 +446,16 @@ export default function LandingPage() {
                 </a>
                 <a
                   href="#probar"
-                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border-2 border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-7 text-sm font-black transition hover:border-[var(--lp-ink)]"
+                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border-2 border-[color:var(--lp-border)] bg-[var(--lp-surface)]/85 px-7 text-sm font-black backdrop-blur-md transition hover:border-[var(--lp-ink)]"
                 >
                   Probar una muestra
                 </a>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold text-[var(--lp-text-muted)]">
+              <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-bold text-[var(--lp-text-muted)] sm:mt-8 sm:gap-x-5 sm:text-xs">
                 {hero.trust.map(item => (
                   <span key={item} className="flex items-center gap-1.5">
-                    <Check size={14} />
+                    <Check size={14} className="text-[var(--lp-accent)]" />
                     {item}
                   </span>
                 ))}
@@ -415,7 +465,7 @@ export default function LandingPage() {
         </section>
 
         {/* Social proof bar */}
-        <section className="border-b border-[color:var(--lp-border)] bg-[var(--lp-ink)] text-white">
+        <section className="border-b border-[color:var(--lp-border)] bg-[var(--lp-panel)] text-[var(--lp-on-panel)]">
           <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-white/10 px-4 sm:grid-cols-4 lg:px-8">
             {[
               ['Catálogo', Tags],
@@ -427,7 +477,7 @@ export default function LandingPage() {
               return (
                 <div
                   key={label as string}
-                  className="flex items-center justify-center gap-2 bg-[var(--lp-ink)] px-3 py-5 text-xs font-black uppercase tracking-[0.1em] text-white/70"
+                  className="flex items-center justify-center gap-2 bg-[var(--lp-panel)] px-3 py-5 text-xs font-black uppercase tracking-[0.1em] text-[var(--lp-on-panel)]/70"
                 >
                   <ItemIcon size={16} className="text-[var(--lp-highlight)]" />
                   {label as string}
@@ -456,7 +506,7 @@ export default function LandingPage() {
                   key={sol.id}
                   className={`relative flex flex-col rounded-[2rem] border p-6 sm:p-8 ${
                     sol.featured
-                      ? 'border-[var(--lp-ink)] bg-[var(--lp-ink)] text-white shadow-2xl'
+                      ? 'border-[var(--lp-ink)] bg-[var(--lp-panel)] text-[var(--lp-on-panel)] shadow-2xl'
                       : 'border-[color:var(--lp-border)] bg-[var(--lp-bg)]'
                   }`}
                 >
@@ -477,7 +527,7 @@ export default function LandingPage() {
                     <sol.icon size={24} />
                   </div>
                   <h3 className="mt-6 text-2xl font-black tracking-[-0.04em]">{sol.title}</h3>
-                  <p className={`mt-3 text-sm font-bold ${sol.featured ? 'text-white/65' : 'text-[var(--lp-text-muted)]'}`}>
+                  <p className={`mt-3 text-sm font-bold ${sol.featured ? 'text-[var(--lp-on-panel)]/65' : 'text-[var(--lp-text-muted)]'}`}>
                     {sol.ideal}
                   </p>
                   <ul className="mt-5 flex-1 space-y-2.5">
@@ -487,13 +537,13 @@ export default function LandingPage() {
                           size={16}
                           className={`mt-0.5 shrink-0 ${sol.featured ? 'text-[var(--lp-highlight)]' : 'text-[var(--lp-accent)]'}`}
                         />
-                        <span className={sol.featured ? 'text-white/80' : 'text-[var(--lp-text-muted)]'}>{b}</span>
+                        <span className={sol.featured ? 'text-[var(--lp-on-panel)]/80' : 'text-[var(--lp-text-muted)]'}>{b}</span>
                       </li>
                     ))}
                   </ul>
                   <p
                     className={`mt-5 text-sm font-bold leading-relaxed ${
-                      sol.featured ? 'text-white/70' : 'text-[var(--lp-text-muted)]'
+                      sol.featured ? 'text-[var(--lp-on-panel)]/70' : 'text-[var(--lp-text-muted)]'
                     }`}
                   >
                     {sol.closing}
@@ -503,7 +553,7 @@ export default function LandingPage() {
                     className={`mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full text-sm font-black transition hover:-translate-y-0.5 ${
                       sol.featured
                         ? 'bg-[var(--lp-highlight)] text-[var(--lp-text)] hover:bg-[var(--lp-on-ink)]'
-                        : 'bg-[var(--lp-ink)] text-white hover:bg-[var(--lp-accent)]'
+                        : 'bg-[var(--lp-panel)] text-[var(--lp-on-panel)] hover:bg-[var(--lp-accent)]'
                     }`}
                   >
                     {sol.cta}
@@ -552,7 +602,7 @@ export default function LandingPage() {
         </section>
 
         {/* Beneficios / mensajes clave */}
-        <section id="beneficios" className="scroll-mt-24 border-b border-[color:var(--lp-border)] bg-[var(--lp-ink)] py-16 text-white sm:py-20">
+        <section id="beneficios" className="scroll-mt-24 border-b border-[color:var(--lp-border)] bg-[var(--lp-panel)] py-16 text-[var(--lp-on-panel)] sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid gap-4 sm:grid-cols-2">
               {keyMessages.map(msg => (
@@ -568,7 +618,7 @@ export default function LandingPage() {
         </section>
 
         {/* Muestras reales */}
-        <section id="muestras" className="scroll-mt-24 border-b border-[color:var(--lp-border)] bg-[var(--lp-ink)] py-20 text-white sm:py-28">
+        <section id="muestras" className="scroll-mt-24 border-b border-[color:var(--lp-border)] bg-[var(--lp-panel)] py-20 text-[var(--lp-on-panel)] sm:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
               <div>
@@ -676,7 +726,7 @@ export default function LandingPage() {
               </div>
               <button
                 type="submit"
-                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--lp-ink)] text-sm font-black text-white hover:bg-[var(--lp-accent)]"
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--lp-ink)] text-sm font-black text-[var(--lp-on-ink)] hover:bg-[var(--lp-accent)]"
               >
                 <WandSparkles size={16} /> Ver mi muestra
               </button>
@@ -732,7 +782,7 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <div className="mt-5 rounded-2xl bg-[var(--lp-ink)] p-5">
+              <div className="mt-5 rounded-2xl bg-[var(--lp-panel)] p-5 text-[var(--lp-on-panel)]">
                 <p className="text-xs font-black uppercase tracking-[0.12em] text-[var(--lp-highlight)]">Entrega</p>
                 <p className="mt-2 text-xl font-black">
                   Link en {SITE_DOMAIN}, QR y prueba desde el celular.
@@ -745,13 +795,13 @@ export default function LandingPage() {
         {/* Promo primeros 10 */}
         <section id="reserva" className="scroll-mt-24 border-b border-[color:var(--lp-border)] py-20 sm:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <article className="rounded-[2rem] border-2 border-[var(--lp-ink)] bg-[var(--lp-ink)] p-6 text-white shadow-2xl sm:p-10">
+            <article className="rounded-[2rem] border-2 border-[var(--lp-panel)] bg-[var(--lp-panel)] p-6 text-[var(--lp-on-panel)] shadow-2xl sm:p-10">
               <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--lp-highlight)]">Tienda completa · primeros 10</p>
               <h2 className="mt-4 max-w-3xl text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl">
                 Promoción tienda online completa
               </h2>
               <p className="mt-4 text-3xl font-black text-[var(--lp-highlight)]">{priceLabel}</p>
-              <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/65">
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-[var(--lp-on-panel)]/65">
                 90% de descuento sobre implementación de $650.000. Catálogo y landing: consultar.
               </p>
               <a
@@ -789,7 +839,7 @@ export default function LandingPage() {
                   key={tier.name}
                   className={`relative flex flex-col rounded-[2rem] border p-6 sm:p-8 ${
                     tier.featured
-                      ? 'border-[var(--lp-ink)] bg-[var(--lp-ink)] text-white shadow-2xl lg:-translate-y-2'
+                      ? 'border-[var(--lp-ink)] bg-[var(--lp-panel)] text-[var(--lp-on-panel)] shadow-2xl lg:-translate-y-2'
                       : 'border-[color:var(--lp-border)] bg-[var(--lp-bg)]'
                   }`}
                 >
@@ -806,21 +856,21 @@ export default function LandingPage() {
                     {tier.eyebrow}
                   </p>
                   <h3 className="mt-4 text-2xl font-black tracking-[-0.045em]">{tier.name}</h3>
-                  <p className={`mt-3 leading-relaxed ${tier.featured ? 'text-white/58' : 'text-[var(--lp-text-muted)]'}`}>
+                  <p className={`mt-3 leading-relaxed ${tier.featured ? 'text-[var(--lp-on-panel)]/58' : 'text-[var(--lp-text-muted)]'}`}>
                     {tier.copy}
                   </p>
 
                   <div className={`my-6 border-y py-5 ${tier.featured ? 'border-white/12' : 'border-[color:var(--lp-border)]'}`}>
-                    <p className={`text-xs font-bold ${tier.featured ? 'text-white/45' : 'text-[var(--lp-text-muted)]'}`}>
+                    <p className={`text-xs font-bold ${tier.featured ? 'text-[var(--lp-on-panel)]/45' : 'text-[var(--lp-text-muted)]'}`}>
                       Implementación
                     </p>
                     {'previousSetup' in tier && tier.previousSetup && (
-                      <p className={`mt-1 text-sm font-bold ${tier.featured ? 'text-white/45' : 'text-[var(--lp-text-muted)]'}`}>
+                      <p className={`mt-1 text-sm font-bold ${tier.featured ? 'text-[var(--lp-on-panel)]/45' : 'text-[var(--lp-text-muted)]'}`}>
                         <s>{tier.previousSetup}</s>
                       </p>
                     )}
                     <p className="mt-1 text-2xl font-black">{tier.setup}</p>
-                    <p className={`mt-2 text-sm font-bold ${tier.featured ? 'text-white/55' : 'text-[var(--lp-text-muted)]'}`}>
+                    <p className={`mt-2 text-sm font-bold ${tier.featured ? 'text-[var(--lp-on-panel)]/55' : 'text-[var(--lp-text-muted)]'}`}>
                       {tier.monthly}
                     </p>
                   </div>
@@ -846,7 +896,7 @@ export default function LandingPage() {
                     className={`mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-full text-sm font-black transition hover:-translate-y-0.5 ${
                       tier.featured
                         ? 'bg-[var(--lp-highlight)] text-[var(--lp-text)] hover:bg-[var(--lp-on-ink)]'
-                        : 'bg-[var(--lp-ink)] text-white hover:bg-[var(--lp-accent)]'
+                        : 'bg-[var(--lp-panel)] text-[var(--lp-on-panel)] hover:bg-[var(--lp-accent)]'
                     }`}
                   >
                     {tier.cta}
@@ -900,7 +950,7 @@ export default function LandingPage() {
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
                 href={consultHref}
-                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[var(--lp-ink)] px-7 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-[var(--lp-highlight)] hover:text-[var(--lp-text)]"
+                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[var(--lp-ink)] px-7 text-sm font-black text-[var(--lp-on-ink)] transition hover:-translate-y-1 hover:bg-[var(--lp-highlight)] hover:text-[var(--lp-text)]"
               >
                 Hablar por WhatsApp
                 <ArrowRight size={18} />
@@ -915,7 +965,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="bg-[var(--lp-ink)] py-8 text-white">
+        <section className="bg-[var(--lp-panel)] py-8 text-[var(--lp-on-panel)]">
           <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
             <div className="flex items-center gap-3">
               <Zap size={18} className="text-[var(--lp-highlight)]" />
@@ -960,7 +1010,7 @@ export default function LandingPage() {
           </a>
           <a
             href={consultHref}
-            className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--lp-ink)] text-sm font-black text-white"
+            className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--lp-ink)] text-sm font-black text-[var(--lp-on-ink)]"
           >
             Consultar
           </a>

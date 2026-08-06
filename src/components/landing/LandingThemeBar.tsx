@@ -24,19 +24,18 @@ export default function LandingThemeBar({
 
   return (
     <div
-      className="flex flex-wrap items-center gap-2 rounded-full border border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-2 py-1.5 text-[10px] font-black uppercase tracking-[0.08em] shadow-sm"
+      className="flex max-w-[min(100%,16.5rem)] items-center gap-1 overflow-x-auto rounded-full border border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-1.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] shadow-sm sm:max-w-none sm:gap-2 sm:px-2 sm:py-1.5"
       aria-label="Apariencia landing"
     >
       <button
         type="button"
         onClick={() => setTheme(isDark ? 'light' : 'dark')}
-        className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--lp-surface-alt)] text-[var(--lp-text)]"
+        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--lp-surface-alt)] text-[var(--lp-text)]"
         aria-label={isDark ? 'Modo claro' : 'Modo oscuro'}
       >
         {isDark ? <Sun size={14} /> : <Moon size={14} />}
       </button>
 
-      <span className="hidden text-[var(--lp-text-muted)] sm:inline">Paleta</span>
       {LANDING_PALETTES.map(p => (
         <button
           key={p.id}
@@ -46,7 +45,7 @@ export default function LandingThemeBar({
             writeLandingPalette(p.id);
             onPalette(p.id);
           }}
-          className={`h-7 w-7 rounded-full border-2 transition ${
+          className={`h-6 w-6 shrink-0 rounded-full border-2 transition sm:h-7 sm:w-7 ${
             paletteId === p.id ? 'border-[var(--lp-accent)] scale-110' : 'border-transparent'
           }`}
           style={{ backgroundColor: p.swatch }}
@@ -55,15 +54,14 @@ export default function LandingThemeBar({
         />
       ))}
 
-      <span className="mx-1 hidden h-4 w-px bg-[color:var(--lp-border)] sm:block" />
+      <span className="mx-0.5 hidden h-4 w-px shrink-0 bg-[color:var(--lp-border)] sm:block" />
 
-      <span className="hidden text-[var(--lp-text-muted)] sm:inline">Hero</span>
       {(['a', 'b'] as HeroVariant[]).map(v => (
         <button
           key={v}
           type="button"
           onClick={() => onHeroVariant(v)}
-          className={`rounded-full px-2.5 py-1 ${
+          className={`shrink-0 rounded-full px-2 py-1 ${
             heroVariant === v
               ? 'bg-[var(--lp-ink)] text-[var(--lp-on-ink)]'
               : 'text-[var(--lp-text-muted)]'
@@ -75,4 +73,3 @@ export default function LandingThemeBar({
     </div>
   );
 }
-
