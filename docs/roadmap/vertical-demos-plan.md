@@ -65,10 +65,14 @@ No si: solo marketing genérico — usar Express.
 
 - [ ] `src/data/demos/<id>.ts` (copy + 6–10 productos + seed orders)
 - [ ] Rutas en registry (mismo patrón carnicería)
-- [ ] Assets `public/demos/<id>/` (hero + 3–4 fotos)
+- [ ] Assets `public/demos/<id>/` (hero + **foto por producto**)
 - [ ] Brief corto en `docs/roadmap/demo-<id>.md` (problema + 60s script)
 - [ ] Link en [`prospect-demo.md`](../ops/prospect-demo.md) + índice README
-- [ ] `npm run check:demo` verde
+- [ ] `npm run check:demo` verde (`demoPhotos.selfcheck` exige archivos en disco)
+
+## Fotos en demos (regla ventas)
+
+Catálogo vacío = demo mala. Presets: `/demos/presets/<rubro>/<itemId>.jpg`. Verticales: `public/demos/<id>/`.
 
 ## Decisión pedida
 

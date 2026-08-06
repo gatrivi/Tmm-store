@@ -41,7 +41,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Bife ancho',
     category: 'parrilla',
     description: 'Cortado en bifes',
-    images: [],
+    images: ['/demos/carniceria/bife-ancho.jpg'],
     options: kgOptions(25200),
   },
   {
@@ -57,7 +57,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Picada especial',
     category: 'diario',
     description: 'Para hamburguesas, salsa o relleno',
-    images: [],
+    images: ['/demos/carniceria/picada.jpg'],
     options: kgOptions(14000),
   },
   {
@@ -65,7 +65,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Milanesas de carne',
     category: 'listos',
     description: 'Empanadas y listas para cocinar',
-    images: [],
+    images: ['/demos/carniceria/milanesas.jpg'],
     options: [
       { id: 'half', label: 'Bandeja ½ kg aprox.', price: 17450 },
       { id: 'kilo', label: 'Bandeja 1 kg aprox.', price: 34900 },
@@ -76,7 +76,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Hamburguesas caseras',
     category: 'listos',
     description: 'Medallones frescos',
-    images: [],
+    images: ['/demos/carniceria/hamburguesas.jpg'],
     options: [{ id: 'pack4', label: 'Pack de 4', price: 12900 }],
   },
 ];

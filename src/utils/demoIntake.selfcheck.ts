@@ -14,7 +14,7 @@ function main() {
   assert.equal(PRESET_PETSHOP.menuItems.length, 8);
   assert.match(PRESET_PETSHOP.copy.cartCta, /Armar pedido/i);
   assert.match(PRESET_PETSHOP.copy.totalLabel, /estimado/i);
-  assert.ok(PRESET_PETSHOP.menuItems.every(i => i.images.length === 0));
+  assert.ok(PRESET_PETSHOP.menuItems.every(i => i.images.length >= 1));
 
   const pet = parseProspectDemo('?rubro=petshop');
   assert.equal(pet.preset?.id, 'petshop');

@@ -55,18 +55,30 @@ function cats(...names: [string, string][]): MenuCategory[] {
   return names.map(([id, name], i) => ({ id, name, sortOrder: i }));
 }
 
-function item(
-  id: string,
-  name: string,
-  category: string,
-  description: string,
-  options: MenuItemType['options'],
-  badge?: string,
-): MenuItemType {
-  return { id, name, category, description, images: [], options, ...(badge ? { badge } : {}) };
+/** Stock photos live at `/demos/presets/<presetId>/<itemId>.jpg`. */
+function itemFor(presetId: string) {
+  return function item(
+    id: string,
+    name: string,
+    category: string,
+    description: string,
+    options: MenuItemType['options'],
+    badge?: string,
+  ): MenuItemType {
+    return {
+      id,
+      name,
+      category,
+      description,
+      images: [`/demos/presets/${presetId}/${id}.jpg`],
+      options,
+      ...(badge ? { badge } : {}),
+    };
+  };
 }
 
 /** Wholesale-first cut (Pasada A priority). */
+const lacteosItem = itemFor('distribuidora-lacteos');
 export const PRESET_DISTRIBUIDORA_LACTEOS: DemoPreset = {
   id: 'distribuidora-lacteos',
   label: 'Distribuidora de lácteos',
@@ -76,35 +88,35 @@ export const PRESET_DISTRIBUIDORA_LACTEOS: DemoPreset = {
   defaultBusinessName: 'Distribuidora de lácteos',
   menuCategories: cats(['leches', 'Leches y cremas'], ['quesos', 'Quesos'], ['reposicion', 'Reposición']),
   menuItems: [
-    item('leche-lv', 'Leche larga vida', 'leches', 'Muestra ilustrativa · pedí por unidad, pack o caja', [
+    lacteosItem('leche-lv', 'Leche larga vida', 'leches', 'Muestra ilustrativa · pedí por unidad, pack o caja', [
       { id: 'u', label: 'Unidad', price: 1200 },
       { id: 'pack', label: 'Pack x6', price: 6800 },
       { id: 'caja', label: 'Caja x12', price: 12800 },
     ], 'Bulto'),
-    item('crema', 'Crema de leche', 'leches', 'Presentación ilustrativa', [
+    lacteosItem('crema', 'Crema de leche', 'leches', 'Presentación ilustrativa', [
       { id: 'u', label: 'Unidad', price: 2100 },
       { id: 'pack', label: 'Pack x6', price: 11500 },
     ]),
-    item('manteca', 'Manteca', 'leches', 'Unidad o caja', [
+    lacteosItem('manteca', 'Manteca', 'leches', 'Unidad o caja', [
       { id: 'u', label: 'Unidad', price: 2800 },
       { id: 'caja', label: 'Caja x10', price: 25500 },
     ]),
-    item('yogur', 'Yogur', 'leches', 'Pack de reposición', [
+    lacteosItem('yogur', 'Yogur', 'leches', 'Pack de reposición', [
       { id: 'pack', label: 'Pack x8', price: 7200 },
     ]),
-    item('queso-cremoso', 'Queso cremoso', 'quesos', 'Media horma / horma', [
+    lacteosItem('queso-cremoso', 'Queso cremoso', 'quesos', 'Media horma / horma', [
       { id: 'media', label: 'Media horma', price: 9800 },
       { id: 'horma', label: 'Horma', price: 18500 },
     ]),
-    item('mozzarella', 'Mozzarella', 'quesos', 'Barra o horma', [
+    lacteosItem('mozzarella', 'Mozzarella', 'quesos', 'Barra o horma', [
       { id: 'barra', label: 'Barra', price: 6500 },
       { id: 'horma', label: 'Horma', price: 22000 },
     ]),
-    item('ddl', 'Dulce de leche', 'quesos', 'Pote o balde', [
+    lacteosItem('ddl', 'Dulce de leche', 'quesos', 'Pote o balde', [
       { id: 'pote', label: 'Pote', price: 4200 },
       { id: 'balde', label: 'Balde', price: 18900 },
     ]),
-    item('combo-repo', 'Combo de reposición', 'reposicion', 'Mix semanal ilustrativo · pedido mínimo a confirmar', [
+    lacteosItem('combo-repo', 'Combo de reposición', 'reposicion', 'Mix semanal ilustrativo · pedido mínimo a confirmar', [
       { id: 'semanal', label: 'Pedido semanal', price: 85000 },
     ], 'Reposición'),
   ],
@@ -124,6 +136,7 @@ export const PRESET_DISTRIBUIDORA_LACTEOS: DemoPreset = {
   }),
 };
 
+const molinoItem = itemFor('molino-mayorista');
 export const PRESET_MOLINO_MAYORISTA: DemoPreset = {
   id: 'molino-mayorista',
   label: 'Molino / insumos',
@@ -133,38 +146,38 @@ export const PRESET_MOLINO_MAYORISTA: DemoPreset = {
   defaultBusinessName: 'Molino Florida',
   menuCategories: cats(['harinas', 'Harinas'], ['granos', 'Granos y semillas'], ['panif', 'Insumos panificación']),
   menuItems: [
-    item('harina-000', 'Harina blanca 000', 'harinas', 'Muestra ilustrativa · bolsa / bulto', [
+    molinoItem('harina-000', 'Harina blanca 000', 'harinas', 'Muestra ilustrativa · bolsa / bulto', [
       { id: '1kg', label: '1 kg', price: 1800 },
       { id: '5kg', label: '5 kg', price: 8200 },
       { id: '25kg', label: '25 kg', price: 35500 },
     ], 'Bulto'),
-    item('harina-int', 'Harina integral', 'harinas', '1 / 5 / 25 kg', [
+    molinoItem('harina-int', 'Harina integral', 'harinas', '1 / 5 / 25 kg', [
       { id: '1kg', label: '1 kg', price: 2200 },
       { id: '5kg', label: '5 kg', price: 9800 },
       { id: '25kg', label: '25 kg', price: 42000 },
     ]),
-    item('harina-centeno', 'Harina de centeno', 'harinas', '1 / 5 / 25 kg', [
+    molinoItem('harina-centeno', 'Harina de centeno', 'harinas', '1 / 5 / 25 kg', [
       { id: '1kg', label: '1 kg', price: 2600 },
       { id: '5kg', label: '5 kg', price: 11800 },
       { id: '25kg', label: '25 kg', price: 48000 },
     ]),
-    item('avena', 'Avena', 'granos', '1 kg / 5 kg', [
+    molinoItem('avena', 'Avena', 'granos', '1 kg / 5 kg', [
       { id: '1kg', label: '1 kg', price: 2400 },
       { id: '5kg', label: '5 kg', price: 10500 },
     ]),
-    item('semillas', 'Semillas mix', 'granos', '500 g / 1 kg', [
+    molinoItem('semillas', 'Semillas mix', 'granos', '500 g / 1 kg', [
       { id: '500', label: '500 g', price: 3900 },
       { id: '1kg', label: '1 kg', price: 7200 },
     ]),
-    item('frutos', 'Frutos secos', 'granos', '500 g / 1 kg', [
+    molinoItem('frutos', 'Frutos secos', 'granos', '500 g / 1 kg', [
       { id: '500', label: '500 g', price: 8500 },
       { id: '1kg', label: '1 kg', price: 15800 },
     ]),
-    item('legumbres', 'Legumbres', 'granos', '1 kg / 5 kg', [
+    molinoItem('legumbres', 'Legumbres', 'granos', '1 kg / 5 kg', [
       { id: '1kg', label: '1 kg', price: 2800 },
       { id: '5kg', label: '5 kg', price: 12500 },
     ]),
-    item('insumos', 'Insumos de panificación', 'panif', 'Levadura, mejoradores — stock a confirmar', [
+    molinoItem('insumos', 'Insumos de panificación', 'panif', 'Levadura, mejoradores — stock a confirmar', [
       { id: 'kit', label: 'Kit básico', price: 9500 },
     ], 'Mayorista'),
   ],
@@ -185,6 +198,7 @@ export const PRESET_MOLINO_MAYORISTA: DemoPreset = {
   }),
 };
 
+const polleriaItem = itemFor('polleria');
 export const PRESET_POLLERIA: DemoPreset = {
   id: 'polleria',
   label: 'Pollería',
@@ -194,27 +208,27 @@ export const PRESET_POLLERIA: DemoPreset = {
   defaultBusinessName: 'Pollería del barrio',
   menuCategories: cats(['pollo', 'Pollo'], ['combos', 'Combos'], ['extras', 'Extras']),
   menuItems: [
-    item('entero', 'Pollo entero', 'pollo', 'Muestra ilustrativa', [
+    polleriaItem('entero', 'Pollo entero', 'pollo', 'Muestra ilustrativa', [
       { id: 'entero', label: 'Entero', price: 8900 },
       { id: 'medio', label: 'Medio', price: 4800 },
     ]),
-    item('spiedo', 'Pollo al spiedo', 'pollo', 'Listo para llevar', [
+    polleriaItem('spiedo', 'Pollo al spiedo', 'pollo', 'Listo para llevar', [
       { id: 'u', label: 'Unidad', price: 9500 },
     ], 'Más pedido'),
-    item('combo-papas', 'Combo pollo + papas', 'combos', 'Para 1–2', [
+    polleriaItem('combo-papas', 'Combo pollo + papas', 'combos', 'Para 1–2', [
       { id: 'u', label: 'Combo', price: 12500 },
     ]),
-    item('combo-fam', 'Combo familiar', 'combos', 'Pollo + papas + ensalada', [
+    polleriaItem('combo-fam', 'Combo familiar', 'combos', 'Pollo + papas + ensalada', [
       { id: 'u', label: 'Familiar', price: 18900 },
     ]),
-    item('papas', 'Papas fritas', 'extras', 'Chicas / grandes', [
+    polleriaItem('papas', 'Papas fritas', 'extras', 'Chicas / grandes', [
       { id: 'ch', label: 'Chicas', price: 3200 },
       { id: 'gr', label: 'Grandes', price: 4800 },
     ]),
-    item('ensalada', 'Ensalada', 'extras', 'Porción', [
+    polleriaItem('ensalada', 'Ensalada', 'extras', 'Porción', [
       { id: 'u', label: 'Porción', price: 3500 },
     ]),
-    item('bebida', 'Bebida', 'extras', 'Lata / 1.5 L', [
+    polleriaItem('bebida', 'Bebida', 'extras', 'Lata / 1.5 L', [
       { id: 'lata', label: 'Lata', price: 1800 },
       { id: '15', label: '1.5 L', price: 3200 },
     ]),
@@ -234,6 +248,7 @@ export const PRESET_POLLERIA: DemoPreset = {
   }),
 };
 
+const verduleriaItem = itemFor('verduleria');
 export const PRESET_VERDULERIA: DemoPreset = {
   id: 'verduleria',
   label: 'Verdulería',
@@ -243,35 +258,35 @@ export const PRESET_VERDULERIA: DemoPreset = {
   defaultBusinessName: 'Verdulería del barrio',
   menuCategories: cats(['verdura', 'Verdura'], ['fruta', 'Fruta'], ['otros', 'Otros']),
   menuItems: [
-    item('tomate', 'Tomate', 'verdura', 'Peso aproximado', [
+    verduleriaItem('tomate', 'Tomate', 'verdura', 'Peso aproximado', [
       { id: 'half', label: '½ kg aprox.', price: 1800 },
       { id: 'kg', label: '1 kg aprox.', price: 3400 },
     ]),
-    item('papa', 'Papa', 'verdura', 'Peso aproximado', [
+    verduleriaItem('papa', 'Papa', 'verdura', 'Peso aproximado', [
       { id: '1kg', label: '1 kg aprox.', price: 1200 },
       { id: '2kg', label: '2 kg aprox.', price: 2200 },
     ]),
-    item('cebolla', 'Cebolla', 'verdura', 'Peso aproximado', [
+    verduleriaItem('cebolla', 'Cebolla', 'verdura', 'Peso aproximado', [
       { id: 'half', label: '½ kg aprox.', price: 900 },
       { id: 'kg', label: '1 kg aprox.', price: 1600 },
     ]),
-    item('banana', 'Banana', 'fruta', 'Peso aproximado', [
+    verduleriaItem('banana', 'Banana', 'fruta', 'Peso aproximado', [
       { id: 'half', label: '½ kg aprox.', price: 1500 },
       { id: 'kg', label: '1 kg aprox.', price: 2800 },
     ]),
-    item('manzana', 'Manzana', 'fruta', 'Peso aproximado', [
+    verduleriaItem('manzana', 'Manzana', 'fruta', 'Peso aproximado', [
       { id: 'half', label: '½ kg aprox.', price: 1700 },
       { id: 'kg', label: '1 kg aprox.', price: 3200 },
     ]),
-    item('palta', 'Palta', 'fruta', 'Unidad o pack', [
+    verduleriaItem('palta', 'Palta', 'fruta', 'Unidad o pack', [
       { id: 'u', label: 'Unidad', price: 1200 },
       { id: 'pack', label: 'Pack x3', price: 3200 },
     ]),
-    item('huevos', 'Huevos', 'otros', 'Docena / maple', [
+    verduleriaItem('huevos', 'Huevos', 'otros', 'Docena / maple', [
       { id: 'doc', label: 'Docena', price: 4500 },
       { id: 'maple', label: 'Maple', price: 12500 },
     ]),
-    item('bolson', 'Bolsón semanal', 'otros', 'Mix ilustrativo', [
+    verduleriaItem('bolson', 'Bolsón semanal', 'otros', 'Mix ilustrativo', [
       { id: 'sem', label: 'Bolsón', price: 15000 },
     ], 'Sugerido'),
   ],
@@ -290,6 +305,7 @@ export const PRESET_VERDULERIA: DemoPreset = {
   }),
 };
 
+const cafeteriaItem = itemFor('cafeteria');
 export const PRESET_CAFETERIA: DemoPreset = {
   id: 'cafeteria',
   label: 'Cafetería',
@@ -299,30 +315,30 @@ export const PRESET_CAFETERIA: DemoPreset = {
   defaultBusinessName: 'Café del barrio',
   menuCategories: cats(['cafe', 'Café'], ['comida', 'Para picar'], ['combos', 'Combos']),
   menuItems: [
-    item('espresso', 'Espresso', 'cafe', 'Simple / doble', [
+    cafeteriaItem('espresso', 'Espresso', 'cafe', 'Simple / doble', [
       { id: 's', label: 'Simple', price: 2200 },
       { id: 'd', label: 'Doble', price: 2800 },
     ]),
-    item('cafe-leche', 'Café con leche', 'cafe', 'Chico / grande', [
+    cafeteriaItem('cafe-leche', 'Café con leche', 'cafe', 'Chico / grande', [
       { id: 'ch', label: 'Chico', price: 2800 },
       { id: 'gr', label: 'Grande', price: 3500 },
     ]),
-    item('capuccino', 'Cappuccino', 'cafe', 'Clásico', [
+    cafeteriaItem('capuccino', 'Cappuccino', 'cafe', 'Clásico', [
       { id: 'u', label: 'Taza', price: 3800 },
     ]),
-    item('medialuna', 'Medialuna', 'comida', 'Manteca', [
+    cafeteriaItem('medialuna', 'Medialuna', 'comida', 'Manteca', [
       { id: 'u', label: 'Unidad', price: 1200 },
     ]),
-    item('tostado', 'Tostado', 'comida', 'Jamón y queso', [
+    cafeteriaItem('tostado', 'Tostado', 'comida', 'Jamón y queso', [
       { id: 'u', label: 'Unidad', price: 4500 },
     ]),
-    item('desayuno', 'Combo desayuno', 'combos', 'Café + medialuna', [
+    cafeteriaItem('desayuno', 'Combo desayuno', 'combos', 'Café + medialuna', [
       { id: 'u', label: 'Combo', price: 4800 },
     ], 'Más pedido'),
-    item('jugo', 'Jugo', 'comida', 'Exprimido', [
+    cafeteriaItem('jugo', 'Jugo', 'comida', 'Exprimido', [
       { id: 'u', label: 'Vaso', price: 3200 },
     ]),
-    item('agua', 'Agua', 'comida', '500 ml', [
+    cafeteriaItem('agua', 'Agua', 'comida', '500 ml', [
       { id: 'u', label: 'Botella', price: 1500 },
     ]),
   ],
@@ -341,6 +357,7 @@ export const PRESET_CAFETERIA: DemoPreset = {
   }),
 };
 
+const libreriaItem = itemFor('libreria');
 export const PRESET_LIBRERIA: DemoPreset = {
   id: 'libreria',
   label: 'Librería',
@@ -350,30 +367,30 @@ export const PRESET_LIBRERIA: DemoPreset = {
   defaultBusinessName: 'Librería del barrio',
   menuCategories: cats(['papel', 'Papelería'], ['escrit', 'Escritura'], ['servicios', 'Servicios']),
   menuItems: [
-    item('cuaderno', 'Cuaderno', 'papel', 'A4 / A5', [
+    libreriaItem('cuaderno', 'Cuaderno', 'papel', 'A4 / A5', [
       { id: 'a4', label: 'A4', price: 4200 },
       { id: 'a5', label: 'A5', price: 2800 },
     ]),
-    item('resma', 'Resma A4', 'papel', '500 hojas', [
+    libreriaItem('resma', 'Resma A4', 'papel', '500 hojas', [
       { id: 'u', label: 'Resma', price: 6500 },
     ]),
-    item('lapiceras', 'Lapiceras', 'escrit', 'Pack', [
+    libreriaItem('lapiceras', 'Lapiceras', 'escrit', 'Pack', [
       { id: 'pack', label: 'Pack x4', price: 3200 },
     ]),
-    item('marcadores', 'Marcadores', 'escrit', 'Set', [
+    libreriaItem('marcadores', 'Marcadores', 'escrit', 'Set', [
       { id: 'set', label: 'Set x6', price: 4800 },
     ]),
-    item('carpeta', 'Carpeta', 'papel', 'Oficio', [
+    libreriaItem('carpeta', 'Carpeta', 'papel', 'Oficio', [
       { id: 'u', label: 'Unidad', price: 2500 },
     ]),
-    item('fotocopias', 'Fotocopias', 'servicios', 'B/N y color', [
+    libreriaItem('fotocopias', 'Fotocopias', 'servicios', 'B/N y color', [
       { id: 'bn', label: 'B/N (hoja)', price: 80 },
       { id: 'color', label: 'Color (hoja)', price: 250 },
     ]),
-    item('anillado', 'Anillado', 'servicios', 'Hasta 100 hojas', [
+    libreriaItem('anillado', 'Anillado', 'servicios', 'Hasta 100 hojas', [
       { id: 'u', label: 'Unidad', price: 3500 },
     ]),
-    item('combo', 'Combo escolar / oficina', 'servicios', 'Mix ilustrativo', [
+    libreriaItem('combo', 'Combo escolar / oficina', 'servicios', 'Mix ilustrativo', [
       { id: 'u', label: 'Combo', price: 18900 },
     ], 'Sugerido'),
   ],
@@ -392,6 +409,7 @@ export const PRESET_LIBRERIA: DemoPreset = {
   }),
 };
 
+const graficaItem = itemFor('grafica');
 export const PRESET_GRAFICA: DemoPreset = {
   id: 'grafica',
   label: 'Gráfica / imprenta',
@@ -401,32 +419,32 @@ export const PRESET_GRAFICA: DemoPreset = {
   defaultBusinessName: 'Gráfica del barrio',
   menuCategories: cats(['impresos', 'Impresos'], ['gran', 'Gran formato'], ['acabado', 'Acabados']),
   menuItems: [
-    item('tarjetas', 'Tarjetas personales', 'impresos', 'Indicá papel en notas', [
+    graficaItem('tarjetas', 'Tarjetas personales', 'impresos', 'Indicá papel en notas', [
       { id: '100', label: '100 u.', price: 18000 },
       { id: '500', label: '500 u.', price: 42000 },
     ]),
-    item('flyers', 'Flyers A5', 'impresos', '100 / 500', [
+    graficaItem('flyers', 'Flyers A5', 'impresos', '100 / 500', [
       { id: '100', label: '100 u.', price: 22000 },
       { id: '500', label: '500 u.', price: 58000 },
     ]),
-    item('stickers', 'Stickers', 'impresos', '50 / 100', [
+    graficaItem('stickers', 'Stickers', 'impresos', '50 / 100', [
       { id: '50', label: '50 u.', price: 9500 },
       { id: '100', label: '100 u.', price: 16500 },
     ]),
-    item('banner', 'Banner / lona', 'gran', 'Medida en notas', [
+    graficaItem('banner', 'Banner / lona', 'gran', 'Medida en notas', [
       { id: 'm2', label: 'Por m² (ilustrativo)', price: 12000 },
     ]),
-    item('a4', 'Impresión A4', 'impresos', 'B/N y color', [
+    graficaItem('a4', 'Impresión A4', 'impresos', 'B/N y color', [
       { id: 'bn', label: 'B/N', price: 150 },
       { id: 'color', label: 'Color', price: 400 },
     ]),
-    item('anillado', 'Anillado', 'acabado', 'Hasta 100 hojas', [
+    graficaItem('anillado', 'Anillado', 'acabado', 'Hasta 100 hojas', [
       { id: 'u', label: 'Unidad', price: 3500 },
     ]),
-    item('plastificado', 'Plastificado', 'acabado', 'A4', [
+    graficaItem('plastificado', 'Plastificado', 'acabado', 'A4', [
       { id: 'u', label: 'Hoja', price: 800 },
     ]),
-    item('diseno', 'Diseño básico (opcional)', 'acabado', 'Sin upload esta noche — coordinar por WSP', [
+    graficaItem('diseno', 'Diseño básico (opcional)', 'acabado', 'Sin upload esta noche — coordinar por WSP', [
       { id: 'u', label: 'Consulta', price: 15000 },
     ]),
   ],
@@ -445,6 +463,7 @@ export const PRESET_GRAFICA: DemoPreset = {
   }),
 };
 
+const petshopItem = itemFor('petshop');
 export const PRESET_PETSHOP: DemoPreset = {
   id: 'petshop',
   label: 'Pet shop',
@@ -454,36 +473,36 @@ export const PRESET_PETSHOP: DemoPreset = {
   defaultBusinessName: 'Pet shop del barrio',
   menuCategories: cats(['alimento', 'Alimento'], ['higiene', 'Higiene'], ['paseo', 'Paseo y juego']),
   menuItems: [
-    item('alimento-perro', 'Alimento para perro', 'alimento', 'Muestra ilustrativa · marca genérica', [
+    petshopItem('alimento-perro', 'Alimento para perro', 'alimento', 'Muestra ilustrativa · marca genérica', [
       { id: '3kg', label: '3 kg', price: 18500 },
       { id: '15kg', label: '15 kg', price: 68900 },
     ], 'Habitual'),
-    item('alimento-gato', 'Alimento para gato', 'alimento', 'Presentación ilustrativa', [
+    petshopItem('alimento-gato', 'Alimento para gato', 'alimento', 'Presentación ilustrativa', [
       { id: '15', label: '1,5 kg', price: 14200 },
       { id: '75', label: '7,5 kg', price: 52400 },
     ]),
-    item('humedo', 'Alimento húmedo', 'alimento', 'Unidad o pack', [
+    petshopItem('humedo', 'Alimento húmedo', 'alimento', 'Unidad o pack', [
       { id: 'u', label: 'Unidad', price: 1800 },
       { id: 'pack', label: 'Pack x12', price: 18900 },
     ]),
-    item('arena', 'Arena sanitaria', 'higiene', '4 kg / 10 kg', [
+    petshopItem('arena', 'Arena sanitaria', 'higiene', '4 kg / 10 kg', [
       { id: '4kg', label: '4 kg', price: 9800 },
       { id: '10kg', label: '10 kg', price: 21500 },
     ]),
-    item('shampoo', 'Shampoo', 'higiene', '250 ml / 500 ml', [
+    petshopItem('shampoo', 'Shampoo', 'higiene', '250 ml / 500 ml', [
       { id: '250', label: '250 ml', price: 6500 },
       { id: '500', label: '500 ml', price: 9800 },
     ]),
-    item('collar', 'Collar', 'paseo', 'Talles ilustrativos', [
+    petshopItem('collar', 'Collar', 'paseo', 'Talles ilustrativos', [
       { id: 's', label: 'S', price: 4200 },
       { id: 'm', label: 'M', price: 4800 },
       { id: 'l', label: 'L', price: 5500 },
     ]),
-    item('correa', 'Correa', 'paseo', 'Corta / larga', [
+    petshopItem('correa', 'Correa', 'paseo', 'Corta / larga', [
       { id: 'corta', label: 'Corta', price: 5900 },
       { id: 'larga', label: 'Larga', price: 7800 },
     ]),
-    item('snack', 'Snacks / juguete', 'paseo', 'Unidad o pack · atajo “compra habitual” en notas', [
+    petshopItem('snack', 'Snacks / juguete', 'paseo', 'Unidad o pack · atajo “compra habitual” en notas', [
       { id: 'u', label: 'Unidad', price: 3200 },
       { id: 'pack', label: 'Pack', price: 8900 },
     ]),
