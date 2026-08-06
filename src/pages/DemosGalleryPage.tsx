@@ -80,6 +80,16 @@ const SHOWCASE_CASES: ShowcaseCase[] = [
   },
   {
     number: '02',
+    name: 'Canavesi',
+    category: 'Carnicería · Olivos',
+    description: 'Cortes por peso, delivery o retiro en Borges, total estimado y bandeja del local.',
+    samplePath: '/demo/canavesi',
+    image: '/demos/canavesi/hero.jpg',
+    imageAlt: 'Demo Canavesi Carnes Olivos',
+    tone: 'dark',
+  },
+  {
+    number: '03',
     name: 'Gabriel',
     category: 'Carnicería',
     description: 'Cortes, combos y pedido por WhatsApp con menos ida y vuelta.',
@@ -89,7 +99,7 @@ const SHOWCASE_CASES: ShowcaseCase[] = [
     tone: 'dark',
   },
   {
-    number: '03',
+    number: '04',
     name: 'Aguacats',
     category: 'Almacén y productos frescos',
     description: 'Una marca singular para separar productos, maduración y formas de pedir.',
@@ -99,7 +109,7 @@ const SHOWCASE_CASES: ShowcaseCase[] = [
     tone: 'green',
   },
   {
-    number: '04',
+    number: '05',
     name: 'Molino Florida',
     category: 'Mayorista e insumos',
     description: 'Un catálogo pensado para bolsas, bultos, reposición y pedidos repetidos.',
@@ -115,6 +125,7 @@ const DEMO_GROUPS: DemoGroup[] = [
     title: 'Productos y gastronomía',
     intro: 'Mostrá lo que vendés. Hacé que pedir sea sencillo.',
     cards: [
+      { name: 'Canavesi', detail: 'Olivos · Borges', samplePath: '/demo/canavesi' },
       { name: 'Carnicería', detail: 'Cortes y combos', samplePath: '/demo/carniceria' },
       { name: 'Panadería', detail: 'Productos y retiro', samplePath: '/demo/panaderia' },
       { name: 'Pizzería', detail: 'Variantes y pedido', samplePath: '/demo/pizzeria' },

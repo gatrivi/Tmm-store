@@ -63,6 +63,8 @@ export default function CommerceApp() {
               <Route path="/demo/mamamabel/order/:orderId" element={<RedirectMamabelOrder />} />
               <Route path="/demo/carniceria" element={<CarniceriaDemoPage />} />
               <Route path="/demo/carniceria/order/:orderId" element={<OrderStatusPage />} />
+              <Route path="/demo/canavesi" element={<CarniceriaDemoPage />} />
+              <Route path="/demo/canavesi/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/s/:slug" element={<Storefront />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/s/:slug/admin" element={<AdminPage />} />

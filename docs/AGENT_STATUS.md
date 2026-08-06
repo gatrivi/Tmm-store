@@ -4,10 +4,10 @@
 
 | Campo | Valor |
 |-------|--------|
-| **Fecha snapshot** | 2026-07-31 |
-| **Versión** | `1.16.1` (`package.json` → stamp UI) |
+| **Fecha snapshot** | 2026-08-06 |
+| **Versión** | `1.21.0` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Cambio actual** | plan demo Canavesi Carnes (Olivos Borges) — docs |
+| **Cambio actual** | demo Canavesi Carnes `/demo/canavesi` |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
@@ -78,6 +78,9 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/demo/carniceria` | Vertical carnicería (cliente) |
 | `/demo/carniceria/owner` | Panel Gabriel |
 | `/demo/carniceria/order/:id` | Seguimiento |
+| `/demo/canavesi` | **Canavesi Carnes** Olivos Borges |
+| `/demo/canavesi/owner` | Panel Canavesi |
+| `/demo/canavesi/order/:id` | Seguimiento |
 | `/demo/aguacats` | **Aguacats** despensa/fresco (ex Refcurcum) |
 | `/demo/aguacats/owner` | Panel Aguacats |
 | `/demo/aguacats/order/:id` | Seguimiento |
@@ -86,7 +89,7 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/order/:orderId` | Seguimiento pedido real/tenant |
 | `/super-admin` | Provisioning tenants |
 
-Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/aguacats` · `/demo/armar` · `/demo` legacy.
+Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/canavesi` · `/demo/aguacats` · `/demo/armar` · `/demo` legacy.
 
 ---
 
@@ -143,6 +146,7 @@ Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/
 | Demo panadería | `sessionStorage` `trufi_demo_orders_v2:panaderia` |
 | Demo aguacats | `sessionStorage` `trufi_demo_orders_v2:aguacats` |
 | Demo carnicería | `sessionStorage` `trufi_demo_orders_v2:carniceria` |
+| Demo Canavesi | `sessionStorage` `trufi_demo_orders_v2:canavesi` |
 
 Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 
@@ -178,9 +182,10 @@ Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 3. Panadería → `/demo/panaderia`
 4. Aguacats (prospect amigo) → `/demo/aguacats` ([`roadmap/demo-aguacats.md`](./roadmap/demo-aguacats.md))
 5. Personalizar al toque → `/demo/armar`
-6. Vertical carnicería → `/demo/carniceria`
-7. Legacy choripán → `/demo` (solo si aplica)
-8. Post-depósito → tenant real `/s/<slug>` (no clonar app)
+6. Vertical Canavesi → `/demo/canavesi` ([`roadmap/demo-canavesi.md`](./roadmap/demo-canavesi.md))
+7. Vertical carnicería → `/demo/carniceria`
+8. Legacy choripán → `/demo` (solo si aplica)
+9. Post-depósito → tenant real `/s/<slug>` (no clonar app)
 
 **Próxima vertical recomendada (no buildeada):** verdulería. Plan: [`roadmap/vertical-demos-plan.md`](./roadmap/vertical-demos-plan.md).
 
@@ -218,7 +223,8 @@ Publicitar “busco pilotos” o vender Tienda online: **Gate A OK** (verificar 
 | Config panadería | `src/data/demos/panaderia.ts` |
 | Config aguacats | `src/data/demos/aguacats.ts` |
 | Config carnicería | `src/data/demos/carniceria.ts` |
-| Página carnicería | `src/pages/CarniceriaDemoPage.tsx` |
+| Config Canavesi | `src/data/demos/canavesi.ts` |
+| Página carnicería / Canavesi | `src/pages/CarniceriaDemoPage.tsx` |
 | Planes | `src/config/plans.ts` |
 | Versión inyectada | `src/config/version.ts` ← vite |
 | API MP | `api/create-preference.ts`, `api/mp-webhook.ts` |
@@ -259,8 +265,9 @@ Abrir:
 - https://tmm.gatrivi.com/demo/pizzeria/owner
 - https://tmm.gatrivi.com/demo/panaderia
 - https://tmm.gatrivi.com/demo/carniceria
+- https://tmm.gatrivi.com/demo/canavesi
 - https://tmm.gatrivi.com/demo/aguacats
-- Stamp / `package.json` = **1.15.1**
+- Stamp / `package.json` = **1.21.0**
 
 ---
 
