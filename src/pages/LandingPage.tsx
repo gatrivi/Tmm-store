@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   ArrowRight,
@@ -10,14 +10,12 @@ import {
   Link2,
   MessageCircle,
   PackageCheck,
-  PawPrint,
   ShieldCheck,
   Smartphone,
   Sparkles,
   Store,
   Tags,
   Warehouse,
-  WandSparkles,
   Zap,
 } from 'lucide-react';
 import LandingThemeBar from '../components/landing/LandingThemeBar';
@@ -42,11 +40,6 @@ import {
   readLandingPalette,
   type LandingPaletteId,
 } from '../utils/landingPalettes';
-import {
-  buildProspectDemoSearch,
-  PROSPECT_CATEGORIES,
-  type ProspectCategory,
-} from '../utils/prospectDemo';
 
 const SITE_DOMAIN = 'zengasoft.shop';
 const SITE_DOMAIN_EXAMPLE = `tunegocio.${SITE_DOMAIN}`;
@@ -64,7 +57,7 @@ const solutions = [
     ],
     closing: 'Perfecto para dejar de mandar fotos sueltas.',
     cta: 'Ver ejemplo de catálogo',
-    demoPath: '/demo?rubro=libreria',
+    demoPath: '/demo/canavesi',
     icon: Tags,
   },
   {
@@ -129,8 +122,8 @@ const keyMessages = [
 const sampleShowcase = [
   {
     type: 'Catálogo',
-    hint: 'Lista clara de productos',
-    to: '/demo?rubro=libreria',
+    hint: 'Cortes y peso estimado',
+    to: '/demo/canavesi',
     icon: Tags,
   },
   {
@@ -252,15 +245,11 @@ const HERO_PREVIEWS = [
   },
   {
     label: 'Catálogo',
-    hint: 'Librería',
-    src: '/demos/presets/libreria/cuaderno.jpg',
-    to: '/demo?rubro=libreria',
+    hint: 'Canavesi',
+    src: '/demos/canavesi/hero.jpg',
+    to: '/demo/canavesi',
   },
 ] as const;
-
-const HERO_RUBROS = (Object.keys(PROSPECT_CATEGORIES) as ProspectCategory[]).filter(id =>
-  ['petshop', 'pizzeria', 'polleria', 'verduleria', 'cafeteria', 'libreria', 'grafica', 'distribuidora-lacteos', 'molino-mayorista', 'panaderia', 'gastronomia'].includes(id),
-);
 
 function SectionEyebrow({ children }: { children: React.ReactNode }) {
   return (
@@ -284,21 +273,6 @@ export default function LandingPage() {
   const reserveHref = buildReserveHref({ source: 'landing reserva' });
   const reserveLabel = reserveCtaLabel();
   const consultHref = buildSalesContactHref(heroContactSource(heroVariant));
-
-  const [negocio, setNegocio] = useState('');
-  const [rubro, setRubro] = useState<ProspectCategory>('petshop');
-  const [barrio, setBarrio] = useState('Olivos');
-
-  const samplePath = useMemo(() => {
-    const name = negocio.trim() || 'Tu negocio';
-    const search = buildProspectDemoSearch({
-      businessName: name,
-      area: barrio.trim() || 'Zona Norte',
-      category: rubro,
-      color: 'carbon',
-    });
-    return withAttribution(`/demo${search}`);
-  }, [negocio, barrio, rubro]);
 
   useEffect(() => {
     captureAttribution(location.search);
@@ -651,8 +625,8 @@ export default function LandingPage() {
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {[
-                { to: '/demo?rubro=petshop', icon: PawPrint, label: 'Pet shop', hint: 'Catálogo con variantes' },
-                { to: '/demo?rubro=molino-mayorista&negocio=Molino%20Florida', icon: Warehouse, label: 'Mayorista', hint: 'Bultos y reposición' },
+                { to: '/demo/verduleria', icon: Sparkles, label: 'La Inmaculada', hint: 'Verdulería · peso y packs' },
+                { to: '/demo/aguacats', icon: Warehouse, label: 'Aguacats', hint: 'Fresco y combos' },
               ].map(item => (
                 <Link
                   key={item.label}
@@ -684,59 +658,30 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Probar muestra (mini builder) */}
+        {/* Probar muestras (solo demos pulidas) */}
         <section id="probar" className="scroll-mt-24 border-b border-[color:var(--lp-border)] py-20 sm:py-28">
-          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
             <SectionEyebrow>Probar ahora</SectionEyebrow>
             <h2 className="text-3xl font-black tracking-[-0.05em] sm:text-4xl">
-              Personalizá una muestra en segundos
+              Muestras reales, listas para mostrar
             </h2>
-            <form
-              className="mt-8 space-y-3 rounded-[1.75rem] border border-[color:var(--lp-border)] bg-[var(--lp-surface)] p-5 shadow-sm"
-              onSubmit={event => {
-                event.preventDefault();
-                window.location.assign(samplePath);
-              }}
-            >
-              <label className="block">
-                <span className="sr-only">Nombre del negocio</span>
-                <input
-                  value={negocio}
-                  onChange={e => setNegocio(e.target.value.slice(0, 60))}
-                  placeholder="Nombre del negocio"
-                  className="min-h-12 w-full rounded-2xl border border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-4 text-sm font-bold outline-none focus:border-[var(--lp-accent)]"
-                />
-              </label>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <select
-                  value={rubro}
-                  onChange={e => setRubro(e.target.value as ProspectCategory)}
-                  className="min-h-12 w-full rounded-2xl border border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-4 text-sm font-bold outline-none"
-                >
-                  {HERO_RUBROS.map(id => (
-                    <option key={id} value={id}>{PROSPECT_CATEGORIES[id]}</option>
-                  ))}
-                </select>
-                <input
-                  value={barrio}
-                  onChange={e => setBarrio(e.target.value.slice(0, 60))}
-                  placeholder="Barrio (opcional)"
-                  className="min-h-12 w-full rounded-2xl border border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-4 text-sm font-bold outline-none"
-                />
-              </div>
-              <button
-                type="submit"
-                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--lp-ink)] text-sm font-black text-[var(--lp-on-ink)] hover:bg-[var(--lp-accent)]"
-              >
-                <WandSparkles size={16} /> Ver mi muestra
-              </button>
-            </form>
-            <p className="mt-4 text-center text-sm font-bold text-[var(--lp-text)]/50">
-              O explorá{' '}
-              <Link to={withAttribution('/demos')} className="text-[var(--lp-accent)] hover:underline">
-                las 11 muestras por rubro
-              </Link>
+            <p className="mt-4 text-base font-bold text-[var(--lp-text)]/55">
+              Carnicería, verdulería, panadería, pizzería y más — sin plantillas a medias.
             </p>
+            <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center">
+              <Link
+                to={withAttribution('/demos')}
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--lp-ink)] px-6 text-sm font-black text-[var(--lp-on-ink)] hover:bg-[var(--lp-accent)]"
+              >
+                Ver muestras <ArrowRight size={16} />
+              </Link>
+              <a
+                href={reserveHref}
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[color:var(--lp-border)] bg-[var(--lp-surface)] px-6 text-sm font-black"
+              >
+                Pedí la tuya
+              </a>
+            </div>
           </div>
         </section>
 
@@ -807,9 +752,7 @@ export default function LandingPage() {
               <a
                 href={buildReserveHref({
                   source: 'landing primeros 10 tienda',
-                  demoUrl: typeof window !== 'undefined' ? `${window.location.origin}${samplePath}` : samplePath,
-                  rubro,
-                  businessName: negocio.trim() || undefined,
+                  demoUrl: typeof window !== 'undefined' ? `${window.location.origin}/demos` : '/demos',
                 })}
                 className="mt-8 inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[var(--lp-highlight)] px-6 text-sm font-black text-[var(--lp-text)] transition hover:-translate-y-0.5 hover:bg-[var(--lp-on-ink)]"
               >
@@ -992,7 +935,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-5 text-xs font-bold text-white/55">
-            <Link to={withAttribution('/demos')} className="hover:text-white">11 muestras</Link>
+            <Link to={withAttribution('/demos')} className="hover:text-white">Muestras</Link>
             <a href="#soluciones" className="hover:text-white">Soluciones</a>
             <a href="#planes" className="hover:text-white">Planes</a>
             <a href={contactHref} className="hover:text-white">Contacto</a>

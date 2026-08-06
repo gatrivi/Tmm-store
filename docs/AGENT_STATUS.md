@@ -5,9 +5,9 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-08-06 |
-| **Versión** | `1.21.1` (`package.json` → stamp UI) |
+| **Versión** | `1.22.0` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Cambio actual** | demos Canavesi + La Inmaculada; WeightedCatalog shared |
+| **Cambio actual** | Demo Express público OFF — solo demos pulidas |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
@@ -63,9 +63,9 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 |------|-----|
 | `/` | Landing de ventas |
 | `/#planes` | Precios (redirect desde `/pricing`) |
-| `/demo` | Demo cliente gastronomía legacy (choripán) |
-| `/demo/owner` | Panel demo gastronomía |
-| `/demo/armar` | Demo Express: personaliza nombre/color en URL (sin Firebase) |
+| `/demo` | Legacy Express — **público OFF** → `/demos` |
+| `/demo/owner` | Legacy Express panel — **público OFF** → `/demos` |
+| `/demo/armar` | Demo Express builder — **público OFF** → `/demos` |
 | `/demo/pizzeria` | **Fit A** pizzería/empanadas (cliente) |
 | `/demo/pizzeria/owner` | Panel pizzería |
 | `/demo/pizzeria/order/:id` | Seguimiento pizzería |
@@ -92,7 +92,7 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/order/:orderId` | Seguimiento pedido real/tenant |
 | `/super-admin` | Provisioning tenants |
 
-Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/canavesi` · `/demo/verduleria` · `/demo/aguacats` · `/demo/armar` · `/demo` legacy.
+Live sales URLs: `/` · `/demos` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/canavesi` · `/demo/verduleria` · `/demo/aguacats`.
 
 ---
 
@@ -107,7 +107,7 @@ Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/
 - Armado wizard (~10 min) en admin
 - Multi-tenant URL `/s/:slug` + SuperAdmin
 - **Orders v2 Hito 1:** demo coherente, una acción primaria, store demo compartido cliente/owner/seguimiento
-- **Demo Express presets (v1.15.0):** 8 rubros + petshop; landing funnel Tally/UTM; `/demos`; ver [`roadmap/passive-sales-petshop-landing.md`](./roadmap/passive-sales-petshop-landing.md)
+- **Demo Express presets:** código vivo; **público OFF** (v1.22.0) — no linkear desde landing/`/demos`; flag `src/config/demoExpress.ts`
 - **Demo Mamá Mabel flagship (v1.11–1.13.4):** portada marca · portfolio likes · encargo WA · cursos honestos · hero/portfolio black-bg studio picks (EXIF/glare/tilt/center)
 - **Demo pizzería Fit A:** carta pizza/empanadas, tenant `demo-pizzeria`, storage aislado
 - **Demo panadería La Magdalena (v1.9.3):** tenant `demo-panaderia`, storage `trufi_demo_orders_v2:panaderia`
@@ -185,12 +185,13 @@ Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 2. **Default Fit A** → `/demo/pizzeria` + owner ([`ops/prospect-demo.md`](./ops/prospect-demo.md))
 3. Panadería → `/demo/panaderia`
 4. Aguacats (prospect amigo) → `/demo/aguacats` ([`roadmap/demo-aguacats.md`](./roadmap/demo-aguacats.md))
-5. Personalizar al toque → `/demo/armar`
+5. Galería → `/demos` (solo demos pulidas)
 6. Vertical Canavesi → `/demo/canavesi` ([`roadmap/demo-canavesi.md`](./roadmap/demo-canavesi.md))
 7. Vertical carnicería → `/demo/carniceria`
 8. **Verdulería La Inmaculada** → `/demo/verduleria` ([`roadmap/demo-verduleria.md`](./roadmap/demo-verduleria.md))
-9. Legacy choripán → `/demo` (solo si aplica)
-10. Post-depósito → tenant real `/s/<slug>` (no clonar app)
+9. Post-depósito → tenant real `/s/<slug>` (no clonar app)
+
+**No mostrar:** `/demo/armar`, `/demo?rubro=*`, legacy `/demo` (Express off).
 
 **Próxima vertical recomendada:** pollería/heladería solo con lead; verdulería shipped.
 
@@ -275,7 +276,7 @@ Abrir:
 - https://tmm.gatrivi.com/demo/canavesi
 - https://tmm.gatrivi.com/demo/verduleria
 - https://tmm.gatrivi.com/demo/aguacats
-- Stamp / `package.json` = **1.21.1**
+- Stamp / `package.json` = **1.22.0**
 
 ---
 
