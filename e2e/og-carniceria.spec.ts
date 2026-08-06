@@ -26,7 +26,7 @@ test.describe('carnicería OG HTML', () => {
   test('landing / keeps generic Gatrivi OG', async ({ request }) => {
     const res = await request.get('/');
     const html = await res.text();
-    expect(html).toContain('Soluciones Web Gatrivi.com — Tu tienda online');
+    expect(html).toContain('Gatrivi.com — Catálogo, landing y tienda online');
     expect(html).toContain('gatrivi-og.png');
   });
 });

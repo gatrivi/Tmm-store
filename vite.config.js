@@ -8,17 +8,24 @@ import { fileURLToPath } from 'node:url'
 const rootDir = dirname(fileURLToPath(import.meta.url))
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'))
 
-/** Serve carnicería HTML shell for OG crawlers (mirrors vercel.json rewrite). */
-function carniceriaHtmlShell() {
-  const shell = resolve(rootDir, 'demo-carniceria.html')
+/** Serve dedicated HTML shells for OG crawlers (mirrors vercel.json rewrites). */
+function demoHtmlShells() {
+  const shells = [
+    { prefix: '/demo/carniceria', file: 'demo-carniceria.html' },
+    { prefix: '/demo/verduleria', file: 'demo-verduleria.html' },
+  ]
+  function match(url) {
+    return shells.find(s => url === s.prefix || url.startsWith(`${s.prefix}/`))
+  }
   return {
-    name: 'carniceria-html-shell',
+    name: 'demo-html-shells',
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
         const url = req.url?.split('?')[0] ?? ''
-        if (url === '/demo/carniceria' || url.startsWith('/demo/carniceria/')) {
+        const hit = match(url)
+        if (hit) {
           try {
-            const raw = readFileSync(shell, 'utf8')
+            const raw = readFileSync(resolve(rootDir, hit.file), 'utf8')
             const html = await server.transformIndexHtml(url, raw)
             res.setHeader('Content-Type', 'text/html')
             res.end(html)
@@ -34,10 +41,11 @@ function carniceriaHtmlShell() {
     configurePreviewServer(server) {
       server.middlewares.use((req, res, next) => {
         const url = req.url?.split('?')[0] ?? ''
-        if (url === '/demo/carniceria' || url.startsWith('/demo/carniceria/')) {
+        const hit = match(url)
+        if (hit) {
           try {
             res.setHeader('Content-Type', 'text/html')
-            res.end(readFileSync(resolve(rootDir, 'dist/demo-carniceria.html'), 'utf8'))
+            res.end(readFileSync(resolve(rootDir, `dist/${hit.file}`), 'utf8'))
             return
           } catch {
             /* fall through */
@@ -55,7 +63,7 @@ export default defineConfig({
     __APP_VERSION__: JSON.stringify(pkg.version),
   },
   plugins: [
-    carniceriaHtmlShell(),
+    demoHtmlShells(),
     react(),
     tailwindcss(),
   ],
@@ -64,6 +72,7 @@ export default defineConfig({
       input: {
         main: resolve(rootDir, 'index.html'),
         carniceria: resolve(rootDir, 'demo-carniceria.html'),
+        verduleria: resolve(rootDir, 'demo-verduleria.html'),
       },
     },
   },

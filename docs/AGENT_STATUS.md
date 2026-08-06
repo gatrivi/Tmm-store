@@ -4,10 +4,10 @@
 
 | Campo | Valor |
 |-------|--------|
-| **Fecha snapshot** | 2026-07-31 |
-| **Versión** | `1.16.1` (`package.json` → stamp UI) |
+| **Fecha snapshot** | 2026-08-06 |
+| **Versión** | `1.21.0` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
-| **Cambio actual** | demo Aguacats (ex Refcurcum) `/demo/aguacats` |
+| **Cambio actual** | demo La Inmaculada `/demo/verduleria` |
 | **Live** | https://tmm.gatrivi.com |
 | **Repo** | https://github.com/gatrivi/Tmm-store |
 | **Índice docs** | [`docs/README.md`](./README.md) |
@@ -81,12 +81,15 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/demo/aguacats` | **Aguacats** despensa/fresco (ex Refcurcum) |
 | `/demo/aguacats/owner` | Panel Aguacats |
 | `/demo/aguacats/order/:id` | Seguimiento |
+| `/demo/verduleria` | **La Inmaculada** verdulería (cliente) |
+| `/demo/verduleria/owner` | Panel Inmaculada |
+| `/demo/verduleria/order/:id` | Seguimiento |
 | `/s/:slug` | Storefront tenant |
 | `/s/:slug/admin` · `/admin` | Admin dueño |
 | `/order/:orderId` | Seguimiento pedido real/tenant |
 | `/super-admin` | Provisioning tenants |
 
-Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/aguacats` · `/demo/armar` · `/demo` legacy.
+Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/verduleria` · `/demo/aguacats` · `/demo/armar` · `/demo` legacy.
 
 ---
 
@@ -121,7 +124,7 @@ Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/
 | WhatsApp Business API | Roadmap P3 — hoy handoff wa.me / mensaje estructurado |
 | Gaucho mode / Premium CX desk | Spec only |
 | Pedidos reales de cliente pagando | Hito B advertising — **no** hasta auth dueño en Firestore |
-| Vertical verdulería | Plan only → [`roadmap/vertical-demos-plan.md`](./roadmap/vertical-demos-plan.md) |
+| Vertical verdulería | Shipped → [`roadmap/demo-verduleria.md`](./roadmap/demo-verduleria.md) · `/demo/verduleria` |
 
 ### Guardrails demos
 
@@ -142,6 +145,7 @@ Live sales URLs: `/` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/
 | Demo mamabel | `sessionStorage` `trufi_demo_orders_v2:mamabel` |
 | Demo panadería | `sessionStorage` `trufi_demo_orders_v2:panaderia` |
 | Demo aguacats | `sessionStorage` `trufi_demo_orders_v2:aguacats` |
+| Demo verdulería | `sessionStorage` `trufi_demo_orders_v2:verduleria` |
 | Demo carnicería | `sessionStorage` `trufi_demo_orders_v2:carniceria` |
 
 Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
@@ -179,10 +183,11 @@ Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 4. Aguacats (prospect amigo) → `/demo/aguacats` ([`roadmap/demo-aguacats.md`](./roadmap/demo-aguacats.md))
 5. Personalizar al toque → `/demo/armar`
 6. Vertical carnicería → `/demo/carniceria`
-7. Legacy choripán → `/demo` (solo si aplica)
-8. Post-depósito → tenant real `/s/<slug>` (no clonar app)
+7. **Verdulería La Inmaculada** → `/demo/verduleria` ([`roadmap/demo-verduleria.md`](./roadmap/demo-verduleria.md))
+8. Legacy choripán → `/demo` (solo si aplica)
+9. Post-depósito → tenant real `/s/<slug>` (no clonar app)
 
-**Próxima vertical recomendada (no buildeada):** verdulería. Plan: [`roadmap/vertical-demos-plan.md`](./roadmap/vertical-demos-plan.md).
+**Próxima vertical recomendada:** pollería/heladería solo con lead; verdulería shipped.
 
 **Fuera de foco:** zapatería, ropa, café solo mesa, resto fino/sushi (fit C).
 
@@ -197,7 +202,7 @@ Publicitar “busco pilotos” o vender Tienda online: **Gate A OK** (verificar 
 | 1 | [`order-processing-v2.md`](./roadmap/order-processing-v2.md) | Hito 1 done; 2–5 pending |
 | 2 | [`advertising-readiness.md`](./roadmap/advertising-readiness.md) | Hito A done; Hito B (auth Firestore) pending |
 | 3 | [`demo-mamabel.md`](./roadmap/demo-mamabel.md) | Flagship shipped v1.13.x; polish fotos ongoing |
-| 4 | [`vertical-demos-plan.md`](./roadmap/vertical-demos-plan.md) | Plan; verdulería bajo demanda |
+| 4 | [`vertical-demos-plan.md`](./roadmap/vertical-demos-plan.md) · [`demo-verduleria.md`](./roadmap/demo-verduleria.md) | Verdulería shipped v1.21.0 |
 | — | competitive-parity, print-tickets, wsp-cx, gaucho, premium-cx | Spec / diferido |
 
 Índice: [`roadmap/README.md`](./roadmap/README.md).
@@ -217,8 +222,10 @@ Publicitar “busco pilotos” o vender Tienda online: **Gate A OK** (verificar 
 | Config Mamabel | `src/data/demos/mamabel.ts` · página `MamabelDemoPage` |
 | Config panadería | `src/data/demos/panaderia.ts` |
 | Config aguacats | `src/data/demos/aguacats.ts` |
+| Config verdulería | `src/data/demos/verduleria.ts` |
 | Config carnicería | `src/data/demos/carniceria.ts` |
-| Página carnicería | `src/pages/CarniceriaDemoPage.tsx` |
+| Página peso (carnicería/verdulería) | `src/pages/WeightedCatalogDemoPage.tsx` |
+| Página carnicería | re-export → WeightedCatalogDemoPage |
 | Planes | `src/config/plans.ts` |
 | Versión inyectada | `src/config/version.ts` ← vite |
 | API MP | `api/create-preference.ts`, `api/mp-webhook.ts` |
@@ -259,8 +266,9 @@ Abrir:
 - https://tmm.gatrivi.com/demo/pizzeria/owner
 - https://tmm.gatrivi.com/demo/panaderia
 - https://tmm.gatrivi.com/demo/carniceria
+- https://tmm.gatrivi.com/demo/verduleria
 - https://tmm.gatrivi.com/demo/aguacats
-- Stamp / `package.json` = **1.15.1**
+- Stamp / `package.json` = **1.21.0**
 
 ---
 
