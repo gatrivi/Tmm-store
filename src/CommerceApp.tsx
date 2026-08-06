@@ -9,6 +9,7 @@ import SuperAdminPage from './pages/SuperAdminPage';
 import WeightedCatalogDemoPage from './pages/WeightedCatalogDemoPage';
 import { AppVersionStamp } from './components/AppVersionBadge';
 import { DemoRibbon } from './components/DemoRibbon';
+import { DEMO_EXPRESS_FALLBACK, DEMO_EXPRESS_PUBLIC } from './config/demoExpress';
 import { AdminProvider } from './context/AdminContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { MenuProvider } from './context/MenuContext';
@@ -16,6 +17,11 @@ import { PlanProvider } from './context/PlanContext';
 import { resolveTenantIdFromPath } from './utils/demoRegistry';
 
 function CustomerDemo() {
+  const location = useLocation();
+  // Express / legacy gastronomy only — pizzería & panadería reuse Storefront with vertical config
+  if (!DEMO_EXPRESS_PUBLIC && (location.pathname === '/demo' || location.pathname === '/demo/')) {
+    return <Navigate to={DEMO_EXPRESS_FALLBACK} replace />;
+  }
   return (
     <>
       <DemoRibbon />

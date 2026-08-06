@@ -10,17 +10,13 @@ import {
   MessageCircle,
   ShoppingBag,
   Sparkles,
-  WandSparkles,
 } from 'lucide-react';
 import { buildReserveHref, reserveCtaLabel, withAttribution } from '../utils/demoIntake';
-import { buildProspectDemoSearch } from '../utils/prospectDemo';
-import type { ProspectCategory } from '../utils/prospectDemo';
 
 type DemoCard = {
   name: string;
   detail: string;
   samplePath: string;
-  rubro?: ProspectCategory;
 };
 
 type DemoGroup = {
@@ -110,16 +106,6 @@ const SHOWCASE_CASES: ShowcaseCase[] = [
   },
   {
     number: '05',
-    name: 'Molino Florida',
-    category: 'Mayorista e insumos',
-    description: 'Un catálogo pensado para bolsas, bultos, reposición y pedidos repetidos.',
-    samplePath: '/demo?rubro=molino-mayorista&negocio=Molino%20Florida',
-    image: '/demos/presets/molino-mayorista/harina-000.jpg',
-    imageAlt: 'Insumos mayoristas Molino Florida',
-    tone: 'blue',
-  },
-  {
-    number: '05',
     name: 'La Inmaculada',
     category: 'Verdulería',
     description: 'Peso, unidad y total estimado — pedido semanal sin audio caótico.',
@@ -132,51 +118,19 @@ const SHOWCASE_CASES: ShowcaseCase[] = [
 
 const DEMO_GROUPS: DemoGroup[] = [
   {
-    title: 'Productos y gastronomía',
-    intro: 'Mostrá lo que vendés. Hacé que pedir sea sencillo.',
+    title: 'Muestras listas',
+    intro: 'Solo demos con marca, fotos y flujo completo. Sin plantillas a medias.',
     cards: [
-      { name: 'Canavesi', detail: 'Olivos · Borges', samplePath: '/demo/canavesi' },
-      { name: 'Carnicería', detail: 'Cortes y combos', samplePath: '/demo/carniceria' },
-      { name: 'Panadería', detail: 'Productos y retiro', samplePath: '/demo/panaderia' },
+      { name: 'Canavesi', detail: 'Carnicería · Olivos Borges', samplePath: '/demo/canavesi' },
+      { name: 'Gabriel', detail: 'Carnicería · cortes y combos', samplePath: '/demo/carniceria' },
+      { name: 'La Inmaculada', detail: 'Verdulería · peso y packs', samplePath: '/demo/verduleria' },
+      { name: 'La Magdalena', detail: 'Panadería · retiro', samplePath: '/demo/panaderia' },
       { name: 'Pizzería', detail: 'Variantes y pedido', samplePath: '/demo/pizzeria' },
-      { name: 'Pollería', detail: 'Entero, medio y combos', samplePath: '/demo?rubro=polleria', rubro: 'polleria' },
-      { name: 'Cafetería', detail: 'Carta para retirar', samplePath: '/demo?rubro=cafeteria', rubro: 'cafeteria' },
-      { name: 'Verdulería', detail: 'Peso, unidad y sustitutos', samplePath: '/demo/verduleria' },
-    ],
-  },
-  {
-    title: 'Comercios y servicios',
-    intro: 'Una presencia clara para que te encuentren y te consulten mejor.',
-    cards: [
-      { name: 'Pet shop', detail: 'Alimentos y accesorios', samplePath: '/demo?rubro=petshop', rubro: 'petshop' },
-      { name: 'Librería', detail: 'Productos y servicios', samplePath: '/demo?rubro=libreria', rubro: 'libreria' },
-      { name: 'Gráfica / imprenta', detail: 'Medidas y cotización', samplePath: '/demo?rubro=grafica', rubro: 'grafica' },
-      { name: 'Almacén', detail: 'Catálogo de cercanía', samplePath: '/demo?rubro=almacen', rubro: 'almacen' },
-      { name: 'Dietética', detail: 'Productos por formato', samplePath: '/demo?rubro=dietetica', rubro: 'dietetica' },
-      { name: 'Rotisería', detail: 'Menú y encargos', samplePath: '/demo?rubro=rotiseria', rubro: 'rotiseria' },
-    ],
-  },
-  {
-    title: 'Mayoristas y reposición',
-    intro: 'Cuando el pedido necesita formato, cantidad, zona y día.',
-    cards: [
-      { name: 'Distribuidora de lácteos', detail: 'Pack, caja y reparto', samplePath: '/demo?rubro=distribuidora-lacteos', rubro: 'distribuidora-lacteos' },
-      { name: 'Molino / insumos', detail: 'Bolsa, bulto y reposición', samplePath: '/demo?rubro=molino-mayorista&negocio=Molino%20Florida', rubro: 'molino-mayorista' },
-      { name: 'Gastronomía', detail: 'Carta y pedido de prueba', samplePath: '/demo?rubro=gastronomia', rubro: 'gastronomia' },
+      { name: 'Mamá Mabel', detail: 'Repostería · portfolio', samplePath: '/demo/mamabel' },
+      { name: 'Aguacats', detail: 'Fresco y combos', samplePath: '/demo/aguacats' },
     ],
   },
 ];
-
-function personalizePath(rubro?: ProspectCategory): string {
-  if (!rubro) return withAttribution('/demo/armar');
-  const search = buildProspectDemoSearch({
-    businessName: 'Tu negocio',
-    area: 'Zona Norte',
-    category: rubro,
-    color: 'carbon',
-  });
-  return withAttribution(`/demo/armar${search}`);
-}
 
 function SectionLabel({ children }: { children: string }) {
   return (
@@ -291,7 +245,7 @@ export default function DemosGalleryPage() {
           <nav className="hidden items-center gap-7 text-xs font-bold text-white/60 md:flex" aria-label="Navegación principal">
             <a href="#soluciones" className="transition hover:text-white">Soluciones</a>
             <a href="#casos" className="transition hover:text-white">Casos</a>
-            <a href="#rubros" className="transition hover:text-white">Rubros</a>
+            <a href="#rubros" className="transition hover:text-white">Muestras</a>
             <a href="#proceso" className="transition hover:text-white">Cómo trabajamos</a>
           </nav>
 
@@ -448,10 +402,10 @@ export default function DemosGalleryPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col justify-between gap-6 border-b border-black/10 pb-10 sm:flex-row sm:items-end">
               <div>
-                <SectionLabel>El catálogo completo</SectionLabel>
-                <h2 className="font-serif text-4xl leading-[0.95] tracking-[-0.06em] sm:text-6xl">Elegí el rubro. Probá la muestra.</h2>
+                <SectionLabel>Catálogo de muestras</SectionLabel>
+                <h2 className="font-serif text-4xl leading-[0.95] tracking-[-0.06em] sm:text-6xl">Solo demos listas para vender.</h2>
               </div>
-              <p className="max-w-sm text-sm leading-relaxed text-black/55">No son plantillas cerradas: son puntos de partida para mostrarte cómo podría funcionar tu negocio.</p>
+              <p className="max-w-sm text-sm leading-relaxed text-black/55">Si tu rubro no está, pedimos una muestra con tu marca — no mostramos plantillas vacías.</p>
             </div>
 
             <div className="mt-10 space-y-14">
@@ -468,14 +422,9 @@ export default function DemosGalleryPage() {
                           <p className="text-base font-black tracking-[-0.02em]">{card.name}</p>
                           <p className="mt-1 text-xs text-black/50">{card.detail}</p>
                         </div>
-                        <div className="flex shrink-0 items-center gap-2">
-                          <Link to={withAttribution(card.samplePath)} className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.08em] text-[#b94335] transition group-hover:translate-x-0.5">
-                            Ver muestra <ChevronRight size={14} />
-                          </Link>
-                          <Link to={personalizePath(card.rubro)} aria-label={`Personalizar muestra de ${card.name}`} className="hidden h-8 w-8 items-center justify-center rounded-full border border-black/15 text-black/50 transition hover:border-black hover:text-black sm:flex">
-                            <WandSparkles size={13} />
-                          </Link>
-                        </div>
+                        <Link to={withAttribution(card.samplePath)} className="inline-flex shrink-0 items-center gap-1 text-[10px] font-black uppercase tracking-[0.08em] text-[#b94335] transition group-hover:translate-x-0.5">
+                          Ver muestra <ChevronRight size={14} />
+                        </Link>
                       </div>
                     ))}
                   </div>

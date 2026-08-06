@@ -5,12 +5,12 @@ Purpose: show the outcome, not a feature inventory.
 ## Links
 
 - Sales page: `/`
-- **Demo Express builder (internal sales tool): `/demo/armar`**
+- **Galería (solo pulidas):** `/demos`
+- **Demo Express:** **OFF público** (`DEMO_EXPRESS_PUBLIC=false`) — `/demo/armar` y `/demo?rubro=` redirigen a `/demos`
 - **Flagship Mamá Mabel:** `/demo/mamabel` · `/demo/mamabel/owner` · `/demo/mamabel/order/:id`
 - **Primary Fit A (pizzería/empanadas):** `/demo/pizzeria` · `/demo/pizzeria/owner` · `/demo/pizzeria/order/:id`
 - **Panadería La Magdalena:** `/demo/panaderia` · `/demo/panaderia/owner` · `/demo/panaderia/order/:id`
 - **Aguacats (ex Refcurcum):** `/demo/aguacats` · `/demo/aguacats/owner` · `/demo/aguacats/order/:id`
-- Legacy gastronomía (choripán): `/demo` · `/demo/owner`
 - **Canavesi Carnes (Olivos):** `/demo/canavesi` · `/demo/canavesi/owner` · `/demo/canavesi/order/:id`
 - **Vertical carnicería:** `/demo/carniceria` · `/demo/carniceria/owner` · `/demo/carniceria/order/:id`
 - **Verdulería La Inmaculada:** `/demo/verduleria` · `/demo/verduleria/owner` · `/demo/verduleria/order/:id`
