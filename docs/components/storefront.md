@@ -20,7 +20,7 @@ Deps: `useMenu()`, `usePlan()`, `useLanguage()`, `CheckoutModal`, `ShareModal`, 
 |------|------|-------|
 | `/demo` | `Storefront` + `DemoRibbon` | Gastronomía showcase |
 | `/demo/carniceria` | `WeightedCatalogDemoPage` | Hero, weight pills, estimado; registry config |
-| `/demo/verduleria` | `WeightedCatalogDemoPage` | Mismo motor peso/unidad · La Inmaculada |
+| `/demo/verduleria` | `VerduleriaDemoPage` | Foto-first · sticky cart · La Inmaculada |
 
 ## Gotchas
 

@@ -5,7 +5,7 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-08-06 |
-| **Versión** | `1.21.0` (`package.json` → stamp UI) |
+| **Versión** | `1.21.1` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
 | **Cambio actual** | demo La Inmaculada `/demo/verduleria` |
 | **Live** | https://tmm.gatrivi.com |
@@ -224,7 +224,8 @@ Publicitar “busco pilotos” o vender Tienda online: **Gate A OK** (verificar 
 | Config aguacats | `src/data/demos/aguacats.ts` |
 | Config verdulería | `src/data/demos/verduleria.ts` |
 | Config carnicería | `src/data/demos/carniceria.ts` |
-| Página peso (carnicería/verdulería) | `src/pages/WeightedCatalogDemoPage.tsx` |
+| Página peso carnicería | `src/pages/WeightedCatalogDemoPage.tsx` |
+| Página verdulería | `src/pages/VerduleriaDemoPage.tsx` |
 | Página carnicería | re-export → WeightedCatalogDemoPage |
 | Planes | `src/config/plans.ts` |
 | Versión inyectada | `src/config/version.ts` ← vite |
@@ -268,7 +269,7 @@ Abrir:
 - https://tmm.gatrivi.com/demo/carniceria
 - https://tmm.gatrivi.com/demo/verduleria
 - https://tmm.gatrivi.com/demo/aguacats
-- Stamp / `package.json` = **1.21.0**
+- Stamp / `package.json` = **1.21.1**
 
 ---
 

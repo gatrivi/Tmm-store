@@ -1,7 +1,6 @@
 # Demo vertical — La Inmaculada (verdulería)
 
-**Estado: shipped** (v1.21.0) · peso/unidad · placeholders hasta fotos del local
-
+**Estado: shipped** (v1.21.1) · página dedicada foto-first · Express `?rubro=verduleria` redirige acá
 ## Prospect
 
 | Campo | Valor |
@@ -25,7 +24,8 @@
 | Seguimiento | `/demo/verduleria/order/:id` |
 
 - Config: `src/data/demos/verduleria.ts`
-- UI: `WeightedCatalogDemoPage` (compartida con carnicería)
+- UI: `VerduleriaDemoPage` (hero marca + cards foto + sticky cart)
+- Express: `/demo?rubro=verduleria` → `/demo/verduleria`
 - Storage: `trufi_demo_orders_v2:verduleria`
 - Tenant: `demo-verduleria`
 - Check: `npm run check:demo`

@@ -6,6 +6,7 @@ import AguacatsDemoPage from './pages/AguacatsDemoPage';
 import MamabelDemoPage from './pages/MamabelDemoPage';
 import Storefront from './pages/Storefront';
 import SuperAdminPage from './pages/SuperAdminPage';
+import VerduleriaDemoPage from './pages/VerduleriaDemoPage';
 import WeightedCatalogDemoPage from './pages/WeightedCatalogDemoPage';
 import { AppVersionStamp } from './components/AppVersionBadge';
 import { DemoRibbon } from './components/DemoRibbon';
@@ -22,6 +23,16 @@ function CustomerDemo() {
       <Storefront />
     </>
   );
+}
+
+/** Express verdulería → vertical dedicada (fotos + marca). */
+function ExpressOrRedirect() {
+  const location = useLocation();
+  const rubro = new URLSearchParams(location.search).get('rubro');
+  if (rubro === 'verduleria') {
+    return <Navigate to="/demo/verduleria" replace />;
+  }
+  return <CustomerDemo />;
 }
 
 /** Typo alias: mamamabel → mamabel */
@@ -50,7 +61,7 @@ export default function CommerceApp() {
           <LanguageProvider>
             <AppVersionStamp />
             <Routes>
-              <Route path="/demo" element={<CustomerDemo />} />
+              <Route path="/demo" element={<ExpressOrRedirect />} />
               <Route path="/demo/pizzeria" element={<CustomerDemo />} />
               <Route path="/demo/pizzeria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/panaderia" element={<CustomerDemo />} />
@@ -63,7 +74,7 @@ export default function CommerceApp() {
               <Route path="/demo/mamamabel/order/:orderId" element={<RedirectMamabelOrder />} />
               <Route path="/demo/carniceria" element={<WeightedCatalogDemoPage />} />
               <Route path="/demo/carniceria/order/:orderId" element={<OrderStatusPage />} />
-              <Route path="/demo/verduleria" element={<WeightedCatalogDemoPage />} />
+              <Route path="/demo/verduleria" element={<VerduleriaDemoPage />} />
               <Route path="/demo/verduleria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/s/:slug" element={<Storefront />} />
               <Route path="/admin" element={<AdminPage />} />

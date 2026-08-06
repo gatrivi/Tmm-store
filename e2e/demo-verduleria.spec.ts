@@ -28,13 +28,14 @@ test.describe('demo verdulería journey', () => {
     test.setTimeout(60_000);
     await expect(page.getByText('La Inmaculada').first()).toBeVisible();
     await expect(page.getByText(/Ugarte y España/i).first()).toBeVisible();
+    await expect(page.locator('[data-demo-page="verduleria"]')).toBeVisible();
 
     await addVerduleriaBasket(page);
 
-    await page.getByRole('button', { name: /Ver carrito/i }).click();
-    await expect(page.locator('.fixed').getByText('$19.800')).toBeVisible();
-    await expect(page.locator('.fixed').getByText('Total estimado')).toBeVisible();
-    await page.getByRole('button', { name: 'Armar pedido' }).click();
+    const sticky = page.locator('.fixed').filter({ hasText: 'Armar pedido' });
+    await expect(sticky.getByText(/19\.800/)).toBeVisible();
+    await expect(sticky.getByText('Total estimado')).toBeVisible();
+    await sticky.getByRole('button', { name: 'Armar pedido' }).click();
 
     await page.getByPlaceholder('Ej: Juan Pérez').fill('Prospecto Test');
     await page.getByPlaceholder('Ej: 11 3184-4469').fill('1100000000');
@@ -65,5 +66,11 @@ test.describe('demo verdulería journey', () => {
     await expect(page.getByText('Preparando')).toBeVisible();
     await expect(page.getByText('Total estimado')).toBeVisible();
     await expect(page.getByText(/19\.800/)).toBeVisible();
+  });
+
+  test('express rubro=verduleria redirects to vertical', async ({ page }) => {
+    await page.goto('/demo?negocio=Tu+negocio&barrio=Olivos&rubro=verduleria&color=carbon');
+    await expect(page).toHaveURL(/\/demo\/verduleria/);
+    await expect(page.getByText('La Inmaculada').first()).toBeVisible();
   });
 });
