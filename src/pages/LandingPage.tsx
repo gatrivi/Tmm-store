@@ -382,7 +382,8 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--lp-bg)] via-[color:var(--lp-bg)]/92 to-[color:var(--lp-bg)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--lp-bg)]/55 via-[color:var(--lp-bg)]/72 to-[color:var(--lp-bg)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,color-mix(in_srgb,var(--lp-bg)_35%,transparent)_100%)]" />
           <div
             className="pointer-events-none absolute -left-20 top-0 h-[55%] w-[70%] rounded-full blur-3xl"
             style={{ background: 'radial-gradient(circle, var(--lp-glow), transparent 68%)' }}
