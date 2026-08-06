@@ -108,6 +108,16 @@ const SHOWCASE_CASES: ShowcaseCase[] = [
     imageAlt: 'Insumos mayoristas Molino Florida',
     tone: 'blue',
   },
+  {
+    number: '05',
+    name: 'La Inmaculada',
+    category: 'Verdulería',
+    description: 'Peso, unidad y total estimado — pedido semanal sin audio caótico.',
+    samplePath: '/demo/verduleria',
+    image: '/demos/verduleria/hero.jpg',
+    imageAlt: 'Bolsón y verdura de la demo La Inmaculada',
+    tone: 'green',
+  },
 ];
 
 const DEMO_GROUPS: DemoGroup[] = [
@@ -120,7 +130,7 @@ const DEMO_GROUPS: DemoGroup[] = [
       { name: 'Pizzería', detail: 'Variantes y pedido', samplePath: '/demo/pizzeria' },
       { name: 'Pollería', detail: 'Entero, medio y combos', samplePath: '/demo?rubro=polleria', rubro: 'polleria' },
       { name: 'Cafetería', detail: 'Carta para retirar', samplePath: '/demo?rubro=cafeteria', rubro: 'cafeteria' },
-      { name: 'Verdulería', detail: 'Peso, unidad y sustitutos', samplePath: '/demo?rubro=verduleria', rubro: 'verduleria' },
+      { name: 'Verdulería', detail: 'Peso, unidad y sustitutos', samplePath: '/demo/verduleria' },
     ],
   },
   {

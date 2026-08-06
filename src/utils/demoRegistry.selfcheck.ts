@@ -16,6 +16,7 @@ import { CARNICERIA_DEMO } from '../data/demos/carniceria';
 import { MAMABEL_DEMO } from '../data/demos/mamabel';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
 import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
+import { VERDULERIA_DEMO } from '../data/demos/verduleria';
 
 function main() {
   assert.equal(resolveTenantIdFromPath('/demo'), 'demo');
@@ -140,6 +141,27 @@ function main() {
   assert.notEqual(resolveDemoStorageKey('panaderia'), resolveDemoStorageKey('pizzeria'));
   assert.notEqual(resolveDemoStorageKey('mamabel'), resolveDemoStorageKey('panaderia'));
   assert.notEqual(resolveDemoStorageKey('aguacats'), resolveDemoStorageKey('mamabel'));
+
+  // Verdulería La Inmaculada — peso/unidad
+  assert.equal(resolveTenantIdFromPath('/demo/verduleria'), 'demo-verduleria');
+  assert.equal(resolveTenantIdFromPath('/demo/verduleria/owner'), 'demo-verduleria');
+  assert.equal(resolveTenantIdFromPath('/demo/verduleria/order/IM12'), 'demo-verduleria');
+  assert.equal(resolveDemoIdFromPath('/demo/verduleria'), 'verduleria');
+  assert.equal(resolveDemoStorageKey('verduleria'), 'trufi_demo_orders_v2:verduleria');
+  const verd = resolveDemoFromPath('/demo/verduleria');
+  assert.ok(verd);
+  assert.equal(verd.tenantId, 'demo-verduleria');
+  assert.equal(verd.siteSettings.brandName, 'La Inmaculada');
+  assert.equal(verd.copy.totalLabel, 'Total estimado');
+  assert.ok(verd.menuItems.some(i => i.id === 'tomate'));
+  assert.ok(verd.menuItems.some(i => i.id === 'bolson'));
+  assert.equal(verd.menuCategories.length, 3);
+  assert.equal(verd.seedOrders.length, 3);
+  assert.equal(getDemoByTenantId('demo-verduleria')?.id, 'verduleria');
+  const tomate = VERDULERIA_DEMO.menuItems.find(i => i.id === 'tomate')!;
+  assert.equal(tomate.options.length, 2);
+  assert.equal(tomate.options[0].price * 2, tomate.options[1].price);
+  assert.notEqual(resolveDemoStorageKey('verduleria'), resolveDemoStorageKey('carniceria'));
 
   console.log('demoRegistry.selfcheck: ok');
 }

@@ -24,7 +24,7 @@ Trufi gana cuando hay **pedido recurrente por WSP desordenado** + dueño que ati
 |---|----------|------|---------|------------|
 | 1 | **Pizzería / empanadas / roti** | ★★★★★ | Fit A playbook; WSP caos; pitch 0 comisión | `/demo/pizzeria` (v1.9.1) |
 | 2 | **Carnicería barrial** | ★★★★☆ | Cortes + “confirmo peso”; sin Rappi típico | `/demo/carniceria` |
-| 3 | **Verdulería / frutería** | ★★★★☆ | Pedido semanal por WSP; peso/unidad; mismo patrón carnicería | — |
+| 3 | **Verdulería / frutería** | ★★★★☆ | Pedido semanal por WSP; peso/unidad; mismo patrón carnicería | `/demo/verduleria` (La Inmaculada) |
 | 4 | **Panadería / facturas** | ★★★☆☆ | Encargos mañana; lista fija; pico 6–9h | `/demo/panaderia` (La Magdalena) |
 | 5 | **Pollería / rotisería pollos** | ★★★☆☆ | Igual pizza/roti; half/pollo + guarnición | cubierto por `/demo` + armar |
 | 6 | **Heladería / sandwiches** | ★★★☆☆ | Pedido WSP fin de semana; sabores/combos | — |
@@ -48,10 +48,9 @@ Cada demo = **un dolor en 60s**, no feature dump. Patrón carnicería: config `s
 
 ## Orden de build (lazy)
 
-1. **Done:** `/demo/pizzeria` · `/demo/panaderia` (La Magdalena) · carnicería · `/demo` legacy.
-2. **Siguiente vertical real:** verdulería (mismo motor peso/unidad que carnicería; alto WSP barrio ZN).
-3. **Pollería/heladería:** primero `/demo/armar`; solo vertical si cierra lead.
-4. **Café / farmacia / zapatería:** no build hasta lead pagando depósito.
+1. **Done:** `/demo/pizzeria` · `/demo/panaderia` (La Magdalena) · carnicería · `/demo/verduleria` (La Inmaculada) · `/demo` legacy.
+2. **Siguiente vertical real:** pollería/heladería solo con lead (Express primero).
+3. **Café / farmacia / zapatería:** no build hasta lead pagando depósito.
 
 ## Criterio “armar vertical nueva”
 
@@ -74,8 +73,8 @@ No si: solo marketing genérico — usar Express.
 
 Catálogo vacío = demo mala. Presets: `/demos/presets/<rubro>/<itemId>.jpg`. Verticales: `public/demos/<id>/`.
 
-## Decisión pedida
+## Decisión
 
-Confirmar **próxima vertical a buildear:** ¿verdulería o panadería? (default recomendado: **verdulería**).
+Verdulería shipped: `/demo/verduleria` · [`demo-verduleria.md`](./demo-verduleria.md).
 
 See also: [`prospect-demo.md`](../ops/prospect-demo.md), [`demo-carniceria-gabriel.md`](./demo-carniceria-gabriel.md), [`sales-playbook-zn.md`](../ops/sales-playbook-zn.md)

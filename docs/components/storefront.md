@@ -19,7 +19,8 @@ Deps: `useMenu()`, `usePlan()`, `useLanguage()`, `CheckoutModal`, `ShareModal`, 
 | Path | Page | Notes |
 |------|------|-------|
 | `/demo` | `Storefront` + `DemoRibbon` | Gastronomía showcase |
-| `/demo/carniceria` | `CarniceriaDemoPage` | Hero, weight pills, estimado; registry config |
+| `/demo/carniceria` | `WeightedCatalogDemoPage` | Hero, weight pills, estimado; registry config |
+| `/demo/verduleria` | `WeightedCatalogDemoPage` | Mismo motor peso/unidad · La Inmaculada |
 
 ## Gotchas
 

@@ -12,6 +12,7 @@ Purpose: show the outcome, not a feature inventory.
 - **Aguacats (ex Refcurcum):** `/demo/aguacats` · `/demo/aguacats/owner` · `/demo/aguacats/order/:id`
 - Legacy gastronomía (choripán): `/demo` · `/demo/owner`
 - **Vertical carnicería:** `/demo/carniceria` · `/demo/carniceria/owner` · `/demo/carniceria/order/:id`
+- **Verdulería La Inmaculada:** `/demo/verduleria` · `/demo/verduleria/owner` · `/demo/verduleria/order/:id`
 
 Live: https://tmm.gatrivi.com/demo/mamabel
 
