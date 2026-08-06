@@ -13,6 +13,7 @@ Purpose: show the outcome, not a feature inventory.
 - Legacy gastronomía (choripán): `/demo` · `/demo/owner`
 - **Canavesi Carnes (Olivos):** `/demo/canavesi` · `/demo/canavesi/owner` · `/demo/canavesi/order/:id`
 - **Vertical carnicería:** `/demo/carniceria` · `/demo/carniceria/owner` · `/demo/carniceria/order/:id`
+- **Verdulería La Inmaculada:** `/demo/verduleria` · `/demo/verduleria/owner` · `/demo/verduleria/order/:id`
 
 Live: https://tmm.gatrivi.com/demo/mamabel
 

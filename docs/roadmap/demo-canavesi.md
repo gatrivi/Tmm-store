@@ -34,7 +34,7 @@ Gaps / qué pedir: [`canavesi-content-gaps.md`](../canavesi-content-gaps.md)
 - Tenant: `demo-canavesi`
 - Storage: `trufi_demo_orders_v2:canavesi`
 - Config: `src/data/demos/canavesi.ts`
-- UI: `CarniceriaDemoPage` (reuso)
+- UI: `WeightedCatalogDemoPage` (shared carnicería/verdulería/Canavesi)
 - Assets: `public/demos/canavesi/`
 - Check: `npm run check:demo`
 

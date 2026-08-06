@@ -4,6 +4,7 @@ import { CARNICERIA_DEMO } from '../data/demos/carniceria';
 import { MAMABEL_DEMO } from '../data/demos/mamabel';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
 import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
+import { VERDULERIA_DEMO } from '../data/demos/verduleria';
 import type { DemoDefinition } from '../data/demos/types';
 
 /** Gastronomy showcase — kept for path parity with legacy `/demo`. */
@@ -18,6 +19,7 @@ const GASTRONOMY_DEMO: Pick<DemoDefinition, 'id' | 'tenantId' | 'customerPath' |
 const DEMOS: DemoDefinition[] = [
   CANAVESI_DEMO,
   CARNICERIA_DEMO,
+  VERDULERIA_DEMO,
   PIZZERIA_DEMO,
   PANADERIA_DEMO,
   MAMABEL_DEMO,

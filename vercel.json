@@ -7,6 +7,8 @@
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/demo/carniceria", "destination": "/demo-carniceria.html" },
     { "source": "/demo/carniceria/(.*)", "destination": "/demo-carniceria.html" },
+    { "source": "/demo/verduleria", "destination": "/demo-verduleria.html" },
+    { "source": "/demo/verduleria/(.*)", "destination": "/demo-verduleria.html" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

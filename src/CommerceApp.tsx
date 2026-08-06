@@ -3,10 +3,10 @@ import AdminPage from './pages/AdminPage';
 import NotFound from './pages/NotFound';
 import OrderStatusPage from './pages/OrderStatusPage';
 import AguacatsDemoPage from './pages/AguacatsDemoPage';
-import CarniceriaDemoPage from './pages/CarniceriaDemoPage';
 import MamabelDemoPage from './pages/MamabelDemoPage';
 import Storefront from './pages/Storefront';
 import SuperAdminPage from './pages/SuperAdminPage';
+import WeightedCatalogDemoPage from './pages/WeightedCatalogDemoPage';
 import { AppVersionStamp } from './components/AppVersionBadge';
 import { DemoRibbon } from './components/DemoRibbon';
 import { AdminProvider } from './context/AdminContext';
@@ -61,10 +61,12 @@ export default function CommerceApp() {
               <Route path="/demo/mamabel/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/mamamabel" element={<Navigate to="/demo/mamabel" replace />} />
               <Route path="/demo/mamamabel/order/:orderId" element={<RedirectMamabelOrder />} />
-              <Route path="/demo/carniceria" element={<CarniceriaDemoPage />} />
+              <Route path="/demo/carniceria" element={<WeightedCatalogDemoPage />} />
               <Route path="/demo/carniceria/order/:orderId" element={<OrderStatusPage />} />
-              <Route path="/demo/canavesi" element={<CarniceriaDemoPage />} />
+              <Route path="/demo/canavesi" element={<WeightedCatalogDemoPage />} />
               <Route path="/demo/canavesi/order/:orderId" element={<OrderStatusPage />} />
+              <Route path="/demo/verduleria" element={<WeightedCatalogDemoPage />} />
+              <Route path="/demo/verduleria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/s/:slug" element={<Storefront />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/s/:slug/admin" element={<AdminPage />} />

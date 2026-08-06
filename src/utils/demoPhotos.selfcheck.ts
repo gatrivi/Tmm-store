@@ -10,6 +10,7 @@ import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
 import { CARNICERIA_DEMO } from '../data/demos/carniceria';
 import { CANAVESI_DEMO } from '../data/demos/canavesi';
+import { VERDULERIA_DEMO } from '../data/demos/verduleria';
 
 function assertImages(label: string, items: { id: string; images: string[] }[]) {
   for (const item of items) {
@@ -27,6 +28,7 @@ function main() {
   assertImages('panaderia', PANADERIA_DEMO.menuItems);
   assertImages('carniceria', CARNICERIA_DEMO.menuItems);
   assertImages('canavesi', CANAVESI_DEMO.menuItems);
+  assertImages('verduleria', VERDULERIA_DEMO.menuItems);
   for (const preset of Object.values(DEMO_PRESETS)) {
     assertImages(preset.id, preset.menuItems);
   }
