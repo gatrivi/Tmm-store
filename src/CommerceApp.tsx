@@ -18,8 +18,12 @@ import { resolveTenantIdFromPath } from './utils/demoRegistry';
 
 function CustomerDemo() {
   const location = useLocation();
-  // Express / legacy gastronomy only — pizzería & panadería reuse Storefront with vertical config
-  if (!DEMO_EXPRESS_PUBLIC && (location.pathname === '/demo' || location.pathname === '/demo/')) {
+  const rubro = new URLSearchParams(location.search).get('rubro');
+  // Legacy `/demo` sin rubro = choripán sin fotos → galería
+  if (location.pathname === '/demo' || location.pathname === '/demo/') {
+    if (!rubro) return <Navigate to={DEMO_EXPRESS_FALLBACK} replace />;
+  }
+  if (!DEMO_EXPRESS_PUBLIC) {
     return <Navigate to={DEMO_EXPRESS_FALLBACK} replace />;
   }
   return (

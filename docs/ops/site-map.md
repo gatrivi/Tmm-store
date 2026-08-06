@@ -72,21 +72,27 @@ Alias: `/demo/mamamabel` → mamabel
 
 `/s/:slug` · `/s/:slug/admin` · `/admin` · `/order/:id` · `/super-admin`
 
-## Express OFF (código vivo, no público)
+## Express ON (fotos completas en `public/demos/presets/`)
 
-Flag: `src/config/demoExpress.ts` → `DEMO_EXPRESS_PUBLIC=false`
+`DEMO_EXPRESS_PUBLIC=true` · `/demo?rubro=<id>` · `/demo/armar` OFF
 
-`/demo` · `/demo?rubro=*` · `/demo/armar` · `/demo/owner` → `/demos`
+| Rubro | URL |
+|-------|-----|
+| Cafetería | `/demo?rubro=cafeteria` |
+| Librería | `/demo?rubro=libreria` |
+| Pet shop | `/demo?rubro=petshop` |
+| Pollería | `/demo?rubro=polleria` |
+| Gráfica | `/demo?rubro=grafica` |
+| Lácteos | `/demo?rubro=distribuidora-lacteos` |
+| Molino Florida | `/demo?rubro=molino-mayorista&negocio=Molino%20Florida` |
 
-Presets con assets (incl. café): `public/demos/presets/<rubro>/` · data `src/data/demoPresets.ts`
+Verdulería preset duplicada → usar `/demo/verduleria`.
 
-| Preset | Assets |
-|--------|--------|
-| `cafeteria` | espresso, café leche, capuccino, medialuna, tostado, desayuno, jugo, agua |
-| `molino-mayorista` | Molino Florida |
-| `petshop` · `libreria` · `polleria` · `grafica` · `distribuidora-lacteos` · … | idem |
+## Sin preset / sin fotos (no rehabilitar)
 
-**Hueco demos pulidas:** cafetería / café takeaway (assets Express listos; falta vertical `/demo/cafe` si hay lead).
+Rubros en `PROSPECT_CATEGORIES` sin preset: `gastronomia`, `rotiseria`, `almacen`, `dietetica`.  
+`/demo` legacy choripán solo si Express legacy activo.
+
 
 ## Relacionado
 

@@ -12,11 +12,13 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { buildReserveHref, reserveCtaLabel, withAttribution } from '../utils/demoIntake';
+import { listDemoPresets } from '../data/demoPresets';
 
 type DemoCard = {
   name: string;
   detail: string;
   samplePath: string;
+  image?: string;
 };
 
 type DemoGroup = {
@@ -116,19 +118,36 @@ const SHOWCASE_CASES: ShowcaseCase[] = [
   },
 ];
 
+const POLISHED_CARDS: DemoCard[] = [
+  { name: 'Canavesi', detail: 'Carnicería · Olivos Borges', samplePath: '/demo/canavesi', image: '/demos/canavesi/hero.jpg' },
+  { name: 'Gabriel', detail: 'Carnicería · cortes y combos', samplePath: '/demo/carniceria', image: '/demos/carniceria/gabriel-hero.jpg' },
+  { name: 'La Inmaculada', detail: 'Verdulería · peso y packs', samplePath: '/demo/verduleria', image: '/demos/verduleria/hero.jpg' },
+  { name: 'La Magdalena', detail: 'Panadería · retiro', samplePath: '/demo/panaderia', image: '/demos/panaderia/products/medialunas.jpg' },
+  { name: 'Pizzería', detail: 'Variantes y pedido', samplePath: '/demo/pizzeria', image: '/demos/pizzeria/muzza.jpg' },
+  { name: 'Mamá Mabel', detail: 'Repostería · portfolio', samplePath: '/demo/mamabel', image: '/demos/mamabel/picked/hero.jpg' },
+  { name: 'Aguacats', detail: 'Fresco y combos', samplePath: '/demo/aguacats', image: '/demos/aguacats/frescura.jpg' },
+];
+
+/** Express presets with full product photos — skip verduleria (polished vertical exists). */
+const EXPRESS_CARDS: DemoCard[] = listDemoPresets()
+  .filter(p => p.id !== 'verduleria')
+  .map(p => ({
+    name: p.defaultBusinessName ?? p.label,
+    detail: p.label,
+    samplePath: `/demo?rubro=${p.id}`,
+    image: p.menuItems[0]?.images[0],
+  }));
+
 const DEMO_GROUPS: DemoGroup[] = [
   {
-    title: 'Muestras listas',
-    intro: 'Solo demos con marca, fotos y flujo completo. Sin plantillas a medias.',
-    cards: [
-      { name: 'Canavesi', detail: 'Carnicería · Olivos Borges', samplePath: '/demo/canavesi' },
-      { name: 'Gabriel', detail: 'Carnicería · cortes y combos', samplePath: '/demo/carniceria' },
-      { name: 'La Inmaculada', detail: 'Verdulería · peso y packs', samplePath: '/demo/verduleria' },
-      { name: 'La Magdalena', detail: 'Panadería · retiro', samplePath: '/demo/panaderia' },
-      { name: 'Pizzería', detail: 'Variantes y pedido', samplePath: '/demo/pizzeria' },
-      { name: 'Mamá Mabel', detail: 'Repostería · portfolio', samplePath: '/demo/mamabel' },
-      { name: 'Aguacats', detail: 'Fresco y combos', samplePath: '/demo/aguacats' },
-    ],
+    title: 'Muestras con marca',
+    intro: 'Prospectos reales · fotos y flujo completo.',
+    cards: POLISHED_CARDS,
+  },
+  {
+    title: 'Más rubros (con fotos)',
+    intro: 'Plantillas ilustrativas · todas con foto por producto.',
+    cards: EXPRESS_CARDS,
   },
 ];
 
@@ -417,8 +436,11 @@ export default function DemosGalleryPage() {
                   </div>
                   <div className="grid gap-x-6 border-t border-black/10 sm:grid-cols-2 lg:grid-cols-3">
                     {group.cards.map(card => (
-                      <div key={card.name} className="group flex min-h-[7.5rem] items-center justify-between gap-4 border-b border-black/10 py-5">
-                        <div>
+                      <div key={card.name} className="group flex min-h-[7.5rem] items-center gap-4 border-b border-black/10 py-5">
+                        {card.image ? (
+                          <img src={card.image} alt="" className="h-14 w-14 shrink-0 rounded-xl object-cover" loading="lazy" />
+                        ) : null}
+                        <div className="min-w-0 flex-1">
                           <p className="text-base font-black tracking-[-0.02em]">{card.name}</p>
                           <p className="mt-1 text-xs text-black/50">{card.detail}</p>
                         </div>

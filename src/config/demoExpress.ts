@@ -1,8 +1,7 @@
-/**
- * Demo Express (presets `/demo?rubro=` + `/demo/armar`) — off for public sales.
- * Code/presets stay for internal revive; do not link from landing or /demos.
- */
-export const DEMO_EXPRESS_PUBLIC = false;
+/** Express `/demo?rubro=` — ON when presets have product photos. */
+export const DEMO_EXPRESS_PUBLIC = true;
 
-/** Where public Express entrypoints redirect. */
+/** Builder `/demo/armar` — keep off (plantillas sin marca). */
+export const DEMO_EXPRESS_ARMAR_PUBLIC = false;
+
 export const DEMO_EXPRESS_FALLBACK = '/demos';

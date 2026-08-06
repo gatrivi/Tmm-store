@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
-import { DEMO_EXPRESS_FALLBACK, DEMO_EXPRESS_PUBLIC } from './config/demoExpress';
+import { DEMO_EXPRESS_ARMAR_PUBLIC, DEMO_EXPRESS_FALLBACK, DEMO_EXPRESS_PUBLIC } from './config/demoExpress';
 
 const CommerceApp = lazy(() => import('./CommerceApp'));
 const DemoOwnerPage = lazy(() => import('./pages/DemoOwnerPage'));
@@ -27,7 +27,7 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/demos" element={<DemosGalleryPage />} />
           <Route path="/pricing" element={<Navigate to="/#planes" replace />} />
-          <Route path="/demo/armar" element={DEMO_EXPRESS_PUBLIC ? <ProspectDemoBuilderPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
+          <Route path="/demo/armar" element={DEMO_EXPRESS_ARMAR_PUBLIC ? <ProspectDemoBuilderPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/owner" element={DEMO_EXPRESS_PUBLIC ? <DemoOwnerPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/carniceria/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/canavesi/owner" element={<DemoOwnerPage />} />

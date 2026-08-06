@@ -625,8 +625,9 @@ export default function LandingPage() {
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {[
-                { to: '/demo/verduleria', icon: Sparkles, label: 'La Inmaculada', hint: 'Verdulería · peso y packs' },
-                { to: '/demo/aguacats', icon: Warehouse, label: 'Aguacats', hint: 'Fresco y combos' },
+                { to: '/demo/verduleria', icon: Sparkles, label: 'La Inmaculada', hint: 'Verdulería' },
+                { to: '/demo?rubro=cafeteria', icon: Sparkles, label: 'Café del barrio', hint: 'Cafetería · retiro' },
+                { to: '/demo?rubro=molino-mayorista&negocio=Molino%20Florida', icon: Warehouse, label: 'Molino Florida', hint: 'Mayorista' },
               ].map(item => (
                 <Link
                   key={item.label}
