@@ -16,7 +16,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'facturas',
     badge: 'Clásico',
     description: 'Horno de la mañana',
-    images: [],
+    images: ['/demos/panaderia/products/medialunas.jpg'],
     options: packs(4800, 9000),
   },
   {
@@ -24,7 +24,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Vigilantes',
     category: 'facturas',
     description: 'Con azúcar',
-    images: [],
+    images: ['/demos/panaderia/products/vigilantes.jpg'],
     options: packs(4500, 8500),
   },
   {
@@ -33,7 +33,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'facturas',
     badge: 'Más pedidas',
     description: 'Crocantes',
-    images: [],
+    images: ['/demos/panaderia/products/tortitas.jpg'],
     options: packs(4200, 7900),
   },
   {
@@ -41,7 +41,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Facturas surtidas',
     category: 'facturas',
     description: 'Mix del día',
-    images: [],
+    images: ['/demos/panaderia/products/facturas-surtidas.jpg'],
     options: packs(5200, 9800),
   },
   {
@@ -49,7 +49,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Pan francés',
     category: 'panes',
     description: 'Masa madre / cocción del día',
-    images: [],
+    images: ['/demos/panaderia/products/pan-frances.jpg'],
     options: [
       { id: 'unidad', label: 'Unidad', price: 900 },
       { id: 'kg', label: '1 kg aprox.', price: 4200 },
@@ -60,7 +60,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Pan mignon',
     category: 'panes',
     description: 'Para la mesa',
-    images: [],
+    images: ['/demos/panaderia/products/mignon.jpg'],
     options: [
       { id: 'media', label: '½ kg aprox.', price: 2800 },
       { id: 'kg', label: '1 kg aprox.', price: 5200 },
@@ -71,7 +71,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Criollitos',
     category: 'panes',
     description: 'Hojaldre salado',
-    images: [],
+    images: ['/demos/panaderia/products/criollitos.jpg'],
     options: packs(3800, 7200),
   },
   {
@@ -79,7 +79,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Café con leche',
     category: 'mostrador',
     description: 'Para retiro en el local',
-    images: [],
+    images: ['/demos/panaderia/products/cafe-leche.jpg'],
     options: [{ id: 'taza', label: 'Taza', price: 2500 }],
   },
 ];
@@ -196,7 +196,7 @@ export const PANADERIA_DEMO: DemoDefinition = {
     brandInstagram: '',
     brandGoogleMaps: '',
     brandLogo: '/demos/panaderia/logo-blueprint.png',
-    menuLayout: 'list',
+    menuLayout: 'grid',
     demoMode: true,
     mpEnabled: false,
   },

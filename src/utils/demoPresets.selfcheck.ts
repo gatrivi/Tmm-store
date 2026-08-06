@@ -31,7 +31,7 @@ function main() {
     assert.ok(p.menuItems.length >= 6 && p.menuItems.length <= 8);
     assert.ok(p.copy.cartCta.length > 0);
     assert.ok(p.copy.totalLabel.length > 0);
-    assert.ok(p.menuItems.every(i => i.images.length === 0), `${id} editorial placeholders`);
+    assert.ok(p.menuItems.every(i => i.images.length >= 1), `${id} has product photos`);
   }
 
   assert.equal(listDemoPresets().length, 8);

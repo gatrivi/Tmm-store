@@ -24,7 +24,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'pizzas',
     badge: 'Más pedida',
     description: 'Salsa, muzzarella y orégano',
-    images: [],
+    images: ['/demos/pizzeria/muzza.jpg'],
     options: pizzaSizes(8900, 12900),
   },
   {
@@ -32,7 +32,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Napolitana',
     category: 'pizzas',
     description: 'Muzzarella, tomate, ajo y albahaca',
-    images: [],
+    images: ['/demos/pizzeria/napo.jpg'],
     options: pizzaSizes(10900, 14900),
   },
   {
@@ -40,7 +40,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Fugazzeta',
     category: 'pizzas',
     description: 'Cebolla y mucho queso',
-    images: [],
+    images: ['/demos/pizzeria/fugazzeta.jpg'],
     options: pizzaSizes(11900, 15900),
   },
   {
@@ -49,7 +49,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'empanadas',
     badge: 'Clásico',
     description: 'Carne cortada a cuchillo',
-    images: [],
+    images: ['/demos/pizzeria/empanada-carne.jpg'],
     options: empanadaPacks(7200, 13500),
   },
   {
@@ -57,7 +57,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Empanadas jamón y queso',
     category: 'empanadas',
     description: 'Jamón cocido y muzzarella',
-    images: [],
+    images: ['/demos/pizzeria/empanada-jyq.jpg'],
     options: empanadaPacks(7200, 13500),
   },
   {
@@ -65,7 +65,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Empanadas de humita',
     category: 'empanadas',
     description: 'Choclo cremoso',
-    images: [],
+    images: ['/demos/pizzeria/empanada-humita.jpg'],
     options: empanadaPacks(6800, 12800),
   },
   {
@@ -73,7 +73,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Fainá',
     category: 'extras',
     description: 'Porción para compartir',
-    images: [],
+    images: ['/demos/pizzeria/faina.jpg'],
     options: [{ id: 'porcion', label: 'Porción', price: 3500 }],
   },
   {
@@ -81,7 +81,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Gaseosa 1.5 L',
     category: 'extras',
     description: 'A elegir al confirmar',
-    images: [],
+    images: ['/demos/pizzeria/gaseosa.jpg'],
     options: [{ id: '15', label: '1.5 L', price: 2800 }],
   },
 ];
@@ -196,7 +196,7 @@ export const PIZZERIA_DEMO: DemoDefinition = {
     brandInstagram: '',
     brandGoogleMaps: '',
     brandLogo: '/demos/pizzeria/monogram.svg',
-    menuLayout: 'list',
+    menuLayout: 'grid',
     demoMode: true,
     mpEnabled: false,
   },

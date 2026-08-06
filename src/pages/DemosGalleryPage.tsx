@@ -104,7 +104,8 @@ const SHOWCASE_CASES: ShowcaseCase[] = [
     category: 'Mayorista e insumos',
     description: 'Un catálogo pensado para bolsas, bultos, reposición y pedidos repetidos.',
     samplePath: '/demo?rubro=molino-mayorista&negocio=Molino%20Florida',
-    imageAlt: 'Identidad tipográfica de Molino Florida',
+    image: '/demos/presets/molino-mayorista/harina-000.jpg',
+    imageAlt: 'Insumos mayoristas Molino Florida',
     tone: 'blue',
   },
 ];
