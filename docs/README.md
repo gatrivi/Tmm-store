@@ -52,6 +52,7 @@ Agent manifest: read this first, then one targeted file.
 | **Leads anillos (Olivos→VL)** | [ops/leads-rings-routine.md](./ops/leads-rings-routine.md) |
 | **Propuesta + demos Olivos/VL** | [ops/propuesta-olivos-vl.md](./ops/propuesta-olivos-vl.md) |
 | Client onboarding | [ops/onboarding.md](./ops/onboarding.md) |
+| **CRM/BPM handoff (nuevo repo)** | [crm-handoff/README.md](./crm-handoff/README.md) |
 | Live demo script | [ops/demo.md](./ops/demo.md) |
 | Human portfolio | [human/portfolio.md](./human/portfolio.md) |
 | **Roadmap / future** | [roadmap/README.md](./roadmap/README.md) |
