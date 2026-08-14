@@ -1,0 +1,7 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-labelledby="title">
+  <title id="title">Pizza artesanal de La Barrial</title>
+  <defs><linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#7f1d1d"/><stop offset="1" stop-color="#431407"/></linearGradient><radialGradient id="crust"><stop stop-color="#fbbf24"/><stop offset=".8" stop-color="#d97706"/><stop offset="1" stop-color="#92400e"/></radialGradient></defs>
+  <rect width="1200" height="520" fill="url(#bg)"/><circle cx="850" cy="285" r="205" fill="#292524" opacity=".35"/><circle cx="850" cy="260" r="190" fill="url(#crust)"/><circle cx="850" cy="260" r="154" fill="#f59e0b"/>
+  <path d="M735 200c50-52 125-67 190-32M738 290c58 49 130 57 207 8" fill="none" stroke="#fff7ed" stroke-width="30" stroke-linecap="round" opacity=".9"/><g fill="#b91c1c"><circle cx="805" cy="185" r="12"/><circle cx="900" cy="220" r="12"/><circle cx="820" cy="315" r="12"/><circle cx="930" cy="300" r="12"/></g><g fill="#3f6212"><ellipse cx="875" cy="155" rx="9" ry="20" transform="rotate(25 875 155)"/><ellipse cx="770" cy="250" rx="9" ry="20" transform="rotate(-35 770 250)"/></g>
+  <text x="155" y="220" fill="#fff7ed" font-family="Georgia,serif" font-size="70" font-weight="700">La Barrial</text><text x="160" y="275" fill="#fed7aa" font-family="Arial,sans-serif" font-size="25" letter-spacing="5">PIZZERÍA DE BARRIO</text>
+</svg>

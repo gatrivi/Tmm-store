@@ -25,6 +25,7 @@ const MENU_ITEMS: MenuItemType[] = [
     badge: 'Más pedida',
     description: 'Salsa, muzzarella y orégano',
     images: [],
+    customImages: ['/demos/pizzeria/muzza-original.png'],
     options: pizzaSizes(8900, 12900),
   },
   {
@@ -33,15 +34,43 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'pizzas',
     description: 'Muzzarella, tomate, ajo y albahaca',
     images: [],
+    customImages: ['/demos/pizzeria/napolitana.png'],
     options: pizzaSizes(10900, 14900),
   },
   {
+    id: 'tomate-albahaca',
+    name: 'Tomate y albahaca',
+    category: 'pizzas',
+    description: 'Muzzarella, tomate fresco, albahaca y oliva.',
+    images: [],
+    customImages: ['/demos/pizzeria/tomate-albahaca.png'],
+    options: pizzaSizes(9900, 13900),
+  },
+  {
+    id: 'jamon-morrones',
+    name: 'Jamón y morrones',
+    category: 'pizzas',
+    description: 'Muzzarella, jamón cocido y morrones asados.',
+    images: [],
+    customImages: ['/demos/pizzeria/jamon-morrones.png'],
+    options: pizzaSizes(11900, 15900),
+  },  {
     id: 'fugazzeta',
     name: 'Fugazzeta',
     category: 'pizzas',
     description: 'Cebolla y mucho queso',
     images: [],
+    customImages: ['/demos/pizzeria/fugazzeta.png'],
     options: pizzaSizes(11900, 15900),
+  },
+  {
+    id: 'aceituna-negra',
+    name: 'Aceituna negra',
+    category: 'pizzas',
+    description: 'Muzzarella, aceitunas negras y un toque de orégano',
+    images: [],
+    customImages: ['/demos/pizzeria/aceituna-negra.jpg'],
+    options: pizzaSizes(10900, 14900),
   },
   {
     id: 'empanada-carne',
@@ -50,6 +79,7 @@ const MENU_ITEMS: MenuItemType[] = [
     badge: 'Clásico',
     description: 'Carne cortada a cuchillo',
     images: [],
+    customImages: ['/demos/pizzeria/empanadas-carne.png'],
     options: empanadaPacks(7200, 13500),
   },
   {
@@ -58,6 +88,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'empanadas',
     description: 'Jamón cocido y muzzarella',
     images: [],
+    customImages: ['/demos/pizzeria/empanadas-jamon-queso.png'],
     options: empanadaPacks(7200, 13500),
   },
   {
@@ -66,6 +97,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'empanadas',
     description: 'Choclo cremoso',
     images: [],
+    customImages: ['/demos/pizzeria/empanadas-humita.png'],
     options: empanadaPacks(6800, 12800),
   },
   {
@@ -74,17 +106,34 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'extras',
     description: 'Porción para compartir',
     images: [],
+    customImages: ['/demos/pizzeria/faina.png'],
     options: [{ id: 'porcion', label: 'Porción', price: 3500 }],
   },
   {
+    id: 'pan-masa-madre',
+    name: 'Pan de masa madre',
+    category: 'extras',
+    description: 'Hogaza artesanal, fermentación lenta y corteza dorada.',
+    images: [],
+    customImages: ['/demos/pizzeria/pan-masa-madre.png'],
+    options: [{ id: 'unidad', label: 'Unidad', price: 6800 }],
+  },  {
     id: 'gaseosa',
     name: 'Gaseosa 1.5 L',
     category: 'extras',
     description: 'A elegir al confirmar',
+    customImages: ['/demos/pizzeria/bouteille-coca-cola-1-5l.webp'],
     images: [],
     options: [{ id: '15', label: '1.5 L', price: 2800 }],
   },
 ];
+
+MENU_ITEMS[0].description = 'La clásica. Salsa de tomate, muzzarella en hebra y un toque de oliva.';
+MENU_ITEMS[0].options = [{ id: 'chica', label: 'Chica · 6 porciones', price: 8900 }, { id: 'grande', label: 'Grande · 10 porciones', price: 12900 }];
+MENU_ITEMS[1].description = 'Muzzarella, tomate fresco, orégano y oliva. Sabor mediterráneo.';
+MENU_ITEMS[1].options = [{ id: 'chica', label: 'Chica · 6 porciones', price: 9900 }, { id: 'grande', label: 'Grande · 10 porciones', price: 13900 }];
+MENU_ITEMS[2].description = 'Mucha cebolla, muzzarella y un toque de parmesano. Suave y aromática.';
+MENU_ITEMS[2].options = [{ id: 'chica', label: 'Chica · 6 porciones', price: 9400 }, { id: 'grande', label: 'Grande · 10 porciones', price: 13400 }];
 
 const now = Date.now();
 
@@ -167,7 +216,9 @@ export const PIZZERIA_DEMO: DemoDefinition = {
   orderPath: (orderId: string) => `/demo/pizzeria/order/${orderId}`,
   plan: 'pedidos',
   locale: 'es',
-  monogram: 'LB',
+  monogram: 'PG',
+  heroImage: '/demos/pizzeria/hero1.png',
+  heroObjectPosition: 'center',
   hideLanguageSwitcher: true,
   hideThemeToggle: true,
   hideShare: true,
@@ -175,17 +226,17 @@ export const PIZZERIA_DEMO: DemoDefinition = {
   hidePromos: true,
   forceOpen: true,
   theme: {
-    hueso: '#FFF7ED',
-    bordo: '#B91C1C',
-    carbon: '#1C1917',
-    papel: '#FED7AA',
-    salvia: '#3F6212',
+    hueso: '#FFFFFF',
+    bordo: '#E63946',
+    carbon: '#0F0F0F',
+    papel: '#222222',
+    salvia: '#4ADE80',
   },
   siteSettings: {
     showUsdToggle: false,
     whatsappNumber: '',
     bankAlias: '',
-    brandName: 'La Barrial',
+    brandName: 'Pizza G',
     brandColor: '#B91C1C',
     brandColorDark: '#1C1917',
     brandColorLight: '#FFF7ED',
@@ -195,8 +246,8 @@ export const PIZZERIA_DEMO: DemoDefinition = {
     brandAddress: '',
     brandInstagram: '',
     brandGoogleMaps: '',
-    brandLogo: '/demos/pizzeria/monogram.svg',
-    menuLayout: 'list',
+    brandLogo: '/demos/pizzeria/logo.png',
+    menuLayout: 'grid',
     demoMode: true,
     mpEnabled: false,
   },
@@ -208,13 +259,13 @@ export const PIZZERIA_DEMO: DemoDefinition = {
   ],
   seedOrders: SEED_ORDERS,
   copy: {
-    heroTitle: 'Pizza y empanadas sin el caos del WhatsApp.',
-    heroBody: 'El cliente elige tamaño y cantidad. Vos recibís el pedido armado en la bandeja.',
+    heroTitle: 'Pizza y empanadas, listas para compartir.',
+    heroBody: 'Elegí el tamaño, armá tu pedido y recibí todo claro para retirar o coordinar delivery.',
     checkoutCta: 'Enviar pedido de prueba',
     cartCta: 'Pedir',
     totalLabel: 'Total',
-    totalHint: 'En producción el local confirma stock y horario por WhatsApp.',
-    ownerTitle: 'Pedidos — La Barrial',
+    totalHint: 'El local confirma stock, cobertura y horario antes de preparar.',
+    ownerTitle: 'Pedidos — Pizza G',
     ownerSubtitle: 'Demo pizzería · hoy',
     ribbonLabel: 'DEMO · productos y precios ilustrativos',
     pickupLabel: 'Retiro',
@@ -237,6 +288,6 @@ export const PIZZERIA_DEMO: DemoDefinition = {
     revenueLabel: 'Pedidos sesión',
     notesPlaceholder: 'Sin aceitunas, timbre roto…',
     chips: ['Delivery', 'Retiro'],
-    weightNotice: 'Problema que resolvemos: audio “una muzza y media docena” → pedido estructurado.',
+    weightNotice: 'Pedido claro: una muzza, media docena y la dirección en un solo lugar.',
   },
 };
