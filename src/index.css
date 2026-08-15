@@ -47,3 +47,34 @@ body {
 [data-demo-theme="carniceria"] .text-green-600 {
   color: #7B1E24;
 }
+
+/*
+ * Pizza G: atmosphere stays behind the information.
+ * The repository does not yet contain the original prep-station background,
+ * so the muzzarella product shot is used as a safe same-brand fallback.
+ */
+[data-demo-theme="pizzeria"] {
+  background-color: #FFF7ED;
+  background-image:
+    linear-gradient(rgba(255, 247, 237, 0.91), rgba(255, 247, 237, 0.96)),
+    url('/demos/pizzeria/muzza.jpg');
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+[data-demo-theme="pizzeria"] .bg-surface-elevated {
+  background-color: rgba(255, 253, 249, 0.96);
+  backdrop-filter: blur(3px);
+}
+
+[data-demo-theme="pizzeria"] .bg-green-600 {
+  background-color: #B91C1C;
+}
+[data-demo-theme="pizzeria"] .hover\:bg-green-700:hover {
+  background-color: #991B1B;
+}
+[data-demo-theme="pizzeria"] .text-green-400,
+[data-demo-theme="pizzeria"] .text-green-600 {
+  color: #B91C1C;
+}
