@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">Zimba Pet Store</title>
+  <desc id="desc">Monograma ZP para la muestra conceptual de Zimba Pet Store</desc>
+  <rect width="160" height="160" rx="36" fill="#17231C"/>
+  <circle cx="48" cy="44" r="12" fill="#D5A43B"/>
+  <circle cx="78" cy="30" r="11" fill="#D5A43B"/>
+  <circle cx="108" cy="44" r="12" fill="#D5A43B"/>
+  <path d="M50 72c8-18 22-27 30-27s22 9 30 27c8 18-3 31-16 31-7 0-10-4-14-4s-7 4-14 4c-13 0-24-13-16-31Z" fill="#D5A43B"/>
+  <text x="80" y="140" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800" letter-spacing="2" fill="#F7F5ED">ZP</text>
+</svg>
