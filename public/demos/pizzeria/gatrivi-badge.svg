@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">GATRIVI</title>
+  <desc id="desc">Circular GATRIVI market badge with storefront, tomato, basil and shopping cart.</desc>
+  <defs>
+    <linearGradient id="windowGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff4bd"/>
+      <stop offset="1" stop-color="#f4c96f"/>
+    </linearGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#000" flood-opacity=".24"/>
+    </filter>
+    <path id="brandArc" d="M 104 373 A 176 176 0 0 0 408 373"/>
+  </defs>
+
+  <circle cx="256" cy="256" r="238" fill="#e97924"/>
+  <circle cx="256" cy="256" r="218" fill="#1d1c19"/>
+  <circle cx="256" cy="256" r="204" fill="none" stroke="#f4e3c1" stroke-opacity=".15" stroke-width="2"/>
+
+  <g filter="url(#softShadow)">
+    <path d="M148 164h216l-20-48H168z" fill="#f5ead1" stroke="#f5ead1" stroke-width="8" stroke-linejoin="round"/>
+    <g stroke="#1d1c19" stroke-width="7">
+      <path d="M158 162h39v26c0 16-39 16-39 0z" fill="#f5ead1"/>
+      <path d="M197 162h39v26c0 16-39 16-39 0z" fill="#d95632"/>
+      <path d="M236 162h40v26c0 16-40 16-40 0z" fill="#f5ead1"/>
+      <path d="M276 162h39v26c0 16-39 16-39 0z" fill="#d95632"/>
+      <path d="M315 162h39v26c0 16-39 16-39 0z" fill="#f5ead1"/>
+    </g>
+
+    <rect x="166" y="190" width="180" height="122" rx="8" fill="#eee1c5" stroke="#f7efd9" stroke-width="8"/>
+    <rect x="184" y="207" width="144" height="80" rx="4" fill="url(#windowGlow)" stroke="#1d1c19" stroke-width="6"/>
+    <path d="M256 207v80M184 247h144" stroke="#1d1c19" stroke-width="5" opacity=".8"/>
+    <path d="M151 313h210v22H151z" fill="#f7efd9"/>
+
+    <g transform="translate(272 239)" fill="none" stroke="#b7e532" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M0 0h15l9 34h42l10-25H25"/>
+      <circle cx="32" cy="47" r="6" fill="#b7e532" stroke="none"/>
+      <circle cx="63" cy="47" r="6" fill="#b7e532" stroke="none"/>
+    </g>
+  </g>
+
+  <g transform="translate(119 259)" filter="url(#softShadow)">
+    <path d="M52 33c-28-8-48 10-48 34 0 28 25 46 52 39 26 7 50-11 50-39 0-26-23-43-54-34z" fill="#d6422f"/>
+    <path d="M55 35c-6-17 4-26 18-31-1 14-5 25-18 31z" fill="#4c8d35"/>
+    <path d="M47 34c-12-12-27-13-39-7 12 8 25 14 39 7z" fill="#60a946"/>
+    <path d="M84 14c34-15 53-4 62 12-29 2-48-1-62-12z" fill="#65ad47"/>
+    <path d="M92 27c30 1 43 15 44 31-25-8-39-17-44-31z" fill="#4d9838"/>
+    <circle cx="32" cy="58" r="5" fill="#ef7b65" opacity=".8"/>
+  </g>
+
+  <circle cx="91" cy="252" r="7" fill="#e8d3ae" opacity=".85"/>
+  <circle cx="421" cy="252" r="7" fill="#e8d3ae" opacity=".85"/>
+
+  <text fill="#f4e3c1" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="900" letter-spacing="4">
+    <textPath href="#brandArc" startOffset="50%" text-anchor="middle">GATRIVI</textPath>
+  </text>
+  <text x="256" y="438" fill="#e97924" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="800" letter-spacing="7" text-anchor="middle">PIZZA</text>
+</svg>
