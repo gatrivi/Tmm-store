@@ -68,7 +68,7 @@ export function getDemoPriceLabel(): string {
     | Record<string, string | undefined>
     | undefined;
   const fromEnv = env?.VITE_DEMO_PRICE_LABEL?.trim();
-  return fromEnv || '$65.000';
+  return fromEnv || '$325.000';
 }
 
 export function getDemoIntakeUrl(): string {
