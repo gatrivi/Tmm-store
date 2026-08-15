@@ -66,6 +66,22 @@ export interface DemoTheme {
   salvia: string;
 }
 
+/**
+ * Optional visual identity layer shared by vertical demos.
+ * This keeps atmosphere/hero treatment in data instead of one-off CSS selectors.
+ */
+export interface DemoPresentation {
+  /** Low-contrast environmental image behind the storefront. */
+  backgroundImage?: string;
+  backgroundPosition?: string;
+  /** 0 = transparent wash, 1 = fully hides the image. */
+  backgroundWash?: number;
+  /** Optional multi-image hero; takes precedence over heroImage. */
+  heroImages?: string[];
+  /** Show the business badge over the hero photography. */
+  showHeroBranding?: boolean;
+}
+
 export interface DemoDefinition {
   id: string;
   tenantId: string;
@@ -80,6 +96,7 @@ export interface DemoDefinition {
   seedOrders: OrderRecord[];
   copy: DemoCopy;
   theme: DemoTheme;
+  presentation?: DemoPresentation;
   /** Optional hero/brand photo; object-position pairs with the asset */
   heroImage?: string;
   heroObjectPosition?: string;
