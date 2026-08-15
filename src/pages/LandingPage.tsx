@@ -50,6 +50,7 @@ export default function LandingPage() {
   const location = useLocation();
   const price = getDemoPriceLabel();
   const demoHref = withAttribution('/demo/pizzeria');
+  const demosHref = withAttribution('/demos');
   const buyHref = buildSalesContactHref(`landing funnel — quiero mi tienda ${price}`);
 
   useEffect(() => {
@@ -162,13 +163,22 @@ export default function LandingPage() {
                 <li className="flex gap-3"><span className="text-[#d84d1d]">02</span> Agrega lo que quiere.</li>
                 <li className="flex gap-3"><span className="text-[#d84d1d]">03</span> Te llega el pedido ordenado.</li>
               </ol>
-              <Link
-                to={demoHref}
-                className="mt-8 inline-flex items-center gap-2 text-sm font-black underline decoration-2 underline-offset-4"
-              >
-                Probar la demo real
-                <ArrowRight size={16} />
-              </Link>
+              <div className="mt-8 flex flex-col items-start gap-3">
+                <Link
+                  to={demoHref}
+                  className="inline-flex items-center gap-2 text-sm font-black underline decoration-2 underline-offset-4"
+                >
+                  Probar la demo real
+                  <ArrowRight size={16} />
+                </Link>
+                <Link
+                  to={demosHref}
+                  className="inline-flex items-center gap-2 text-sm font-black text-black/45 transition hover:text-black"
+                >
+                  Ver más ejemplos
+                  <ArrowRight size={15} />
+                </Link>
+              </div>
             </div>
 
             <Link
