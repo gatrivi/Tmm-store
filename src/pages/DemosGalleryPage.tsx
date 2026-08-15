@@ -64,6 +64,16 @@ const DEMOS: DemoItem[] = [
     tags: ['Fotos y precios', 'Peso estimado', 'WhatsApp'],
   },
   {
+    name: 'Molino Florida',
+    rubro: 'Molino · Florida',
+    kind: 'Catálogo',
+    description: 'Harinas, cereales y formatos mayoristas ordenados para hogar, gastronomía y producción.',
+    samplePath: '/demo/molino-florida',
+    image: '/demos/molino-florida/card.svg',
+    imageAlt: 'Catálogo demo Molino Florida de harinas y cereales',
+    tags: ['Harinas', 'Formatos mayoristas', 'WhatsApp'],
+  },
+  {
     name: 'Mamá Mabel',
     rubro: 'Repostería artesanal',
     kind: 'Página',
