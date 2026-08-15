@@ -73,7 +73,7 @@ export function DemoRibbon() {
             }`}
           >
             <Store size={14} />
-            Local
+            Panel
           </Link>
         </div>
 
