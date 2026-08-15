@@ -44,6 +44,16 @@ const DEMOS: DemoItem[] = [
     featured: true,
   },
   {
+    name: 'Zimba Pet',
+    rubro: 'Pet shop · Vicente López',
+    kind: 'Tienda',
+    description: 'Alimento, reposición, retiro y delivery para que la compra habitual se resuelva en pocos toques.',
+    samplePath: '/demo/zimba-pet',
+    image: '/demos/presets/petshop/alimento-perro.jpg',
+    imageAlt: 'Alimento para mascotas de la muestra conceptual Zimba Pet',
+    tags: ['Compra habitual', 'Retiro / delivery', 'Pedidos'],
+  },
+  {
     name: 'Canavesi',
     rubro: 'Carnicería · Olivos',
     kind: 'Catálogo',
