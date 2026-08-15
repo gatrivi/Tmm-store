@@ -36,6 +36,22 @@ body {
   color: var(--color-text-primary);
 }
 
+/* Vertical demo: pizzería — atmosphere without reducing readability. */
+[data-demo-theme="pizzeria"] {
+  background-color: #fff7ed;
+  background-image:
+    linear-gradient(rgba(255, 247, 237, 0.91), rgba(255, 247, 237, 0.95)),
+    url('/demos/pizzeria/muzza.jpg');
+  background-position: center top;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+[data-demo-theme="pizzeria"] .bg-surface-elevated {
+  background-color: rgba(255, 253, 249, 0.94);
+  backdrop-filter: blur(4px);
+}
+
 /* Vertical demo: carnicería — remap hardcoded green CTAs */
 [data-demo-theme="carniceria"] .bg-green-600 {
   background-color: #7B1E24;
