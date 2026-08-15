@@ -4,6 +4,7 @@ import NotFound from './pages/NotFound';
 import OrderStatusPage from './pages/OrderStatusPage';
 import AguacatsDemoPage from './pages/AguacatsDemoPage';
 import MamabelDemoPage from './pages/MamabelDemoPage';
+import MolinoFloridaDemoPage from './pages/MolinoFloridaDemoPage';
 import Storefront from './pages/Storefront';
 import SuperAdminPage from './pages/SuperAdminPage';
 import WeightedCatalogDemoPage from './pages/WeightedCatalogDemoPage';
@@ -75,6 +76,8 @@ export default function CommerceApp() {
               <Route path="/demo/canavesi/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/verduleria" element={<WeightedCatalogDemoPage />} />
               <Route path="/demo/verduleria/order/:orderId" element={<OrderStatusPage />} />
+              <Route path="/demo/molino-florida" element={<MolinoFloridaDemoPage />} />
+              <Route path="/demo/molino" element={<Navigate to="/demo/molino-florida" replace />} />
               <Route path="/s/:slug" element={<Storefront />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/s/:slug/admin" element={<AdminPage />} />
