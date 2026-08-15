@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Molino Florida</title>
+  <desc id="desc">Ilustración editorial de trigo y harina para la demo Molino Florida.</desc>
+  <rect width="1200" height="900" fill="#efe6d2"/>
+  <rect x="70" y="70" width="1060" height="760" rx="56" fill="#f8f2e5" stroke="#23301f" stroke-width="8"/>
+  <circle cx="930" cy="228" r="128" fill="#d8b45a" opacity=".45"/>
+  <g stroke="#23301f" stroke-width="14" stroke-linecap="round" fill="none">
+    <path d="M308 684c70-154 112-306 115-455"/>
+    <path d="M423 319c-72-16-110-54-129-112"/>
+    <path d="M425 371c72-18 113-55 137-111"/>
+    <path d="M410 429c-74-11-120-43-151-96"/>
+    <path d="M400 488c79-7 129-36 165-88"/>
+    <path d="M380 548c-70 3-121-18-163-62"/>
+    <path d="M360 605c78 7 133-12 177-57"/>
+  </g>
+  <g fill="#c9972d" stroke="#23301f" stroke-width="7">
+    <ellipse cx="307" cy="212" rx="34" ry="64" transform="rotate(-42 307 212)"/>
+    <ellipse cx="551" cy="260" rx="34" ry="64" transform="rotate(44 551 260)"/>
+    <ellipse cx="265" cy="330" rx="34" ry="64" transform="rotate(-48 265 330)"/>
+    <ellipse cx="555" cy="394" rx="34" ry="64" transform="rotate(48 555 394)"/>
+    <ellipse cx="226" cy="484" rx="34" ry="64" transform="rotate(-54 226 484)"/>
+    <ellipse cx="532" cy="548" rx="34" ry="64" transform="rotate(54 532 548)"/>
+  </g>
+  <g transform="translate(602 372)">
+    <path d="M28 66h334l-34 278H62z" fill="#e7d1a7" stroke="#23301f" stroke-width="9"/>
+    <path d="M54 70c52-69 251-70 282 0" fill="#f9f4e9" stroke="#23301f" stroke-width="9"/>
+    <path d="M111 170c60 24 120 24 180 0" stroke="#23301f" stroke-width="8" fill="none"/>
+    <text x="195" y="248" text-anchor="middle" font-family="Georgia,serif" font-size="58" font-weight="700" fill="#23301f">MF</text>
+    <text x="195" y="300" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="5" fill="#23301f">MOLINO FLORIDA</text>
+  </g>
+  <text x="105" y="145" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="7" fill="#6f704b">HARINAS · CEREALES · PANIFICACIÓN</text>
+</svg>
