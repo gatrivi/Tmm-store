@@ -135,7 +135,7 @@ export default function LandingPage() {
 
             <div className="hidden md:block">
               <div className="ml-auto max-w-sm rounded-[2rem] border border-white/15 bg-black/50 p-7 shadow-2xl backdrop-blur-xl">
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-white/45">Promo · primeros 10</p>
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-white/45">Promo 50% · hasta reunir 5 testimonios</p>
                 <p className="mt-5 text-sm font-bold text-white/45"><s>$650.000</s></p>
                 <p className="text-5xl font-black tracking-[-0.06em] text-[#ff8a5c]">{price}</p>
                 <p className="mt-2 text-sm font-bold text-white/60">implementación</p>
@@ -243,7 +243,7 @@ export default function LandingPage() {
             </div>
 
             <div className="rounded-[2rem] bg-[#ff6b35] p-7 text-white shadow-2xl sm:p-9">
-              <p className="text-xs font-black uppercase tracking-[0.14em] text-white/70">Promo lanzamiento · primeros 10</p>
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-white/70">Promo lanzamiento 50% · hasta reunir 5 testimonios</p>
               <p className="mt-8 text-sm font-bold text-white/60"><s>$650.000</s></p>
               <p className="text-6xl font-black tracking-[-0.07em]">{price}</p>
               <p className="mt-2 font-bold text-white/75">implementación · desde $35.000/mes</p>
