@@ -208,8 +208,8 @@ export const PIZZERIA_DEMO: DemoDefinition = {
   ],
   seedOrders: SEED_ORDERS,
   copy: {
-    heroTitle: 'Pizza y empanadas sin el caos del WhatsApp.',
-    heroBody: 'El cliente elige tamaño y cantidad. Vos recibís el pedido armado en la bandeja.',
+    heroTitle: 'Pizza de barrio, al horno y sin vueltas.',
+    heroBody: 'Elegí tus pizzas, empanadas y extras. Armá el pedido y elegí delivery o retiro.',
     checkoutCta: 'Enviar pedido de prueba',
     cartCta: 'Pedir',
     totalLabel: 'Total',
@@ -237,6 +237,6 @@ export const PIZZERIA_DEMO: DemoDefinition = {
     revenueLabel: 'Pedidos sesión',
     notesPlaceholder: 'Sin aceitunas, timbre roto…',
     chips: ['Delivery', 'Retiro'],
-    weightNotice: 'Problema que resolvemos: audio “una muzza y media docena” → pedido estructurado.',
+    weightNotice: 'Pedido claro, total visible y confirmación antes de enviar.',
   },
 };
