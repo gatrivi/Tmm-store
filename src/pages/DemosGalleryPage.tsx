@@ -74,6 +74,16 @@ const DEMOS: DemoItem[] = [
     tags: ['Harinas', 'Formatos mayoristas', 'WhatsApp'],
   },
   {
+    name: 'Ferretería Norte',
+    rubro: 'Ferretería · Zona Norte',
+    kind: 'Tienda',
+    description: 'Herramientas, medidas, presentaciones y pedido armado sin depender de audios o fotos sueltas.',
+    samplePath: '/demo/ferreteria',
+    image: '/demos/ferreteria/hero.svg',
+    imageAlt: 'Banco de trabajo de la tienda demo Ferretería Norte',
+    tags: ['Herramientas', 'Variantes', 'Retiro / envío'],
+  },
+  {
     name: 'Mamá Mabel',
     rubro: 'Repostería artesanal',
     kind: 'Página',
@@ -181,9 +191,7 @@ export default function DemosGalleryPage() {
           <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
             <div className="grid gap-8 lg:grid-cols-[1fr_.72fr] lg:items-end">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-[#d84d1d]">
-                  Abrí una. Probala.
-                </p>
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-[#d84d1d]">Abrí una. Probala.</p>
                 <h1 className="mt-4 max-w-3xl text-[clamp(3rem,8vw,5.8rem)] font-black leading-[0.88] tracking-[-0.075em]">
                   Nuestros sitios,
                   <span className="block text-[#ff6b35]">en el estante.</span>
@@ -211,10 +219,7 @@ export default function DemosGalleryPage() {
             <div className="mt-10 grid gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
               <label className="relative block">
                 <span className="sr-only">Buscar una muestra</span>
-                <Search
-                  size={18}
-                  className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-black/35"
-                />
+                <Search size={18} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-black/35" />
                 <input
                   value={query}
                   onChange={event => setQuery(event.target.value)}
@@ -299,15 +304,10 @@ export default function DemosGalleryPage() {
                     </div>
 
                     <div className="p-5">
-                      <p className="min-h-[3rem] text-sm font-medium leading-relaxed text-black/58">
-                        {item.description}
-                      </p>
+                      <p className="min-h-[3rem] text-sm font-medium leading-relaxed text-black/58">{item.description}</p>
                       <div className="mt-4 flex flex-wrap gap-2">
                         {item.tags.map(tag => (
-                          <span
-                            key={tag}
-                            className="rounded-full bg-[#f5f2eb] px-2.5 py-1.5 text-[10px] font-black text-black/50"
-                          >
+                          <span key={tag} className="rounded-full bg-[#f5f2eb] px-2.5 py-1.5 text-[10px] font-black text-black/50">
                             {tag}
                           </span>
                         ))}

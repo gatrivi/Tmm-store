@@ -1,6 +1,7 @@
 import { AGUACATS_DEMO } from '../data/demos/aguacats';
 import { CANAVESI_DEMO } from '../data/demos/canavesi';
 import { CARNICERIA_DEMO } from '../data/demos/carniceria';
+import { FERRETERIA_DEMO } from '../data/demos/ferreteria';
 import { MAMABEL_DEMO } from '../data/demos/mamabel';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
 import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
@@ -23,6 +24,7 @@ const DEMOS: DemoDefinition[] = [
   VERDULERIA_DEMO,
   PIZZERIA_DEMO,
   PANADERIA_DEMO,
+  FERRETERIA_DEMO,
   MAMABEL_DEMO,
   AGUACATS_DEMO,
   ZIMBA_PET_DEMO,

@@ -33,6 +33,7 @@ export default function App() {
           <Route path="/demo/canavesi/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/pizzeria/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/panaderia/owner" element={<DemoOwnerPage />} />
+          <Route path="/demo/ferreteria/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/mamabel/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/aguacats/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/verduleria/owner" element={<DemoOwnerPage />} />

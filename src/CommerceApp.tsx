@@ -3,6 +3,7 @@ import AdminPage from './pages/AdminPage';
 import NotFound from './pages/NotFound';
 import OrderStatusPage from './pages/OrderStatusPage';
 import AguacatsDemoPage from './pages/AguacatsDemoPage';
+import FerreteriaDemoPage from './pages/FerreteriaDemoPage';
 import MamabelDemoPage from './pages/MamabelDemoPage';
 import MolinoFloridaDemoPage from './pages/MolinoFloridaDemoPage';
 import Storefront from './pages/Storefront';
@@ -62,6 +63,8 @@ export default function CommerceApp() {
               <Route path="/demo/pizzeria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/panaderia" element={<CustomerDemo />} />
               <Route path="/demo/panaderia/order/:orderId" element={<OrderStatusPage />} />
+              <Route path="/demo/ferreteria" element={<FerreteriaDemoPage />} />
+              <Route path="/demo/ferreteria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/zimba-pet" element={<CustomerDemo />} />
               <Route path="/demo/zimba-pet/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/aguacats" element={<AguacatsDemoPage />} />
