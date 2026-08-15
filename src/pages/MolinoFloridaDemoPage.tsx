@@ -1,0 +1,321 @@
+import { useEffect, useMemo, useState } from 'react';
+import { ArrowRight, Clock3, MapPin, MessageCircle, Package, Truck } from 'lucide-react';
+
+type Product = {
+  id: string;
+  name: string;
+  category: 'harinas' | 'panaderia' | 'cereales' | 'especiales';
+  format: string;
+  description: string;
+  featured?: boolean;
+};
+
+const WHATSAPP = '5491160157002';
+
+const PRODUCTS: Product[] = [
+  {
+    id: 'integral-superfina',
+    name: 'Harina integral de trigo superfina',
+    category: 'harinas',
+    format: '1 kg · 10 kg',
+    description: 'Molienda fina para panes, masas y cocina diaria.',
+    featured: true,
+  },
+  {
+    id: 'integral-fina',
+    name: 'Harina integral de trigo fina',
+    category: 'harinas',
+    format: '1 kg · 10 kg',
+    description: 'Una integral versátil para tener siempre a mano.',
+  },
+  {
+    id: 'centeno-fino',
+    name: 'Harina integral de centeno fino',
+    category: 'harinas',
+    format: '1 kg · 10 kg · 20 kg',
+    description: 'Para panes de centeno, blends y fermentaciones largas.',
+  },
+  {
+    id: 'garbanzo',
+    name: 'Harina de garbanzo',
+    category: 'especiales',
+    format: '1 kg · 5 kg',
+    description: 'Para fainá, rebozados, masas y cocina sin trigo.',
+    featured: true,
+  },
+  {
+    id: 'arroz-blanco',
+    name: 'Harina de arroz blanco',
+    category: 'especiales',
+    format: '1 kg · 5 kg',
+    description: 'Textura liviana para mezclas, repostería y cocina.',
+  },
+  {
+    id: 'semolin',
+    name: 'Semolín de trigo pan',
+    category: 'panaderia',
+    format: '1 kg · 5 kg · 25 kg',
+    description: 'Formato hogar y bolsa para producción gastronómica.',
+    featured: true,
+  },
+  {
+    id: 'premezcla-3-cereales',
+    name: 'Premezcla 3 cereales',
+    category: 'panaderia',
+    format: '1 kg · 25 kg',
+    description: 'Una base práctica para panificación y producción.',
+  },
+  {
+    id: 'salvado',
+    name: 'Salvado de trigo',
+    category: 'cereales',
+    format: '500 g',
+    description: 'Para panes, desayunos, granolas y preparaciones integrales.',
+  },
+  {
+    id: 'cebada',
+    name: 'Cebada perlada',
+    category: 'cereales',
+    format: '1 kg · 5 kg · 25 kg',
+    description: 'Para cocina, gastronomía y compras en volumen.',
+  },
+  {
+    id: 'almendras',
+    name: 'Harina de almendras con piel',
+    category: 'especiales',
+    format: '250 g · 1 kg',
+    description: 'Para repostería, masas y recetas de alto valor agregado.',
+  },
+  {
+    id: 'paraguaya',
+    name: 'Harina paraguaya',
+    category: 'panaderia',
+    format: '5 kg · 25 kg',
+    description: 'Presentaciones pensadas para cocina y producción.',
+  },
+  {
+    id: 'maiz',
+    name: 'Harina de maíz',
+    category: 'harinas',
+    format: '5 kg',
+    description: 'Un básico de despensa en formato rendidor.',
+  },
+];
+
+const FILTERS = [
+  { id: 'todos', label: 'Todos' },
+  { id: 'harinas', label: 'Harinas' },
+  { id: 'panaderia', label: 'Panadería' },
+  { id: 'cereales', label: 'Cereales' },
+  { id: 'especiales', label: 'Especiales' },
+] as const;
+
+function whatsappHref(product?: Product): string {
+  const text = product
+    ? `Hola Molino Florida, quería consultar stock y precio de ${product.name} (${product.format}).`
+    : 'Hola Molino Florida, quería consultar por productos y formatos disponibles.';
+  return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+}
+
+export default function MolinoFloridaDemoPage() {
+  const [filter, setFilter] = useState<(typeof FILTERS)[number]['id']>('todos');
+
+  useEffect(() => {
+    document.title = 'Molino Florida — demo Gatrivi.com';
+  }, []);
+
+  const products = useMemo(
+    () => (filter === 'todos' ? PRODUCTS : PRODUCTS.filter(product => product.category === filter)),
+    [filter],
+  );
+
+  return (
+    <div className="min-h-screen bg-[#f4efe4] text-[#1f241d]">
+      <div className="border-b border-[#243224]/10 bg-[#243224] px-4 py-2 text-center text-[10px] font-black uppercase tracking-[0.18em] text-[#f7f1e5]/75">
+        Demo de propuesta · Gatrivi.com · datos de catálogo sujetos a confirmación
+      </div>
+
+      <header className="sticky top-0 z-30 border-b border-[#243224]/10 bg-[#f7f3e9]/95 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+          <a href="#inicio" className="flex items-center gap-3" aria-label="Molino Florida, inicio">
+            <span className="grid h-10 w-10 place-items-center rounded-full border border-[#41543c]/25 bg-[#41543c] font-serif text-sm font-black text-[#f7f1e5]">
+              MF
+            </span>
+            <span>
+              <span className="block font-serif text-lg font-bold leading-none tracking-[-0.02em]">Molino Florida</span>
+              <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-[#52604e]">Harinas · cereales · materias primas</span>
+            </span>
+          </a>
+
+          <a
+            href={whatsappHref()}
+            target="_blank"
+            rel="noreferrer"
+            className="hidden min-h-10 items-center gap-2 rounded-full bg-[#41543c] px-4 text-xs font-black text-white transition hover:bg-[#31402e] sm:inline-flex"
+          >
+            <MessageCircle size={16} /> Consultar
+          </a>
+        </div>
+      </header>
+
+      <main>
+        <section id="inicio" className="overflow-hidden border-b border-[#243224]/10">
+          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.1fr_.9fr] lg:items-center lg:py-24">
+            <div>
+              <p className="mb-4 text-[11px] font-black uppercase tracking-[0.18em] text-[#86662f]">Florida · Vicente López</p>
+              <h1 className="max-w-3xl font-serif text-4xl font-bold leading-[0.98] tracking-[-0.045em] text-[#243224] sm:text-6xl lg:text-7xl">
+                Todo para amasar, cocinar y producir.
+              </h1>
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-[#4d5549] sm:text-lg">
+                Encontrá harinas, cereales y materias primas por formato. Para tu casa, tu cocina o tu negocio, sin perderte entre cientos de productos.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-2 text-[11px] font-black uppercase tracking-[0.08em] text-[#41543c]">
+                {['Hogar', 'Gastronomía', 'Panadería', 'Formatos grandes'].map(item => (
+                  <span key={item} className="rounded-full border border-[#41543c]/20 bg-white/55 px-3 py-1.5">{item}</span>
+                ))}
+              </div>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a href="#productos" className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#41543c] px-5 text-sm font-black text-white">
+                  Ver productos <ArrowRight size={17} />
+                </a>
+                <a href={whatsappHref()} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-[#41543c]/20 bg-[#fffdf7] px-5 text-sm font-black text-[#41543c]">
+                  Consultar por WhatsApp
+                </a>
+              </div>
+            </div>
+
+            <div className="relative min-h-[360px] rounded-[2rem] border border-[#243224]/10 bg-[#d9c79f] p-5 shadow-[0_24px_70px_rgba(36,50,36,0.12)] sm:min-h-[430px] sm:p-8">
+              <div className="absolute inset-0 opacity-30" aria-hidden style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #41543c 1px, transparent 0)', backgroundSize: '20px 20px' }} />
+              <div className="relative flex h-full flex-col justify-between gap-8">
+                <div className="flex items-start justify-between">
+                  <span className="rounded-full bg-[#f7f1e5] px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#41543c]">Selección del molino</span>
+                  <Package size={28} className="text-[#41543c]" strokeWidth={1.5} />
+                </div>
+                <div className="grid grid-cols-2 items-end gap-4">
+                  <div className="rounded-t-[2.5rem] rounded-b-xl border border-[#243224]/15 bg-[#f2e6ca] px-5 py-10 text-center shadow-sm">
+                    <p className="font-serif text-4xl font-bold text-[#41543c]">1 kg</p>
+                    <p className="mt-2 text-[10px] font-black uppercase tracking-[0.12em] text-[#596454]">para tu casa</p>
+                  </div>
+                  <div className="rounded-t-[3rem] rounded-b-xl border border-[#243224]/15 bg-[#eee0bd] px-5 py-14 text-center shadow-sm">
+                    <p className="font-serif text-4xl font-bold text-[#41543c]">25 kg</p>
+                    <p className="mt-2 text-[10px] font-black uppercase tracking-[0.12em] text-[#596454]">para producir</p>
+                  </div>
+                </div>
+                <p className="max-w-sm text-sm font-bold leading-relaxed text-[#384536]">Elegí por producto y formato. Stock y precio, confirmados al momento de consultar.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-[#243224]/10 bg-[#fffdf7]">
+          <div className="mx-auto grid max-w-6xl gap-4 px-4 py-5 text-xs font-bold text-[#4e584b] sm:grid-cols-3 sm:px-6">
+            <p className="flex items-center gap-2"><Truck size={16} className="text-[#41543c]" /> Envíos a CABA y Zona Norte</p>
+            <p className="flex items-center gap-2"><MapPin size={16} className="text-[#41543c]" /> Coquimbo 3560 · Vicente López</p>
+            <p className="flex items-center gap-2"><Clock3 size={16} className="text-[#41543c]" /> Lun–Vie 8–14 · Sáb 8–11:30</p>
+          </div>
+        </section>
+
+        <section id="productos" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-12 sm:px-6 sm:py-16">
+          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#86662f]">Catálogo simple</p>
+              <h2 className="mt-2 font-serif text-3xl font-bold tracking-[-0.035em] text-[#243224] sm:text-4xl">Encontrá rápido lo que necesitás.</h2>
+            </div>
+            <p className="max-w-md text-sm leading-relaxed text-[#5a6257]">Sin precios de fantasía en esta demo: cada consulta confirma disponibilidad, formato y valor vigente.</p>
+          </div>
+
+          <div className="mt-7 flex gap-2 overflow-x-auto pb-2">
+            {FILTERS.map(item => {
+              const active = filter === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setFilter(item.id)}
+                  className={`shrink-0 rounded-full border px-4 py-2 text-xs font-black transition ${active ? 'border-[#41543c] bg-[#41543c] text-white' : 'border-[#41543c]/15 bg-[#fffdf7] text-[#556050] hover:border-[#41543c]/35'}`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {products.map(product => (
+              <article key={product.id} className="group flex min-h-[255px] flex-col rounded-2xl border border-[#243224]/10 bg-[#fffdf7] p-5 transition hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(36,50,36,0.08)]">
+                <div className="flex items-start justify-between gap-3">
+                  <span className="rounded-full bg-[#dfe4d8] px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.12em] text-[#41543c]">{FILTERS.find(item => item.id === product.category)?.label}</span>
+                  {product.featured ? <span className="text-[9px] font-black uppercase tracking-[0.12em] text-[#9b7434]">Destacado</span> : null}
+                </div>
+                <h3 className="mt-5 font-serif text-xl font-bold leading-tight tracking-[-0.025em] text-[#243224]">{product.name}</h3>
+                <p className="mt-2 text-xs leading-relaxed text-[#62695f]">{product.description}</p>
+                <p className="mt-4 text-sm font-black text-[#41543c]">{product.format}</p>
+                <a href={whatsappHref(product)} target="_blank" rel="noreferrer" className="mt-auto inline-flex min-h-10 items-center justify-between border-t border-[#243224]/10 pt-4 text-xs font-black text-[#41543c]">
+                  Consultar stock y precio <ArrowRight size={15} className="transition group-hover:translate-x-1" />
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="border-y border-[#243224]/10 bg-[#243224] text-[#f7f1e5]">
+          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:py-16">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#d5ae68]">Para producción</p>
+              <h2 className="mt-3 max-w-xl font-serif text-3xl font-bold tracking-[-0.035em] sm:text-4xl">¿Comprás por bolsa? Que los formatos grandes no queden enterrados.</h2>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {['5 kg', '10 kg', '25 kg'].map(size => (
+                <div key={size} className="rounded-2xl border border-white/15 bg-white/[0.04] px-3 py-7 text-center">
+                  <p className="font-serif text-2xl font-bold sm:text-3xl">{size}</p>
+                  <p className="mt-2 text-[9px] font-black uppercase tracking-[0.12em] text-white/55">formatos visibles</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+          <div className="grid gap-8 lg:grid-cols-[.9fr_1.1fr] lg:items-start">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#86662f]">Comprar sin vueltas</p>
+              <h2 className="mt-2 font-serif text-3xl font-bold tracking-[-0.035em] text-[#243224]">Del catálogo a la consulta en tres pasos.</h2>
+            </div>
+            <ol className="grid gap-3 sm:grid-cols-3">
+              {[
+                ['01', 'Elegí', 'Producto y formato, sin navegar páginas innecesarias.'],
+                ['02', 'Consultá', 'WhatsApp sale prearmado con lo que estabas mirando.'],
+                ['03', 'Coordiná', 'Stock, precio, pago y entrega se confirman antes de cerrar.'],
+              ].map(([n, title, body]) => (
+                <li key={n} className="rounded-2xl border border-[#243224]/10 bg-[#fffdf7] p-5">
+                  <p className="text-[10px] font-black tracking-[0.16em] text-[#9b7434]">{n}</p>
+                  <h3 className="mt-5 font-serif text-xl font-bold text-[#243224]">{title}</h3>
+                  <p className="mt-2 text-xs leading-relaxed text-[#62695f]">{body}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-[#243224]/10 bg-[#fffdf7]">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-xs text-[#62695f] sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <div>
+            <p className="font-serif text-lg font-bold text-[#243224]">Molino Florida</p>
+            <p className="mt-1">Débito · efectivo · transferencia · envíos CABA y Zona Norte</p>
+          </div>
+          <a href={whatsappHref()} target="_blank" rel="noreferrer" className="font-black text-[#41543c]">Consultar catálogo →</a>
+        </div>
+      </footer>
+
+      <a
+        href={whatsappHref()}
+        target="_blank"
+        rel="noreferrer"
+        className="fixed bottom-4 left-4 right-4 z-40 flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#41543c] px-4 text-sm font-black text-white shadow-xl sm:hidden"
+      >
+        <MessageCircle size={17} /> Consultar por WhatsApp
+      </a>
+    </div>
+  );
+}
