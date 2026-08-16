@@ -16,6 +16,7 @@ const GASTRONOMY_DEMO: Pick<DemoDefinition, 'id' | 'tenantId' | 'customerPath' |
   orderPath: (orderId: string) => `/order/${orderId}`,
 };
 
+/** Canavesi is the canonical and only carnicería demo. */
 const DEMOS: DemoDefinition[] = [
   CANAVESI_DEMO,
   VERDULERIA_DEMO,
