@@ -37,6 +37,12 @@ function RedirectMamabelOrder() {
   return <Navigate to={`/demo/mamabel/order/${orderId}`} replace />;
 }
 
+/** Legacy generic carnicería → canonical Canavesi demo. */
+function RedirectCarniceriaOrder() {
+  const { orderId } = useParams();
+  return <Navigate to={`/demo/canavesi/order/${orderId}`} replace />;
+}
+
 /** Remount Express menu when `rubro` changes (same tenant `demo`). */
 function demoMenuScope(pathname: string, search: string): string {
   const tenant = resolveTenantIdFromPath(pathname);
@@ -70,8 +76,8 @@ export default function CommerceApp() {
               <Route path="/demo/mamabel/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/mamamabel" element={<Navigate to="/demo/mamabel" replace />} />
               <Route path="/demo/mamamabel/order/:orderId" element={<RedirectMamabelOrder />} />
-              <Route path="/demo/carniceria" element={<WeightedCatalogDemoPage />} />
-              <Route path="/demo/carniceria/order/:orderId" element={<OrderStatusPage />} />
+              <Route path="/demo/carniceria" element={<Navigate to="/demo/canavesi" replace />} />
+              <Route path="/demo/carniceria/order/:orderId" element={<RedirectCarniceriaOrder />} />
               <Route path="/demo/canavesi" element={<WeightedCatalogDemoPage />} />
               <Route path="/demo/canavesi/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/verduleria" element={<WeightedCatalogDemoPage />} />
