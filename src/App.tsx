@@ -29,7 +29,7 @@ export default function App() {
           <Route path="/pricing" element={<Navigate to="/#planes" replace />} />
           <Route path="/demo/armar" element={DEMO_EXPRESS_PUBLIC ? <ProspectDemoBuilderPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/owner" element={DEMO_EXPRESS_PUBLIC ? <DemoOwnerPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
-          <Route path="/demo/carniceria/owner" element={<DemoOwnerPage />} />
+          <Route path="/demo/carniceria/owner" element={<Navigate to="/demo/canavesi/owner" replace />} />
           <Route path="/demo/canavesi/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/pizzeria/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/panaderia/owner" element={<DemoOwnerPage />} />
