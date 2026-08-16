@@ -62,7 +62,6 @@ const DEMOS: DemoItem[] = [
     image: '/demos/canavesi/hero.jpg',
     imageAlt: 'Tienda demo Canavesi Carnes Olivos',
     tags: ['Peso estimado', 'Carrito', 'Panel de pedidos'],
-    featured: true,
   },
   {
     name: 'Molino Florida',
