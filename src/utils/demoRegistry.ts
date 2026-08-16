@@ -1,6 +1,5 @@
 import { AGUACATS_DEMO } from '../data/demos/aguacats';
 import { CANAVESI_DEMO } from '../data/demos/canavesi';
-import { CARNICERIA_DEMO } from '../data/demos/carniceria';
 import { MAMABEL_DEMO } from '../data/demos/mamabel';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
 import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
@@ -19,7 +18,6 @@ const GASTRONOMY_DEMO: Pick<DemoDefinition, 'id' | 'tenantId' | 'customerPath' |
 
 const DEMOS: DemoDefinition[] = [
   CANAVESI_DEMO,
-  CARNICERIA_DEMO,
   VERDULERIA_DEMO,
   PIZZERIA_DEMO,
   PANADERIA_DEMO,
@@ -47,7 +45,7 @@ export function isDemoTenant(tenantId: string): boolean {
 
 /**
  * Central path → tenant. All `/demo…` entrypoints must use this.
- * Longer prefixes win (`/demo/carniceria` before `/demo`).
+ * Longer prefixes win (`/demo/canavesi` before `/demo`).
  */
 export function resolveTenantIdFromPath(pathname: string): string {
   const demo = resolveDemoFromPath(pathname);
