@@ -55,13 +55,14 @@ const DEMOS: DemoItem[] = [
   },
   {
     name: 'Canavesi',
-    rubro: 'Carnicería · Olivos',
-    kind: 'Catálogo',
-    description: 'Cortes y precios ordenados para dejar de mandar fotos sueltas por WhatsApp.',
+    rubro: 'Carnicería gourmet · Olivos',
+    kind: 'Tienda',
+    description: 'Cortes por peso, carrito, retiro o delivery y panel de pedidos en una experiencia completa.',
     samplePath: '/demo/canavesi',
     image: '/demos/canavesi/hero.jpg',
-    imageAlt: 'Catálogo demo Canavesi Carnes Olivos',
-    tags: ['Fotos y precios', 'Peso estimado', 'WhatsApp'],
+    imageAlt: 'Tienda demo Canavesi Carnes Olivos',
+    tags: ['Peso estimado', 'Carrito', 'Panel de pedidos'],
+    featured: true,
   },
   {
     name: 'Molino Florida',
@@ -102,16 +103,6 @@ const DEMOS: DemoItem[] = [
     image: '/demos/verduleria/hero.jpg',
     imageAlt: 'Verduras y bolsón de la demo La Inmaculada',
     tags: ['Peso / unidad', 'Total', 'Pedido'],
-  },
-  {
-    name: 'Gabriel',
-    rubro: 'Carnicería',
-    kind: 'Tienda',
-    description: 'Cortes, combos, retiro y delivery con menos ida y vuelta para cerrar el pedido.',
-    samplePath: '/demo/carniceria',
-    image: '/demos/carniceria/gabriel-hero.jpg',
-    imageAlt: 'Cortes de carne de la tienda demo Gabriel',
-    tags: ['Cortes', 'Combos', 'Delivery'],
   },
 ];
 
