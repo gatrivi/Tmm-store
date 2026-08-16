@@ -12,7 +12,7 @@ function kgOptions(pricePerKg: number): MenuOption[] {
 }
 
 /**
- * Selección curada para la propuesta Canavesi.
+ * Canonical carnicería demo: Canavesi.
  * Los precios son ilustrativos hasta contar con lista oficial.
  * Cada SKU usa una foto distinta para evitar el look de catálogo genérico.
  */
