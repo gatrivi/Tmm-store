@@ -8,9 +8,11 @@ type Product = {
   format: string;
   description: string;
   featured?: boolean;
+  image?: string;
 };
 
 const WHATSAPP = '5491160157002';
+const ASSET_BASE = '/demos/molino-florida';
 
 const PRODUCTS: Product[] = [
   {
@@ -20,6 +22,7 @@ const PRODUCTS: Product[] = [
     format: '1 kg · 10 kg',
     description: 'Molienda fina para panes, masas y cocina diaria.',
     featured: true,
+    image: `${ASSET_BASE}/product-integral.webp`,
   },
   {
     id: 'integral-fina',
@@ -42,6 +45,7 @@ const PRODUCTS: Product[] = [
     format: '1 kg · 5 kg',
     description: 'Para fainá, rebozados, masas y cocina sin trigo.',
     featured: true,
+    image: `${ASSET_BASE}/product-garbanzo.webp`,
   },
   {
     id: 'arroz-blanco',
@@ -57,6 +61,7 @@ const PRODUCTS: Product[] = [
     format: '1 kg · 5 kg · 25 kg',
     description: 'Formato hogar y bolsa para producción gastronómica.',
     featured: true,
+    image: `${ASSET_BASE}/product-semolin.webp`,
   },
   {
     id: 'premezcla-3-cereales',
@@ -132,18 +137,20 @@ export default function MolinoFloridaDemoPage() {
   return (
     <div className="min-h-screen bg-[#f4efe4] text-[#1f241d]">
       <div className="border-b border-[#243224]/10 bg-[#243224] px-4 py-2 text-center text-[10px] font-black uppercase tracking-[0.18em] text-[#f7f1e5]/75">
-        Demo de propuesta · Gatrivi.com · datos de catálogo sujetos a confirmación
+        Demo visual de propuesta · Gatrivi.com · identidad y packaging conceptuales
       </div>
 
       <header className="sticky top-0 z-30 border-b border-[#243224]/10 bg-[#f7f3e9]/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-          <a href="#inicio" className="flex items-center gap-3" aria-label="Molino Florida, inicio">
-            <span className="grid h-10 w-10 place-items-center rounded-full border border-[#41543c]/25 bg-[#41543c] font-serif text-sm font-black text-[#f7f1e5]">
-              MF
-            </span>
-            <span>
-              <span className="block font-serif text-lg font-bold leading-none tracking-[-0.02em]">Molino Florida</span>
-              <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-[#52604e]">Harinas · cereales · materias primas</span>
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:px-6">
+          <a href="#inicio" className="flex min-w-0 items-center gap-3" aria-label="Molino Florida, inicio">
+            <img
+              src={`${ASSET_BASE}/logo.webp`}
+              alt="Molino Florida"
+              className="h-14 w-14 shrink-0 object-contain sm:h-16 sm:w-16"
+            />
+            <span className="min-w-0">
+              <span className="block truncate font-serif text-lg font-bold leading-none tracking-[-0.02em]">Molino Florida</span>
+              <span className="mt-1 block truncate text-[9px] font-bold uppercase tracking-[0.13em] text-[#52604e] sm:text-[10px]">Harinas · cereales · materias primas</span>
             </span>
           </a>
 
@@ -159,49 +166,44 @@ export default function MolinoFloridaDemoPage() {
       </header>
 
       <main>
-        <section id="inicio" className="overflow-hidden border-b border-[#243224]/10">
-          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.1fr_.9fr] lg:items-center lg:py-24">
-            <div>
-              <p className="mb-4 text-[11px] font-black uppercase tracking-[0.18em] text-[#86662f]">Florida · Vicente López</p>
-              <h1 className="max-w-3xl font-serif text-4xl font-bold leading-[0.98] tracking-[-0.045em] text-[#243224] sm:text-6xl lg:text-7xl">
-                Todo para amasar, cocinar y producir.
-              </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-[#4d5549] sm:text-lg">
-                Encontrá harinas, cereales y materias primas por formato. Para tu casa, tu cocina o tu negocio, sin perderte entre cientos de productos.
-              </p>
-              <div className="mt-7 flex flex-wrap gap-2 text-[11px] font-black uppercase tracking-[0.08em] text-[#41543c]">
-                {['Hogar', 'Gastronomía', 'Panadería', 'Formatos grandes'].map(item => (
-                  <span key={item} className="rounded-full border border-[#41543c]/20 bg-white/55 px-3 py-1.5">{item}</span>
-                ))}
+        <section id="inicio" className="border-b border-[#243224]/10">
+          <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:py-16">
+            <div className="overflow-hidden rounded-[2rem] border border-[#243224]/10 bg-[#e5d4b2] shadow-[0_24px_70px_rgba(36,50,36,0.14)] lg:grid lg:grid-cols-[1.2fr_.8fr]">
+              <div className="relative min-h-[320px] sm:min-h-[440px] lg:min-h-[520px]">
+                <img
+                  src={`${ASSET_BASE}/hero.webp`}
+                  alt="Selección conceptual de harinas Molino Florida"
+                  className="absolute inset-0 h-full w-full object-cover object-left"
+                  fetchPriority="high"
+                />
+                <div className="absolute left-4 top-4 rounded-full border border-white/60 bg-[#f7f1e5]/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.14em] text-[#41543c] shadow-sm backdrop-blur sm:left-6 sm:top-6">
+                  Propuesta visual
+                </div>
               </div>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a href="#productos" className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#41543c] px-5 text-sm font-black text-white">
-                  Ver productos <ArrowRight size={17} />
-                </a>
-                <a href={whatsappHref()} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-[#41543c]/20 bg-[#fffdf7] px-5 text-sm font-black text-[#41543c]">
-                  Consultar por WhatsApp
-                </a>
-              </div>
-            </div>
 
-            <div className="relative min-h-[360px] rounded-[2rem] border border-[#243224]/10 bg-[#d9c79f] p-5 shadow-[0_24px_70px_rgba(36,50,36,0.12)] sm:min-h-[430px] sm:p-8">
-              <div className="absolute inset-0 opacity-30" aria-hidden style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #41543c 1px, transparent 0)', backgroundSize: '20px 20px' }} />
-              <div className="relative flex h-full flex-col justify-between gap-8">
-                <div className="flex items-start justify-between">
-                  <span className="rounded-full bg-[#f7f1e5] px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#41543c]">Selección del molino</span>
-                  <Package size={28} className="text-[#41543c]" strokeWidth={1.5} />
+              <div className="flex flex-col justify-center bg-[#f7f1e5] p-7 sm:p-10 lg:p-12">
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#86662f]">Florida · Vicente López</p>
+                <h1 className="mt-4 font-serif text-4xl font-bold leading-[0.98] tracking-[-0.045em] text-[#243224] sm:text-5xl lg:text-6xl">
+                  Todo para amasar, cocinar y producir.
+                </h1>
+                <p className="mt-5 text-sm leading-relaxed text-[#4d5549] sm:text-base">
+                  Harinas, cereales y materias primas organizadas por producto y formato. Para tu casa, tu cocina o tu negocio, sin perderte entre cientos de opciones.
+                </p>
+
+                <div className="mt-6 flex flex-wrap gap-2 text-[10px] font-black uppercase tracking-[0.08em] text-[#41543c]">
+                  {['Hogar', 'Gastronomía', 'Panadería', 'Formatos grandes'].map(item => (
+                    <span key={item} className="rounded-full border border-[#41543c]/20 bg-white/60 px-3 py-1.5">{item}</span>
+                  ))}
                 </div>
-                <div className="grid grid-cols-2 items-end gap-4">
-                  <div className="rounded-t-[2.5rem] rounded-b-xl border border-[#243224]/15 bg-[#f2e6ca] px-5 py-10 text-center shadow-sm">
-                    <p className="font-serif text-4xl font-bold text-[#41543c]">1 kg</p>
-                    <p className="mt-2 text-[10px] font-black uppercase tracking-[0.12em] text-[#596454]">para tu casa</p>
-                  </div>
-                  <div className="rounded-t-[3rem] rounded-b-xl border border-[#243224]/15 bg-[#eee0bd] px-5 py-14 text-center shadow-sm">
-                    <p className="font-serif text-4xl font-bold text-[#41543c]">25 kg</p>
-                    <p className="mt-2 text-[10px] font-black uppercase tracking-[0.12em] text-[#596454]">para producir</p>
-                  </div>
+
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <a href="#productos" className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#41543c] px-5 text-sm font-black text-white transition hover:bg-[#31402e]">
+                    Ver productos <ArrowRight size={17} />
+                  </a>
+                  <a href={whatsappHref()} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-[#41543c]/20 bg-[#fffdf7] px-5 text-sm font-black text-[#41543c]">
+                    Consultar
+                  </a>
                 </div>
-                <p className="max-w-sm text-sm font-bold leading-relaxed text-[#384536]">Elegí por producto y formato. Stock y precio, confirmados al momento de consultar.</p>
               </div>
             </div>
           </div>
@@ -215,50 +217,77 @@ export default function MolinoFloridaDemoPage() {
           </div>
         </section>
 
-        <section id="productos" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-12 sm:px-6 sm:py-16">
-          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#86662f]">Catálogo simple</p>
-              <h2 className="mt-2 font-serif text-3xl font-bold tracking-[-0.035em] text-[#243224] sm:text-4xl">Encontrá rápido lo que necesitás.</h2>
+        <section
+          id="productos"
+          className="scroll-mt-24 border-b border-[#243224]/10 bg-cover bg-top"
+          style={{
+            backgroundImage: `linear-gradient(rgba(244,239,228,.91), rgba(244,239,228,.97)), url('${ASSET_BASE}/background.webp')`,
+          }}
+        >
+          <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+            <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#86662f]">Catálogo simple</p>
+                <h2 className="mt-2 font-serif text-3xl font-bold tracking-[-0.035em] text-[#243224] sm:text-4xl">Encontrá rápido lo que necesitás.</h2>
+              </div>
+              <p className="max-w-md text-sm leading-relaxed text-[#5a6257]">Stock, formato y valor vigente se confirman al momento de consultar.</p>
             </div>
-            <p className="max-w-md text-sm leading-relaxed text-[#5a6257]">Sin precios de fantasía en esta demo: cada consulta confirma disponibilidad, formato y valor vigente.</p>
-          </div>
 
-          <div className="mt-7 flex gap-2 overflow-x-auto pb-2">
-            {FILTERS.map(item => {
-              const active = filter === item.id;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setFilter(item.id)}
-                  className={`shrink-0 rounded-full border px-4 py-2 text-xs font-black transition ${active ? 'border-[#41543c] bg-[#41543c] text-white' : 'border-[#41543c]/15 bg-[#fffdf7] text-[#556050] hover:border-[#41543c]/35'}`}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-          </div>
+            <div className="mt-7 flex gap-2 overflow-x-auto pb-2">
+              {FILTERS.map(item => {
+                const active = filter === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setFilter(item.id)}
+                    className={`shrink-0 rounded-full border px-4 py-2 text-xs font-black transition ${active ? 'border-[#41543c] bg-[#41543c] text-white' : 'border-[#41543c]/15 bg-[#fffdf7]/90 text-[#556050] hover:border-[#41543c]/35'}`}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
 
-          <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {products.map(product => (
-              <article key={product.id} className="group flex min-h-[255px] flex-col rounded-2xl border border-[#243224]/10 bg-[#fffdf7] p-5 transition hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(36,50,36,0.08)]">
-                <div className="flex items-start justify-between gap-3">
-                  <span className="rounded-full bg-[#dfe4d8] px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.12em] text-[#41543c]">{FILTERS.find(item => item.id === product.category)?.label}</span>
-                  {product.featured ? <span className="text-[9px] font-black uppercase tracking-[0.12em] text-[#9b7434]">Destacado</span> : null}
-                </div>
-                <h3 className="mt-5 font-serif text-xl font-bold leading-tight tracking-[-0.025em] text-[#243224]">{product.name}</h3>
-                <p className="mt-2 text-xs leading-relaxed text-[#62695f]">{product.description}</p>
-                <p className="mt-4 text-sm font-black text-[#41543c]">{product.format}</p>
-                <a href={whatsappHref(product)} target="_blank" rel="noreferrer" className="mt-auto inline-flex min-h-10 items-center justify-between border-t border-[#243224]/10 pt-4 text-xs font-black text-[#41543c]">
-                  Consultar stock y precio <ArrowRight size={15} className="transition group-hover:translate-x-1" />
-                </a>
-              </article>
-            ))}
+            <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {products.map(product => (
+                <article key={product.id} className="group flex overflow-hidden rounded-2xl border border-[#243224]/10 bg-[#fffdf7]/95 shadow-sm transition hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(36,50,36,0.10)]">
+                  <div className="flex w-full flex-col">
+                    {product.image ? (
+                      <div className="overflow-hidden border-b border-[#243224]/10 bg-[#eadbc0]">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          loading="lazy"
+                          className="aspect-square w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+                        />
+                      </div>
+                    ) : (
+                      <div className="grid aspect-[4/2] place-items-center border-b border-[#243224]/10 bg-[#e8ddc6]/45">
+                        <Package size={34} strokeWidth={1.3} className="text-[#7a6848]/55" />
+                      </div>
+                    )}
+
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-start justify-between gap-3">
+                        <span className="rounded-full bg-[#dfe4d8] px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.12em] text-[#41543c]">{FILTERS.find(item => item.id === product.category)?.label}</span>
+                        {product.featured ? <span className="text-[9px] font-black uppercase tracking-[0.12em] text-[#9b7434]">Destacado</span> : null}
+                      </div>
+                      <h3 className="mt-4 font-serif text-xl font-bold leading-tight tracking-[-0.025em] text-[#243224]">{product.name}</h3>
+                      <p className="mt-2 text-xs leading-relaxed text-[#62695f]">{product.description}</p>
+                      <p className="mt-4 text-sm font-black text-[#41543c]">{product.format}</p>
+                      <a href={whatsappHref(product)} target="_blank" rel="noreferrer" className="mt-5 inline-flex min-h-10 items-center justify-between border-t border-[#243224]/10 pt-4 text-xs font-black text-[#41543c]">
+                        Consultar stock y precio <ArrowRight size={15} className="transition group-hover:translate-x-1" />
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section className="border-y border-[#243224]/10 bg-[#243224] text-[#f7f1e5]">
+        <section className="border-b border-[#243224]/10 bg-[#243224] text-[#f7f1e5]">
           <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:py-16">
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#d5ae68]">Para producción</p>
@@ -300,9 +329,12 @@ export default function MolinoFloridaDemoPage() {
 
       <footer className="border-t border-[#243224]/10 bg-[#fffdf7]">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-xs text-[#62695f] sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <div>
-            <p className="font-serif text-lg font-bold text-[#243224]">Molino Florida</p>
-            <p className="mt-1">Débito · efectivo · transferencia · envíos CABA y Zona Norte</p>
+          <div className="flex items-center gap-3">
+            <img src={`${ASSET_BASE}/logo.webp`} alt="" className="h-12 w-12 object-contain" />
+            <div>
+              <p className="font-serif text-lg font-bold text-[#243224]">Molino Florida</p>
+              <p className="mt-1">Débito · efectivo · transferencia · envíos CABA y Zona Norte</p>
+            </div>
           </div>
           <a href={whatsappHref()} target="_blank" rel="noreferrer" className="font-black text-[#41543c]">Consultar catálogo →</a>
         </div>
