@@ -24,7 +24,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'pizzas',
     badge: 'Más pedida',
     description: 'Salsa, muzzarella y orégano',
-    images: ['/demos/pizzeria/muzza.jpg'],
+    images: ['/demos/pizzeria/muzzarella.png'],
     options: pizzaSizes(8900, 12900),
   },
   {
@@ -32,15 +32,15 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Napolitana',
     category: 'pizzas',
     description: 'Muzzarella, tomate, ajo y albahaca',
-    images: ['/demos/pizzeria/napo.jpg'],
+    images: ['/demos/pizzeria/napolitana.png'],
     options: pizzaSizes(10900, 14900),
   },
   {
     id: 'fugazzeta',
     name: 'Fugazzeta',
     category: 'pizzas',
-    description: 'Cebolla y mucho queso',
-    images: ['/demos/pizzeria/fugazzeta.jpg'],
+    description: 'Cebolla caramelizada y mucho queso',
+    images: ['/demos/pizzeria/fugazzeta.png'],
     options: pizzaSizes(11900, 15900),
   },
   {
@@ -49,7 +49,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'empanadas',
     badge: 'Clásico',
     description: 'Carne cortada a cuchillo',
-    images: ['/demos/pizzeria/empanada-carne.jpg'],
+    images: ['/demos/pizzeria/empanadas-carne.png'],
     options: empanadaPacks(7200, 13500),
   },
   {
@@ -57,7 +57,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Empanadas jamón y queso',
     category: 'empanadas',
     description: 'Jamón cocido y muzzarella',
-    images: ['/demos/pizzeria/empanada-jyq.jpg'],
+    images: ['/demos/pizzeria/empanadas-jamon-queso.png'],
     options: empanadaPacks(7200, 13500),
   },
   {
@@ -65,7 +65,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Empanadas de humita',
     category: 'empanadas',
     description: 'Choclo cremoso',
-    images: ['/demos/pizzeria/empanada-humita.jpg'],
+    images: ['/demos/pizzeria/empanadas-humita.png'],
     options: empanadaPacks(6800, 12800),
   },
   {
@@ -73,7 +73,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Fainá',
     category: 'extras',
     description: 'Porción para compartir',
-    images: ['/demos/pizzeria/faina.jpg'],
+    images: ['/demos/pizzeria/faina.png'],
     options: [{ id: 'porcion', label: 'Porción', price: 3500 }],
   },
   {
@@ -81,7 +81,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Gaseosa 1.5 L',
     category: 'extras',
     description: 'A elegir al confirmar',
-    images: ['/demos/pizzeria/gaseosa.jpg'],
+    images: ['/demos/pizzeria/bouteille-coca-cola-1-5l.webp'],
     options: [{ id: '15', label: '1.5 L', price: 2800 }],
   },
 ];
@@ -158,7 +158,6 @@ const SEED_ORDERS: OrderRecord[] = [
   },
 ];
 
-/** Working name — swap when a pilot confirms. */
 export const PIZZERIA_DEMO: DemoDefinition = {
   id: 'pizzeria',
   tenantId: 'demo-pizzeria',
@@ -167,7 +166,9 @@ export const PIZZERIA_DEMO: DemoDefinition = {
   orderPath: (orderId: string) => `/demo/pizzeria/order/${orderId}`,
   plan: 'pedidos',
   locale: 'es',
-  monogram: 'LB',
+  monogram: 'PG',
+  heroImage: '/demos/pizzeria/pizza-g-hero.png',
+  heroObjectPosition: 'center 52%',
   hideLanguageSwitcher: true,
   hideThemeToggle: true,
   hideShare: true,
@@ -185,7 +186,7 @@ export const PIZZERIA_DEMO: DemoDefinition = {
     showUsdToggle: false,
     whatsappNumber: '',
     bankAlias: '',
-    brandName: 'La Barrial',
+    brandName: 'Pizza G',
     brandColor: '#B91C1C',
     brandColorDark: '#1C1917',
     brandColorLight: '#FFF7ED',
@@ -195,7 +196,7 @@ export const PIZZERIA_DEMO: DemoDefinition = {
     brandAddress: '',
     brandInstagram: '',
     brandGoogleMaps: '',
-    brandLogo: '/demos/pizzeria/monogram.svg',
+    brandLogo: '/demos/pizzeria/pizza-g-logo.png',
     menuLayout: 'grid',
     demoMode: true,
     mpEnabled: false,
@@ -208,15 +209,15 @@ export const PIZZERIA_DEMO: DemoDefinition = {
   ],
   seedOrders: SEED_ORDERS,
   copy: {
-    heroTitle: 'Pizza y empanadas sin el caos del WhatsApp.',
-    heroBody: 'El cliente elige tamaño y cantidad. Vos recibís el pedido armado en la bandeja.',
+    heroTitle: 'Pizza de barrio, hecha como corresponde.',
+    heroBody: 'Muzzarella abundante, masa dorada y clásicos para pedir sin vueltas. Elegí tamaño, delivery o retiro.',
     checkoutCta: 'Enviar pedido de prueba',
     cartCta: 'Pedir',
     totalLabel: 'Total',
     totalHint: 'En producción el local confirma stock y horario por WhatsApp.',
-    ownerTitle: 'Pedidos — La Barrial',
+    ownerTitle: 'Pedidos — Pizza G',
     ownerSubtitle: 'Demo pizzería · hoy',
-    ribbonLabel: 'DEMO · productos y precios ilustrativos',
+    ribbonLabel: 'DEMO · Pizza G · productos y precios ilustrativos',
     pickupLabel: 'Retiro',
     deliveryLabel: 'Delivery',
     pickupHint: 'Retiro en el local. Te confirman horario al aceptar el pedido.',
@@ -237,6 +238,6 @@ export const PIZZERIA_DEMO: DemoDefinition = {
     revenueLabel: 'Pedidos sesión',
     notesPlaceholder: 'Sin aceitunas, timbre roto…',
     chips: ['Delivery', 'Retiro'],
-    weightNotice: 'Problema que resolvemos: audio “una muzza y media docena” → pedido estructurado.',
+    weightNotice: 'Elegí tamaño y cantidad. El total queda claro antes de pedir.',
   },
 };
