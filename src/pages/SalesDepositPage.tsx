@@ -44,6 +44,9 @@ export default function SalesDepositPage() {
   const proofHref = buildSalesContactHref(
     `seña comercial — transferí ${DEPOSIT_LABEL} a Brubank alias ${BRUBANK_ALIAS} — plan ${plan.name}`,
   );
+  const startHref = buildSalesContactHref(
+    `pago acreditado — plan ${plan.name} — Mercado Pago payment_id ${paymentId ?? 'sin id'} — listo para empezar. Te envío fotos, precios y logo.`,
+  );
 
   useEffect(() => {
     if (!paymentId) {
@@ -85,6 +88,8 @@ export default function SalesDepositPage() {
   }, [paymentId, returnStatus]);
 
   function selectPlan(nextPlan: PlanId) {
+    if (verification === 'approved') return;
+
     setPlanId(nextPlan);
     const next = new URLSearchParams(searchParams);
     next.set('plan', nextPlan);
@@ -147,7 +152,19 @@ export default function SalesDepositPage() {
         {verification !== 'idle' && (
           <div className={`mb-7 rounded-2xl border p-5 text-sm font-bold leading-relaxed ${verification === 'approved' ? 'border-emerald-200 bg-emerald-50 text-emerald-900' : 'border-black/10 bg-white'}`}>
             {verification === 'checking' && 'Verificando la acreditación con Mercado Pago…'}
-            {verification === 'approved' && `Seña acreditada ✓ Reservaste el plan ${plan.name}.`}
+            {verification === 'approved' && (
+              <div>
+                <p>Seña acreditada ✓ Reservaste el plan {plan.name}. Arrancamos.</p>
+                <p className="mt-1 font-medium text-emerald-800/80">Enviá fotos, precios y logo para iniciar el trabajo.</p>
+                <a
+                  href={startHref}
+                  className="mt-4 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-900 px-5 text-sm font-black text-white"
+                >
+                  <MessageCircle size={17} />
+                  Enviar material y empezar
+                </a>
+              </div>
+            )}
             {verification === 'pending' && 'El pago está pendiente. La reserva se confirma cuando Mercado Pago lo acredite.'}
             {verification === 'failed' && 'El pago no se acreditó. Podés intentarlo otra vez o usar transferencia.'}
             {verification === 'error' && 'Volviste de Mercado Pago, pero no pudimos verificar la acreditación automáticamente. No vuelvas a pagar: consultanos primero.'}
@@ -179,7 +196,8 @@ export default function SalesDepositPage() {
                   key={item.id}
                   type="button"
                   onClick={() => selectPlan(item.id)}
-                  className={`rounded-2xl border p-4 text-left transition ${
+                  disabled={verification === 'approved'}
+                  className={`rounded-2xl border p-4 text-left transition disabled:cursor-not-allowed ${
                     planId === item.id
                       ? 'border-[#ff6b35] bg-[#ff6b35]/10 ring-2 ring-[#ff6b35]/10'
                       : 'border-black/10 hover:border-black/25'
@@ -220,44 +238,48 @@ export default function SalesDepositPage() {
 
             {error && <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p>}
 
-            <div className="my-7 flex items-center gap-3 text-xs font-black uppercase tracking-[0.12em] text-black/30">
-              <span className="h-px flex-1 bg-black/10" />
-              o transferencia
-              <span className="h-px flex-1 bg-black/10" />
-            </div>
-
-            <div className="rounded-2xl border border-black/10 p-5">
-              <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white"><Landmark size={18} /></span>
-                <div>
-                  <p className="font-black">Brubank</p>
-                  <p className="text-xs font-bold text-black/45">Transferencia bancaria · ARS</p>
+            {verification !== 'approved' && (
+              <>
+                <div className="my-7 flex items-center gap-3 text-xs font-black uppercase tracking-[0.12em] text-black/30">
+                  <span className="h-px flex-1 bg-black/10" />
+                  o transferencia
+                  <span className="h-px flex-1 bg-black/10" />
                 </div>
-              </div>
 
-              <p className="mt-5 text-xs font-black uppercase tracking-[0.12em] text-black/35">Alias</p>
-              <div className="mt-2 flex items-center gap-2 rounded-xl bg-[#f5f2eb] p-3">
-                <code className="flex-1 text-lg font-black">{BRUBANK_ALIAS}</code>
-                <button
-                  type="button"
-                  onClick={copyAlias}
-                  className="inline-flex min-h-10 items-center gap-2 rounded-full bg-black px-4 text-xs font-black text-white"
-                >
-                  <Copy size={14} />
-                  {copied ? 'Copiado' : 'Copiar'}
-                </button>
-              </div>
-              <p className="mt-3 text-sm font-medium leading-relaxed text-black/55">
-                Transferí {DEPOSIT_LABEL}. Antes de confirmar, verificá en tu banco los datos del destinatario.
-              </p>
-              <a
-                href={proofHref}
-                className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-black/15 px-5 text-sm font-black"
-              >
-                <MessageCircle size={17} />
-                Ya transferí · enviar comprobante
-              </a>
-            </div>
+                <div className="rounded-2xl border border-black/10 p-5">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white"><Landmark size={18} /></span>
+                    <div>
+                      <p className="font-black">Brubank</p>
+                      <p className="text-xs font-bold text-black/45">Transferencia bancaria · ARS</p>
+                    </div>
+                  </div>
+
+                  <p className="mt-5 text-xs font-black uppercase tracking-[0.12em] text-black/35">Alias</p>
+                  <div className="mt-2 flex items-center gap-2 rounded-xl bg-[#f5f2eb] p-3">
+                    <code className="flex-1 text-lg font-black">{BRUBANK_ALIAS}</code>
+                    <button
+                      type="button"
+                      onClick={copyAlias}
+                      className="inline-flex min-h-10 items-center gap-2 rounded-full bg-black px-4 text-xs font-black text-white"
+                    >
+                      <Copy size={14} />
+                      {copied ? 'Copiado' : 'Copiar'}
+                    </button>
+                  </div>
+                  <p className="mt-3 text-sm font-medium leading-relaxed text-black/55">
+                    Transferí {DEPOSIT_LABEL}. Antes de confirmar, verificá en tu banco los datos del destinatario.
+                  </p>
+                  <a
+                    href={proofHref}
+                    className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-black/15 px-5 text-sm font-black"
+                  >
+                    <MessageCircle size={17} />
+                    Ya transferí · enviar comprobante
+                  </a>
+                </div>
+              </>
+            )}
           </div>
         </section>
 
