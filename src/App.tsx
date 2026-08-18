@@ -10,6 +10,7 @@ const DemosGalleryPage = lazy(() => import('./pages/DemosGalleryPage'));
 const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SalesDepositPage = lazy(() => import('./pages/SalesDepositPage'));
 const ReferralsPage = lazy(() => import('./pages/ReferralsPage'));
+const ReferralProgramPage = lazy(() => import('./pages/ReferralProgramPage'));
 const ReferralAdminPage = lazy(() => import('./pages/ReferralAdminPage'));
 const ReferralScanPage = lazy(() => import('./pages/ReferralScanPage'));
 const ReferralFlyerPage = lazy(() => import('./pages/ReferralFlyerPage'));
@@ -52,6 +53,7 @@ export default function App() {
           <Route path="/planes" element={<PricingPage />} />
           <Route path="/reservar" element={<SalesDepositPage />} />
           <Route path="/referidos" element={<ReferralsPage />} />
+          <Route path="/referidos/como-funciona" element={<ReferralProgramPage />} />
           <Route path="/referidos/admin" element={<ReferralAdminPage />} />
           <Route path="/referidos/flyer/:flyerId" element={<ReferralFlyerPage />} />
           <Route path="/r/:flyerId" element={<ReferralScanPage />} />
