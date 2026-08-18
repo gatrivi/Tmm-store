@@ -22,11 +22,13 @@ type DemoItem = {
   rubro: string;
   kind: DemoKind;
   description: string;
-  samplePath: string;
+  samplePath?: string;
+  externalUrl?: string;
   image: string;
   imageAlt: string;
   tags: string[];
   featured?: boolean;
+  realSite?: boolean;
 };
 
 const FILTERS: DemoFilter[] = ['Todos', 'Catálogo', 'Página', 'Tienda'];
@@ -42,6 +44,39 @@ const DEMOS: DemoItem[] = [
     imageAlt: 'Pizza napolitana de la tienda demo Pizzería G',
     tags: ['Carrito', 'Mercado Pago / alias', 'Pedidos'],
     featured: true,
+  },
+  {
+    name: 'El Puestito del Tío',
+    rubro: 'Parrilla 24 hs · Palermo',
+    kind: 'Catálogo',
+    description: 'Menú completo con variantes, precios y platos explicados para decidir antes de llegar o pedir.',
+    externalUrl: 'https://elpuestitodeltio.com/',
+    image: 'https://elpuestitodeltio.com/hero-new.jpg',
+    imageAlt: 'El Puestito del Tío, parrilla 24 horas en Palermo',
+    tags: ['Sitio real', 'Menú', 'Variantes y precios'],
+    realSite: true,
+  },
+  {
+    name: 'Ricardo Hombres',
+    rubro: 'Indumentaria masculina · San Fernando',
+    kind: 'Tienda',
+    description: 'Catálogo amplio de indumentaria masculina, talles, categorías y contacto comercial.',
+    externalUrl: 'https://ricardohombres.com.ar/',
+    image: 'https://lirp.cdn-website.com/e46c27d6/dms3rep/multi/opt/pexels-photo-325876-1920w.jpeg',
+    imageAlt: 'Indumentaria masculina de Ricardo Hombres',
+    tags: ['Sitio real', 'Indumentaria', 'Tienda online'],
+    realSite: true,
+  },
+  {
+    name: 'Navarro Vial',
+    rubro: 'Construcción e infraestructura',
+    kind: 'Página',
+    description: 'Sitio corporativo de obra e infraestructura con foco visual en proyectos, capacidad técnica y contacto.',
+    externalUrl: 'https://navarrovial.zengasoft.shop/',
+    image: 'https://navarrovial.zengasoft.shop/og/default.jpg',
+    imageAlt: 'Sitio corporativo Navarro Vial de construcción e infraestructura',
+    tags: ['Sitio real', 'Portfolio', 'Obra e infraestructura'],
+    realSite: true,
   },
   {
     name: 'Zimba Pet',
@@ -275,52 +310,82 @@ export default function DemosGalleryPage() {
 
             {visibleDemos.length > 0 ? (
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {visibleDemos.map(item => (
-                  <Link
-                    key={item.samplePath}
-                    to={withAttribution(item.samplePath)}
-                    className="group overflow-hidden rounded-[1.75rem] border border-black/10 bg-white shadow-[0_12px_35px_rgba(30,25,15,0.06)] transition hover:-translate-y-1 hover:border-black/20 hover:shadow-[0_20px_45px_rgba(30,25,15,0.11)]"
-                  >
-                    <div className="relative aspect-[4/3] overflow-hidden bg-black/5">
-                      <img
-                        src={item.image}
-                        alt={item.imageAlt}
-                        loading={item.featured ? 'eager' : 'lazy'}
-                        className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.025]"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-                      <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-black shadow-sm backdrop-blur">
-                        {item.kind}
-                      </span>
-                      {item.featured && (
-                        <span className="absolute right-4 top-4 rounded-full bg-[#ff6b35] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-white shadow-sm">
-                          Destacada
+                {visibleDemos.map(item => {
+                  const href = withAttribution(item.externalUrl || item.samplePath || '/demos');
+                  const card = (
+                    <>
+                      <div className="relative aspect-[4/3] overflow-hidden bg-black/5">
+                        <img
+                          src={item.image}
+                          alt={item.imageAlt}
+                          loading={item.featured ? 'eager' : 'lazy'}
+                          className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.025]"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+                        <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-black shadow-sm backdrop-blur">
+                          {item.kind}
                         </span>
-                      )}
-                      <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                        <p className="text-xs font-bold text-white/65">{item.rubro}</p>
-                        <h2 className="mt-1 text-2xl font-black tracking-[-0.04em]">{item.name}</h2>
-                      </div>
-                    </div>
-
-                    <div className="p-5">
-                      <p className="min-h-[3rem] text-sm font-medium leading-relaxed text-black/58">{item.description}</p>
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {item.tags.map(tag => (
-                          <span key={tag} className="rounded-full bg-[#f5f2eb] px-2.5 py-1.5 text-[10px] font-black text-black/50">
-                            {tag}
+                        {item.featured && (
+                          <span className="absolute right-4 top-4 rounded-full bg-[#ff6b35] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-white shadow-sm">
+                            Destacada
                           </span>
-                        ))}
+                        )}
+                        {!item.featured && item.realSite && (
+                          <span className="absolute right-4 top-4 rounded-full bg-black/85 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-white shadow-sm backdrop-blur">
+                            Sitio real
+                          </span>
+                        )}
+                        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+                          <p className="text-xs font-bold text-white/65">{item.rubro}</p>
+                          <h2 className="mt-1 text-2xl font-black tracking-[-0.04em]">{item.name}</h2>
+                        </div>
                       </div>
-                      <div className="mt-5 flex items-center justify-between border-t border-black/8 pt-4">
-                        <span className="text-xs font-black">Abrir muestra</span>
-                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-white transition group-hover:bg-[#ff6b35]">
-                          <ArrowRight size={16} />
-                        </span>
+
+                      <div className="p-5">
+                        <p className="min-h-[3rem] text-sm font-medium leading-relaxed text-black/58">{item.description}</p>
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {item.tags.map(tag => (
+                            <span key={tag} className="rounded-full bg-[#f5f2eb] px-2.5 py-1.5 text-[10px] font-black text-black/50">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="mt-5 flex items-center justify-between border-t border-black/8 pt-4">
+                          <span className="text-xs font-black">Abrir muestra</span>
+                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-white transition group-hover:bg-[#ff6b35]">
+                            <ArrowRight size={16} />
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                ))}
+                    </>
+                  );
+
+                  const className = 'group overflow-hidden rounded-[1.75rem] border border-black/10 bg-white shadow-[0_12px_35px_rgba(30,25,15,0.06)] transition hover:-translate-y-1 hover:border-black/20 hover:shadow-[0_20px_45px_rgba(30,25,15,0.11)]';
+
+                  if (item.externalUrl) {
+                    return (
+                      <a
+                        key={item.externalUrl}
+                        href={href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={className}
+                      >
+                        {card}
+                      </a>
+                    );
+                  }
+
+                  return (
+                    <Link
+                      key={item.samplePath}
+                      to={href}
+                      className={className}
+                    >
+                      {card}
+                    </Link>
+                  );
+                })}
               </div>
             ) : (
               <div className="rounded-[2rem] border border-dashed border-black/20 bg-white px-6 py-16 text-center">
