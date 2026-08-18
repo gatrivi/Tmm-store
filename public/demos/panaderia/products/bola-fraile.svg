@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Bola de fraile con dulce de leche</title>
+  <desc id="desc">Ilustración de panadería de una bola de fraile azucarada rellena con dulce de leche.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f6e7cb"/><stop offset="1" stop-color="#e7c493"/></linearGradient>
+    <radialGradient id="dough"><stop stop-color="#f9c96e"/><stop offset=".7" stop-color="#d88b2f"/><stop offset="1" stop-color="#9d571e"/></radialGradient>
+    <linearGradient id="ddl" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#a95820"/><stop offset="1" stop-color="#6f2f12"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="24" stdDeviation="24" flood-opacity=".22"/></filter>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <ellipse cx="610" cy="645" rx="360" ry="80" fill="#8a542f" opacity=".18"/>
+  <g filter="url(#shadow)">
+    <path d="M275 490c0-177 145-318 328-318s322 138 322 313c0 158-135 246-322 246S275 648 275 490Z" fill="url(#dough)"/>
+    <path d="M355 456c96-52 393-56 501 4-29 27-59 44-93 56-98 34-236 38-337 7-31-9-55-30-71-67Z" fill="#e8a744" opacity=".72"/>
+    <path d="M450 416c85-40 219-39 310 0-25 46-61 80-105 102-52 26-112 26-158 1-34-19-52-52-47-103Z" fill="url(#ddl)"/>
+    <path d="M476 416c73-22 178-22 257 0-17 21-38 37-61 49-44 23-92 24-132 5-25-12-46-30-64-54Z" fill="#c27333" opacity=".7"/>
+  </g>
+  <g fill="#fff6df" opacity=".9">
+    <circle cx="430" cy="267" r="9"/><circle cx="486" cy="230" r="7"/><circle cx="553" cy="249" r="8"/><circle cx="621" cy="222" r="6"/><circle cx="693" cy="251" r="9"/><circle cx="755" cy="236" r="7"/><circle cx="808" cy="281" r="8"/><circle cx="379" cy="320" r="6"/><circle cx="849" cy="344" r="7"/>
+  </g>
+  <path d="M166 121h247" stroke="#0b1f33" stroke-width="8" stroke-linecap="round" opacity=".22"/>
+  <path d="M788 682h246" stroke="#0b1f33" stroke-width="8" stroke-linecap="round" opacity=".16"/>
+</svg>
