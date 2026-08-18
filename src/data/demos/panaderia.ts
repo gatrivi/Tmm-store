@@ -193,7 +193,7 @@ export const PANADERIA_DEMO: DemoDefinition = {
     brandTextColor: '#0B1F33',
     brandFont: 'Georgia, "Times New Roman", serif',
     brandAddress: '',
-    brandInstagram: '',
+    brandInstagram: 'https://www.instagram.com/lamagdalena_olivos/',
     brandGoogleMaps: '',
     brandLogo: '/demos/panaderia/logo-blueprint.png',
     menuLayout: 'grid',
