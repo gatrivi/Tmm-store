@@ -23,6 +23,29 @@ const included = [
   'Sin comisión sobre tus ventas',
 ];
 
+const ownerQuestions = [
+  {
+    question: '¿Qué pasa si alguien compra y justo no tengo stock?',
+    answer:
+      'Podés pausar el producto o marcarlo sin stock para que no se siga vendiendo. Si ya entró un pedido pago, coordinás con el cliente un reemplazo o la devolución. Si necesitás stock sincronizado automáticamente, lo definimos aparte según cómo manejes hoy el inventario.',
+  },
+  {
+    question: '¿Cómo me entero cuando entra un pedido o un pago?',
+    answer:
+      'El pedido queda ordenado con los datos del cliente y lo que compró. Según la forma de cobro, también recibís la confirmación de Mercado Pago o el comprobante de transferencia. La idea es que no tengas que reconstruir el pedido leyendo veinte mensajes.',
+  },
+  {
+    question: '¿Quién cambia precios, productos o fotos después?',
+    answer:
+      'No quedás atado a nosotros para cada cambio chico. La tienda puede prepararse con gestión simple para actualizar productos; y si preferís delegarlo, también hay soporte y mantenimiento.',
+  },
+  {
+    question: '¿Mercado Pago me cobra comisión? ¿Ustedes también?',
+    answer:
+      'Gatrivi no cobra comisión sobre tus ventas. Mercado Pago aplica sus propias comisiones según el medio de pago y el plazo de acreditación que tengas configurado. Si cobrás por transferencia, la operación va directo a tu cuenta.',
+  },
+];
+
 function CommerceHeroVisual() {
   return (
     <div className="relative mx-auto w-full max-w-[31rem] lg:mx-0">
@@ -224,6 +247,28 @@ export default function FlyerFunnelPage() {
                   </span>
                   {item}
                 </p>
+              ))}
+            </div>
+          </section>
+
+          <section className="border-b border-black/10 py-9">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-black/40">Antes de vender online</p>
+            <h2 className="mt-3 text-3xl font-black tracking-[-0.045em]">Las preguntas que aparecen enseguida.</h2>
+            <p className="mt-3 max-w-xl font-medium leading-relaxed text-black/60">
+              Sobre stock, pagos y el trabajo del día a día.
+            </p>
+
+            <div className="mt-6 divide-y divide-black/10 rounded-[1.5rem] border border-black/10 bg-white px-5 sm:px-6">
+              {ownerQuestions.map(({ question, answer }) => (
+                <details key={question} className="group py-1">
+                  <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 py-4 text-left text-base font-black leading-snug marker:content-none">
+                    <span>{question}</span>
+                    <span className="shrink-0 text-xl font-black text-[#d84d1d] transition-transform group-open:rotate-45">+</span>
+                  </summary>
+                  <p className="max-w-2xl pb-5 pr-8 text-sm font-medium leading-relaxed text-black/60">
+                    {answer}
+                  </p>
+                </details>
               ))}
             </div>
           </section>
