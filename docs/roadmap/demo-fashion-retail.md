@@ -24,3 +24,5 @@ No inventar prendas ni precios mientras el catálogo real no haya sido exportado
 - `/demo/vintagedealers`
 - `/demo/vintagedealers/owner`
 - tarjeta pública en `/demos`
+
+La demo pública es además la referencia de implementación para futuros comercios de moda.
