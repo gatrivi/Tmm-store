@@ -3,6 +3,7 @@ import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from 'react
 import LandingPage from './pages/LandingPage';
 import DemoShareFooter from './components/DemoShareFooter';
 import MotionEffects from './components/MotionEffects';
+import PricingShareButton from './components/PricingShareButton';
 import { ThemeToggle } from './components/ThemeToggle';
 import { DEMO_EXPRESS_FALLBACK, DEMO_EXPRESS_PUBLIC } from './config/demoExpress';
 
@@ -123,6 +124,7 @@ export default function App() {
         </Routes>
         <DemoShareFooter />
         <PricingReserveBar />
+        <PricingShareButton />
         <SalesThemeToggle />
       </Suspense>
     </BrowserRouter>
