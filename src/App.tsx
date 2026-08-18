@@ -46,6 +46,7 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/empezar" element={<FlyerFunnelPage />} />
           <Route path="/web" element={<FlyerFunnelPage />} />
+          <Route path="/sitio" element={<FlyerFunnelPage />} />
           <Route path="/tienda" element={<FlyerFunnelPage />} />
           <Route path="/catalogo" element={<FlyerFunnelPage />} />
           <Route path="/demos" element={<DemosGalleryPage />} />
