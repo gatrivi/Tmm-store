@@ -6,6 +6,7 @@ import AguacatsDemoPage from './pages/AguacatsDemoPage';
 import FerreteriaDemoPage from './pages/FerreteriaDemoPage';
 import MamabelDemoPage from './pages/MamabelDemoPage';
 import MolinoFloridaDemoPage from './pages/MolinoFloridaDemoPage';
+import PanaderiaDemoPage from './pages/PanaderiaDemoPage';
 import Storefront from './pages/Storefront';
 import SuperAdminPage from './pages/SuperAdminPage';
 import WeightedCatalogDemoPage from './pages/WeightedCatalogDemoPage';
@@ -20,7 +21,7 @@ import { resolveTenantIdFromPath } from './utils/demoRegistry';
 
 function CustomerDemo() {
   const location = useLocation();
-  // Express / legacy gastronomy only — pizzería & panadería reuse Storefront with vertical config
+  // Express / legacy gastronomy only — specialized verticals may provide their own page.
   if (!DEMO_EXPRESS_PUBLIC && (location.pathname === '/demo' || location.pathname === '/demo/')) {
     return <Navigate to={DEMO_EXPRESS_FALLBACK} replace />;
   }
@@ -61,7 +62,7 @@ export default function CommerceApp() {
               <Route path="/demo" element={<CustomerDemo />} />
               <Route path="/demo/pizzeria" element={<CustomerDemo />} />
               <Route path="/demo/pizzeria/order/:orderId" element={<OrderStatusPage />} />
-              <Route path="/demo/panaderia" element={<CustomerDemo />} />
+              <Route path="/demo/panaderia" element={<PanaderiaDemoPage />} />
               <Route path="/demo/panaderia/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/ferreteria" element={<FerreteriaDemoPage />} />
               <Route path="/demo/ferreteria/order/:orderId" element={<OrderStatusPage />} />
