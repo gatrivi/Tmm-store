@@ -33,8 +33,14 @@ service cloud.firestore {
       allow read: if owns(uid) || referralAdmin();
       allow create: if owns(uid)
         && request.resource.data.uid == uid
-        && request.resource.data.referralCode is string;
-      allow update, delete: if owns(uid) || referralAdmin();
+        && request.resource.data.referralCode is string
+        && request.resource.data.commissionRate == 0.15;
+      allow update: if referralAdmin()
+        || (owns(uid)
+          && request.resource.data.uid == resource.data.uid
+          && request.resource.data.referralCode == resource.data.referralCode
+          && request.resource.data.commissionRate == resource.data.commissionRate);
+      allow delete: if referralAdmin();
     }
 
     match /referralFlyers/{flyerId} {
@@ -62,6 +68,7 @@ service cloud.firestore {
         || (signedIn() && request.auth.uid == resource.data.ownerUid);
       allow create: if request.resource.data.flyerId is string
         && request.resource.data.type in ['scan', 'contact_click']
+        && request.resource.data.occurredAt is string
         && exists(/databases/$(database)/documents/referralFlyers/$(request.resource.data.flyerId))
         && request.resource.data.ownerUid == get(/databases/$(database)/documents/referralFlyers/$(request.resource.data.flyerId)).data.ownerUid
         && request.resource.data.referralCode == get(/databases/$(database)/documents/referralFlyers/$(request.resource.data.flyerId)).data.referralCode
