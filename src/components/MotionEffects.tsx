@@ -57,6 +57,11 @@ export default function MotionEffects() {
       const main = document.querySelector<HTMLElement>('main');
       if (!main) return;
 
+      if (!main.classList.contains('zs-page-enter')) {
+        main.classList.add('zs-page-enter');
+        touched.add(main);
+      }
+
       main.querySelectorAll<HTMLElement>('section').forEach((section, index) => {
         if (section.classList.contains('zs-reveal')) return;
         section.classList.add('zs-reveal');
@@ -79,20 +84,15 @@ export default function MotionEffects() {
       });
     };
 
-    const main = document.querySelector<HTMLElement>('main');
-    if (main) {
-      main.classList.add('zs-page-enter');
-      touched.add(main);
-      enhance();
-      mutationObserver = new MutationObserver(() => {
-        if (mutationFrame) return;
-        mutationFrame = requestAnimationFrame(() => {
-          mutationFrame = 0;
-          enhance();
-        });
+    enhance();
+    mutationObserver = new MutationObserver(() => {
+      if (mutationFrame) return;
+      mutationFrame = requestAnimationFrame(() => {
+        mutationFrame = 0;
+        enhance();
       });
-      mutationObserver.observe(main, { childList: true, subtree: true });
-    }
+    });
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
 
     const paintScroll = () => {
       scrollFrame = 0;
