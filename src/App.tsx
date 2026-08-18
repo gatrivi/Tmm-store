@@ -9,6 +9,10 @@ const ProspectDemoBuilderPage = lazy(() => import('./pages/ProspectDemoBuilderPa
 const DemosGalleryPage = lazy(() => import('./pages/DemosGalleryPage'));
 const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SalesDepositPage = lazy(() => import('./pages/SalesDepositPage'));
+const ReferralsPage = lazy(() => import('./pages/ReferralsPage'));
+const ReferralScanPage = lazy(() => import('./pages/ReferralScanPage'));
+const ReferralFlyerPage = lazy(() => import('./pages/ReferralFlyerPage'));
+const ReferralContactPage = lazy(() => import('./pages/ReferralContactPage'));
 
 function RouteLoader() {
   return (
@@ -46,6 +50,10 @@ export default function App() {
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/planes" element={<PricingPage />} />
           <Route path="/reservar" element={<SalesDepositPage />} />
+          <Route path="/referidos" element={<ReferralsPage />} />
+          <Route path="/referidos/flyer/:flyerId" element={<ReferralFlyerPage />} />
+          <Route path="/r/:flyerId" element={<ReferralScanPage />} />
+          <Route path="/referido/contact" element={<ReferralContactPage />} />
           <Route path="/demo/armar" element={DEMO_EXPRESS_PUBLIC ? <ProspectDemoBuilderPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/owner" element={DEMO_EXPRESS_PUBLIC ? <DemoOwnerPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/carniceria/owner" element={<DemoOwnerPage />} />
