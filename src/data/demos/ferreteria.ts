@@ -2,6 +2,17 @@ import type { MenuItemType } from '../menu';
 import type { OrderRecord } from '../../types/order';
 import type { DemoDefinition } from './types';
 
+const PHOTO = {
+  hero: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=1600&q=82',
+  drill: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=900&q=82',
+  handTools: 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?auto=format&fit=crop&w=900&q=82',
+  mechanicTools: 'https://images.unsplash.com/photo-1508873535684-277a3cbcc4e8?auto=format&fit=crop&w=900&q=82',
+  fasteners: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=900&q=82',
+  paintTools: 'https://images.pexels.com/photos/6024540/pexels-photo-6024540.jpeg?auto=compress&cs=tinysrgb&w=900',
+  tapeMeasure: 'https://images.pexels.com/photos/3143085/pexels-photo-3143085.jpeg?auto=compress&cs=tinysrgb&w=900',
+  extensionCord: 'https://images.unsplash.com/photo-1621717731333-7f7fa49fc86d?auto=format&fit=crop&w=900&q=82',
+};
+
 const MENU_ITEMS: MenuItemType[] = [
   {
     id: 'taladro-percutor',
@@ -9,7 +20,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'herramientas',
     badge: 'Más vendido',
     description: '750 W · mandril 13 mm · velocidad variable y reversa.',
-    images: ['/demos/ferreteria/products/taladro.svg'],
+    images: [PHOTO.drill, '/demos/ferreteria/products/taladro.svg'],
     options: [
       { id: 'solo', label: 'Taladro', price: 89900 },
       { id: 'kit', label: 'Kit + mechas', price: 109900 },
@@ -20,7 +31,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Juego de llaves combinadas',
     category: 'herramientas',
     description: 'Set de 8 piezas · 8 a 19 mm · acero cromo vanadio.',
-    images: ['/demos/ferreteria/products/llaves.svg'],
+    images: [PHOTO.handTools, '/demos/ferreteria/products/llaves.svg'],
     options: [{ id: 'set-8', label: 'Set 8 piezas', price: 42900 }],
   },
   {
@@ -28,7 +39,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Martillo carpintero 16 oz',
     category: 'herramientas',
     description: 'Cabeza forjada y mango antideslizante para uso diario.',
-    images: ['/demos/ferreteria/products/martillo.svg'],
+    images: [PHOTO.mechanicTools, '/demos/ferreteria/products/martillo.svg'],
     options: [{ id: 'unidad', label: 'Unidad', price: 23800 }],
   },
   {
@@ -37,7 +48,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'fijaciones',
     badge: 'Obra',
     description: 'Kit universal para pared · tornillo 6 × 40 mm.',
-    images: ['/demos/ferreteria/products/fijaciones.svg'],
+    images: [PHOTO.fasteners, '/demos/ferreteria/products/fijaciones.svg'],
     options: [
       { id: 'pack-20', label: 'Pack 20 u', price: 4500 },
       { id: 'caja-100', label: 'Caja 100 u', price: 15400 },
@@ -49,7 +60,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'pintura',
     badge: 'Rendidor',
     description: 'Terminación mate · lavable · bajo olor.',
-    images: ['/demos/ferreteria/products/pintura.svg'],
+    images: [PHOTO.paintTools, '/demos/ferreteria/products/pintura.svg'],
     options: [
       { id: '4l', label: '4 litros', price: 28900 },
       { id: '20l', label: '20 litros', price: 83900 },
@@ -60,7 +71,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Cerradura doble paleta',
     category: 'fijaciones',
     description: 'Frente de acero · incluye 2 llaves y tornillería.',
-    images: ['/demos/ferreteria/products/cerradura.svg'],
+    images: [PHOTO.fasteners, '/demos/ferreteria/products/cerradura.svg'],
     options: [{ id: 'unidad', label: 'Unidad', price: 37900 }],
   },
   {
@@ -68,7 +79,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Cinta métrica 5 m',
     category: 'medicion',
     description: 'Cinta 19 mm · traba automática · clip metálico.',
-    images: ['/demos/ferreteria/products/cinta.svg'],
+    images: [PHOTO.tapeMeasure, '/demos/ferreteria/products/cinta.svg'],
     options: [{ id: 'unidad', label: 'Unidad', price: 12900 }],
   },
   {
@@ -76,7 +87,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Alargue reforzado 5 tomas',
     category: 'electricidad',
     description: '3 metros · cable reforzado · llave térmica.',
-    images: ['/demos/ferreteria/products/alargue.svg'],
+    images: [PHOTO.extensionCord, '/demos/ferreteria/products/alargue.svg'],
     options: [
       { id: '3m', label: '3 metros', price: 24900 },
       { id: '5m', label: '5 metros', price: 31900 },
@@ -164,7 +175,7 @@ export const FERRETERIA_DEMO: DemoDefinition = {
   plan: 'pedidos',
   locale: 'es',
   monogram: 'FN',
-  heroImage: '/demos/ferreteria/hero.svg',
+  heroImage: PHOTO.hero,
   heroObjectPosition: 'center 52%',
   hideLanguageSwitcher: true,
   hideThemeToggle: true,
