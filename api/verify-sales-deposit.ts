@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 
 const DEPOSIT_AMOUNT = 65000;
+const SALES_REFERENCE = /^SALE-(BASIC|STANDARD|PREMIUM)-\d+$/;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
@@ -25,18 +26,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const payment = await paymentApi.get({ id: paymentId });
 
     const reference = String(payment.external_reference ?? '');
+    const match = SALES_REFERENCE.exec(reference);
+    if (!match) {
+      return res.status(404).json({ error: 'Pago no asociado a una reserva comercial.' });
+    }
+
     const amount = Number(payment.transaction_amount ?? 0);
     const currency = String(payment.currency_id ?? '');
-    const belongsToSalesDeposit = reference.startsWith('SALE-');
     const amountMatches = amount === DEPOSIT_AMOUNT && currency === 'ARS';
-    const approved = payment.status === 'approved' && belongsToSalesDeposit && amountMatches;
+    const verified = payment.status === 'approved' && amountMatches;
 
     return res.status(200).json({
-      verified: approved,
+      verified,
       status: payment.status ?? 'unknown',
-      reference,
-      amount,
-      currency,
+      plan: match[1].toLowerCase(),
     });
   } catch (error) {
     console.error('Sales deposit verification failed:', error);
