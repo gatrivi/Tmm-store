@@ -169,7 +169,7 @@ export default function PricingPage() {
                         <p className="mt-2 text-4xl font-black tracking-[-0.05em]">{plan.full}</p>
                       </>
                     )}
-                    <p className="mt-4 text-sm font-black text-black/70">o {plan.monthly} / mes</p>
+                    <p className="mt-4 text-sm font-black text-black/70">o {plan.monthly}</p>
                   </div>
 
                   <ul className="mt-6 flex-1 space-y-3">
