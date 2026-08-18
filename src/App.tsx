@@ -11,6 +11,7 @@ const HeladeriaDemoPage = lazy(() => import('./pages/HeladeriaDemoPage'));
 const CafeRocaDemoPage = lazy(() => import('./pages/CafeRocaDemoPage'));
 const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SalesDepositPage = lazy(() => import('./pages/SalesDepositPage'));
+const SupportPlansPage = lazy(() => import('./pages/SupportPlansPage'));
 const FlyerFunnelPage = lazy(() => import('./pages/FlyerFunnelPage'));
 
 function RouteLoader() {
@@ -53,6 +54,8 @@ export default function App() {
           <Route path="/demos" element={<DemosGalleryPage />} />
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/planes" element={<PricingPage />} />
+          <Route path="/soporte" element={<SupportPlansPage />} />
+          <Route path="/mantenimiento" element={<SupportPlansPage />} />
           <Route path="/reservar" element={<SalesDepositPage />} />
           <Route path="/demo/heladeria" element={<HeladeriaDemoPage />} />
           <Route path="/demo/cafe-roca" element={<CafeRocaDemoPage />} />
