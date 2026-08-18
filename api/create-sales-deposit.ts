@@ -65,9 +65,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           deposit_amount: DEPOSIT_AMOUNT,
         },
         back_urls: {
-          success: `${origin}/pricing?deposit_status=approved&sale_ref=${reference}`,
-          failure: `${origin}/pricing?deposit_status=failure&sale_ref=${reference}`,
-          pending: `${origin}/pricing?deposit_status=pending&sale_ref=${reference}`,
+          success: `${origin}/reservar?plan=${plan}&deposit_status=approved&sale_ref=${reference}`,
+          failure: `${origin}/reservar?plan=${plan}&deposit_status=failure&sale_ref=${reference}`,
+          pending: `${origin}/reservar?plan=${plan}&deposit_status=pending&sale_ref=${reference}`,
         },
         notification_url: `${origin}/api/mp-webhook`,
         auto_return: 'approved',
