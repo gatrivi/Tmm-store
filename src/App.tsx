@@ -8,6 +8,7 @@ const DemoOwnerPage = lazy(() => import('./pages/DemoOwnerPage'));
 const ProspectDemoBuilderPage = lazy(() => import('./pages/ProspectDemoBuilderPage'));
 const DemosGalleryPage = lazy(() => import('./pages/DemosGalleryPage'));
 const HeladeriaDemoPage = lazy(() => import('./pages/HeladeriaDemoPage'));
+const CafeRocaDemoPage = lazy(() => import('./pages/CafeRocaDemoPage'));
 const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SalesDepositPage = lazy(() => import('./pages/SalesDepositPage'));
 const FlyerFunnelPage = lazy(() => import('./pages/FlyerFunnelPage'));
@@ -54,6 +55,7 @@ export default function App() {
           <Route path="/planes" element={<PricingPage />} />
           <Route path="/reservar" element={<SalesDepositPage />} />
           <Route path="/demo/heladeria" element={<HeladeriaDemoPage />} />
+          <Route path="/demo/cafe-roca" element={<CafeRocaDemoPage />} />
           <Route path="/demo/armar" element={DEMO_EXPRESS_PUBLIC ? <ProspectDemoBuilderPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/owner" element={DEMO_EXPRESS_PUBLIC ? <DemoOwnerPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/carniceria/owner" element={<DemoOwnerPage />} />
