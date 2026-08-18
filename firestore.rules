@@ -50,7 +50,13 @@ service cloud.firestore {
         && request.resource.data.id == flyerId
         && request.resource.data.referralCode is string
         && request.resource.data.status == 'active';
-      allow update, delete: if referralAdmin()
+      allow update: if referralAdmin()
+        || (signedIn()
+          && request.auth.uid == resource.data.ownerUid
+          && request.resource.data.id == resource.data.id
+          && request.resource.data.ownerUid == resource.data.ownerUid
+          && request.resource.data.referralCode == resource.data.referralCode);
+      allow delete: if referralAdmin()
         || (signedIn() && request.auth.uid == resource.data.ownerUid);
     }
 
@@ -59,7 +65,12 @@ service cloud.firestore {
         || (signedIn() && request.auth.uid == resource.data.ownerUid);
       allow create: if owns(request.resource.data.ownerUid)
         && request.resource.data.flyerId == flyerId;
-      allow update, delete: if referralAdmin()
+      allow update: if referralAdmin()
+        || (signedIn()
+          && request.auth.uid == resource.data.ownerUid
+          && request.resource.data.ownerUid == resource.data.ownerUid
+          && request.resource.data.flyerId == resource.data.flyerId);
+      allow delete: if referralAdmin()
         || (signedIn() && request.auth.uid == resource.data.ownerUid);
     }
 
