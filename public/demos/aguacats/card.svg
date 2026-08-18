@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Aguacats</title>
+  <desc id="desc">Portada de Aguacats con identidad de gato y palta, frutas frescas y hojas.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fbfaf3"/>
+      <stop offset="1" stop-color="#e8f2c9"/>
+    </linearGradient>
+    <linearGradient id="avo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a8d52a"/>
+      <stop offset="1" stop-color="#4f8b21"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#527c28"/>
+      <stop offset="1" stop-color="#183e20"/>
+    </linearGradient>
+    <radialGradient id="flesh" cx="45%" cy="38%" r="68%">
+      <stop offset="0" stop-color="#f5ef78"/>
+      <stop offset=".58" stop-color="#cce34b"/>
+      <stop offset="1" stop-color="#75ae2b"/>
+    </radialGradient>
+    <radialGradient id="pit" cx="35%" cy="30%" r="70%">
+      <stop offset="0" stop-color="#b9702c"/>
+      <stop offset="1" stop-color="#62331d"/>
+    </radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="22" stdDeviation="22" flood-color="#17341a" flood-opacity=".18"/>
+    </filter>
+    <pattern id="spots" width="110" height="96" patternUnits="userSpaceOnUse">
+      <path d="M22 18c20-11 39-4 42 10 3 15-14 28-32 24C14 48 7 27 22 18Z" fill="#769b48" opacity=".08"/>
+      <path d="M78 66c12-8 27-3 29 8 2 12-10 21-22 18-13-3-18-18-7-26Z" fill="#769b48" opacity=".07"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="560" height="900" fill="url(#spots)"/>
+  <circle cx="1000" cy="230" r="355" fill="#dce9ae" opacity=".62"/>
+  <circle cx="930" cy="230" r="235" fill="#f7f7e8" opacity=".58"/>
+
+  <!-- brand mark -->
+  <g transform="translate(92 118)">
+    <path d="M44 38V13c0-8 10-12 16-6l38 32c22-11 78-11 100 0l38-32c6-6 16-2 16 6v25c0 19 18 37 18 76 0 70-51 119-122 119S26 184 26 114c0-39 18-57 18-76Z" fill="none" stroke="#78b72c" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M148 90c-34 21-54 53-54 86 0 31 22 52 54 52s54-21 54-52c0-33-20-65-54-86Z" fill="url(#avo)"/>
+    <circle cx="148" cy="183" r="26" fill="#f7f5e7"/>
+    <path d="M199 89c11-24 31-31 54-19-4 23-24 38-54 19Z" fill="#23733b"/>
+    <path d="M138 67c4 8 16 8 20 0" fill="none" stroke="#191b17" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="148" cy="60" r="6" fill="#191b17"/>
+  </g>
+
+  <text x="88" y="440" font-family="Inter,Arial,sans-serif" font-size="92" font-weight="850" letter-spacing="-4" fill="#171914">Aguacats</text>
+  <text x="94" y="494" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="750" letter-spacing="4" fill="#527c28">FRESCO · SIMPLE · DIRECTO</text>
+
+  <!-- leaves -->
+  <g fill="#315f2d" opacity=".94">
+    <path d="M760 105c82-78 154-67 190-27-52 57-122 67-190 27Z"/>
+    <path d="M1030 92c49-56 105-56 137-24-37 43-86 52-137 24Z"/>
+    <path d="M730 720c-76 35-130 13-151-25 58-29 111-21 151 25Z"/>
+    <path d="M1035 684c65-57 133-50 165-13-45 50-105 58-165 13Z"/>
+  </g>
+  <g stroke="#315f2d" stroke-width="8" stroke-linecap="round" opacity=".7">
+    <path d="M716 113 1030 12"/>
+    <path d="M657 748 525 822"/>
+    <path d="M1026 694 1180 604"/>
+  </g>
+
+  <!-- avocados -->
+  <g filter="url(#shadow)">
+    <g transform="translate(780 230) rotate(-7)">
+      <path d="M146 0C97 8 42 83 18 157-9 239 18 354 118 380c104 28 184-55 179-159C293 134 211-11 146 0Z" fill="url(#skin)"/>
+      <path d="M149 18C109 28 63 91 43 158c-22 73 2 169 82 189 85 22 147-45 143-128-3-73-67-212-119-201Z" fill="url(#flesh)" stroke="#3d7227" stroke-width="13"/>
+      <circle cx="148" cy="223" r="66" fill="url(#pit)"/>
+      <circle cx="128" cy="198" r="15" fill="#d4944a" opacity=".48"/>
+    </g>
+    <g transform="translate(958 420) rotate(12)">
+      <path d="M113 0C76 6 35 62 16 119-5 183 14 268 90 290c81 23 143-42 140-121C227 103 163-8 113 0Z" fill="url(#skin)"/>
+      <path d="M114 18C84 26 51 72 35 121c-17 53 0 120 59 136 62 17 109-32 107-91-2-52-48-157-87-148Z" fill="url(#flesh)" stroke="#3d7227" stroke-width="11"/>
+      <ellipse cx="115" cy="171" rx="41" ry="47" fill="#e9ef9d" opacity=".75"/>
+    </g>
+    <g transform="translate(694 518) rotate(20)">
+      <path d="M104 0C69 5 30 58 13 111-7 171 12 250 82 270c75 22 132-38 129-112C208 95 150-7 104 0Z" fill="url(#skin)"/>
+      <path d="M105 17C77 24 47 66 32 112c-15 49 0 111 55 126 57 16 101-29 99-84-2-49-44-145-81-137Z" fill="url(#flesh)" stroke="#3d7227" stroke-width="10"/>
+      <circle cx="104" cy="158" r="47" fill="url(#pit)"/>
+    </g>
+  </g>
+
+  <path d="M622 801c161-53 346-35 506 38" fill="none" stroke="#a9bd78" stroke-width="4" opacity=".7"/>
+</svg>
