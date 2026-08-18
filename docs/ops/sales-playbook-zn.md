@@ -77,6 +77,48 @@ One reusable retail demo can cover several stops:
 2. Di Cards — Carlos Gardel 1899
 3. Pipon Mascotas — Carlos Gardel 1708
 
+## Street mode — mobile first
+
+**Never use the full prospect table while walking.** Before leaving, select one cluster of at most 5 shops. The field view should show exactly one current stop and one next stop.
+
+### Current stop card
+
+```text
+4 / 5
+
+CALZADOS SARACHIAN
+Av. Maipú 2339
+Calzado · demo Moda
+
+[ ABRIR DEMO ]
+[ HABLÉ ] [ CERRADO ]
+[ NO SIRVE ] [ VOLVER ]
+
+Siguiente → Óptica Olivos · 2517
+```
+
+Rules:
+
+1. Large tap targets; usable one-handed.
+2. Address + rubro + relevant demo only. No research paragraphs in field mode.
+3. `HABLÉ` immediately asks only: nombre/contacto + outcome + optional voice note.
+4. `CERRADO`, `NO SIRVE`, `VOLVER` advance automatically to the next stop.
+5. Completed/rejected stops disappear from today's route.
+6. Map is secondary: one tap for directions, never the primary review surface.
+7. Research lives in the lead detail and is opened only when needed.
+
+### Today: Maipú micro-route
+
+```text
+01 Casa Sánchez        Maipú 2302  Ropa
+02 Morelli              Maipú 2335  Calzado
+03 Sarachian            Maipú 2339  Calzado
+04 Óptica Olivos        Maipú 2517  Óptica
+05 Febo                 Maipú 2798  Calzado · baja prioridad
+```
+
+Operational target: **walk → identify storefront → pitch/demo → tap outcome → next.** No scrolling through the master CRM.
+
 ## Demo backlog by leverage
 
 Build once, reuse many times:
