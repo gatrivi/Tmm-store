@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import DemoShareFooter from './components/DemoShareFooter';
+import { ThemeToggle } from './components/ThemeToggle';
 import { DEMO_EXPRESS_FALLBACK, DEMO_EXPRESS_PUBLIC } from './config/demoExpress';
 
 const CommerceApp = lazy(() => import('./CommerceApp'));
@@ -39,6 +40,18 @@ function PricingReserveBar() {
     >
       Reservar con seña · $65.000
     </Link>
+  );
+}
+
+function HomeThemeToggle() {
+  const location = useLocation();
+  const show = location.pathname === '/' || location.pathname === '/oferta' || location.pathname === '/empezar';
+  if (!show) return null;
+
+  return (
+    <div className="fixed bottom-4 left-4 z-[90]">
+      <ThemeToggle showLabel />
+    </div>
   );
 }
 
@@ -103,6 +116,7 @@ export default function App() {
         </Routes>
         <DemoShareFooter />
         <PricingReserveBar />
+        <HomeThemeToggle />
       </Suspense>
     </BrowserRouter>
   );
