@@ -29,7 +29,7 @@ function RouteLoader() {
 
 function PricingReserveBar() {
   const location = useLocation();
-  const show = location.pathname === '/pricing' || location.pathname === '/planes';
+  const show = location.pathname === '/precios';
   if (!show) return null;
 
   return (
@@ -48,14 +48,22 @@ export default function App() {
       <Suspense fallback={<RouteLoader />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+
+          {/* Ruta comercial principal y accesos cortos para flyer/outreach. */}
+          <Route path="/oferta" element={<FlyerFunnelPage />} />
           <Route path="/empezar" element={<FlyerFunnelPage />} />
           <Route path="/web" element={<FlyerFunnelPage />} />
           <Route path="/sitio" element={<FlyerFunnelPage />} />
           <Route path="/tienda" element={<FlyerFunnelPage />} />
           <Route path="/catalogo" element={<FlyerFunnelPage />} />
+
           <Route path="/demos" element={<DemosGalleryPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/planes" element={<PricingPage />} />
+
+          {/* /precios es la URL pública canónica. Conservamos las antiguas sin duplicar contenido. */}
+          <Route path="/precios" element={<PricingPage />} />
+          <Route path="/pricing" element={<Navigate to="/precios" replace />} />
+          <Route path="/planes" element={<Navigate to="/precios" replace />} />
+
           <Route path="/soporte" element={<SupportPlansPage />} />
           <Route path="/mantenimiento" element={<SupportPlansPage />} />
           <Route path="/reservar" element={<SalesDepositPage />} />
