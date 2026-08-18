@@ -29,7 +29,7 @@ function PricingReserveBar() {
   return (
     <Link
       to="/reservar?plan=standard"
-      className="fixed inset-x-3 bottom-3 z-[70] flex min-h-13 items-center justify-center rounded-full bg-[#ff6b35] px-6 text-sm font-black text-white shadow-2xl transition hover:-translate-y-0.5 md:inset-x-auto md:bottom-5 md:right-5"
+      className="fixed inset-x-3 bottom-3 z-[70] flex min-h-14 items-center justify-center rounded-full bg-[#ff6b35] px-6 text-sm font-black text-white shadow-2xl transition hover:-translate-y-0.5 md:inset-x-auto md:bottom-5 md:right-5"
     >
       Reservar con seña · $65.000
     </Link>
