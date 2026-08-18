@@ -19,7 +19,7 @@ const SALES_PATHS = new Set([
 ]);
 
 function pathKey(pathname: string) {
-  return pathname === '/' ? 'home' : pathname.replace(/^\//, '').replaceAll('/', '-');
+  return pathname === '/' ? 'home' : pathname.replace(/^\//, '').replace(/\//g, '-');
 }
 
 export default function MotionEffects() {
