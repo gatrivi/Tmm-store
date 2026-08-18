@@ -47,14 +47,14 @@ export function DemoRibbon() {
         </p>
       )}
       <div className="mx-auto flex min-h-12 max-w-7xl items-center justify-between gap-2 px-3 sm:px-6">
-        <Link
-          to="/"
+        <a
+          href="https://gatrivi.com/"
           className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-white/75 transition hover:text-white"
         >
           <ArrowLeft size={15} />
           <span className="hidden sm:inline">Volver a Gatrivi.com</span>
           <span className="sm:hidden">Gatrivi</span>
-        </Link>
+        </a>
 
         <div className="flex rounded-full bg-white/8 p-1 text-xs font-bold">
           <Link
