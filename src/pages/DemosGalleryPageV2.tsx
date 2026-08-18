@@ -144,8 +144,8 @@ const DEMOS: DemoItem[] = [
     kind: 'Catálogo',
     description: 'Productos separados, opciones de maduración y una forma clara de consultar o pedir.',
     samplePath: '/aguacats',
-    image: '/demos/aguacats/frescura.jpg',
-    imageAlt: 'Productos frescos de la demo Aguacats',
+    image: '/demos/aguacats/card.svg',
+    imageAlt: 'Portada de Aguacats con identidad de gato y palta',
     tags: ['Productos', 'Maduración', 'WhatsApp'],
   },
   {
