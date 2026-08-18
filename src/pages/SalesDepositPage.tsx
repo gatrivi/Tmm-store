@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -23,6 +23,7 @@ const plans = [
 ] as const;
 
 type PlanId = (typeof plans)[number]['id'];
+type VerificationState = 'idle' | 'checking' | 'approved' | 'pending' | 'failed' | 'error';
 
 function isPlanId(value: string | null): value is PlanId {
   return plans.some(plan => plan.id === value);
@@ -31,16 +32,57 @@ function isPlanId(value: string | null): value is PlanId {
 export default function SalesDepositPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialPlan = searchParams.get('plan');
+  const paymentId = searchParams.get('payment_id');
+  const returnStatus = searchParams.get('deposit_status');
   const [planId, setPlanId] = useState<PlanId>(isPlanId(initialPlan) ? initialPlan : 'standard');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [verification, setVerification] = useState<VerificationState>(paymentId ? 'checking' : 'idle');
 
   const plan = useMemo(() => plans.find(item => item.id === planId) ?? plans[1], [planId]);
-  const status = searchParams.get('deposit_status');
   const proofHref = buildSalesContactHref(
     `seña comercial — transferí ${DEPOSIT_LABEL} a Brubank alias ${BRUBANK_ALIAS} — plan ${plan.name}`,
   );
+
+  useEffect(() => {
+    if (!paymentId) {
+      if (returnStatus === 'approved') setVerification('error');
+      else if (returnStatus === 'pending') setVerification('pending');
+      else if (returnStatus === 'failure') setVerification('failed');
+      else setVerification('idle');
+      return;
+    }
+
+    let cancelled = false;
+    setVerification('checking');
+
+    fetch(`/api/verify-sales-deposit?payment_id=${encodeURIComponent(paymentId)}`)
+      .then(async response => {
+        const data = (await response.json()) as {
+          verified?: boolean;
+          status?: string;
+          plan?: string;
+          error?: string;
+        };
+        if (!response.ok) throw new Error(data.error || 'No se pudo verificar el pago.');
+        return data;
+      })
+      .then(data => {
+        if (cancelled) return;
+        if (isPlanId(data.plan ?? null)) setPlanId(data.plan as PlanId);
+        if (data.verified) setVerification('approved');
+        else if (data.status === 'pending' || data.status === 'in_process') setVerification('pending');
+        else setVerification('failed');
+      })
+      .catch(() => {
+        if (!cancelled) setVerification('error');
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [paymentId, returnStatus]);
 
   function selectPlan(nextPlan: PlanId) {
     setPlanId(nextPlan);
@@ -48,6 +90,11 @@ export default function SalesDepositPage() {
     next.set('plan', nextPlan);
     next.delete('deposit_status');
     next.delete('sale_ref');
+    next.delete('payment_id');
+    next.delete('collection_id');
+    next.delete('collection_status');
+    next.delete('status');
+    next.delete('external_reference');
     setSearchParams(next, { replace: true });
   }
 
@@ -97,11 +144,13 @@ export default function SalesDepositPage() {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-16">
-        {status && (
-          <div className="mb-7 rounded-2xl border border-black/10 bg-white p-5 text-sm font-bold leading-relaxed">
-            {status === 'approved' && 'Volviste de Mercado Pago. Verificamos la acreditación y seguimos con tu proyecto.'}
-            {status === 'pending' && 'El pago quedó pendiente en Mercado Pago. Cuando se acredite, seguimos con la reserva.'}
-            {status === 'failure' && 'El pago no se completó. Podés intentarlo otra vez o usar transferencia.'}
+        {verification !== 'idle' && (
+          <div className={`mb-7 rounded-2xl border p-5 text-sm font-bold leading-relaxed ${verification === 'approved' ? 'border-emerald-200 bg-emerald-50 text-emerald-900' : 'border-black/10 bg-white'}`}>
+            {verification === 'checking' && 'Verificando la acreditación con Mercado Pago…'}
+            {verification === 'approved' && `Seña acreditada ✓ Reservaste el plan ${plan.name}.`}
+            {verification === 'pending' && 'El pago está pendiente. La reserva se confirma cuando Mercado Pago lo acredite.'}
+            {verification === 'failed' && 'El pago no se acreditó. Podés intentarlo otra vez o usar transferencia.'}
+            {verification === 'error' && 'Volviste de Mercado Pago, pero no pudimos verificar la acreditación automáticamente. No vuelvas a pagar: consultanos primero.'}
           </div>
         )}
 
@@ -159,11 +208,11 @@ export default function SalesDepositPage() {
             <button
               type="button"
               onClick={startMercadoPago}
-              disabled={loading}
-              className="mt-4 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-[#009ee3] px-6 text-base font-black text-white transition hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-65"
+              disabled={loading || verification === 'approved'}
+              className="mt-4 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-[#009ee3] px-6 text-base font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-65"
             >
               {loading ? <LoaderCircle size={19} className="animate-spin" /> : <CreditCard size={19} />}
-              {loading ? 'Abriendo Mercado Pago…' : `Pagar con Mercado Pago · ${DEPOSIT_LABEL}`}
+              {verification === 'approved' ? 'Seña ya acreditada ✓' : loading ? 'Abriendo Mercado Pago…' : `Pagar con Mercado Pago · ${DEPOSIT_LABEL}`}
             </button>
             <p className="mt-3 flex items-center justify-center gap-2 text-center text-xs font-bold text-black/45">
               <ShieldCheck size={14} /> El pago se procesa en el checkout seguro de Mercado Pago.
