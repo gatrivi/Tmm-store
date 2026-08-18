@@ -67,11 +67,15 @@ export interface ReferralSale {
   id: string;
   flyerId: string;
   ownerUid: string;
+  referralCode: string;
+  reference: string;
   amount: number;
+  commissionRate: number;
   commissionAmount: number;
   status: ReferralSaleStatus;
   occurredAt: string;
   createdAt?: unknown;
+  updatedAt?: unknown;
 }
 
 export interface ReferralDashboardData {
@@ -79,6 +83,10 @@ export interface ReferralDashboardData {
   placements: ReferralPlacement[];
   events: ReferralEvent[];
   sales: ReferralSale[];
+}
+
+export interface ReferralAdminData extends ReferralDashboardData {
+  profiles: ReferralProfile[];
 }
 
 function authOrThrow() {
@@ -117,6 +125,16 @@ export function currentReferralUser() {
     return authOrThrow().currentUser;
   } catch {
     return null;
+  }
+}
+
+export async function isReferralAdminUser(user = currentReferralUser()) {
+  if (!user) return false;
+  if ((user.email ?? '').toLowerCase().endsWith('@zengasoft.com')) return true;
+  try {
+    return (await getDoc(doc(dbOrThrow(), 'referralAdmins', user.uid))).exists();
+  } catch {
+    return false;
   }
 }
 
@@ -219,6 +237,11 @@ async function listOwned<T>(collectionName: string, uid: string) {
   return snapshot.docs.map((item) => ({ id: item.id, ...item.data() }) as T);
 }
 
+async function listAll<T>(collectionName: string) {
+  const snapshot = await getDocs(collection(dbOrThrow(), collectionName));
+  return snapshot.docs.map((item) => ({ id: item.id, ...item.data() }) as T);
+}
+
 export async function getReferralDashboardData(uid: string): Promise<ReferralDashboardData> {
   const [flyers, placements, events, sales] = await Promise.all([
     listOwned<ReferralFlyer>('referralFlyers', uid),
@@ -232,6 +255,64 @@ export async function getReferralDashboardData(uid: string): Promise<ReferralDas
     events: events.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt)),
     sales: sales.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt)),
   };
+}
+
+export async function getReferralAdminData(): Promise<ReferralAdminData> {
+  if (!await isReferralAdminUser()) throw new Error('Esta cuenta no administra referidos.');
+  const [profiles, flyers, placements, events, sales] = await Promise.all([
+    listAll<ReferralProfile>('referralProfiles'),
+    listAll<ReferralFlyer>('referralFlyers'),
+    listAll<ReferralPlacement>('referralPlacements'),
+    listAll<ReferralEvent>('referralEvents'),
+    listAll<ReferralSale>('referralSales'),
+  ]);
+  return {
+    profiles,
+    flyers,
+    placements,
+    events: events.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt)),
+    sales: sales.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt)),
+  };
+}
+
+export async function createReferralSale(input: {
+  flyerId: string;
+  amount: number;
+  reference?: string;
+  status?: ReferralSaleStatus;
+}) {
+  if (!await isReferralAdminUser()) throw new Error('Permiso de administración requerido.');
+  const amount = Math.max(0, Number(input.amount) || 0);
+  if (!amount) throw new Error('Ingresá el valor de la venta.');
+  const flyer = await getReferralFlyer(input.flyerId);
+  if (!flyer) throw new Error('Flyer no encontrado.');
+  const profile = await getReferralProfile(flyer.ownerUid);
+  if (!profile) throw new Error('Referidor no encontrado.');
+  const rate = Number.isFinite(profile.commissionRate) ? profile.commissionRate : REFERRAL_COMMISSION_RATE;
+  const id = `SALE-${crypto.randomUUID().replace(/-/g, '').slice(0, 10).toUpperCase()}`;
+  const sale: ReferralSale = {
+    id,
+    flyerId: flyer.id,
+    ownerUid: flyer.ownerUid,
+    referralCode: flyer.referralCode,
+    reference: input.reference?.trim() || 'Venta referida',
+    amount,
+    commissionRate: rate,
+    commissionAmount: Math.round(amount * rate),
+    status: input.status ?? 'approved',
+    occurredAt: new Date().toISOString(),
+  };
+  await setDoc(doc(dbOrThrow(), 'referralSales', id), {
+    ...sale,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+  return sale;
+}
+
+export async function setReferralSaleStatus(id: string, status: ReferralSaleStatus) {
+  if (!await isReferralAdminUser()) throw new Error('Permiso de administración requerido.');
+  await setDoc(doc(dbOrThrow(), 'referralSales', id), { status, updatedAt: serverTimestamp() }, { merge: true });
 }
 
 export async function getReferralFlyer(id: string): Promise<ReferralFlyer | null> {
