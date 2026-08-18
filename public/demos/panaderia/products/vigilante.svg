@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Vigilante argentino</title>
+  <desc id="desc">Ilustración de una factura vigilante alargada con membrillo y crema pastelera.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#eef5fa"/><stop offset="1" stop-color="#c8d9e7"/></linearGradient>
+    <linearGradient id="pastry" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd27c"/><stop offset=".55" stop-color="#d9902f"/><stop offset="1" stop-color="#a95b1f"/></linearGradient>
+    <linearGradient id="mem" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#9d2720"/><stop offset=".5" stop-color="#d74b31"/><stop offset="1" stop-color="#872019"/></linearGradient>
+    <linearGradient id="cream" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff1a8"/><stop offset="1" stop-color="#e9bd50"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="22" stdDeviation="22" flood-opacity=".2"/></filter>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <ellipse cx="610" cy="624" rx="410" ry="72" fill="#284d67" opacity=".12"/>
+  <g filter="url(#shadow)" transform="rotate(-8 600 400)">
+    <path d="M206 454c27-87 118-168 228-203 131-42 303-27 430 46 76 44 126 96 157 154-51 66-137 111-250 129-142 23-307 0-423-61-63-33-111-54-142-65Z" fill="url(#pastry)"/>
+    <path d="M318 447c77-31 157-50 241-54 87-5 179 6 273 33-36 28-78 51-124 68-108 39-242 41-356 6-17-6-29-23-34-53Z" fill="#efb858" opacity=".72"/>
+    <path d="M361 405c105-27 245-28 373 2 18 4 26 23 17 39-11 19-26 34-45 45-86-18-190-19-290-2-27-12-46-31-55-57-5-13-5-22 0-27Z" fill="url(#mem)"/>
+    <path d="M400 356c79-20 196-21 285-2 23 5 34 32 21 52-10 16-24 28-42 38-69-13-150-13-222 0-19-9-34-22-46-39-14-20-11-43 4-49Z" fill="url(#cream)"/>
+    <g stroke="#f8dc93" stroke-width="16" opacity=".8"><path d="M300 330l72 195"/><path d="M404 289l58 230"/><path d="M519 267l42 242"/><path d="M642 276l19 219"/><path d="M759 315l-9 151"/><path d="M854 358l-19 87"/></g>
+  </g>
+  <g fill="#fff" opacity=".7"><circle cx="337" cy="238" r="7"/><circle cx="394" cy="202" r="6"/><circle cx="815" cy="214" r="8"/><circle cx="877" cy="260" r="6"/></g>
+</svg>
