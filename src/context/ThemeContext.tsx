@@ -22,6 +22,11 @@ function applyTheme(theme: Theme) {
   root.classList.toggle('light', theme === 'light');
   root.dataset.theme = theme;
   root.style.colorScheme = theme;
+
+  // Make the top-level surface switch synchronously as well. This matters on
+  // mobile while React/Tailwind classes are settling after a route change.
+  document.body.style.backgroundColor = theme === 'dark' ? '#0d0d0d' : '#f9fafb';
+  document.body.style.color = theme === 'dark' ? '#f5f5f5' : '#111827';
 }
 
 function readInitialTheme(): Theme {
