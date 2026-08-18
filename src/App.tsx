@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import { DEMO_EXPRESS_FALLBACK, DEMO_EXPRESS_PUBLIC } from './config/demoExpress';
 
@@ -8,6 +8,7 @@ const DemoOwnerPage = lazy(() => import('./pages/DemoOwnerPage'));
 const ProspectDemoBuilderPage = lazy(() => import('./pages/ProspectDemoBuilderPage'));
 const DemosGalleryPage = lazy(() => import('./pages/DemosGalleryPage'));
 const PricingPage = lazy(() => import('./pages/PricingPage'));
+const SalesDepositPage = lazy(() => import('./pages/SalesDepositPage'));
 
 function RouteLoader() {
   return (
@@ -20,6 +21,21 @@ function RouteLoader() {
   );
 }
 
+function PricingReserveBar() {
+  const location = useLocation();
+  const show = location.pathname === '/pricing' || location.pathname === '/planes';
+  if (!show) return null;
+
+  return (
+    <Link
+      to="/reservar?plan=standard"
+      className="fixed inset-x-3 bottom-3 z-[70] flex min-h-13 items-center justify-center rounded-full bg-[#ff6b35] px-6 text-sm font-black text-white shadow-2xl transition hover:-translate-y-0.5 md:inset-x-auto md:bottom-5 md:right-5"
+    >
+      Reservar con seña · $65.000
+    </Link>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -29,6 +45,7 @@ export default function App() {
           <Route path="/demos" element={<DemosGalleryPage />} />
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/planes" element={<PricingPage />} />
+          <Route path="/reservar" element={<SalesDepositPage />} />
           <Route path="/demo/armar" element={DEMO_EXPRESS_PUBLIC ? <ProspectDemoBuilderPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/owner" element={DEMO_EXPRESS_PUBLIC ? <DemoOwnerPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/carniceria/owner" element={<DemoOwnerPage />} />
@@ -43,6 +60,7 @@ export default function App() {
           <Route path="/demo/mamamabel/owner" element={<Navigate to="/demo/mamabel/owner" replace />} />
           <Route path="*" element={<CommerceApp />} />
         </Routes>
+        <PricingReserveBar />
       </Suspense>
     </BrowserRouter>
   );
