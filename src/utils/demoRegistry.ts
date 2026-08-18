@@ -8,6 +8,7 @@ import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
 import { VERDULERIA_DEMO } from '../data/demos/verduleria';
 import { ZIMBA_PET_DEMO } from '../data/demos/zimbaPet';
 import type { DemoDefinition } from '../data/demos/types';
+import { getDemoShortPath } from '../config/demoShortLinks';
 
 /** Gastronomy showcase — kept for path parity with legacy `/demo`. */
 const GASTRONOMY_DEMO: Pick<DemoDefinition, 'id' | 'tenantId' | 'customerPath' | 'ownerPath' | 'orderPath'> = {
@@ -47,17 +48,19 @@ export function isDemoTenant(tenantId: string): boolean {
   return tenantId === 'demo' || DEMOS.some(d => d.tenantId === tenantId);
 }
 
+function matchesDemoPath(demo: DemoDefinition, pathname: string): boolean {
+  const shortPath = getDemoShortPath(demo.id);
+  const bases = [demo.customerPath, shortPath].filter(Boolean) as string[];
+  return bases.some(base => pathname === base || pathname.startsWith(`${base}/`));
+}
+
 /**
- * Central path → tenant. All `/demo…` entrypoints must use this.
- * Longer prefixes win (`/demo/carniceria` before `/demo`).
+ * Central path → tenant. Both memorable `/panaderia` style URLs and legacy `/demo/panaderia` URLs resolve to the same tenant.
  */
 export function resolveTenantIdFromPath(pathname: string): string {
   const demo = resolveDemoFromPath(pathname);
   if (demo) return demo.tenantId;
-  if (pathname === '/demo' || pathname.startsWith('/demo/')) {
-    // /demo/owner, /demo/armar, bare /demo — verticals already handled above
-    return 'demo';
-  }
+  if (pathname === '/demo' || pathname.startsWith('/demo/')) return 'demo';
 
   const fromEnv = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_TENANT_ID) as string | undefined;
   if (fromEnv?.trim()) return fromEnv.trim();
@@ -68,17 +71,12 @@ export function resolveTenantIdFromPath(pathname: string): string {
 }
 
 export function resolveDemoFromPath(pathname: string): DemoDefinition | null {
-  const sorted = [...DEMOS].sort((a, b) => b.customerPath.length - a.customerPath.length);
-  for (const demo of sorted) {
-    if (
-      pathname === demo.customerPath
-      || pathname === demo.ownerPath
-      || pathname.startsWith(`${demo.customerPath}/`)
-    ) {
-      return demo;
-    }
-  }
-  return null;
+  const sorted = [...DEMOS].sort((a, b) => {
+    const aLen = Math.max(a.customerPath.length, getDemoShortPath(a.id)?.length ?? 0);
+    const bLen = Math.max(b.customerPath.length, getDemoShortPath(b.id)?.length ?? 0);
+    return bLen - aLen;
+  });
+  return sorted.find(demo => matchesDemoPath(demo, pathname)) ?? null;
 }
 
 export function resolveDemoStorageKey(demoId: string): string {
@@ -97,10 +95,12 @@ export function resolveDemoPaths(pathname: string): {
 } {
   const demo = resolveDemoFromPath(pathname);
   if (demo) {
+    const shortPath = getDemoShortPath(demo.id);
+    const isShort = Boolean(shortPath && (pathname === shortPath || pathname.startsWith(`${shortPath}/`)));
     return {
-      customerPath: demo.customerPath,
-      ownerPath: demo.ownerPath,
-      orderPath: demo.orderPath,
+      customerPath: isShort && shortPath ? shortPath : demo.customerPath,
+      ownerPath: isShort && shortPath ? `${shortPath}/owner` : demo.ownerPath,
+      orderPath: isShort && shortPath ? (orderId: string) => `${shortPath}/order/${orderId}` : demo.orderPath,
     };
   }
   return {

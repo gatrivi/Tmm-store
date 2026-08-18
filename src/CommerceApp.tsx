@@ -21,7 +21,6 @@ import { resolveTenantIdFromPath } from './utils/demoRegistry';
 
 function CustomerDemo() {
   const location = useLocation();
-  // Express / legacy gastronomy only — specialized verticals may provide their own page.
   if (!DEMO_EXPRESS_PUBLIC && (location.pathname === '/demo' || location.pathname === '/demo/')) {
     return <Navigate to={DEMO_EXPRESS_FALLBACK} replace />;
   }
@@ -36,7 +35,7 @@ function CustomerDemo() {
 /** Typo alias: mamamabel → mamabel */
 function RedirectMamabelOrder() {
   const { orderId } = useParams();
-  return <Navigate to={`/demo/mamabel/order/${orderId}`} replace />;
+  return <Navigate to={`/mamabel/order/${orderId}`} replace />;
 }
 
 /** Remount Express menu when `rubro` changes (same tenant `demo`). */
@@ -60,28 +59,58 @@ export default function CommerceApp() {
             <AppVersionStamp />
             <Routes>
               <Route path="/demo" element={<CustomerDemo />} />
+
+              <Route path="/pizzeria" element={<CustomerDemo />} />
+              <Route path="/pizzeria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/pizzeria" element={<CustomerDemo />} />
               <Route path="/demo/pizzeria/order/:orderId" element={<OrderStatusPage />} />
+
+              <Route path="/panaderia" element={<PanaderiaDemoPage />} />
+              <Route path="/panaderia/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/panaderia" element={<PanaderiaDemoPage />} />
               <Route path="/demo/panaderia/order/:orderId" element={<OrderStatusPage />} />
+
+              <Route path="/ferreteria" element={<FerreteriaDemoPage />} />
+              <Route path="/ferreteria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/ferreteria" element={<FerreteriaDemoPage />} />
               <Route path="/demo/ferreteria/order/:orderId" element={<OrderStatusPage />} />
+
+              <Route path="/zimba-pet" element={<CustomerDemo />} />
+              <Route path="/zimba-pet/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/zimba-pet" element={<CustomerDemo />} />
               <Route path="/demo/zimba-pet/order/:orderId" element={<OrderStatusPage />} />
+
+              <Route path="/aguacats" element={<AguacatsDemoPage />} />
+              <Route path="/aguacats/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/aguacats" element={<AguacatsDemoPage />} />
               <Route path="/demo/aguacats/order/:orderId" element={<OrderStatusPage />} />
+
+              <Route path="/mamabel" element={<MamabelDemoPage />} />
+              <Route path="/mamabel/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/mamabel" element={<MamabelDemoPage />} />
               <Route path="/demo/mamabel/order/:orderId" element={<OrderStatusPage />} />
-              <Route path="/demo/mamamabel" element={<Navigate to="/demo/mamabel" replace />} />
+              <Route path="/demo/mamamabel" element={<Navigate to="/mamabel" replace />} />
               <Route path="/demo/mamamabel/order/:orderId" element={<RedirectMamabelOrder />} />
+
+              <Route path="/carniceria" element={<WeightedCatalogDemoPage />} />
+              <Route path="/carniceria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/carniceria" element={<WeightedCatalogDemoPage />} />
               <Route path="/demo/carniceria/order/:orderId" element={<OrderStatusPage />} />
+
+              <Route path="/canavesi" element={<WeightedCatalogDemoPage />} />
+              <Route path="/canavesi/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/canavesi" element={<WeightedCatalogDemoPage />} />
               <Route path="/demo/canavesi/order/:orderId" element={<OrderStatusPage />} />
+
+              <Route path="/verduleria" element={<WeightedCatalogDemoPage />} />
+              <Route path="/verduleria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/verduleria" element={<WeightedCatalogDemoPage />} />
               <Route path="/demo/verduleria/order/:orderId" element={<OrderStatusPage />} />
+
+              <Route path="/molino-florida" element={<MolinoFloridaDemoPage />} />
               <Route path="/demo/molino-florida" element={<MolinoFloridaDemoPage />} />
-              <Route path="/demo/molino" element={<Navigate to="/demo/molino-florida" replace />} />
+              <Route path="/demo/molino" element={<Navigate to="/molino-florida" replace />} />
+
               <Route path="/s/:slug" element={<Storefront />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/s/:slug/admin" element={<AdminPage />} />

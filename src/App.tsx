@@ -1,12 +1,13 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
+import DemoShareFooter from './components/DemoShareFooter';
 import { DEMO_EXPRESS_FALLBACK, DEMO_EXPRESS_PUBLIC } from './config/demoExpress';
 
 const CommerceApp = lazy(() => import('./CommerceApp'));
 const DemoOwnerPage = lazy(() => import('./pages/DemoOwnerPage'));
 const ProspectDemoBuilderPage = lazy(() => import('./pages/ProspectDemoBuilderPage'));
-const DemosGalleryPage = lazy(() => import('./pages/DemosGalleryPage'));
+const DemosGalleryPage = lazy(() => import('./pages/DemosGalleryPageV2'));
 const HeladeriaDemoPage = lazy(() => import('./pages/HeladeriaDemoPage'));
 const CafeRocaDemoPage = lazy(() => import('./pages/CafeRocaDemoPage'));
 const PricingPage = lazy(() => import('./pages/PricingPage'));
@@ -57,10 +58,25 @@ export default function App() {
           <Route path="/soporte" element={<SupportPlansPage />} />
           <Route path="/mantenimiento" element={<SupportPlansPage />} />
           <Route path="/reservar" element={<SalesDepositPage />} />
+
+          <Route path="/heladeria" element={<HeladeriaDemoPage />} />
+          <Route path="/cafe-roca" element={<CafeRocaDemoPage />} />
           <Route path="/demo/heladeria" element={<HeladeriaDemoPage />} />
           <Route path="/demo/cafe-roca" element={<CafeRocaDemoPage />} />
+
           <Route path="/demo/armar" element={DEMO_EXPRESS_PUBLIC ? <ProspectDemoBuilderPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/owner" element={DEMO_EXPRESS_PUBLIC ? <DemoOwnerPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
+
+          <Route path="/carniceria/owner" element={<DemoOwnerPage />} />
+          <Route path="/canavesi/owner" element={<DemoOwnerPage />} />
+          <Route path="/pizzeria/owner" element={<DemoOwnerPage />} />
+          <Route path="/panaderia/owner" element={<DemoOwnerPage />} />
+          <Route path="/ferreteria/owner" element={<DemoOwnerPage />} />
+          <Route path="/mamabel/owner" element={<DemoOwnerPage />} />
+          <Route path="/aguacats/owner" element={<DemoOwnerPage />} />
+          <Route path="/verduleria/owner" element={<DemoOwnerPage />} />
+          <Route path="/zimba-pet/owner" element={<DemoOwnerPage />} />
+
           <Route path="/demo/carniceria/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/canavesi/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/pizzeria/owner" element={<DemoOwnerPage />} />
@@ -70,9 +86,11 @@ export default function App() {
           <Route path="/demo/aguacats/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/verduleria/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/zimba-pet/owner" element={<DemoOwnerPage />} />
-          <Route path="/demo/mamamabel/owner" element={<Navigate to="/demo/mamabel/owner" replace />} />
+          <Route path="/demo/mamamabel/owner" element={<Navigate to="/mamabel/owner" replace />} />
+
           <Route path="*" element={<CommerceApp />} />
         </Routes>
+        <DemoShareFooter />
         <PricingReserveBar />
       </Suspense>
     </BrowserRouter>
