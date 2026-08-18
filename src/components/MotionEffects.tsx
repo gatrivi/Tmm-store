@@ -18,6 +18,10 @@ const SALES_PATHS = new Set([
   '/reservar',
 ]);
 
+function pathKey(pathname: string) {
+  return pathname === '/' ? 'home' : pathname.replace(/^\//, '').replaceAll('/', '-');
+}
+
 export default function MotionEffects() {
   const location = useLocation();
 
@@ -26,10 +30,12 @@ export default function MotionEffects() {
     const active = SALES_PATHS.has(location.pathname);
     if (!active) {
       root.classList.remove('zs-sales-motion', 'zs-scrolled');
+      delete root.dataset.zsPath;
       return undefined;
     }
 
     root.classList.add('zs-sales-motion');
+    root.dataset.zsPath = pathKey(location.pathname);
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const finePointer = window.matchMedia('(pointer: fine)');
@@ -54,7 +60,7 @@ export default function MotionEffects() {
     }
 
     const enhance = () => {
-      const main = document.querySelector<HTMLElement>('main');
+      const main = document.querySelector<HTMLElement>('#root main');
       if (!main) return;
 
       if (!main.classList.contains('zs-page-enter')) {
@@ -65,18 +71,16 @@ export default function MotionEffects() {
       main.querySelectorAll<HTMLElement>('section').forEach((section, index) => {
         if (section.classList.contains('zs-reveal')) return;
         section.classList.add('zs-reveal');
-        section.style.setProperty('--zs-delay', `${Math.min(index % 5, 4) * 55}ms`);
+        section.style.setProperty('--zs-delay', `${Math.min(index % 4, 3) * 45}ms`);
         touched.add(section);
         if (reduceMotion.matches || !revealObserver) section.classList.add('zs-visible');
         else revealObserver.observe(section);
       });
 
-      main
-        .querySelectorAll<HTMLElement>('article, a.group, [class*="shadow-2xl"][class*="rounded"]')
-        .forEach(surface => {
-          surface.classList.add('zs-interactive-surface');
-          touched.add(surface);
-        });
+      main.querySelectorAll<HTMLElement>('article, a.group, [data-motion-surface]').forEach(surface => {
+        surface.classList.add('zs-interactive-surface');
+        touched.add(surface);
+      });
 
       main.querySelectorAll<HTMLElement>('a.rounded-full, button.rounded-full').forEach(control => {
         control.classList.add('zs-magnetic');
@@ -85,6 +89,7 @@ export default function MotionEffects() {
     };
 
     enhance();
+    const appRoot = document.getElementById('root') ?? document.body;
     mutationObserver = new MutationObserver(() => {
       if (mutationFrame) return;
       mutationFrame = requestAnimationFrame(() => {
@@ -92,7 +97,7 @@ export default function MotionEffects() {
         enhance();
       });
     });
-    mutationObserver.observe(document.body, { childList: true, subtree: true });
+    mutationObserver.observe(appRoot, { childList: true, subtree: true });
 
     const paintScroll = () => {
       scrollFrame = 0;
@@ -128,8 +133,8 @@ export default function MotionEffects() {
       if (!magnetic) return;
 
       const rect = magnetic.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 8;
-      const y = ((event.clientY - rect.top) / rect.height - 0.5) * 6;
+      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 7;
+      const y = ((event.clientY - rect.top) / rect.height - 0.5) * 5;
       magnetic.style.setProperty('--zs-magnet-x', `${x}px`);
       magnetic.style.setProperty('--zs-magnet-y', `${y}px`);
       lastMagnetic = magnetic;
@@ -155,6 +160,7 @@ export default function MotionEffects() {
       root.style.removeProperty('--zs-scroll-progress');
       root.style.removeProperty('--zs-pointer-x');
       root.style.removeProperty('--zs-pointer-y');
+      delete root.dataset.zsPath;
     };
   }, [location.pathname]);
 
