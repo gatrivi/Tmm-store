@@ -2,7 +2,8 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 
 export type Theme = 'dark' | 'light';
 
-const STORAGE_KEY = 'trufi_theme';
+const STORAGE_KEY = 'gatrivi_theme';
+const LEGACY_STORAGE_KEY = 'trufi_theme';
 
 interface ThemeContextValue {
   theme: Theme;
@@ -16,6 +17,7 @@ function readInitialTheme(): Theme {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved === 'light' || saved === 'dark') return saved;
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
   } catch {
     /* ignore */
   }
