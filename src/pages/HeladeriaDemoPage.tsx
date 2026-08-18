@@ -54,11 +54,17 @@ export default function HeladeriaDemoPage() {
     updateActive({ flavors: selected ? active.flavors.filter(flavorId => flavorId !== id) : [...active.flavors, id] });
   };
 
-  const addNext = () => {
+  const goNext = () => {
     if (!active.name.trim() || active.flavors.length === 0) return;
-    const next = makePortion(portions.length + 1);
-    setPortions(current => [...current, next]);
-    setActiveIndex(portions.length);
+
+    if (activeIndex < portions.length - 1) {
+      setActiveIndex(activeIndex + 1);
+    } else {
+      const next = makePortion(portions.length + 1);
+      setPortions(current => [...current, next]);
+      setActiveIndex(portions.length);
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -84,6 +90,7 @@ export default function HeladeriaDemoPage() {
   }, [portions, totalGrams]);
 
   const canContinue = Boolean(active.name.trim() && active.flavors.length > 0);
+  const hasNext = activeIndex < portions.length - 1;
 
   return (
     <div className="min-h-screen bg-[#fffaf4] text-[#231c19] selection:bg-[#ef476f] selection:text-white">
@@ -198,10 +205,10 @@ export default function HeladeriaDemoPage() {
           <button
             type="button"
             disabled={!canContinue}
-            onClick={addNext}
+            onClick={goNext}
             className="flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full bg-[#ef476f] px-5 text-sm font-black text-white shadow-lg transition disabled:cursor-not-allowed disabled:opacity-35"
           >
-            <Plus size={18} /> Siguiente 1/4
+            <Plus size={18} /> {hasNext ? 'Siguiente persona' : 'Agregar otro 1/4'}
           </button>
           <button
             type="button"
