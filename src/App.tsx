@@ -47,11 +47,15 @@ function PricingReserveBar() {
 // Sales pages keep one obvious, mobile-safe theme control.
 function SalesThemeToggle() {
   const location = useLocation();
-  const show = ['/', '/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios'].includes(location.pathname);
+  const salesPaths = ['/', '/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios'];
+  const bottomBarPaths = ['/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios'];
+  const show = salesPaths.includes(location.pathname);
   if (!show) return null;
 
+  const clearsMobileBar = bottomBarPaths.includes(location.pathname);
+
   return (
-    <div className="fixed bottom-4 left-4 z-[90]">
+    <div className={`fixed left-4 z-[90] ${clearsMobileBar ? 'bottom-20 md:bottom-4' : 'bottom-4'}`}>
       <ThemeToggle showLabel />
     </div>
   );
