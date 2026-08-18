@@ -43,9 +43,9 @@ function PricingReserveBar() {
   );
 }
 
-function HomeThemeToggle() {
+function SalesThemeToggle() {
   const location = useLocation();
-  const show = location.pathname === '/' || location.pathname === '/oferta' || location.pathname === '/empezar';
+  const show = ['/', '/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios'].includes(location.pathname);
   if (!show) return null;
 
   return (
@@ -116,7 +116,7 @@ export default function App() {
         </Routes>
         <DemoShareFooter />
         <PricingReserveBar />
-        <HomeThemeToggle />
+        <SalesThemeToggle />
       </Suspense>
     </BrowserRouter>
   );
