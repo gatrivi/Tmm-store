@@ -48,7 +48,7 @@ function PricingReserveBar() {
 // Sales pages keep one obvious, mobile-safe theme control.
 function SalesThemeToggle() {
   const location = useLocation();
-  const salesPaths = ['/', '/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios'];
+  const salesPaths = ['/', '/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios', '/demos'];
   const bottomBarPaths = ['/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios'];
   const show = salesPaths.includes(location.pathname);
   if (!show) return null;
