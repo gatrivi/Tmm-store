@@ -134,8 +134,8 @@ const DEMOS: DemoItem[] = [
     kind: 'Página',
     description: 'Portfolio, marca y encargos en una página que presenta el trabajo antes del contacto.',
     samplePath: '/mamabel',
-    image: '/demos/mamabel/picked/hero.jpg',
-    imageAlt: 'Mamá Mabel con su delantal de repostería',
+    image: '/demos/mamabel/thumbnail.webp',
+    imageAlt: 'Portada de Tortas de Mamá Mabel',
     tags: ['Portfolio', 'Encargos', 'Marca'],
   },
   {
