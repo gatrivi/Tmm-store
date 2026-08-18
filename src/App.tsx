@@ -7,6 +7,7 @@ const CommerceApp = lazy(() => import('./CommerceApp'));
 const DemoOwnerPage = lazy(() => import('./pages/DemoOwnerPage'));
 const ProspectDemoBuilderPage = lazy(() => import('./pages/ProspectDemoBuilderPage'));
 const DemosGalleryPage = lazy(() => import('./pages/DemosGalleryPage'));
+const PricingPage = lazy(() => import('./pages/PricingPage'));
 
 function RouteLoader() {
   return (
@@ -26,7 +27,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/demos" element={<DemosGalleryPage />} />
-          <Route path="/pricing" element={<Navigate to="/#planes" replace />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/planes" element={<PricingPage />} />
           <Route path="/demo/armar" element={DEMO_EXPRESS_PUBLIC ? <ProspectDemoBuilderPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/owner" element={DEMO_EXPRESS_PUBLIC ? <DemoOwnerPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/carniceria/owner" element={<DemoOwnerPage />} />
