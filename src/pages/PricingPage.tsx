@@ -6,6 +6,7 @@ import {
   Check,
   CreditCard,
   MessageCircle,
+  Minus,
   Sparkles,
 } from 'lucide-react';
 import { buildSalesContactHref } from '../utils/salesContact';
@@ -63,6 +64,28 @@ const plans = [
   },
 ];
 
+const comparisonRows = [
+  { label: 'Precio de lista', basic: '$400.000', standard: '$650.000', premium: '$1.200.000', emphasis: true },
+  { label: 'Modalidad mensual', basic: '12 × $35.000', standard: '12 × $60.000', premium: '12 × $110.000', emphasis: true },
+  { label: 'Catálogo con fotos y precios', basic: true, standard: true, premium: true },
+  { label: 'Ficha individual de producto', basic: true, standard: true, premium: true },
+  { label: 'Diseño mobile', basic: true, standard: true, premium: true },
+  { label: 'WhatsApp directo', basic: true, standard: true, premium: true },
+  { label: 'Link + QR', basic: true, standard: true, premium: true },
+  { label: 'Dominio por 1 año', basic: true, standard: true, premium: true },
+  { label: 'Carga inicial', basic: 'Incluida', standard: 'Hasta 300', premium: 'Hasta 300' },
+  { label: 'Carrito + total automático', basic: false, standard: true, premium: true },
+  { label: 'Pedido ordenado por WhatsApp', basic: false, standard: true, premium: true },
+  { label: 'Alias / transferencia', basic: false, standard: true, premium: true },
+  { label: 'Envío de comprobante', basic: false, standard: true, premium: true },
+  { label: 'Panel de productos', basic: false, standard: true, premium: true },
+  { label: 'Mercado Pago integrado', basic: false, standard: false, premium: true },
+  { label: 'Gestor de pedidos', basic: false, standard: false, premium: true },
+  { label: 'Reseñas', basic: false, standard: false, premium: true },
+  { label: 'Asistente IA', basic: false, standard: false, premium: true },
+  { label: 'Automatizaciones comerciales', basic: false, standard: false, premium: true },
+];
+
 const paymentModes = [
   {
     title: 'Pago completo',
@@ -87,6 +110,28 @@ const paymentModes = [
     ],
   },
 ];
+
+type ComparisonValue = boolean | string;
+
+function ComparisonCell({ value }: { value: ComparisonValue }) {
+  if (value === true) {
+    return (
+      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#ff6b35]/10 text-[#d84d1d]" aria-label="Incluido">
+        <Check size={16} strokeWidth={3} />
+      </span>
+    );
+  }
+
+  if (value === false) {
+    return (
+      <span className="inline-flex h-7 w-7 items-center justify-center text-black/20" aria-label="No incluido">
+        <Minus size={17} strokeWidth={2.5} />
+      </span>
+    );
+  }
+
+  return <span className="text-sm font-black text-black/70">{value}</span>;
+}
 
 export default function PricingPage() {
   const contactHref = buildSalesContactHref('pricing — quiero elegir plan y forma de pago');
@@ -198,6 +243,50 @@ export default function PricingPage() {
 
         <section className="border-b border-black/10 bg-white py-14 sm:py-20">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="max-w-3xl">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#d84d1d]">Comparación completa</p>
+              <h2 className="mt-4 text-4xl font-black tracking-[-0.055em] sm:text-5xl">Qué estás pagando.</h2>
+              <p className="mt-4 max-w-2xl text-base font-medium leading-relaxed text-black/55">
+                Básico te da presencia. Estándar agrega el flujo de pedido. Premium suma cobro online y herramientas para operar el negocio.
+              </p>
+            </div>
+
+            <div className="mt-8 overflow-hidden rounded-[1.75rem] border border-black/10 bg-white shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[760px] border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-black/10 bg-[#f5f2eb]">
+                      <th className="w-[40%] px-5 py-5 text-xs font-black uppercase tracking-[0.12em] text-black/45 sm:px-6">Incluye</th>
+                      <th className="w-[20%] px-4 py-5 text-center text-sm font-black">Básico</th>
+                      <th className="w-[20%] bg-[#ff6b35]/10 px-4 py-5 text-center text-sm font-black text-[#c74418]">
+                        Estándar
+                        <span className="mx-auto mt-1 block w-fit rounded-full bg-[#ff6b35] px-2 py-0.5 text-[9px] uppercase tracking-[0.1em] text-white">Recomendado</span>
+                      </th>
+                      <th className="w-[20%] px-4 py-5 text-center text-sm font-black">Premium</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {comparisonRows.map(row => (
+                      <tr key={row.label} className={`border-b border-black/5 last:border-0 ${row.emphasis ? 'bg-black/[0.025]' : ''}`}>
+                        <th className="px-5 py-4 text-sm font-bold text-black/70 sm:px-6">{row.label}</th>
+                        <td className="px-4 py-4 text-center"><ComparisonCell value={row.basic} /></td>
+                        <td className="bg-[#ff6b35]/[0.045] px-4 py-4 text-center"><ComparisonCell value={row.standard} /></td>
+                        <td className="px-4 py-4 text-center"><ComparisonCell value={row.premium} /></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-[#ff6b35]/25 bg-[#ff6b35]/10 p-5 text-sm font-bold leading-relaxed text-black/70">
+              <strong className="text-black">La diferencia de precio:</strong> de Básico a Estándar pagás por automatizar el pedido; de Estándar a Premium pagás por integrar el cobro y la gestión. La promo actual de $325.000 aplica sólo al Estándar y no cambia su precio de lista de $650.000.
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-black/10 py-14 sm:py-20">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="max-w-2xl">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-[#d84d1d]">Cómo se paga</p>
               <h2 className="mt-4 text-4xl font-black tracking-[-0.055em] sm:text-5xl">Dos caminos. Nada escondido.</h2>
@@ -207,7 +296,7 @@ export default function PricingPage() {
               {paymentModes.map(mode => {
                 const Icon = mode.icon;
                 return (
-                  <article key={mode.title} className="rounded-[2rem] border border-black/10 bg-[#f5f2eb] p-6 sm:p-8">
+                  <article key={mode.title} className="rounded-[2rem] border border-black/10 bg-white p-6 sm:p-8">
                     <Icon size={24} className="text-[#d84d1d]" />
                     <h3 className="mt-5 text-2xl font-black tracking-[-0.035em]">{mode.title}</h3>
                     <p className="mt-2 font-bold text-black/55">{mode.summary}</p>
