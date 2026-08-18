@@ -1,6 +1,19 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function owns(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function referralAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/referralAdmins/$(request.auth.uid));
+    }
+
     match /tenants/{tenantId} {
       allow read: if true;
       allow write: if true;
@@ -10,6 +23,58 @@ service cloud.firestore {
         allow create: if true;
         allow update: if true;
       }
+    }
+
+    match /referralProfiles/{uid} {
+      allow read: if owns(uid) || referralAdmin();
+      allow create: if owns(uid)
+        && request.resource.data.uid == uid
+        && request.resource.data.referralCode is string;
+      allow update, delete: if owns(uid) || referralAdmin();
+    }
+
+    match /referralFlyers/{flyerId} {
+      // Public read is required by /r/:flyerId. No profile/payment data lives here.
+      allow read: if true;
+      allow create: if owns(request.resource.data.ownerUid)
+        && request.resource.data.id == flyerId
+        && request.resource.data.referralCode is string
+        && request.resource.data.status == 'active';
+      allow update, delete: if referralAdmin()
+        || (signedIn() && request.auth.uid == resource.data.ownerUid);
+    }
+
+    match /referralPlacements/{flyerId} {
+      allow read: if referralAdmin()
+        || (signedIn() && request.auth.uid == resource.data.ownerUid);
+      allow create: if owns(request.resource.data.ownerUid)
+        && request.resource.data.flyerId == flyerId;
+      allow update, delete: if referralAdmin()
+        || (signedIn() && request.auth.uid == resource.data.ownerUid);
+    }
+
+    match /referralEvents/{eventId} {
+      allow read: if referralAdmin()
+        || (signedIn() && request.auth.uid == resource.data.ownerUid);
+      allow create: if request.resource.data.flyerId is string
+        && request.resource.data.type in ['scan', 'contact_click']
+        && exists(/databases/$(database)/documents/referralFlyers/$(request.resource.data.flyerId))
+        && request.resource.data.ownerUid == get(/databases/$(database)/documents/referralFlyers/$(request.resource.data.flyerId)).data.ownerUid
+        && request.resource.data.referralCode == get(/databases/$(database)/documents/referralFlyers/$(request.resource.data.flyerId)).data.referralCode
+        && get(/databases/$(database)/documents/referralFlyers/$(request.resource.data.flyerId)).data.status == 'active';
+      allow update, delete: if referralAdmin();
+    }
+
+    match /referralSales/{saleId} {
+      allow read: if referralAdmin()
+        || (signedIn() && request.auth.uid == resource.data.ownerUid);
+      // Only an admin can turn attribution into money.
+      allow create, update, delete: if referralAdmin();
+    }
+
+    match /referralAdmins/{uid} {
+      allow read: if owns(uid);
+      allow write: if false;
     }
   }
 }
