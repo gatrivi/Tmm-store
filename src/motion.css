@@ -1,0 +1,193 @@
+:root {
+  --zs-scroll-progress: 0;
+  --zs-pointer-x: 50vw;
+  --zs-pointer-y: 35vh;
+}
+
+.zs-motion-ui {
+  display: none;
+}
+
+.zs-sales-motion .zs-motion-ui {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.zs-scroll-progress {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg, #ff6b35, #ffb36f);
+  box-shadow: 0 0 16px rgb(255 107 53 / 35%);
+  transform: scaleX(var(--zs-scroll-progress));
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.zs-pointer-aura {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    280px circle at var(--zs-pointer-x) var(--zs-pointer-y),
+    rgb(255 107 53 / 8%),
+    transparent 72%
+  );
+  opacity: 0.8;
+}
+
+.zs-sales-motion .zs-page-enter {
+  animation: zs-page-enter 420ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.zs-sales-motion .zs-reveal {
+  opacity: 0;
+  translate: 0 18px;
+  scale: 0.992;
+  filter: blur(4px);
+  transition:
+    opacity 520ms cubic-bezier(.22, 1, .36, 1),
+    translate 520ms cubic-bezier(.22, 1, .36, 1),
+    scale 520ms cubic-bezier(.22, 1, .36, 1),
+    filter 520ms ease;
+  transition-delay: var(--zs-delay, 0ms);
+}
+
+.zs-sales-motion .zs-reveal.zs-visible {
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+  filter: blur(0);
+}
+
+.zs-sales-motion header.sticky {
+  transition:
+    box-shadow 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease,
+    backdrop-filter 220ms ease;
+}
+
+.zs-sales-motion.zs-scrolled header.sticky {
+  box-shadow: 0 12px 40px rgb(0 0 0 / 9%);
+  backdrop-filter: blur(18px) saturate(1.08);
+}
+
+.zs-sales-motion .zs-interactive-surface {
+  transition:
+    transform 240ms cubic-bezier(.22, 1, .36, 1),
+    box-shadow 240ms ease,
+    filter 240ms ease,
+    border-color 240ms ease;
+  will-change: transform;
+}
+
+.zs-sales-motion .zs-interactive-surface:hover {
+  transform: translateY(-4px) scale(1.004);
+  filter: saturate(1.025);
+}
+
+.zs-sales-motion .zs-interactive-surface img {
+  transition: transform 520ms cubic-bezier(.22, 1, .36, 1), filter 320ms ease;
+}
+
+.zs-sales-motion .zs-interactive-surface:hover img {
+  transform: scale(1.025);
+  filter: saturate(1.045);
+}
+
+.zs-sales-motion .zs-magnetic {
+  translate: var(--zs-magnet-x, 0) var(--zs-magnet-y, 0);
+  transition:
+    translate 150ms ease-out,
+    transform 180ms cubic-bezier(.22, 1, .36, 1),
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease;
+  will-change: translate, transform;
+}
+
+.zs-sales-motion .zs-magnetic:hover {
+  box-shadow: 0 12px 30px rgb(0 0 0 / 14%);
+}
+
+.zs-sales-motion .zs-magnetic:active {
+  transform: scale(.975);
+  transition-duration: 80ms;
+}
+
+.zs-sales-motion main section:first-of-type > img.absolute {
+  animation: zs-hero-breathe 15s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.zs-sales-motion main h1,
+.zs-sales-motion main h2 {
+  text-wrap: balance;
+}
+
+@keyframes zs-page-enter {
+  from {
+    opacity: 0;
+    translate: 0 7px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes zs-hero-breathe {
+  from {
+    transform: scale(1.01) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.045) translate3d(-.35%, -.25%, 0);
+  }
+}
+
+@media (pointer: coarse) {
+  .zs-pointer-aura {
+    display: none;
+  }
+
+  .zs-sales-motion .zs-interactive-surface:hover,
+  .zs-sales-motion .zs-interactive-surface:hover img {
+    transform: none;
+    filter: none;
+  }
+
+  .zs-sales-motion .zs-magnetic {
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zs-sales-motion .zs-page-enter,
+  .zs-sales-motion main section:first-of-type > img.absolute {
+    animation: none;
+  }
+
+  .zs-sales-motion .zs-reveal,
+  .zs-sales-motion .zs-reveal.zs-visible {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+    filter: none;
+    transition: none;
+  }
+
+  .zs-pointer-aura {
+    display: none;
+  }
+
+  .zs-sales-motion .zs-magnetic,
+  .zs-sales-motion .zs-interactive-surface,
+  .zs-sales-motion .zs-interactive-surface img {
+    translate: 0 0;
+    transition-duration: 0.01ms !important;
+  }
+}
