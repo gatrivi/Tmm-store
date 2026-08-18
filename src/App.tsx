@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import DemoShareFooter from './components/DemoShareFooter';
+import MotionEffects from './components/MotionEffects';
 import { ThemeToggle } from './components/ThemeToggle';
 import { DEMO_EXPRESS_FALLBACK, DEMO_EXPRESS_PUBLIC } from './config/demoExpress';
 
@@ -59,6 +60,7 @@ function SalesThemeToggle() {
 export default function App() {
   return (
     <BrowserRouter>
+      <MotionEffects />
       <Suspense fallback={<RouteLoader />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
