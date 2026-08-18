@@ -170,14 +170,14 @@ export default function FlyerFunnelPage() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
                 to="/precios"
-                className="inline-flex min-h-13 items-center justify-center gap-2 rounded-full bg-black px-6 text-sm font-black text-white"
+                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-black px-6 text-sm font-black text-white"
               >
                 Ver precios
                 <ArrowRight size={17} />
               </Link>
               <Link
                 to="/demo/pizzeria"
-                className="inline-flex min-h-13 items-center justify-center gap-2 rounded-full border border-black/15 bg-white px-6 text-sm font-black"
+                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-black/15 bg-white px-6 text-sm font-black"
               >
                 Ver una tienda
               </Link>
