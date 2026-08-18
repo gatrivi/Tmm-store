@@ -2,8 +2,11 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 
 export type Theme = 'dark' | 'light';
 
-const STORAGE_KEY = 'gatrivi_theme';
-const LEGACY_STORAGE_KEY = 'trufi_theme';
+// v2 intentionally resets the short-lived theme preference used while the
+// public site was being debugged. Existing visitors must come back in light
+// mode once, then their choice persists normally from here on.
+const STORAGE_KEY = 'gatrivi_theme_v2';
+const STALE_STORAGE_KEYS = ['gatrivi_theme', 'trufi_theme'];
 
 interface ThemeContextValue {
   theme: Theme;
@@ -13,11 +16,19 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
+function applyTheme(theme: Theme) {
+  const root = document.documentElement;
+  root.classList.toggle('dark', theme === 'dark');
+  root.classList.toggle('light', theme === 'light');
+  root.dataset.theme = theme;
+  root.style.colorScheme = theme;
+}
+
 function readInitialTheme(): Theme {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved === 'light' || saved === 'dark') return saved;
-    localStorage.removeItem(LEGACY_STORAGE_KEY);
+    STALE_STORAGE_KEYS.forEach(key => localStorage.removeItem(key));
   } catch {
     /* ignore */
   }
@@ -25,13 +36,21 @@ function readInitialTheme(): Theme {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(readInitialTheme);
+  const [theme, setThemeState] = useState<Theme>(readInitialTheme);
+
+  const setTheme = (nextTheme: Theme) => {
+    // Apply synchronously so the control never feels inert on mobile.
+    applyTheme(nextTheme);
+    setThemeState(nextTheme);
+    try {
+      localStorage.setItem(STORAGE_KEY, nextTheme);
+    } catch {
+      /* ignore */
+    }
+  };
 
   useEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle('dark', theme === 'dark');
-    root.classList.toggle('light', theme === 'light');
-    root.style.colorScheme = theme;
+    applyTheme(theme);
     try {
       localStorage.setItem(STORAGE_KEY, theme);
     } catch {
