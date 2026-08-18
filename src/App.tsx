@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import DemoShareFooter from './components/DemoShareFooter';
@@ -18,6 +18,8 @@ const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SalesDepositPage = lazy(() => import('./pages/SalesDepositPage'));
 const SupportPlansPage = lazy(() => import('./pages/SupportPlansPage'));
 const FlyerFunnelPage = lazy(() => import('./pages/FlyerFunnelPage'));
+
+const SALES_PATHS = ['/', '/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios', '/demos'];
 
 function RouteLoader() {
   return (
@@ -45,12 +47,23 @@ function PricingReserveBar() {
   );
 }
 
+function SalesThemeScope() {
+  const location = useLocation();
+  const active = SALES_PATHS.includes(location.pathname);
+
+  useEffect(() => {
+    document.body.classList.toggle('sales-theme', active);
+    return () => document.body.classList.remove('sales-theme');
+  }, [active]);
+
+  return null;
+}
+
 // Sales pages keep one obvious, mobile-safe theme control.
 function SalesThemeToggle() {
   const location = useLocation();
-  const salesPaths = ['/', '/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios', '/demos'];
   const bottomBarPaths = ['/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios'];
-  const show = salesPaths.includes(location.pathname);
+  const show = SALES_PATHS.includes(location.pathname);
   if (!show) return null;
 
   const clearsMobileBar = bottomBarPaths.includes(location.pathname);
@@ -65,6 +78,7 @@ function SalesThemeToggle() {
 export default function App() {
   return (
     <BrowserRouter>
+      <SalesThemeScope />
       <MotionEffects />
       <Suspense fallback={<RouteLoader />}>
         <Routes>
