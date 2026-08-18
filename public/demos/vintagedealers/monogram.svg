@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-labelledby="title desc">
+  <title id="title">vintagedealers</title>
+  <desc id="desc">Monograma VD para la tienda vintagedealers</desc>
+  <rect width="180" height="180" rx="42" fill="#F4F1E8"/>
+  <circle cx="90" cy="90" r="67" fill="none" stroke="#355845" stroke-width="3"/>
+  <path d="M49 56l25 67 16-43 16 43 25-67" fill="none" stroke="#1E2722" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M123 42c-18 4-29 15-34 34 18-4 29-15 34-34Z" fill="#819987"/>
+</svg>
