@@ -54,7 +54,7 @@ export function injectSocialMetadata(html, meta) {
     .replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(meta.title)}</title>`)
     .replace(/<link\s+rel=["']canonical["'][^>]*>/i, `<link rel="canonical" href="${escapeHtml(meta.url)}" />`);
   for (const [attribute, key, value] of [
-    ['name','description',meta.description], ['name','robots',meta.robots], ['property','og:type','website'], ['property','og:site_name','Gatrivi.com'], ['property','og:locale','es_AR'], ['property','og:url',meta.url], ['property','og:title',meta.title], ['property','og:description',meta.description], ['property','og:image',meta.image], ['property','og:image:alt',meta.imageAlt], ['property','og:image:width','1200'], ['property','og:image:height','630'], ['name','twitter:card','summary_large_image'], ['name','twitter:title',meta.title], ['name','twitter:description',meta.description], ['name','twitter:image',meta.image], ['name','twitter:image:alt',meta.imageAlt],
+    ['name','description',meta.description], ['name','robots',meta.robots], ['property','og:type','website'], ['property','og:site_name','Gatrivi.com'], ['property','og:locale','es_AR'], ['property','og:url',meta.url], ['property','og:title',meta.title], ['property','og:description',meta.description], ['property','og:image',meta.image], ['property','og:image:secure_url',meta.image], ['property','og:image:alt',meta.imageAlt], ['property','og:image:width','1200'], ['property','og:image:height','630'], ['name','twitter:card','summary_large_image'], ['name','twitter:title',meta.title], ['name','twitter:description',meta.description], ['name','twitter:image',meta.image], ['name','twitter:image:alt',meta.imageAlt],
   ]) output = replaceOrAppendMeta(output, attribute, key, value);
   return output;
 }
