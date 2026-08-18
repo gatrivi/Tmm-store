@@ -13,6 +13,7 @@ const included = [
   'Carga inicial incluida',
   'Diseño para celular',
   'Dominio por 1 año',
+  'Listo en 3 días con el material completo',
   'Sin comisión sobre tus ventas',
 ];
 
