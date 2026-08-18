@@ -11,7 +11,11 @@ service cloud.firestore {
 
     function referralAdmin() {
       return signedIn()
-        && exists(/databases/$(database)/documents/referralAdmins/$(request.auth.uid));
+        && (
+          (request.auth.token.email is string
+            && request.auth.token.email.matches('.*@zengasoft[.]com$'))
+          || exists(/databases/$(database)/documents/referralAdmins/$(request.auth.uid))
+        );
     }
 
     match /tenants/{tenantId} {
@@ -73,7 +77,7 @@ service cloud.firestore {
     }
 
     match /referralAdmins/{uid} {
-      allow read: if owns(uid);
+      allow read: if owns(uid) || referralAdmin();
       allow write: if false;
     }
   }
