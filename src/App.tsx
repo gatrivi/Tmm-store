@@ -43,6 +43,7 @@ function PricingReserveBar() {
   );
 }
 
+// Sales pages keep one obvious, mobile-safe theme control.
 function SalesThemeToggle() {
   const location = useLocation();
   const show = ['/', '/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios'].includes(location.pathname);
