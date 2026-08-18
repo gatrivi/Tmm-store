@@ -10,6 +10,7 @@ const ProspectDemoBuilderPage = lazy(() => import('./pages/ProspectDemoBuilderPa
 const DemosGalleryPage = lazy(() => import('./pages/DemosGalleryPageV2'));
 const HeladeriaDemoPage = lazy(() => import('./pages/HeladeriaDemoPage'));
 const CafeRocaDemoPage = lazy(() => import('./pages/CafeRocaDemoPage'));
+const PanaderiaDemoMinimalPage = lazy(() => import('./pages/PanaderiaDemoMinimalPage'));
 const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SalesDepositPage = lazy(() => import('./pages/SalesDepositPage'));
 const SupportPlansPage = lazy(() => import('./pages/SupportPlansPage'));
@@ -59,6 +60,8 @@ export default function App() {
           <Route path="/mantenimiento" element={<SupportPlansPage />} />
           <Route path="/reservar" element={<SalesDepositPage />} />
 
+          <Route path="/panaderia" element={<PanaderiaDemoMinimalPage />} />
+          <Route path="/demo/panaderia" element={<PanaderiaDemoMinimalPage />} />
           <Route path="/heladeria" element={<HeladeriaDemoPage />} />
           <Route path="/cafe-roca" element={<CafeRocaDemoPage />} />
           <Route path="/demo/heladeria" element={<HeladeriaDemoPage />} />
