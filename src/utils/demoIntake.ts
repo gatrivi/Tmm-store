@@ -1,13 +1,13 @@
 /**
- * Passive-sales intake: Tally + UTM. No backend.
+ * Passive-sales intake: Tally + UTM + referral attribution. No backend.
  * @see docs/roadmap/passive-sales-petshop-landing.md
  */
 import { buildSalesContactHref, hasSalesWhatsApp } from './salesContact';
 
 const ATTR_KEY = 'trufi_attr_v1';
-const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'] as const;
+const ATTR_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'ref', 'flyer'] as const;
 
-export type Attribution = Partial<Record<(typeof UTM_KEYS)[number], string>>;
+export type Attribution = Partial<Record<(typeof ATTR_KEYS)[number], string>>;
 
 function readStored(): Attribution {
   try {
@@ -20,15 +20,15 @@ function readStored(): Attribution {
   }
 }
 
-/** Capture UTM from current URL into sessionStorage (merge, don't wipe). */
+/** Capture UTM/referral fields from current URL into sessionStorage (merge, don't wipe). */
 export function captureAttribution(search = typeof window !== 'undefined' ? window.location.search : ''): Attribution {
   const params = new URLSearchParams(search);
   const next = { ...readStored() };
   let changed = false;
-  for (const key of UTM_KEYS) {
+  for (const key of ATTR_KEYS) {
     const value = params.get(key)?.trim();
     if (value) {
-      next[key] = value.slice(0, 80);
+      next[key] = value.slice(0, 100);
       changed = true;
     }
   }
@@ -44,7 +44,7 @@ export function getAttribution(): Attribution {
   return readStored();
 }
 
-/** Append stored UTM (+ extras) onto a path or absolute URL. */
+/** Append stored UTM/referral attribution (+ extras) onto a path or absolute URL. */
 export function withAttribution(
   pathOrUrl: string,
   extra: Record<string, string | undefined> = {},
