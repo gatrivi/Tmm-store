@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "check:demo": "npx --yes tsx src/utils/demoRegistry.selfcheck.ts && npx --yes tsx src/services/demoOrderFlow.selfcheck.ts && npx --yes tsx src/utils/mamabelEncargo.selfcheck.ts && npx --yes tsx src/utils/demoPresets.selfcheck.ts && npx --yes tsx src/utils/demoIntake.selfcheck.ts && npx --yes tsx src/utils/demoPhotos.selfcheck.ts && npx --yes tsx src/utils/salesContact.selfcheck.ts",
+    "check:demo": "npx --yes tsx src/contracts/commerceEvents.selfcheck.ts && npx --yes tsx src/utils/demoRegistry.selfcheck.ts && npx --yes tsx src/services/demoOrderFlow.selfcheck.ts && npx --yes tsx src/utils/mamabelEncargo.selfcheck.ts && npx --yes tsx src/utils/demoPresets.selfcheck.ts && npx --yes tsx src/utils/demoIntake.selfcheck.ts && npx --yes tsx src/utils/demoPhotos.selfcheck.ts && npx --yes tsx src/utils/salesContact.selfcheck.ts",
     "check:ai": "npx --yes tsx api/menuMatch.selfcheck.ts",
     "test:e2e:demo": "playwright test",
     "check:env": "node scripts/check-env.mjs",
@@ -38,7 +38,7 @@
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@playwright/test": "^1.61.1",
-    "@types/qrcode": "^1.5.6",
+    "@types/qrcode": "^1.0.6",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vercel/node": "^5.7.16",
