@@ -51,6 +51,7 @@ export default function LandingPage() {
   const price = getDemoPriceLabel();
   const demoHref = withAttribution('/demo/pizzeria');
   const demosHref = withAttribution('/demos');
+  const pricingHref = withAttribution('/pricing');
   const buyHref = buildSalesContactHref(`landing funnel — quiero mi tienda ${price}`);
 
   useEffect(() => {
@@ -143,6 +144,13 @@ export default function LandingPage() {
                 <p className="font-bold leading-relaxed text-white/80">
                   Planes desde $35.000/mes. Sin porcentaje sobre tus ventas.
                 </p>
+                <Link
+                  to={pricingHref}
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-black text-[#ff8a5c] underline decoration-2 underline-offset-4"
+                >
+                  Ver planes y formas de pago
+                  <ArrowRight size={15} />
+                </Link>
               </div>
             </div>
           </div>
@@ -254,6 +262,13 @@ export default function LandingPage() {
                 <MessageCircle size={19} />
                 Quiero el mío
               </a>
+              <Link
+                to={pricingHref}
+                className="mt-4 flex min-h-11 items-center justify-center gap-2 text-sm font-black text-white underline decoration-2 underline-offset-4"
+              >
+                Ver planes y formas de pago
+                <ArrowRight size={15} />
+              </Link>
               <p className="mt-4 text-center text-xs font-bold text-white/65">
                 Un toque. Seguimos por WhatsApp.
               </p>
