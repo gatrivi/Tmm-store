@@ -146,38 +146,56 @@ export default function PanaderiaDemoPage() {
       </header>
 
       <main>
-        <section className="mx-auto grid max-w-6xl gap-6 px-4 pb-8 pt-6 md:grid-cols-[1.05fr_.95fr] md:items-stretch md:pt-10">
-          <div className="flex flex-col justify-center rounded-[2rem] bg-[#0b1f33] p-7 text-white shadow-xl md:p-10">
-            <div className="mb-5 flex flex-wrap gap-2">
-              {['Horneado hoy', 'Retiro por horario', 'Sin audios'].map(label => (
-                <span key={label} className="rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-[11px] font-black uppercase tracking-wide text-[#c5d5e4]">
-                  {label}
-                </span>
-              ))}
+        <section className="mx-auto max-w-6xl px-4 pb-8 pt-4 md:pt-8">
+          <div className="overflow-hidden rounded-[2rem] bg-[#0b1f33] text-white shadow-xl md:grid md:grid-cols-[1.04fr_.96fr]">
+            <div className="relative h-[190px] overflow-hidden bg-[#c5d5e4] sm:h-[250px] md:order-2 md:h-full md:min-h-[520px]">
+              <img
+                src="/demos/panaderia/products/medialunas.jpg"
+                alt="Medialunas de manteca recién horneadas"
+                className="absolute inset-0 h-full w-full object-cover object-center scale-[1.03]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0b1f33]/70 via-[#0b1f33]/5 to-transparent md:bg-gradient-to-l md:from-transparent md:via-transparent md:to-[#0b1f33]/20" />
+              <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full border border-white/25 bg-[#0b1f33]/75 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm md:left-auto md:right-5 md:top-5">
+                <span className="h-2 w-2 rounded-full bg-[#9fd3f3]" />
+                Horneado hoy
+              </div>
+              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3 rounded-2xl border border-white/15 bg-[#0b1f33]/82 p-4 backdrop-blur-md md:bottom-6 md:left-6 md:right-6">
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-[0.16em] text-[#9fd3f3]">Más pedidas</p>
+                  <p className="mt-1 font-serif text-xl font-black leading-none sm:text-2xl">Medialunas de manteca</p>
+                </div>
+                <div className="shrink-0 text-right">
+                  <p className="text-[9px] font-black uppercase tracking-wide text-[#c5d5e4]">Media docena</p>
+                  <p className="mt-1 text-base font-black">$4.800</p>
+                </div>
+              </div>
             </div>
-            <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-[#5ba3d9]">Tu desayuno, ya encargado</p>
-            <h1 className="max-w-xl font-serif text-4xl font-black leading-[.98] tracking-[-0.04em] sm:text-5xl">
-              Facturas de la mañana sin mandar un audio a las 7.
-            </h1>
-            <p className="mt-5 max-w-lg text-sm font-medium leading-relaxed text-[#c5d5e4] sm:text-base">
-              Elegí media o docena, reservá horario y pasá a buscar. El pedido llega ordenado a la bandeja del local.
-            </p>
-            <button
-              type="button"
-              onClick={() => document.getElementById('menu-panaderia')?.scrollIntoView({ behavior: 'smooth' })}
-              className="mt-7 flex min-h-12 w-fit items-center gap-2 rounded-full bg-[#e8f1f8] px-5 text-sm font-black text-[#0b1f33] transition hover:-translate-y-0.5"
-            >
-              Armar pedido <ArrowRight size={17} />
-            </button>
-          </div>
 
-          <div className="relative min-h-[330px] overflow-hidden rounded-[2rem] bg-[#c5d5e4] shadow-xl md:min-h-[520px]">
-            <img src="/demos/panaderia/products/medialunas.jpg" alt="Medialunas recién horneadas" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0b1f33]/75 via-transparent to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-[#c5d5e4]">Más pedidas</p>
-              <p className="mt-1 font-serif text-3xl font-black">Medialunas de manteca</p>
-              <p className="mt-1 text-sm text-[#e8f1f8]">Media docena desde $4.800</p>
+            <div className="flex flex-col justify-center p-6 sm:p-8 md:order-1 md:p-10 lg:p-12">
+              <div className="mb-5 flex flex-wrap gap-2">
+                {['Retiro por horario', 'Pedido listo'].map(label => (
+                  <span key={label} className="rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-[10px] font-black uppercase tracking-wide text-[#c5d5e4]">
+                    {label}
+                  </span>
+                ))}
+              </div>
+              <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-[#5ba3d9]">Tu desayuno, ya encargado</p>
+              <h1 className="max-w-2xl font-serif text-[clamp(2.65rem,8vw,4.8rem)] font-black leading-[0.9] tracking-[-0.05em]">
+                Facturas de la mañana, ya encargadas.
+              </h1>
+              <p className="mt-5 max-w-xl text-sm font-medium leading-relaxed text-[#c5d5e4] sm:text-base">
+                Elegí media o docena, reservá horario y pasá a buscar. Sin audios a las 7 ni pedidos perdidos en WhatsApp.
+              </p>
+              <button
+                type="button"
+                onClick={() => document.getElementById('menu-panaderia')?.scrollIntoView({ behavior: 'smooth' })}
+                className="mt-7 flex min-h-13 w-full items-center justify-center gap-2 rounded-full bg-[#e8f1f8] px-6 text-sm font-black text-[#0b1f33] shadow-lg shadow-black/10 transition hover:-translate-y-0.5 sm:w-fit"
+              >
+                Armar mi pedido <ArrowRight size={17} />
+              </button>
+              <p className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-[#c5d5e4]/65 sm:text-left">
+                Elegís · reservás horario · retirás
+              </p>
             </div>
           </div>
         </section>
@@ -244,7 +262,7 @@ export default function PanaderiaDemoPage() {
       <footer className="border-t border-[#0b1f33]/10 bg-[#0b1f33] px-4 py-8 text-[#e8f1f8]">
         <div className="mx-auto flex max-w-6xl flex-col justify-between gap-3 sm:flex-row sm:items-center">
           <div><p className="font-serif text-xl font-black">La Magdalena</p><p className="mt-1 text-xs text-[#c5d5e4]">Demo de pedidos para panadería · Gatrivi.com</p></div>
-          <Link to="/demo/panaderia/owner" className="text-xs font-black uppercase tracking-[0.14em] text-[#5ba3d9]">Ver panel del local →</Link>
+          <Link to="/panaderia/owner" className="text-xs font-black uppercase tracking-[0.14em] text-[#5ba3d9]">Ver panel del local →</Link>
         </div>
       </footer>
 
@@ -346,8 +364,8 @@ export default function PanaderiaDemoPage() {
             <p className="mt-5 text-xs font-black uppercase tracking-[0.18em] text-[#2e6fa8]">Pedido #{successId}</p>
             <h2 className="mt-2 font-serif text-3xl font-black">La panadería ya lo recibió.</h2>
             <p className="mt-3 text-sm leading-relaxed text-[#0b1f33]/60">Abrí la bandeja y vas a ver este mismo pedido listo para preparar.</p>
-            <Link to="/demo/panaderia/owner" className="mt-6 flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#2e6fa8] text-sm font-black text-white">Ver bandeja del local <ArrowRight size={17} /></Link>
-            <Link to={`/demo/panaderia/order/${successId}`} className="mt-2 flex min-h-12 items-center justify-center text-xs font-black uppercase tracking-wide text-[#0b1f33]/60">Ver estado del pedido</Link>
+            <Link to="/panaderia/owner" className="mt-6 flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#2e6fa8] text-sm font-black text-white">Ver bandeja del local <ArrowRight size={17} /></Link>
+            <Link to={`/panaderia/order/${successId}`} className="mt-2 flex min-h-12 items-center justify-center text-xs font-black uppercase tracking-wide text-[#0b1f33]/60">Ver estado del pedido</Link>
             <button type="button" onClick={() => { setSuccessId(null); setCart([]); setName(''); setPhone(''); setNotes(''); }} className="mt-2 text-xs font-black text-[#2e6fa8]">Seguir mirando</button>
           </div>
         </div>
