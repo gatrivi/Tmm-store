@@ -5,6 +5,7 @@ import './motion.css'
 import App from './App.tsx'
 import { ThemeProvider } from './context/ThemeContext'
 
+// Recover once when an open tab still references a chunk removed by a newer deploy.
 const PRELOAD_RELOAD_KEY = 'gatrivi_preload_reload_at'
 
 window.addEventListener('vite:preloadError', (event) => {
