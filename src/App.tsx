@@ -10,6 +10,7 @@ const DemosGalleryPage = lazy(() => import('./pages/DemosGalleryPage'));
 const HeladeriaDemoPage = lazy(() => import('./pages/HeladeriaDemoPage'));
 const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SalesDepositPage = lazy(() => import('./pages/SalesDepositPage'));
+const FlyerFunnelPage = lazy(() => import('./pages/FlyerFunnelPage'));
 
 function RouteLoader() {
   return (
@@ -43,6 +44,10 @@ export default function App() {
       <Suspense fallback={<RouteLoader />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/empezar" element={<FlyerFunnelPage />} />
+          <Route path="/web" element={<FlyerFunnelPage />} />
+          <Route path="/tienda" element={<FlyerFunnelPage />} />
+          <Route path="/catalogo" element={<FlyerFunnelPage />} />
           <Route path="/demos" element={<DemosGalleryPage />} />
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/planes" element={<PricingPage />} />
