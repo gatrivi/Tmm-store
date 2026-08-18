@@ -70,7 +70,7 @@ export default function SupportPlansPage() {
     <div className="min-h-screen bg-[#f5f2eb] text-[#171717] selection:bg-[#ff6b35] selection:text-white">
       <header className="sticky top-0 z-50 border-b border-black/10 bg-[#f5f2eb]/95 backdrop-blur-xl">
         <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-          <Link to="/pricing" className="inline-flex items-center gap-2 text-sm font-black">
+          <Link to="/precios" className="inline-flex items-center gap-2 text-sm font-black">
             <ArrowLeft size={16} />
             Planes principales
           </Link>
@@ -197,7 +197,7 @@ export default function SupportPlansPage() {
                 Si empezás a pedir cambios seguido, pasamos a Cuidado. No hace falta decidirlo al comprar la web.
               </p>
               <Link
-                to="/pricing"
+                to="/precios"
                 className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-black px-5 text-sm font-black text-white"
               >
                 Volver a los planes
