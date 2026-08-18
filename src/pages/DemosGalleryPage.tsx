@@ -68,6 +68,16 @@ const DEMOS: DemoItem[] = [
     realSite: true,
   },
   {
+    name: 'Vintage Dealers',
+    rubro: 'Ropa · zapatería · accesorios',
+    kind: 'Tienda',
+    description: 'Vertical de moda con categorías, talles, colores y stock unitario o por variante. Caso piloto: tienda circular de Gaia.',
+    samplePath: '/demo/vintagedealers',
+    image: '/demos/vintagedealers/monogram.svg',
+    imageAlt: 'Tienda demo Vintage Dealers para indumentaria, calzado y accesorios',
+    tags: ['Indumentaria', 'Calzado', 'Talles', 'Variantes'],
+  },
+  {
     name: 'Navarro Vial',
     rubro: 'Construcción e infraestructura',
     kind: 'Página',
