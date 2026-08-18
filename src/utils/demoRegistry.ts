@@ -6,6 +6,7 @@ import { MAMABEL_DEMO } from '../data/demos/mamabel';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
 import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
 import { VERDULERIA_DEMO } from '../data/demos/verduleria';
+import { VINTAGEDEALERS_DEMO } from '../data/demos/vintagedealers';
 import { ZIMBA_PET_DEMO } from '../data/demos/zimbaPet';
 import type { DemoDefinition } from '../data/demos/types';
 
@@ -28,6 +29,7 @@ const DEMOS: DemoDefinition[] = [
   MAMABEL_DEMO,
   AGUACATS_DEMO,
   ZIMBA_PET_DEMO,
+  VINTAGEDEALERS_DEMO,
 ];
 
 export function listVerticalDemos(): DemoDefinition[] {
