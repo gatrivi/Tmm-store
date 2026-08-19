@@ -71,17 +71,25 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#f5f2eb] text-[#171717] selection:bg-[#ff6b35] selection:text-white">
       <header className="sticky top-0 z-50 border-b border-black/10 bg-[#f5f2eb]/95 backdrop-blur-xl">
-        <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+        <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
           <Link to="/" className="font-black tracking-[-0.045em]">
             GATRIVI.COM
           </Link>
-          <a
-            href={buyHref}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-black px-5 text-sm font-black text-white transition hover:-translate-y-0.5"
-          >
-            Quiero el mío
-            <ArrowRight size={16} />
-          </a>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              to="/referidos/como-funciona"
+              className="inline-flex min-h-10 items-center px-2 text-xs font-black text-black/60 transition hover:text-black sm:px-3 sm:text-sm"
+            >
+              Referidos
+            </Link>
+            <a
+              href={buyHref}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-black px-4 text-sm font-black text-white transition hover:-translate-y-0.5 sm:px-5"
+            >
+              Quiero el mío
+              <ArrowRight size={16} />
+            </a>
+          </div>
         </div>
       </header>
 
@@ -276,6 +284,24 @@ export default function LandingPage() {
           </div>
         </section>
 
+        <section className="border-b border-black/10 bg-[#ff6b35] py-12 text-white sm:py-14">
+          <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 sm:px-6 md:flex-row md:items-center md:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-white/70">Programa de referidos</p>
+              <h2 className="mt-2 text-3xl font-black tracking-[-0.05em] sm:text-4xl">¿Conocés comercios? Ganá 15% recomendándonos.</h2>
+              <p className="mt-3 text-sm font-bold leading-relaxed text-white/75">
+                Generá flyers con QR propio y medí qué ubicación termina trayendo clientes.
+              </p>
+            </div>
+            <Link
+              to="/referidos/como-funciona"
+              className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-black px-6 text-sm font-black text-white"
+            >
+              Cómo funciona <ArrowRight size={16} />
+            </Link>
+          </div>
+        </section>
+
         <section className="bg-[#f5f2eb] py-16 sm:py-20">
           <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
             <h2 className="text-4xl font-black leading-[0.95] tracking-[-0.06em] sm:text-6xl">
@@ -301,7 +327,10 @@ export default function LandingPage() {
             <p className="font-black tracking-[-0.04em]">GATRIVI.COM</p>
             <p className="mt-1 text-xs text-white/40">de ZengaSoft · {SITE_DOMAIN}</p>
           </div>
-          <a href={buyHref} className="text-sm font-black text-[#ff8a5c]">WhatsApp</a>
+          <div className="flex items-center gap-4">
+            <Link to="/referidos/como-funciona" className="text-sm font-black text-white/60">Referidos</Link>
+            <a href={buyHref} className="text-sm font-black text-[#ff8a5c]">WhatsApp</a>
+          </div>
         </div>
       </footer>
 
