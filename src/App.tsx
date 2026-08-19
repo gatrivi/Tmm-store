@@ -59,7 +59,6 @@ function SalesThemeScope() {
   return null;
 }
 
-// Sales pages keep one obvious, mobile-safe theme control.
 function SalesThemeToggle() {
   const location = useLocation();
   const bottomBarPaths = ['/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios'];
@@ -83,37 +82,28 @@ export default function App() {
       <Suspense fallback={<RouteLoader />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-
-          {/* Ruta comercial principal y accesos cortos para flyer/outreach. */}
           <Route path="/oferta" element={<FlyerFunnelPage />} />
           <Route path="/empezar" element={<FlyerFunnelPage />} />
           <Route path="/web" element={<FlyerFunnelPage />} />
           <Route path="/sitio" element={<FlyerFunnelPage />} />
           <Route path="/tienda" element={<FlyerFunnelPage />} />
           <Route path="/catalogo" element={<FlyerFunnelPage />} />
-
           <Route path="/demos" element={<DemosGalleryPage />} />
-
-          {/* /precios es la URL pública canónica. Conservamos las antiguas sin duplicar contenido. */}
           <Route path="/precios" element={<PricingPage />} />
           <Route path="/pricing" element={<Navigate to="/precios" replace />} />
           <Route path="/planes" element={<Navigate to="/precios" replace />} />
-
           <Route path="/soporte" element={<SupportPlansPage />} />
           <Route path="/mantenimiento" element={<SupportPlansPage />} />
           <Route path="/reservar" element={<SalesDepositPage />} />
-
           <Route path="/panaderia" element={<PanaderiaDemoMinimalPage />} />
           <Route path="/demo/panaderia" element={<PanaderiaDemoMinimalPage />} />
           <Route path="/heladeria" element={<HeladeriaDemoPage />} />
           <Route path="/cafe-roca" element={<CafeRocaDemoPage />} />
           <Route path="/demo/heladeria" element={<HeladeriaDemoPage />} />
           <Route path="/demo/cafe-roca" element={<CafeRocaDemoPage />} />
-
           <Route path="/demo/armar" element={DEMO_EXPRESS_PUBLIC ? <ProspectDemoBuilderPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
           <Route path="/demo/owner" element={DEMO_EXPRESS_PUBLIC ? <DemoOwnerPage /> : <Navigate to={DEMO_EXPRESS_FALLBACK} replace />} />
-
-          <Route path="/carniceria/owner" element={<DemoOwnerPage />} />
+          <Route path="/carniceria/owner" element={<Navigate to="/canavesi/owner" replace />} />
           <Route path="/canavesi/owner" element={<DemoOwnerPage />} />
           <Route path="/pizzeria/owner" element={<DemoOwnerPage />} />
           <Route path="/panaderia/owner" element={<DemoOwnerPage />} />
@@ -122,8 +112,7 @@ export default function App() {
           <Route path="/aguacats/owner" element={<DemoOwnerPage />} />
           <Route path="/verduleria/owner" element={<DemoOwnerPage />} />
           <Route path="/zimba-pet/owner" element={<DemoOwnerPage />} />
-
-          <Route path="/demo/carniceria/owner" element={<DemoOwnerPage />} />
+          <Route path="/demo/carniceria/owner" element={<Navigate to="/demo/canavesi/owner" replace />} />
           <Route path="/demo/canavesi/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/pizzeria/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/panaderia/owner" element={<DemoOwnerPage />} />
@@ -133,7 +122,6 @@ export default function App() {
           <Route path="/demo/verduleria/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/zimba-pet/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/mamamabel/owner" element={<Navigate to="/mamabel/owner" replace />} />
-
           <Route path="*" element={<CommerceApp />} />
         </Routes>
         <DemoShareFooter />
