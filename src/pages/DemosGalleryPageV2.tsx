@@ -36,6 +36,42 @@ const FILTERS: DemoFilter[] = ['Todos', 'Catálogo', 'Página', 'Tienda'];
 
 const DEMOS: DemoItem[] = [
   {
+    name: 'El Puestito del Tío',
+    rubro: 'Parrilla 24 hs · Palermo',
+    kind: 'Catálogo',
+    description: 'Menú completo con variantes, precios y platos explicados para decidir antes de llegar o pedir.',
+    externalUrl: 'https://elpuestitodeltio.com/',
+    image: 'https://elpuestitodeltio.com/hero-new.jpg',
+    imageAlt: 'El Puestito del Tío, parrilla 24 horas en Palermo',
+    tags: ['Sitio real', 'Menú', 'Variantes y precios'],
+    featured: true,
+    realSite: true,
+  },
+  {
+    name: 'Ricardo Hombres',
+    rubro: 'Indumentaria masculina · San Fernando',
+    kind: 'Tienda',
+    description: 'Catálogo amplio de indumentaria masculina, talles, categorías y contacto comercial.',
+    externalUrl: 'https://ricardohombres.com.ar/',
+    image: 'https://lirp.cdn-website.com/e46c27d6/dms3rep/multi/opt/pexels-photo-325876-1920w.jpeg',
+    imageAlt: 'Indumentaria masculina de Ricardo Hombres',
+    tags: ['Sitio real', 'Indumentaria', 'Tienda online'],
+    featured: true,
+    realSite: true,
+  },
+  {
+    name: 'Navarro Vial',
+    rubro: 'Construcción e infraestructura',
+    kind: 'Página',
+    description: 'Sitio corporativo de obra e infraestructura con foco visual en proyectos, capacidad técnica y contacto.',
+    externalUrl: 'https://navarrovial.zengasoft.shop/',
+    image: 'https://navarrovial.zengasoft.shop/og/default.jpg',
+    imageAlt: 'Sitio corporativo Navarro Vial de construcción e infraestructura',
+    tags: ['Sitio real', 'Portfolio', 'Obra e infraestructura'],
+    featured: true,
+    realSite: true,
+  },
+  {
     name: 'La Magdalena',
     rubro: 'Panadería',
     kind: 'Tienda',
@@ -44,7 +80,6 @@ const DEMOS: DemoItem[] = [
     image: '/demos/panaderia/products/medialunas.jpg',
     imageAlt: 'Medialunas de la demo de panadería La Magdalena',
     tags: ['Horarios', 'Media / docena', 'Pedidos'],
-    featured: true,
   },
   {
     name: 'Helados del Barrio',
@@ -55,7 +90,6 @@ const DEMOS: DemoItem[] = [
     image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=1000&q=82',
     imageAlt: 'Helado artesanal de la demo Helados del Barrio',
     tags: ['Sabores', 'Pedido grupal', 'Mobile'],
-    featured: true,
   },
   {
     name: 'Café Roca',
@@ -66,7 +100,6 @@ const DEMOS: DemoItem[] = [
     image: '/demos/panaderia/products/cafe-leche.jpg',
     imageAlt: 'Café con leche de la demo Café Roca',
     tags: ['Carta', 'Reserva', 'Carrito'],
-    featured: true,
   },
   {
     name: 'Pizzería G',
@@ -158,39 +191,6 @@ const DEMOS: DemoItem[] = [
     imageAlt: 'Verduras y bolsón de la demo La Inmaculada',
     tags: ['Peso / unidad', 'Total', 'Pedido'],
   },
-  {
-    name: 'El Puestito del Tío',
-    rubro: 'Parrilla 24 hs · Palermo',
-    kind: 'Catálogo',
-    description: 'Menú completo con variantes, precios y platos explicados para decidir antes de llegar o pedir.',
-    externalUrl: 'https://elpuestitodeltio.com/',
-    image: 'https://elpuestitodeltio.com/hero-new.jpg',
-    imageAlt: 'El Puestito del Tío, parrilla 24 horas en Palermo',
-    tags: ['Sitio real', 'Menú', 'Variantes y precios'],
-    realSite: true,
-  },
-  {
-    name: 'Ricardo Hombres',
-    rubro: 'Indumentaria masculina · San Fernando',
-    kind: 'Tienda',
-    description: 'Catálogo amplio de indumentaria masculina, talles, categorías y contacto comercial.',
-    externalUrl: 'https://ricardohombres.com.ar/',
-    image: 'https://lirp.cdn-website.com/e46c27d6/dms3rep/multi/opt/pexels-photo-325876-1920w.jpeg',
-    imageAlt: 'Indumentaria masculina de Ricardo Hombres',
-    tags: ['Sitio real', 'Indumentaria', 'Tienda online'],
-    realSite: true,
-  },
-  {
-    name: 'Navarro Vial',
-    rubro: 'Construcción e infraestructura',
-    kind: 'Página',
-    description: 'Sitio corporativo de obra e infraestructura con foco visual en proyectos, capacidad técnica y contacto.',
-    externalUrl: 'https://navarrovial.zengasoft.shop/',
-    image: 'https://navarrovial.zengasoft.shop/og/default.jpg',
-    imageAlt: 'Sitio corporativo Navarro Vial de construcción e infraestructura',
-    tags: ['Sitio real', 'Portfolio', 'Obra e infraestructura'],
-    realSite: true,
-  },
 ];
 
 export default function DemosGalleryPageV2() {
@@ -209,7 +209,7 @@ export default function DemosGalleryPageV2() {
       .querySelector('meta[name="description"]')
       ?.setAttribute(
         'content',
-        'Demos navegables de catálogos, páginas y tiendas online. Cada muestra tiene una URL corta y se puede probar como cliente.',
+        'Sitios reales y demos navegables de catálogos, páginas y tiendas online para ver y probar.',
       );
   }, []);
 
@@ -249,13 +249,13 @@ export default function DemosGalleryPageV2() {
           <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
             <div className="grid gap-8 lg:grid-cols-[1fr_.72fr] lg:items-end">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-[#d84d1d]">Abrí una. Usala.</p>
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-[#d84d1d]">Sitios reales + demos</p>
                 <h1 className="mt-4 max-w-3xl text-[clamp(3rem,8vw,5.8rem)] font-black leading-[0.88] tracking-[-0.075em]">
-                  Demos que se
-                  <span className="block text-[#ff6b35]">pueden probar.</span>
+                  Mirá lo que
+                  <span className="block text-[#ff6b35]">podemos hacer.</span>
                 </h1>
                 <p className="mt-5 max-w-2xl text-base font-medium leading-relaxed text-black/55 sm:text-lg">
-                  Catálogo, página o tienda. Cada demo interna tiene una URL corta de Gatrivi.com y un QR al final para pasarla de pantalla en pantalla.
+                  Primero vas a ver trabajos publicados para negocios reales. Después, demos navegables para distintos rubros y formas de vender.
                 </p>
               </div>
               <div className="rounded-[1.5rem] border border-black/10 bg-[#f5f2eb] p-5">
@@ -264,8 +264,8 @@ export default function DemosGalleryPageV2() {
                     <Check size={15} strokeWidth={3} />
                   </span>
                   <div>
-                    <p className="font-black">No son screenshots.</p>
-                    <p className="mt-1 text-sm leading-relaxed text-black/55">Entrá, tocá productos, armá pedidos y probá los flujos.</p>
+                    <p className="font-black">Podés entrar y probar.</p>
+                    <p className="mt-1 text-sm leading-relaxed text-black/55">Abrí los sitios, tocá productos y recorré los flujos como lo haría un cliente.</p>
                   </div>
                 </div>
               </div>
