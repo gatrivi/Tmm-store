@@ -18,6 +18,12 @@ const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SalesDepositPage = lazy(() => import('./pages/SalesDepositPage'));
 const SupportPlansPage = lazy(() => import('./pages/SupportPlansPage'));
 const FlyerFunnelPage = lazy(() => import('./pages/FlyerFunnelPage'));
+const ReferralsPage = lazy(() => import('./pages/ReferralsPage'));
+const ReferralProgramPage = lazy(() => import('./pages/ReferralProgramPage'));
+const ReferralAdminPage = lazy(() => import('./pages/ReferralAdminPage'));
+const ReferralScanPage = lazy(() => import('./pages/ReferralScanPage'));
+const ReferralFlyerPage = lazy(() => import('./pages/ReferralFlyerPage'));
+const ReferralContactPage = lazy(() => import('./pages/ReferralContactPage'));
 
 const SALES_PATHS = ['/', '/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios', '/demos'];
 
@@ -102,6 +108,13 @@ export default function App() {
           <Route path="/soporte" element={<SupportPlansPage />} />
           <Route path="/mantenimiento" element={<SupportPlansPage />} />
           <Route path="/reservar" element={<SalesDepositPage />} />
+
+          <Route path="/referidos" element={<ReferralsPage />} />
+          <Route path="/referidos/como-funciona" element={<ReferralProgramPage />} />
+          <Route path="/referidos/admin" element={<ReferralAdminPage />} />
+          <Route path="/referidos/flyer/:flyerId" element={<ReferralFlyerPage />} />
+          <Route path="/r/:flyerId" element={<ReferralScanPage />} />
+          <Route path="/referido/contact" element={<ReferralContactPage />} />
 
           <Route path="/panaderia" element={<PanaderiaDemoMinimalPage />} />
           <Route path="/demo/panaderia" element={<PanaderiaDemoMinimalPage />} />
