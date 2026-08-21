@@ -5,7 +5,7 @@
 | Campo | Valor |
 |-------|--------|
 | **Fecha snapshot** | 2026-08-21 |
-| **Versión** | `1.23.0` (`package.json` → stamp UI) |
+| **Versión** | `1.24.0` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
 | **Cambio actual** | Demo Express público OFF — solo demos pulidas |
 | **Live** | https://tmm.gatrivi.com |
@@ -84,6 +84,9 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/demo/aguacats` | **Aguacats** despensa/fresco (ex Refcurcum) |
 | `/demo/aguacats/owner` | Panel Aguacats |
 | `/demo/aguacats/order/:id` | Seguimiento |
+| `/demo/confiteria-parana` | **Confitería Paraná** (cliente) — warm lead |
+| `/demo/confiteria-parana/owner` | Panel confitería |
+| `/demo/confiteria-parana/order/:id` | Seguimiento |
 | `/demo/verduleria` | **La Inmaculada** verdulería (cliente) |
 | `/demo/verduleria/owner` | Panel Inmaculada |
 | `/demo/verduleria/order/:id` | Seguimiento |
@@ -92,7 +95,7 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/order/:orderId` | Seguimiento pedido real/tenant |
 | `/super-admin` | Provisioning tenants |
 
-Live sales URLs: `/` · `/demos` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/canavesi` · `/demo/verduleria` · `/demo/aguacats`.
+Live sales URLs: `/` · `/demos` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/canavesi` · `/demo/verduleria` · `/demo/aguacats` · `/demo/confiteria-parana`.
 
 ---
 
@@ -109,6 +112,7 @@ Live sales URLs: `/` · `/demos` · `/demo/mamabel` · `/demo/pizzeria` (+ owner
 - **Orders v2 Hito 1:** demo coherente, una acción primaria, store demo compartido cliente/owner/seguimiento
 - **Demo Express presets:** código vivo; **público OFF** (v1.22.0) — no linkear desde landing/`/demos`; flag `src/config/demoExpress.ts`
 - **Demo plan switch (v1.23.0):** barra "Vista demo" (Catálogo / Tienda WSP / Tienda MP) en demos con plan gating real: verticals Storefront (pizzería, Zimba Pet, Express), WeightedCatalog (carnicería/Canavesi/verdulería), Aguacats, Ferretería. Override en sessionStorage `trufi_demo_plan_override` (sticky por sesión, sólo demos). Pendiente switch en páginas bespoke: Mamabel, Panadería, MolinoFlorida, Heladería, CafeRoca.
+- **Demo Confitería Paraná (v1.24.0):** warm lead (amigos de familia), Paraná 3374 Olivos, **746 reseñas Google 4.6★ sin web propia**, vende por Rappi/PedidosYa. Storefront genérico + plan switch. Config `src/data/demos/confiteriaParana.ts` · doc [`roadmap/demo-confiteria-parana.md`](./roadmap/demo-confiteria-parana.md). Sin WSP del comercio hasta permiso; fotos reutilizadas (pendiente sesión propia).
 - **Demo Mamá Mabel flagship (v1.11–1.13.4):** portada marca · portfolio likes · encargo WA · cursos honestos · hero/portfolio black-bg studio picks (EXIF/glare/tilt/center)
 - **Demo pizzería Fit A:** carta pizza/empanadas, tenant `demo-pizzeria`, storage aislado
 - **Demo panadería La Magdalena (v1.9.3):** tenant `demo-panaderia`, storage `trufi_demo_orders_v2:panaderia`
@@ -236,6 +240,7 @@ Publicitar “busco pilotos” o vender Tienda online: **Gate A OK** (verificar 
 | Config Canavesi | `src/data/demos/canavesi.ts` |
 | Página peso (carnicería/Canavesi/verdulería) | `src/pages/WeightedCatalogDemoPage.tsx` |
 | Demo plan switch | `src/components/DemoPlanSwitch.tsx` + override en `src/context/PlanContext.tsx` |
+| Config confitería | `src/data/demos/confiteriaParana.ts` → Storefront genérico |
 | Página carnicería | re-export → WeightedCatalogDemoPage |
 | Planes | `src/config/plans.ts` |
 | Versión inyectada | `src/config/version.ts` ← vite |

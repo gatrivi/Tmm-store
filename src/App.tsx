@@ -132,6 +132,8 @@ export default function App() {
           <Route path="/demo/aguacats/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/verduleria/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/zimba-pet/owner" element={<DemoOwnerPage />} />
+          <Route path="/demo/confiteria-parana/owner" element={<DemoOwnerPage />} />
+          <Route path="/confiteria-parana/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/mamamabel/owner" element={<Navigate to="/mamabel/owner" replace />} />
 
           <Route path="*" element={<CommerceApp />} />

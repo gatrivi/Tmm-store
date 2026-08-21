@@ -1,6 +1,7 @@
 import { AGUACATS_DEMO } from '../data/demos/aguacats';
 import { CANAVESI_DEMO } from '../data/demos/canavesi';
 import { CARNICERIA_DEMO } from '../data/demos/carniceria';
+import { CONFITERIA_PARANA_DEMO } from '../data/demos/confiteriaParana';
 import { FERRETERIA_DEMO } from '../data/demos/ferreteria';
 import { MAMABEL_DEMO } from '../data/demos/mamabel';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
@@ -21,6 +22,7 @@ const GASTRONOMY_DEMO: Pick<DemoDefinition, 'id' | 'tenantId' | 'customerPath' |
 
 const DEMOS: DemoDefinition[] = [
   CANAVESI_DEMO,
+  CONFITERIA_PARANA_DEMO,
   CARNICERIA_DEMO,
   VERDULERIA_DEMO,
   PIZZERIA_DEMO,

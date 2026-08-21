@@ -112,6 +112,16 @@ const DEMOS: DemoItem[] = [
     tags: ['Carrito', 'Mercado Pago / alias', 'Pedidos'],
   },
   {
+    name: 'Confitería Paraná',
+    rubro: 'Confitería · Olivos',
+    kind: 'Catálogo',
+    description: 'Facturas, café y tortas de la confitería del barrio con pedido armado y retiro coordinado.',
+    samplePath: '/confiteria-parana',
+    image: '/demos/panaderia/products/facturas-surtidas.jpg',
+    imageAlt: 'Facturas surtidas de la demo Confitería Paraná',
+    tags: ['Facturas y café', 'Retiro / delivery', 'Pedidos'],
+  },
+  {
     name: 'Zimba Pet',
     rubro: 'Pet shop · Vicente López',
     kind: 'Tienda',

@@ -79,6 +79,11 @@ export default function CommerceApp() {
 
               <Route path="/zimba-pet" element={<CustomerDemo />} />
               <Route path="/zimba-pet/order/:orderId" element={<OrderStatusPage />} />
+
+              <Route path="/confiteria-parana" element={<CustomerDemo />} />
+              <Route path="/confiteria-parana/order/:orderId" element={<OrderStatusPage />} />
+              <Route path="/demo/confiteria-parana" element={<CustomerDemo />} />
+              <Route path="/demo/confiteria-parana/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/zimba-pet" element={<CustomerDemo />} />
               <Route path="/demo/zimba-pet/order/:orderId" element={<OrderStatusPage />} />
 
