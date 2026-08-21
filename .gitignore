@@ -10,7 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+coverage/
+.vite/
+.cache/
 *.local
+*.tsbuildinfo
 .env
 .env.*
 !.env.example
@@ -20,6 +24,7 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
@@ -27,6 +32,9 @@ dist-ssr
 *.sw?
 .aider*
 .vercel
+
+# Browser / E2E artifacts
+.playwright-mcp/
 test-results/
 playwright-report/
 playwright/.cache/
@@ -39,4 +47,3 @@ content/mamabel/pick/*
 !content/mamabel/pick/README.md
 content/mamabel/better ones/*
 !content/mamabel/better ones/README.md
-
