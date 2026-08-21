@@ -19,6 +19,23 @@ function empanadaPacks(media: number, docena: number) {
 
 const MENU_ITEMS: MenuItemType[] = [
   {
+    id: 'combo-muzza',
+    name: 'Combo Muzza',
+    category: 'combos',
+    badge: 'Mejor precio',
+    description: 'Muzzarella grande + ½ docena de carne + gaseosa 1.5 L',
+    images: ['/demos/pizzeria/muzzarella.png'],
+    options: [{ id: 'combo', label: 'Combo completo', price: 21900 }],
+  },
+  {
+    id: 'combo-docena',
+    name: 'Combo Docena',
+    category: 'combos',
+    description: 'Docena de empanadas mixtas + gaseosa 1.5 L',
+    images: ['/demos/pizzeria/empanadas-carne.png'],
+    options: [{ id: 'combo', label: 'Combo completo', price: 15500 }],
+  },
+  {
     id: 'muzza',
     name: 'Muzzarella',
     category: 'pizzas',
@@ -80,9 +97,13 @@ const MENU_ITEMS: MenuItemType[] = [
     id: 'gaseosa',
     name: 'Gaseosa 1.5 L',
     category: 'extras',
-    description: 'A elegir al confirmar',
+    description: 'Elegí el sabor',
     images: ['/demos/pizzeria/bouteille-coca-cola-1-5l.webp'],
-    options: [{ id: '15', label: '1.5 L', price: 2800 }],
+    options: [
+      { id: 'coca', label: 'Coca-Cola', price: 2800 },
+      { id: 'sprite', label: 'Sprite', price: 2800 },
+      { id: 'fanta', label: 'Fanta', price: 2800 },
+    ],
   },
 ];
 
@@ -203,9 +224,10 @@ export const PIZZERIA_DEMO: DemoDefinition = {
   },
   menuItems: MENU_ITEMS,
   menuCategories: [
-    { id: 'pizzas', name: 'Pizzas', sortOrder: 0 },
-    { id: 'empanadas', name: 'Empanadas', sortOrder: 1 },
-    { id: 'extras', name: 'Extras', sortOrder: 2 },
+    { id: 'combos', name: 'Combos', sortOrder: 0 },
+    { id: 'pizzas', name: 'Pizzas', sortOrder: 1 },
+    { id: 'empanadas', name: 'Empanadas', sortOrder: 2 },
+    { id: 'extras', name: 'Extras', sortOrder: 3 },
   ],
   seedOrders: SEED_ORDERS,
   copy: {

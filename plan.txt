@@ -1,0 +1,83 @@
+## Diagnóstico
+
+1. **Jerarquía rota**
+
+   * Hay **dos avisos “DEMO…”**.
+   * Header + subheader + logo consumen ~180px antes del contenido.
+   * “Quiero esto” compite con carrito y tabs.
+
+2. **Hero ilegible**
+
+   * Texto negro sobre panel gris oscuro → contraste pésimo.
+   * Imagen demasiado dominante.
+   * El bloque parece “pegado encima”, no diseñado con la foto.
+
+3. **Fondo caótico**
+
+   * Foto de cocina continúa detrás del catálogo.
+   * Las cards/productos pierden separación.
+   * Demasiadas texturas simultáneas.
+
+4. **Encoding roto 🚨**
+
+   * `DEMO Ã...`
+   * `tamaÃ±o`
+   * `recibÃ...`
+     Esto solo ya hace que el sitio parezca roto/no profesional.
+
+5. **Sistema visual inconsistente**
+
+   * Serif + sans + distintos pesos sin lógica clara.
+   * Pills blancas, verdes, rojas, negras.
+   * Bordes/radios cambian constantemente.
+   * Carrito flotante parece de otro producto.
+
+6. **Catálogo empieza tarde**
+
+   * A 900px de alto apenas aparecen los primeros productos.
+   * Para una pizzería, el usuario debería ver **producto + precio + CTA casi inmediatamente**.
+
+## Plan
+
+### P0 — arreglar ya
+
+1. Corregir UTF-8/mojibake.
+2. Eliminar aviso demo duplicado.
+3. Simplificar header a ~64px.
+4. Hero:
+
+   * 320–400px alto.
+   * overlay consistente.
+   * texto blanco.
+   * 1 CTA principal.
+5. Terminar foto de fondo al acabar hero; catálogo sobre fondo sólido.
+
+### P1 — sistema visual
+
+1. Definir:
+
+   * 1 serif/display.
+   * 1 sans UI.
+   * rojo Pizza G + crema + carbón.
+2. Unificar radios, pills, botones y cards.
+3. Hacer tabs sticky y mucho más compactas.
+
+### P2 — venta
+
+```text
+Header
+↓
+Hero corto
+↓
+[Pizzas] [Empanadas] [Extras]
+↓
+Producto   Producto
+imagen     imagen
+nombre     nombre
+precio     precio
+[Agregar]  [Agregar]
+↓
+Carrito sticky
+```
+
+**Mayor mejora:** sacar la cocina del fondo del catálogo y convertir el hero en una pieza limpia. Ahora mismo la página tiene buenos assets, pero la composición los está haciendo parecer baratos.

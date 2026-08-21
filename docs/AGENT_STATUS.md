@@ -4,8 +4,8 @@
 
 | Campo | Valor |
 |-------|--------|
-| **Fecha snapshot** | 2026-08-06 |
-| **Versión** | `1.22.0` (`package.json` → stamp UI) |
+| **Fecha snapshot** | 2026-08-21 |
+| **Versión** | `1.23.0` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
 | **Cambio actual** | Demo Express público OFF — solo demos pulidas |
 | **Live** | https://tmm.gatrivi.com |
@@ -108,6 +108,7 @@ Live sales URLs: `/` · `/demos` · `/demo/mamabel` · `/demo/pizzeria` (+ owner
 - Multi-tenant URL `/s/:slug` + SuperAdmin
 - **Orders v2 Hito 1:** demo coherente, una acción primaria, store demo compartido cliente/owner/seguimiento
 - **Demo Express presets:** código vivo; **público OFF** (v1.22.0) — no linkear desde landing/`/demos`; flag `src/config/demoExpress.ts`
+- **Demo plan switch (v1.23.0):** barra "Vista demo" (Catálogo / Tienda WSP / Tienda MP) en demos con plan gating real: verticals Storefront (pizzería, Zimba Pet, Express), WeightedCatalog (carnicería/Canavesi/verdulería), Aguacats, Ferretería. Override en sessionStorage `trufi_demo_plan_override` (sticky por sesión, sólo demos). Pendiente switch en páginas bespoke: Mamabel, Panadería, MolinoFlorida, Heladería, CafeRoca.
 - **Demo Mamá Mabel flagship (v1.11–1.13.4):** portada marca · portfolio likes · encargo WA · cursos honestos · hero/portfolio black-bg studio picks (EXIF/glare/tilt/center)
 - **Demo pizzería Fit A:** carta pizza/empanadas, tenant `demo-pizzeria`, storage aislado
 - **Demo panadería La Magdalena (v1.9.3):** tenant `demo-panaderia`, storage `trufi_demo_orders_v2:panaderia`
@@ -171,6 +172,8 @@ Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 
 **Listo para vender:** Tienda online (Gate A). Ver [`ops/sales-readiness.md`](./ops/sales-readiness.md).
 
+**Foco 2026-08-21:** vender Gate A ya; CRM `gatrivi` y BPM estacionados hasta primer tenant pagante — [`ops/strategy-focus-2026-08-21.md`](./ops/strategy-focus-2026-08-21.md).
+
 **No vender aún:** Pedidos reales multi-dispositivo (Gate B), MP integrado (Gate C).
 
 **Perfil que compra:** pizza / empanadas / roti / food truck — dueño cocina, alto WSP, sin web propia, odia comisión. + pastelería/panadería como flagship demo.
@@ -232,6 +235,7 @@ Publicitar “busco pilotos” o vender Tienda online: **Gate A OK** (verificar 
 | Config carnicería | `src/data/demos/carniceria.ts` |
 | Config Canavesi | `src/data/demos/canavesi.ts` |
 | Página peso (carnicería/Canavesi/verdulería) | `src/pages/WeightedCatalogDemoPage.tsx` |
+| Demo plan switch | `src/components/DemoPlanSwitch.tsx` + override en `src/context/PlanContext.tsx` |
 | Página carnicería | re-export → WeightedCatalogDemoPage |
 | Planes | `src/config/plans.ts` |
 | Versión inyectada | `src/config/version.ts` ← vite |

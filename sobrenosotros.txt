@@ -1,0 +1,27 @@
+## Sobre nosotros
+
+### Hecho por alguien que también construye productos
+
+Soy **Gastón Trivi**, desarrollador full-stack y fundador de **Zengasoft**. Trabajo con React, Node y herramientas de IA para crear sitios, catálogos y aplicaciones que resuelven problemas concretos.
+
+TMM nació de esa misma idea: darle a una pyme una presencia digital clara, útil y fácil de mantener, sin convertir cada cambio en un proyecto nuevo.
+
+### Otros trabajos
+
+Acá podés ver algunos productos y sitios que desarrollé:
+
+* **Navarro Vial** — sitio para constructora e infraestructura.
+* **CatReader** — lector y sistema de descubrimiento de libros.
+* **Rosario Cards** — aplicación de oración y devociones.
+* **CatIntAssist** — asistente para interpretación médica.
+* **Aguacats** — catálogo y landing comercial.
+
+Cada tarjeta puede llevar **thumbnail + nombre + descripción breve + “Ver proyecto”**.
+
+### También funciona como catálogo
+
+Esta sección usa la misma lógica que podemos aplicar a tu negocio:
+
+**foto → producto/proyecto → descripción → acción**
+
+Si funciona para mostrar software, también funciona para tortas, repuestos, alimentos, servicios o cualquier catálogo comercial.

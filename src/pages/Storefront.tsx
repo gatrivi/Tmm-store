@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { ShoppingCart, Plus, Minus, Trash2, Send, Globe, Clock, Share2, Flame, CheckCircle, MessageCircle } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { ShoppingCart, Plus, Minus, Trash2, Send, Globe, Clock, Share2, Flame, CheckCircle, MessageCircle, UserRound, Store } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { useMenu } from '../context/MenuContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -33,6 +33,9 @@ export default function Storefront() {
   const canOrder = features.canOrder;
   const mpEnabled = features.canUseMercadoPago && siteSettings.mpEnabled;
   const vertical = getDemoByTenantId(tenantId);
+  const isPizzeria = vertical?.id === 'pizzeria';
+  const location = useLocation();
+  const ownerActive = vertical?.ownerPath === location.pathname;
   const prospect = useMemo(
     () => (tenantId === 'demo' && !vertical ? parseProspectDemo(window.location.search) : null),
     [tenantId, vertical],
@@ -60,6 +63,15 @@ export default function Storefront() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
+  const [heroDepth, setHeroDepth] = useState(0);
+
+  useEffect(() => {
+    if (!vertical) return;
+    const onScroll = () => setHeroDepth(Math.min(window.scrollY, 360));
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [vertical?.id]);
 
   // Detectar retorno de MercadoPago
   const [searchParams, setSearchParams] = useSearchParams();
@@ -387,11 +399,11 @@ export default function Storefront() {
       );
     }
 
-    const imageHeight = menuLayout === 'magazine' ? 'h-64' : 'h-48';
+    const imageHeight = isPizzeria ? 'h-44 sm:h-52' : (menuLayout === 'magazine' ? 'h-64' : 'h-48');
     const titleClass = menuLayout === 'magazine' ? 'text-2xl' : 'text-xl';
 
     return (
-      <div key={item.id} className={`bg-surface-elevated rounded-2xl shadow-sm border border-border overflow-hidden flex flex-col ${isUnavailable ? 'opacity-60 grayscale' : ''}`}>
+      <div key={item.id} className={`rounded-2xl overflow-hidden flex flex-col transition duration-300 hover:-translate-y-1 hover:shadow-xl ${isPizzeria ? 'bg-white border border-black/8 shadow-sm' : 'bg-surface-elevated shadow-sm border border-border'} ${isUnavailable ? 'opacity-60 grayscale' : ''}`}>
         {images.length > 0 ? (
           <img
             src={images[0]}
@@ -404,7 +416,7 @@ export default function Storefront() {
             {getLocalizedName(item)}
           </div>
         ) : null}
-        <div className={`p-5 flex flex-col flex-1 justify-between ${menuLayout === 'magazine' ? 'p-6' : ''}`}>
+        <div className={`p-4 flex flex-col flex-1 justify-between ${menuLayout === 'magazine' ? 'p-6' : ''}`}>
           <div>
             <div className="flex items-start justify-between gap-2 mb-2">
               <h3 className={`${titleClass} font-bold`}>{getLocalizedName(item)}</h3>
@@ -459,13 +471,14 @@ export default function Storefront() {
 
   return (
     <div
-      className="min-h-screen bg-surface pb-24 font-sans text-text-primary"
+      className={`min-h-screen pb-24 font-sans text-text-primary ${isPizzeria ? 'bg-[#f4eee5]' : 'bg-surface'}`}
       data-demo-theme={vertical?.id}
       style={vertical?.theme ? {
         ['--demo-bordo' as string]: vertical.theme.bordo,
         ['--demo-carbon' as string]: vertical.theme.carbon,
         ['--demo-salvia' as string]: vertical.theme.salvia,
         fontFamily: 'system-ui, sans-serif',
+        ...(isPizzeria ? { backgroundColor: '#f4eee5' } : {}),
       } : undefined}
     >
       {/* MercadoPago Success Banner */}
@@ -475,16 +488,14 @@ export default function Storefront() {
             <div className="flex items-center gap-3">
               <CheckCircle size={24} className="shrink-0" />
               <div>
-                <p className="font-bold text-sm">¡Pago aprobado! 🎉</p>
+                <p className="font-bold text-sm">Pago aprobado</p>
                 <p className="text-xs text-sky-100">
-                  Tu pedido #{mpPendingOrder.orderId} por ${mpPendingOrder.total.toLocaleString('es-AR')} fue pagado.
+                  Tu pedido fue pagado correctamente.
                 </p>
               </div>
             </div>
             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-                `Hola, acabo de pagar mi pedido #${mpPendingOrder.orderId} por MercadoPago. Total: $${mpPendingOrder.total.toLocaleString('es-AR')}.`
-              )}`}
+              href={'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent('Hola, acabo de pagar mi pedido por MercadoPago.')}
               target="_blank"
               rel="noopener noreferrer"
               className="shrink-0 flex items-center gap-2 bg-white text-sky-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-sky-50 transition"
@@ -496,7 +507,7 @@ export default function Storefront() {
         </div>
       )}
 
-      {(vertical || preset) && demoCopy && (
+      {(vertical || preset) && demoCopy && demoCopy.ribbonLabel && !isPizzeria && (
         <div
           className="px-4 py-2 text-center text-[11px] font-black uppercase tracking-[0.12em]"
           style={{
@@ -509,9 +520,27 @@ export default function Storefront() {
       )}
 
       {/* Header */}
-      <header className={`sticky top-0 z-10 shadow-md flex justify-between items-center p-4 dark:bg-black dark:text-white light:bg-brand-white light:text-text-primary light:border-b light:border-border ${mpSuccess ? 'mt-[88px] sm:mt-[72px]' : ''}`}
+      <header className={`sticky top-0 z-10 relative shadow-md flex justify-between items-center ${isPizzeria ? 'min-h-16 p-3' : 'p-4'} dark:bg-black dark:text-white light:bg-brand-white light:text-text-primary light:border-b light:border-border ${mpSuccess ? 'mt-[88px] sm:mt-[72px]' : ''}`}
         style={vertical?.theme ? { backgroundColor: vertical.theme.carbon, color: vertical.theme.hueso } : undefined}
       >
+        {isPizzeria && vertical && (
+          <div className="absolute left-1/2 flex -translate-x-1/2 items-center rounded-full bg-white/8 p-1 text-[11px] font-bold">
+            <Link
+              to={vertical.customerPath}
+              className={'flex min-h-8 items-center gap-1 rounded-full px-2.5 transition ' + (!ownerActive ? 'bg-white text-[#151612]' : 'text-white/80 hover:text-white')}
+            >
+              <UserRound size={13} />
+              Cliente
+            </Link>
+            <Link
+              to={vertical.ownerPath}
+              className={'flex min-h-8 items-center gap-1 rounded-full px-2.5 transition ' + (ownerActive ? 'bg-white text-[#151612]' : 'text-white/80 hover:text-white')}
+            >
+              <Store size={13} />
+              Local
+            </Link>
+          </div>
+        )}
         <div className="flex items-center gap-3">
           <BrandLogoMark
             src={siteSettings.brandLogo || '/puestito.png'}
@@ -618,17 +647,16 @@ export default function Storefront() {
       )}
 
       {vertical && demoCopy && (
-        <section className="max-w-5xl mx-auto px-4 pt-6 pb-2">
-          <div
-            className="overflow-hidden rounded-2xl border border-black/8"
+        <section className={`${isPizzeria ? 'max-w-5xl mx-auto px-4 pt-4 pb-3' : 'max-w-5xl mx-auto px-4 pt-6 pb-2'}`}>
+          <div className={`${isPizzeria ? 'relative min-h-[22rem] sm:min-h-[25rem] flex items-end overflow-hidden rounded-2xl' : 'overflow-hidden rounded-2xl border border-black/8'}`}
             style={{ backgroundColor: vertical.theme.papel }}
           >
             {vertical.heroImage ? (
               <img
                 src={vertical.heroImage}
                 alt=""
-                className="h-40 w-full object-cover sm:h-52"
-                style={{ objectPosition: vertical.heroObjectPosition || 'center' }}
+                className={`${isPizzeria ? 'absolute inset-0 h-full w-full' : 'h-48 w-full sm:h-64'} object-cover transition-transform duration-700 hover:scale-[1.03]`}
+                style={{ objectPosition: vertical.heroObjectPosition || 'center', transform: 'translateY(' + (heroDepth * 0.08) + 'px) scale(1.04)' }}
               />
             ) : (
               <div
@@ -644,14 +672,15 @@ export default function Storefront() {
                 </span>
               </div>
             )}
-            <div className="space-y-3 p-5">
+            {isPizzeria && <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/5" />}
+            <div className={`${isPizzeria ? 'relative z-[1] max-w-2xl space-y-3 p-6 text-white sm:p-8' : 'space-y-3 p-5'}`}>
               <h1
                 className="text-2xl font-bold leading-tight tracking-[-0.03em] sm:text-3xl"
-                style={{ fontFamily: siteSettings.brandFont, color: vertical.theme.carbon }}
+                style={{ fontFamily: siteSettings.brandFont, color: isPizzeria ? '#fff' : vertical.theme.carbon }}
               >
                 {demoCopy.heroTitle}
               </h1>
-              <p className="text-sm leading-relaxed" style={{ color: `${vertical.theme.carbon}cc` }}>
+              <p className="text-sm leading-relaxed" style={{ color: isPizzeria ? 'rgba(255,255,255,.82)' : `${vertical.theme.carbon}cc` }}>
                 {demoCopy.heroBody}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -669,6 +698,7 @@ export default function Storefront() {
                   </span>
                 ))}
               </div>
+              {isPizzeria && <a href="#menu" className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#e63946] px-5 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#c92f3b]">Ver menú</a>}
               <p className="text-xs font-medium" style={{ color: vertical.theme.salvia }}>
                 {demoCopy.weightNotice}
               </p>
@@ -678,7 +708,7 @@ export default function Storefront() {
       )}
 
       {!vertical && preset && demoCopy && (
-        <section className="max-w-5xl mx-auto px-4 pt-6 pb-2">
+        <section className={`${isPizzeria ? 'max-w-5xl mx-auto px-4 pt-4 pb-3' : 'max-w-5xl mx-auto px-4 pt-6 pb-2'}`}>
           <div className="overflow-hidden rounded-2xl border border-border bg-surface-elevated p-5 space-y-3">
             <h1 className="text-2xl font-bold leading-tight tracking-[-0.03em] sm:text-3xl">
               {demoCopy.heroTitle}
@@ -700,12 +730,13 @@ export default function Storefront() {
       )}
 
       {/* Dynamic Menu — category sections */}
-      <main className="max-w-5xl mx-auto p-4 space-y-8 mt-6">
+      <main id="menu" className={`${isPizzeria ? 'max-w-5xl mx-auto p-4 space-y-7 mt-2' : 'max-w-5xl mx-auto p-4 space-y-8 mt-6'}`}>
         {storefrontCategories.length > 1 && (
           <MenuCategoryNav
             categories={storefrontCategories}
             activeId={activeId}
             onSelect={scrollToCategory}
+            compact={isPizzeria}
           />
         )}
 
@@ -733,6 +764,14 @@ export default function Storefront() {
         )}
       </main>
 
+      {isPizzeria && canOrder && cart.length > 0 && !isCartOpen && (
+        <div className="fixed inset-x-0 bottom-0 z-30 px-3 pb-3">
+          <button onClick={() => setIsCartOpen(true)} className="mx-auto flex min-h-14 w-full max-w-5xl items-center justify-between rounded-2xl bg-[#171814] px-5 text-left text-white shadow-2xl ring-1 ring-white/10">
+            <span><span className="block text-[10px] font-black uppercase tracking-[0.14em] text-white/50">Tu pedido</span><span className="font-black">Ver carrito</span></span>
+            <span className="rounded-full bg-[#e63946] px-4 py-2 text-sm font-black">${total.toLocaleString('es-AR')}</span>
+          </button>
+        </div>
+      )}
 {/* Footer */}
       <GlobalFooter
           brandName={siteSettings.brandName}

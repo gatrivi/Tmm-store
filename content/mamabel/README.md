@@ -1,4 +1,4 @@
-﻿# Las Tortas de Mamá Mabel — content
+# Las Tortas de Mamá Mabel — content
 
 Family flagship. Assets owned by the family.
 

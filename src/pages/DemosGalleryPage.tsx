@@ -35,6 +35,17 @@ const FILTERS: DemoFilter[] = ['Todos', 'Catálogo', 'Página', 'Tienda'];
 
 const DEMOS: DemoItem[] = [
   {
+    name: 'Ricardo Hombres',
+    rubro: 'Indumentaria masculina · San Fernando',
+    kind: 'Tienda',
+    description: 'Catálogo amplio de indumentaria masculina, talles, categorías y contacto comercial.',
+    externalUrl: 'https://ricardohombres.com.ar/',
+    image: 'https://lirp.cdn-website.com/e46c27d6/dms3rep/multi/opt/pexels-photo-325876-1920w.jpeg',
+    imageAlt: 'Indumentaria masculina de Ricardo Hombres',
+    tags: ['Sitio real', 'Indumentaria', 'Tienda online'],
+    realSite: true,
+  },
+  {
     name: 'Pizzería G',
     rubro: 'Pizzería',
     kind: 'Tienda',
@@ -54,17 +65,6 @@ const DEMOS: DemoItem[] = [
     image: 'https://elpuestitodeltio.com/hero-new.jpg',
     imageAlt: 'El Puestito del Tío, parrilla 24 horas en Palermo',
     tags: ['Sitio real', 'Menú', 'Variantes y precios'],
-    realSite: true,
-  },
-  {
-    name: 'Ricardo Hombres',
-    rubro: 'Indumentaria masculina · San Fernando',
-    kind: 'Tienda',
-    description: 'Catálogo amplio de indumentaria masculina, talles, categorías y contacto comercial.',
-    externalUrl: 'https://ricardohombres.com.ar/',
-    image: 'https://lirp.cdn-website.com/e46c27d6/dms3rep/multi/opt/pexels-photo-325876-1920w.jpeg',
-    imageAlt: 'Indumentaria masculina de Ricardo Hombres',
-    tags: ['Sitio real', 'Indumentaria', 'Tienda online'],
     realSite: true,
   },
   {

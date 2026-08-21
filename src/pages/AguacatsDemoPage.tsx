@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import CheckoutModal from '../components/CheckoutModal';
 import { DemoRibbon } from '../components/DemoRibbon';
+import { DemoPlanSwitch } from '../components/DemoPlanSwitch';
 import { useMenu } from '../context/MenuContext';
 import { usePlan } from '../context/PlanContext';
 import { useTheme } from '../context/ThemeContext';
@@ -104,8 +105,9 @@ function ProductShot({ item, className = 'aspect-[16/10]' }: { item: MenuItemTyp
 
 export default function AguacatsDemoPage() {
   const { menuItems, siteSettings } = useMenu();
-  const { tenantId } = usePlan();
+  const { tenantId, features } = usePlan();
   const { setTheme } = useTheme();
+  const canOrder = features.canOrder;
   const demo = getDemoByTenantId(tenantId);
   const theme = demo?.theme;
   const copy = demo?.copy;
@@ -183,8 +185,8 @@ export default function AguacatsDemoPage() {
 
   return (
     <div className="ac-site min-h-screen bg-white text-[#1A2E14]" data-demo-page="aguacats-site">
+      <DemoPlanSwitch />
       <DemoRibbon />
-
       <header
         className={`sticky top-0 z-40 border-b transition ${scrolled ? 'border-black/8 bg-white/95 shadow-sm backdrop-blur-md' : 'border-transparent bg-white'}`}
       >
@@ -201,12 +203,13 @@ export default function AguacatsDemoPage() {
               </button>
             ))}
           </nav>
-
-          <div className="flex items-center gap-2">
-            <button type="button" onClick={() => setCartOpen(true)} className="relative flex h-10 w-10 items-center justify-center rounded-xl text-white" style={{ backgroundColor: theme.bordo }} aria-label="Carrito">
-              <ShoppingCart size={18} />
-              {cartCount > 0 && <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#C4A035] px-1 text-[10px] font-black">{cartCount}</span>}
-            </button>
+            <div className="flex items-center gap-2">
+              {canOrder && (
+                <button type="button" onClick={() => setCartOpen(true)} className="relative flex h-10 w-10 items-center justify-center rounded-xl text-white" style={{ backgroundColor: theme.bordo }} aria-label="Carrito">
+                  <ShoppingCart size={18} />
+                  {cartCount > 0 && <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#C4A035] px-1 text-[10px] font-black">{cartCount}</span>}
+                </button>
+              )}
             {waHref && (
               <a href={waHref} target="_blank" rel="noopener noreferrer" className="hidden min-h-10 items-center gap-1.5 rounded-xl px-4 text-xs font-extrabold text-[#1A2E14] sm:flex" style={{ backgroundColor: accent }}>
                 <MessageCircle size={16} /> Cotizar
@@ -324,14 +327,22 @@ export default function AguacatsDemoPage() {
                         })}
                       </div>
                     )}
-                    <div className="mt-4 flex gap-2">
-                      <div className="flex items-center rounded-xl border border-black/10">
-                        <button type="button" className="flex h-10 w-9 items-center justify-center" onClick={() => setCardState(p => ({ ...p, [item.id]: { optionId: state.optionId, qty: Math.max(1, state.qty - 1) } }))}><Minus size={14} /></button>
-                        <span className="w-8 text-center text-sm font-extrabold">{state.qty}</span>
-                        <button type="button" className="flex h-10 w-9 items-center justify-center" onClick={() => setCardState(p => ({ ...p, [item.id]: { optionId: state.optionId, qty: state.qty + 1 } }))}><Plus size={14} /></button>
+                    {canOrder ? (
+                      <div className="mt-4 flex gap-2">
+                        <div className="flex items-center rounded-xl border border-black/10">
+                          <button type="button" className="flex h-10 w-9 items-center justify-center" onClick={() => setCardState(p => ({ ...p, [item.id]: { optionId: state.optionId, qty: Math.max(1, state.qty - 1) } }))}><Minus size={14} /></button>
+                          <span className="w-8 text-center text-sm font-extrabold">{state.qty}</span>
+                          <button type="button" className="flex h-10 w-9 items-center justify-center" onClick={() => setCardState(p => ({ ...p, [item.id]: { optionId: state.optionId, qty: state.qty + 1 } }))}><Plus size={14} /></button>
+                        </div>
+                        <button type="button" onClick={() => option && addLine(item, option, state.qty)} className="flex-1 min-h-10 rounded-xl text-sm font-extrabold text-white" style={{ backgroundColor: theme.bordo }}>Agregar</button>
                       </div>
-                      <button type="button" onClick={() => option && addLine(item, option, state.qty)} className="flex-1 min-h-10 rounded-xl text-sm font-extrabold text-white" style={{ backgroundColor: theme.bordo }}>Agregar</button>
-                    </div>
+                    ) : waHref ? (
+                      <a href={waHref} target="_blank" rel="noopener noreferrer" className="mt-4 flex min-h-10 items-center justify-center gap-2 rounded-xl border text-sm font-extrabold" style={{ borderColor: theme.bordo, color: theme.bordo }}>
+                        <MessageCircle size={15} /> Consultar por WhatsApp
+                      </a>
+                    ) : (
+                      <span title="En la tienda real este botón abre el WhatsApp del local" className="mt-4 flex min-h-10 cursor-default items-center justify-center rounded-xl border border-black/10 text-sm font-extrabold text-black/40">Consultar por WhatsApp</span>
+                    )}
                   </div>
                 </article>
               );
@@ -414,7 +425,7 @@ export default function AguacatsDemoPage() {
         {siteSettings.brandName} · demo Gatrivi.com · {copy.ribbonLabel}
       </footer>
 
-      {cartCount > 0 && !cartOpen && (
+      {canOrder && cartCount > 0 && !cartOpen && (
         <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-black/8 bg-white p-3 shadow-lg md:hidden">
           <button type="button" onClick={() => setCartOpen(true)} className="flex w-full min-h-12 items-center justify-between rounded-xl px-5 text-sm font-extrabold text-white" style={{ backgroundColor: theme.bordo }}>
             <span>Ver pedido ({cartCount})</span><span>{formatArs(cartTotal)}</span>
@@ -422,7 +433,7 @@ export default function AguacatsDemoPage() {
         </div>
       )}
 
-      {cartOpen && (
+      {canOrder && cartOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/50">
           <div className="flex h-full w-full max-w-md flex-col bg-white shadow-2xl">
             <div className="flex items-center justify-between border-b px-5 py-4">
@@ -449,7 +460,9 @@ export default function AguacatsDemoPage() {
         </div>
       )}
 
-      <CheckoutModal isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} cart={cart} total={cartTotal} subtotal={cartTotal} discount={0} whatsappNumber="" bankAlias="" mpEnabled={false} initialDeliveryType={fulfillment} onOrderSent={() => setCart([])} />
+      {canOrder && (
+        <CheckoutModal isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} cart={cart} total={cartTotal} subtotal={cartTotal} discount={0} whatsappNumber="" bankAlias="" mpEnabled={features.canUseMercadoPago} initialDeliveryType={fulfillment} onOrderSent={() => setCart([])} />
+      )}
     </div>
   );
 }

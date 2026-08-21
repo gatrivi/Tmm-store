@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import CheckoutModal from '../components/CheckoutModal';
 import { DemoRibbon } from '../components/DemoRibbon';
+import { DemoPlanSwitch } from '../components/DemoPlanSwitch';
 import { useMenu } from '../context/MenuContext';
 import { usePlan } from '../context/PlanContext';
 import { useTheme } from '../context/ThemeContext';
@@ -56,11 +57,16 @@ function isWeightItem(item: MenuItemType): boolean {
 
 export default function WeightedCatalogDemoPage() {
   const { menuItems, menuCategories, siteSettings } = useMenu();
-  const { tenantId } = usePlan();
+  const { tenantId, features } = usePlan();
   const { setTheme } = useTheme();
   const demo = getDemoByTenantId(tenantId);
   const theme = demo?.theme;
   const copy = demo?.copy;
+  const canOrder = features.canOrder;
+  const wspNumber = siteSettings.whatsappNumber || '';
+  const consultHref = wspNumber
+    ? `https://wa.me/${wspNumber}?text=${encodeURIComponent(`Hola ${siteSettings.brandName || ''}! Quiero consultar por un producto.`)}`
+    : '';
   const catalogRef = useRef<HTMLElement>(null);
 
   const cartKey = `trufi_cart:${tenantId}`;
@@ -158,6 +164,7 @@ export default function WeightedCatalogDemoPage() {
       style={{ backgroundColor: theme.hueso, color: theme.carbon }}
       data-demo-theme={demo.id}
     >
+      <DemoPlanSwitch />
       <DemoRibbon />
 
       <header className="sticky top-0 z-30 border-b border-black/8 bg-[#fffdf9]/95 backdrop-blur">
@@ -174,55 +181,57 @@ export default function WeightedCatalogDemoPage() {
             ) : null}
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="flex rounded-full border border-black/10 bg-white p-1 text-xs font-bold">
+          {canOrder && (
+            <div className="flex items-center gap-2">
+              <div className="flex rounded-full border border-black/10 bg-white p-1 text-xs font-bold">
+                <button
+                  type="button"
+                  onClick={() => setFulfillment('delivery')}
+                  className={`min-h-9 rounded-full px-3 transition ${
+                    fulfillment === 'delivery' ? 'text-white' : 'text-black/55'
+                  }`}
+                  style={fulfillment === 'delivery' ? { backgroundColor: theme.bordo } : undefined}
+                >
+                  {copy.deliveryLabel}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFulfillment('pickup')}
+                  className={`min-h-9 rounded-full px-3 transition ${
+                    fulfillment === 'pickup' ? 'text-white' : 'text-black/55'
+                  }`}
+                  style={fulfillment === 'pickup' ? { backgroundColor: theme.bordo } : undefined}
+                >
+                  {copy.pickupLabel}
+                </button>
+              </div>
+
               <button
                 type="button"
-                onClick={() => setFulfillment('delivery')}
-                className={`min-h-9 rounded-full px-3 transition ${
-                  fulfillment === 'delivery' ? 'text-white' : 'text-black/55'
-                }`}
-                style={fulfillment === 'delivery' ? { backgroundColor: theme.bordo } : undefined}
+                onClick={() => setCartOpen(true)}
+                aria-label={`Ver carrito${cartCount ? ` · ${formatArs(cartTotal)}` : ''}`}
+                className="flex min-h-11 items-center gap-2 rounded-xl px-2.5 text-left transition hover:bg-black/4"
               >
-                {copy.deliveryLabel}
-              </button>
-              <button
-                type="button"
-                onClick={() => setFulfillment('pickup')}
-                className={`min-h-9 rounded-full px-3 transition ${
-                  fulfillment === 'pickup' ? 'text-white' : 'text-black/55'
-                }`}
-                style={fulfillment === 'pickup' ? { backgroundColor: theme.bordo } : undefined}
-              >
-                {copy.pickupLabel}
+                <span
+                  className="relative flex h-10 w-10 items-center justify-center rounded-lg text-white"
+                  style={{ backgroundColor: theme.bordo }}
+                >
+                  <ShoppingCart size={18} />
+                  {cartCount > 0 && (
+                    <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#1D1B18] px-1 text-[10px] font-black text-white">
+                      {cartCount}
+                    </span>
+                  )}
+                </span>
+                <span className="hidden sm:block">
+                  <span className="block text-sm font-black">{formatArs(cartTotal)}</span>
+                  <span className="flex items-center gap-0.5 text-[11px] font-bold text-black/45">
+                    Ver carrito <ChevronDown size={12} />
+                  </span>
+                </span>
               </button>
             </div>
-
-            <button
-              type="button"
-              onClick={() => setCartOpen(true)}
-              aria-label={`Ver carrito${cartCount ? ` · ${formatArs(cartTotal)}` : ''}`}
-              className="flex min-h-11 items-center gap-2 rounded-xl px-2.5 text-left transition hover:bg-black/4"
-            >
-              <span
-                className="relative flex h-10 w-10 items-center justify-center rounded-lg text-white"
-                style={{ backgroundColor: theme.bordo }}
-              >
-                <ShoppingCart size={18} />
-                {cartCount > 0 && (
-                  <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#1D1B18] px-1 text-[10px] font-black text-white">
-                    {cartCount}
-                  </span>
-                )}
-              </span>
-              <span className="hidden sm:block">
-                <span className="block text-sm font-black">{formatArs(cartTotal)}</span>
-                <span className="flex items-center gap-0.5 text-[11px] font-bold text-black/45">
-                  Ver carrito <ChevronDown size={12} />
-                </span>
-              </span>
-            </button>
-          </div>
+          )}
         </div>
       </header>
 
@@ -385,46 +394,67 @@ export default function WeightedCatalogDemoPage() {
                   )}
 
                   <div className="mt-auto flex items-center gap-2">
-                    <div className="flex items-center rounded-lg border border-black/12 bg-white">
-                      <button
-                        type="button"
-                        aria-label="Restar"
-                        className="flex h-10 w-9 items-center justify-center text-black/55"
-                        onClick={() =>
-                          setCardState(prev => ({
-                            ...prev,
-                            [item.id]: {
-                              optionId: state.optionId,
-                              qty: Math.max(1, state.qty - 1),
-                            },
-                          }))
-                        }
+                    {canOrder ? (
+                      <>
+                        <div className="flex items-center rounded-lg border border-black/12 bg-white">
+                          <button
+                            type="button"
+                            aria-label="Restar"
+                            className="flex h-10 w-9 items-center justify-center text-black/55"
+                            onClick={() =>
+                              setCardState(prev => ({
+                                ...prev,
+                                [item.id]: {
+                                  optionId: state.optionId,
+                                  qty: Math.max(1, state.qty - 1),
+                                },
+                              }))
+                            }
+                          >
+                            <Minus size={14} />
+                          </button>
+                          <span className="w-7 text-center text-sm font-black">{state.qty}</span>
+                          <button
+                            type="button"
+                            aria-label="Sumar"
+                            className="flex h-10 w-9 items-center justify-center text-black/55"
+                            onClick={() =>
+                              setCardState(prev => ({
+                                ...prev,
+                                [item.id]: { optionId: state.optionId, qty: state.qty + 1 },
+                              }))
+                            }
+                          >
+                            <Plus size={14} />
+                          </button>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => option && addLine(item, option, state.qty)}
+                          className="flex min-h-10 flex-1 items-center justify-center rounded-lg text-sm font-black text-white"
+                          style={{ backgroundColor: theme.bordo }}
+                        >
+                          Agregar
+                        </button>
+                      </>
+                    ) : consultHref ? (
+                      <a
+                        href={consultHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex min-h-10 flex-1 items-center justify-center gap-2 rounded-lg border text-sm font-black"
+                        style={{ borderColor: theme.bordo, color: theme.bordo }}
                       >
-                        <Minus size={14} />
-                      </button>
-                      <span className="w-7 text-center text-sm font-black">{state.qty}</span>
-                      <button
-                        type="button"
-                        aria-label="Sumar"
-                        className="flex h-10 w-9 items-center justify-center text-black/55"
-                        onClick={() =>
-                          setCardState(prev => ({
-                            ...prev,
-                            [item.id]: { optionId: state.optionId, qty: state.qty + 1 },
-                          }))
-                        }
+                        Consultar por WhatsApp
+                      </a>
+                    ) : (
+                      <span
+                        title="En la tienda real este botón abre el WhatsApp del local"
+                        className="flex min-h-10 flex-1 cursor-default items-center justify-center rounded-lg border border-black/12 text-sm font-black text-black/40"
                       >
-                        <Plus size={14} />
-                      </button>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => option && addLine(item, option, state.qty)}
-                      className="flex min-h-10 flex-1 items-center justify-center rounded-lg text-sm font-black text-white"
-                      style={{ backgroundColor: theme.bordo }}
-                    >
-                      Agregar
-                    </button>
+                        Consultar por WhatsApp
+                      </span>
+                    )}
                   </div>
                   <p className="text-[10px] font-medium text-black/40">
                     {copy.totalLabel} · {copy.totalHint}
@@ -460,7 +490,7 @@ export default function WeightedCatalogDemoPage() {
         </p>
       </footer>
 
-      {cartOpen && (
+      {canOrder && cartOpen && (
         <div className="fixed inset-0 z-40 flex justify-end bg-black/45">
           <div className="flex h-full w-full max-w-md flex-col bg-[#fffdf9] shadow-2xl">
             <div className="flex items-center justify-between border-b border-black/8 px-5 py-4">
@@ -515,19 +545,21 @@ export default function WeightedCatalogDemoPage() {
         </div>
       )}
 
-      <CheckoutModal
-        isOpen={checkoutOpen}
-        onClose={() => setCheckoutOpen(false)}
-        cart={cart}
-        total={cartTotal}
-        subtotal={cartTotal}
-        discount={0}
-        whatsappNumber=""
-        bankAlias=""
-        mpEnabled={false}
-        initialDeliveryType={fulfillment}
-        onOrderSent={() => setCart([])}
-      />
+      {canOrder && (
+        <CheckoutModal
+          isOpen={checkoutOpen}
+          onClose={() => setCheckoutOpen(false)}
+          cart={cart}
+          total={cartTotal}
+          subtotal={cartTotal}
+          discount={0}
+          whatsappNumber=""
+          bankAlias=""
+          mpEnabled={features.canUseMercadoPago}
+          initialDeliveryType={fulfillment}
+          onOrderSent={() => setCart([])}
+        />
+      )}
     </div>
   );
 }

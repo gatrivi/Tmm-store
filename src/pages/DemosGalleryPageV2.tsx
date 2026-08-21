@@ -36,18 +36,6 @@ const FILTERS: DemoFilter[] = ['Todos', 'Catálogo', 'Página', 'Tienda'];
 
 const DEMOS: DemoItem[] = [
   {
-    name: 'El Puestito del Tío',
-    rubro: 'Parrilla 24 hs · Palermo',
-    kind: 'Catálogo',
-    description: 'Menú completo con variantes, precios y platos explicados para decidir antes de llegar o pedir.',
-    externalUrl: 'https://elpuestitodeltio.com/',
-    image: 'https://elpuestitodeltio.com/hero-new.jpg',
-    imageAlt: 'El Puestito del Tío, parrilla 24 horas en Palermo',
-    tags: ['Sitio real', 'Menú', 'Variantes y precios'],
-    featured: true,
-    realSite: true,
-  },
-  {
     name: 'Ricardo Hombres',
     rubro: 'Indumentaria masculina · San Fernando',
     kind: 'Tienda',
@@ -56,6 +44,18 @@ const DEMOS: DemoItem[] = [
     image: 'https://lirp.cdn-website.com/e46c27d6/dms3rep/multi/opt/pexels-photo-325876-1920w.jpeg',
     imageAlt: 'Indumentaria masculina de Ricardo Hombres',
     tags: ['Sitio real', 'Indumentaria', 'Tienda online'],
+    featured: true,
+    realSite: true,
+  },
+  {
+    name: 'El Puestito del Tío',
+    rubro: 'Parrilla 24 hs · Palermo',
+    kind: 'Catálogo',
+    description: 'Menú completo con variantes, precios y platos explicados para decidir antes de llegar o pedir.',
+    externalUrl: 'https://elpuestitodeltio.com/',
+    image: 'https://elpuestitodeltio.com/hero-new.jpg',
+    imageAlt: 'El Puestito del Tío, parrilla 24 horas en Palermo',
+    tags: ['Sitio real', 'Menú', 'Variantes y precios'],
     featured: true,
     realSite: true,
   },

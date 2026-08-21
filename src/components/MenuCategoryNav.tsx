@@ -5,9 +5,10 @@ interface MenuCategoryNavProps {
   categories: MenuCategory[];
   activeId: string;
   onSelect: (id: string) => void;
+  compact?: boolean;
 }
 
-export function MenuCategoryNav({ categories, activeId, onSelect }: MenuCategoryNavProps) {
+export function MenuCategoryNav({ categories, activeId, onSelect, compact = false }: MenuCategoryNavProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export function MenuCategoryNav({ categories, activeId, onSelect }: MenuCategory
   }, [activeId]);
 
   return (
-    <div className="sticky top-[72px] z-[9] bg-surface/95 backdrop-blur-md border-b border-border -mx-4 px-4 py-2">
+    <div className={`sticky ${compact ? 'top-16 py-1.5' : 'top-[72px] py-2'} z-[9] bg-surface/95 backdrop-blur-md border-b border-border -mx-4 px-4`}>
       <div ref={scrollRef} className="flex gap-2 overflow-x-auto hide-scrollbar max-w-5xl mx-auto">
         {categories.map(cat => (
           <button
@@ -24,7 +25,7 @@ export function MenuCategoryNav({ categories, activeId, onSelect }: MenuCategory
             type="button"
             data-cat={cat.id}
             onClick={() => onSelect(cat.id)}
-            className={`shrink-0 px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap ${
+            className={`shrink-0 ${compact ? 'px-3 py-1.5' : 'px-4 py-2'} rounded-full text-xs font-bold transition whitespace-nowrap ${
               activeId === cat.id
                 ? 'bg-brand-green text-white shadow-md'
                 : 'bg-surface-muted text-text-secondary hover:text-text-primary border border-border'

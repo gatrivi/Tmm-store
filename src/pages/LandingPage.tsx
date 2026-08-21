@@ -46,6 +46,70 @@ const objections = [
   },
 ];
 
+const steps = [
+  {
+    n: '01',
+    title: 'Mandás fotos y precios',
+    copy: 'Por WhatsApp, como te resulte. Sin formularios ni cuentas.',
+  },
+  {
+    n: '02',
+    title: 'Armamos tu tienda',
+    copy: 'Catálogo, carrito y pedidos listos en 72 h con el material completo.',
+  },
+  {
+    n: '03',
+    title: 'Compartís y vendés',
+    copy: 'Link y QR para pegar en Instagram, el local y cada respuesta.',
+  },
+];
+
+const stores = [
+  {
+    name: 'Las Tortas de Mamá Mabel',
+    rubro: 'Tortas y pastelería',
+    img: '/demos/mamabel/balcarce.jpg',
+    href: '/demo/mamabel',
+  },
+  {
+    name: 'Pizza G',
+    rubro: 'Pizzería',
+    img: '/demos/pizzeria/fugazzeta.jpg',
+    href: '/demo/pizzeria',
+  },
+  {
+    name: 'La Magdalena',
+    rubro: 'Panadería',
+    img: '/demos/panaderia/products/facturas-surtidas.jpg',
+    href: '/demo/panaderia',
+  },
+  {
+    name: 'Canavesi',
+    rubro: 'Carnicería',
+    img: '/demos/canavesi/picada.jpg',
+    href: '/demo/canavesi',
+  },
+];
+
+const faqs = [
+  {
+    q: '¿Qué necesito para arrancar?',
+    a: 'Fotos y precios de tus productos. Con eso cargamos todo y te entregamos el link andando.',
+  },
+  {
+    q: '¿Después puedo cambiar precios o productos?',
+    a: 'Sí. El panel abre desde tu celular: cambiás precios, sacás o agregás productos sin pedirnos nada.',
+  },
+  {
+    q: '¿Cómo recibo el pago?',
+    a: 'Tu cliente te pasa el pedido por WhatsApp y coordinan el pago directo: efectivo o transferencia. Nosotros no intermediamos ni nos llevamos un peso.',
+  },
+  {
+    q: '¿El link y el QR son míos?',
+    a: 'Sí. Link fijo con tu nombre y QR para el mostrador, listos para compartir donde quieras.',
+  },
+];
+
 export default function LandingPage() {
   const location = useLocation();
   const price = getDemoPriceLabel();
@@ -132,6 +196,9 @@ export default function LandingPage() {
                 <span className="flex items-center gap-2"><Check size={16} /> Carga incluida</span>
                 <span className="flex items-center gap-2"><Check size={16} /> Sin app</span>
               </div>
+              <p className="mt-4 text-xs font-black uppercase tracking-[0.14em] text-white/40">
+                Pizzerías · Rotiserías · Panaderías · Carnicerías · Despensas
+              </p>
             </div>
 
             <div className="hidden md:block">
@@ -140,6 +207,7 @@ export default function LandingPage() {
                 <p className="mt-5 text-sm font-bold text-white/45"><s>$650.000</s></p>
                 <p className="text-5xl font-black tracking-[-0.06em] text-[#ff8a5c]">{price}</p>
                 <p className="mt-2 text-sm font-bold text-white/60">implementación</p>
+                <p className="mt-1 text-xs font-bold text-white/45">50% al arrancar · 50% al entregar</p>
                 <div className="my-6 h-px bg-white/15" />
                 <p className="font-bold leading-relaxed text-white/80">
                   Planes desde $35.000/mes. Sin porcentaje sobre tus ventas.
@@ -153,6 +221,19 @@ export default function LandingPage() {
                 </Link>
               </div>
             </div>
+          </div>
+        </section>
+        <section className="border-b border-black/10 bg-white py-10">
+          <div className="mx-auto grid max-w-6xl gap-6 px-4 sm:grid-cols-3 sm:px-6">
+            {steps.map(step => (
+              <div key={step.n} className="flex gap-4">
+                <span className="text-2xl font-black tracking-[-0.04em] text-[#d84d1d]">{step.n}</span>
+                <div>
+                  <p className="font-black">{step.title}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-black/55">{step.copy}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -210,6 +291,54 @@ export default function LandingPage() {
             </Link>
           </div>
         </section>
+        <section className="border-b border-black/10 py-16 sm:py-20">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div className="max-w-2xl">
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-[#d84d1d]">Tiendas reales</p>
+                <h2 className="mt-4 text-4xl font-black leading-[0.95] tracking-[-0.055em] sm:text-5xl">
+                  Andando ahora mismo.
+                </h2>
+                <p className="mt-4 text-lg leading-relaxed text-black/60">
+                  Cada una es un link que ya está online. Tocalo y pedí como te pediría tu cliente.
+                </p>
+              </div>
+              <Link
+                to={demosHref}
+                className="inline-flex items-center gap-2 text-sm font-black underline decoration-2 underline-offset-4"
+              >
+                Ver todas las demos
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {stores.map(store => (
+                <Link
+                  key={store.name}
+                  to={withAttribution(store.href)}
+                  className="group overflow-hidden rounded-2xl border border-black/10 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <div className="aspect-[4/3] overflow-hidden bg-black/5">
+                    <img
+                      src={store.img}
+                      alt={`Tienda online de ${store.name}`}
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between gap-3 p-4">
+                    <div>
+                      <p className="font-black leading-tight">{store.name}</p>
+                      <p className="mt-0.5 text-xs font-bold uppercase tracking-[0.12em] text-black/40">{store.rubro}</p>
+                    </div>
+                    <ArrowRight size={16} className="shrink-0 text-[#d84d1d] transition group-hover:translate-x-1" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
 
         <section className="border-b border-black/10 py-16 sm:py-20">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -255,6 +384,7 @@ export default function LandingPage() {
               <p className="mt-8 text-sm font-bold text-white/60"><s>$650.000</s></p>
               <p className="text-6xl font-black tracking-[-0.07em]">{price}</p>
               <p className="mt-2 font-bold text-white/75">implementación · desde $35.000/mes</p>
+              <p className="mt-1 text-sm font-bold text-white/60">50% al arrancar · 50% al entregar</p>
               <a
                 href={buyHref}
                 className="mt-8 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-black px-6 text-base font-black text-white transition hover:-translate-y-0.5"
@@ -272,6 +402,24 @@ export default function LandingPage() {
               <p className="mt-4 text-center text-xs font-bold text-white/65">
                 Un toque. Seguimos por WhatsApp.
               </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-black/10 bg-white py-16 sm:py-20">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6">
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#d84d1d]">Antes de preguntar</p>
+            <h2 className="mt-4 text-4xl font-black tracking-[-0.055em] sm:text-5xl">Lo que todos preguntan.</h2>
+            <div className="mt-8 divide-y divide-black/10 border-y border-black/10">
+              {faqs.map(faq => (
+                <details key={faq.q} className="group py-4">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-black [&::-webkit-details-marker]:hidden">
+                    {faq.q}
+                    <span className="text-xl font-black text-[#d84d1d] transition group-open:rotate-45">+</span>
+                  </summary>
+                  <p className="mt-3 text-sm leading-relaxed text-black/60">{faq.a}</p>
+                </details>
+              ))}
             </div>
           </div>
         </section>

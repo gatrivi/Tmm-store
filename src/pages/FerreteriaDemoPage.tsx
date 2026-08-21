@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import CheckoutModal from '../components/CheckoutModal';
 import { DemoRibbon } from '../components/DemoRibbon';
+import { DemoPlanSwitch } from '../components/DemoPlanSwitch';
 import { useMenu } from '../context/MenuContext';
 import { usePlan } from '../context/PlanContext';
 import { useTheme } from '../context/ThemeContext';
@@ -35,7 +36,8 @@ const formatArs = (value: number) => `$${value.toLocaleString('es-AR')}`;
 
 export default function FerreteriaDemoPage() {
   const { menuItems, menuCategories, siteSettings } = useMenu();
-  const { tenantId } = usePlan();
+  const { tenantId, features } = usePlan();
+  const canOrder = features.canOrder;
   const { setTheme } = useTheme();
   const demo = getDemoByTenantId(tenantId);
   const theme = demo?.theme;
@@ -126,8 +128,8 @@ export default function FerreteriaDemoPage() {
       }}
       data-demo-theme="ferreteria"
     >
+      <DemoPlanSwitch />
       <DemoRibbon />
-
       <header className="sticky top-0 z-30 border-b border-black/10 bg-[#f6f3ea]/95 backdrop-blur-xl">
         <div className="mx-auto flex min-h-18 max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
@@ -144,19 +146,21 @@ export default function FerreteriaDemoPage() {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setCartOpen(true)}
-            className="relative inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#181818] px-3.5 text-sm font-black text-white transition hover:-translate-y-0.5"
-          >
-            <ShoppingCart size={17} />
-            <span className="hidden sm:inline">{cartCount ? formatArs(cartTotal) : 'Pedido'}</span>
-            {cartCount > 0 && (
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#F4C430] px-1 text-[10px] font-black text-black">
-                {cartCount}
-              </span>
-            )}
-          </button>
+          {canOrder && (
+            <button
+              type="button"
+              onClick={() => setCartOpen(true)}
+              className="relative inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#181818] px-3.5 text-sm font-black text-white transition hover:-translate-y-0.5"
+            >
+              <ShoppingCart size={17} />
+              <span className="hidden sm:inline">{cartCount ? formatArs(cartTotal) : 'Pedido'}</span>
+              {cartCount > 0 && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#F4C430] px-1 text-[10px] font-black text-black">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+          )}
         </div>
       </header>
 
@@ -270,25 +274,31 @@ export default function FerreteriaDemoPage() {
                     <p className="mt-3 text-[10px] font-black uppercase tracking-[0.08em] text-black/35">{option?.label}</p>
                   )}
 
-                  <div className="mt-4 flex items-center gap-2">
-                    <div className="flex items-center rounded-lg border border-black/12 bg-white">
-                      <button type="button" aria-label="Restar" className="flex h-10 w-8 items-center justify-center" onClick={() => setCardState(prev => ({ ...prev, [item.id]: { optionId: state.optionId, qty: Math.max(1, state.qty - 1) } }))}>
-                        <Minus size={13} />
-                      </button>
-                      <span className="w-6 text-center text-xs font-black">{state.qty}</span>
-                      <button type="button" aria-label="Sumar" className="flex h-10 w-8 items-center justify-center" onClick={() => setCardState(prev => ({ ...prev, [item.id]: { optionId: state.optionId, qty: state.qty + 1 } }))}>
-                        <Plus size={13} />
+                  {canOrder ? (
+                    <div className="mt-4 flex items-center gap-2">
+                      <div className="flex items-center rounded-lg border border-black/12 bg-white">
+                        <button type="button" aria-label="Restar" className="flex h-10 w-8 items-center justify-center" onClick={() => setCardState(prev => ({ ...prev, [item.id]: { optionId: state.optionId, qty: Math.max(1, state.qty - 1) } }))}>
+                          <Minus size={13} />
+                        </button>
+                        <span className="w-6 text-center text-xs font-black">{state.qty}</span>
+                        <button type="button" aria-label="Sumar" className="flex h-10 w-8 items-center justify-center" onClick={() => setCardState(prev => ({ ...prev, [item.id]: { optionId: state.optionId, qty: state.qty + 1 } }))}>
+                          <Plus size={13} />
+                        </button>
+                      </div>
+                      <button
+                        type="button"
+                        disabled={!option}
+                        onClick={() => option && addLine(item, option, state.qty)}
+                        className="min-h-10 flex-1 rounded-lg bg-[#DCA600] px-3 text-xs font-black text-black transition hover:bg-[#F4C430] disabled:opacity-40"
+                      >
+                        Agregar
                       </button>
                     </div>
-                    <button
-                      type="button"
-                      disabled={!option}
-                      onClick={() => option && addLine(item, option, state.qty)}
-                      className="min-h-10 flex-1 rounded-lg bg-[#DCA600] px-3 text-xs font-black text-black transition hover:bg-[#F4C430] disabled:opacity-40"
-                    >
-                      Agregar
-                    </button>
-                  </div>
+                  ) : (
+                    <span title="En la tienda real este botón abre el WhatsApp del local" className="mt-4 flex min-h-10 cursor-default items-center justify-center rounded-lg border border-black/12 text-xs font-black text-black/40">
+                      Consultar por WhatsApp
+                    </span>
+                  )}
                 </div>
               </article>
             );
@@ -311,7 +321,7 @@ export default function FerreteriaDemoPage() {
         </div>
       </footer>
 
-      {cartOpen && (
+      {canOrder && cartOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/55">
           <div className="flex h-full w-full max-w-md flex-col bg-[#fffdf8] shadow-2xl">
             <div className="flex items-center justify-between border-b border-black/10 px-5 py-4">
@@ -351,19 +361,21 @@ export default function FerreteriaDemoPage() {
         </div>
       )}
 
-      <CheckoutModal
-        isOpen={checkoutOpen}
-        onClose={() => setCheckoutOpen(false)}
-        cart={cart}
-        total={cartTotal}
-        subtotal={cartTotal}
-        discount={0}
-        whatsappNumber=""
-        bankAlias=""
-        mpEnabled={false}
-        initialDeliveryType={fulfillment}
-        onOrderSent={() => setCart([])}
-      />
+      {canOrder && (
+        <CheckoutModal
+          isOpen={checkoutOpen}
+          onClose={() => setCheckoutOpen(false)}
+          cart={cart}
+          total={cartTotal}
+          subtotal={cartTotal}
+          discount={0}
+          whatsappNumber=""
+          bankAlias=""
+          mpEnabled={features.canUseMercadoPago}
+          initialDeliveryType={fulfillment}
+          onOrderSent={() => setCart([])}
+        />
+      )}
     </div>
   );
 }

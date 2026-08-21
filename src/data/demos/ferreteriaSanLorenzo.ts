@@ -1,0 +1,26 @@
+import type { OrderRecord } from '../../types/order';
+import type { DemoDefinition } from './types';
+
+const item = (id: string, name: string, category: string, description: string, options: { id: string; label: string; price: number }[], badge?: string) => ({ id, name, category, description, images: [], options, ...(badge ? { badge } : {}) });
+const menuItems = [
+  item('tarugo-tornillo', 'Kit tarugos y tornillos', 'fijaciones', 'Para colgar, ajustar y resolver en casa', [{ id: 'kit', label: 'Kit x20', price: 4200 }], 'Más pedido'),
+  item('tornillos-madera', 'Tornillos para madera', 'fijaciones', 'Medidas surtidas', [{ id: 'caja', label: 'Caja x100', price: 6900 }, { id: 'blister', label: 'Blíster x20', price: 1900 }]),
+  item('cinta-teflon', 'Cinta de teflón', 'plomeria', 'Para conexiones y reparaciones', [{ id: 'u', label: 'Unidad', price: 1300 }]),
+  item('llave-paso', 'Llave de paso', 'plomeria', 'Repuesto de uso habitual', [{ id: 'media', label: '½ pulgada', price: 5800 }, { id: 'tres-cuartos', label: '¾ pulgada', price: 7200 }]),
+  item('lampara-led', 'Lámpara LED', 'electricidad', 'Luz blanca cálida o fría a confirmar', [{ id: '9w', label: '9 W', price: 3200 }, { id: '12w', label: '12 W', price: 4300 }]),
+  item('cable-taller', 'Cable tipo taller', 'electricidad', 'Corte por metro · consultar disponibilidad', [{ id: 'metro', label: 'Metro', price: 2400 }]),
+  item('rodillo', 'Rodillo para pintar', 'pintura', 'Para paredes y retoques', [{ id: '10cm', label: '10 cm', price: 3900 }, { id: '22cm', label: '22 cm', price: 6500 }]),
+  item('silicona', 'Silicona selladora', 'pintura', 'Transparente o blanca a confirmar', [{ id: 'cartucho', label: 'Cartucho', price: 4800 }]),
+];
+
+const now = Date.now();
+const seedOrders: OrderRecord[] = [{ id: 'SL24', tenantId: 'demo-ferreteria-san-lorenzo', status: 'new', customerName: 'Marcos R.', customerPhone: '', deliveryType: 'pickup', address: 'Retiro en el local (demo)', paymentMethod: 'cash', paymentStatus: 'pending', notes: 'Confirmar medida de llave de paso antes de preparar', items: [{ id: 'tarugo-tornillo', name: 'Kit tarugos y tornillos', optionId: 'kit', optionLabel: 'Kit x20', price: 4200, qty: 1 }, { id: 'cinta-teflon', name: 'Cinta de teflón', optionId: 'u', optionLabel: 'Unidad', price: 1300, qty: 2 }], subtotal: 6800, discount: 0, total: 6800, source: 'demo', createdAt: new Date(now - 5 * 60000).toISOString(), updatedAt: new Date(now - 5 * 60000).toISOString() }];
+
+export const FERRETERIA_SAN_LORENZO_DEMO: DemoDefinition = {
+  id: 'ferreteria-san-lorenzo', tenantId: 'demo-ferreteria-san-lorenzo', customerPath: '/demo/ferreteria-san-lorenzo', ownerPath: '/demo/ferreteria-san-lorenzo/owner', orderPath: id => `/demo/ferreteria-san-lorenzo/order/${id}`,
+  plan: 'pedidos', locale: 'es', monogram: 'SL', hideLanguageSwitcher: true, hideThemeToggle: true, hideShare: true, hideAddress: false, hidePromos: true, forceOpen: true,
+  theme: { hueso: '#F3F0E9', bordo: '#174A5B', carbon: '#202A2D', papel: '#DCE7E8', salvia: '#C98935' },
+  siteSettings: { showUsdToggle: false, whatsappNumber: '', bankAlias: '', brandName: 'Ferretería San Lorenzo', brandColor: '#174A5B', brandColorDark: '#202A2D', brandColorLight: '#F3F0E9', brandAccent: '#C98935', brandTextColor: '#202A2D', brandFont: 'system-ui, sans-serif', brandAddress: 'San Lorenzo y Fray Justo Sarmiento · Florida', brandLogo: '', menuLayout: 'list', demoMode: true, mpEnabled: false },
+  menuItems, menuCategories: [{ id: 'fijaciones', name: 'Fijaciones', sortOrder: 0 }, { id: 'plomeria', name: 'Plomería', sortOrder: 1 }, { id: 'electricidad', name: 'Electricidad', sortOrder: 2 }, { id: 'pintura', name: 'Pintura', sortOrder: 3 }], seedOrders,
+  copy: { heroTitle: 'Resolvé el arreglo sin dar mil vueltas', heroBody: 'Elegí el producto, indicá medida o consulta y armá un pedido claro para retirar o coordinar.', checkoutCta: 'Armar pedido', cartCta: 'Armar pedido', totalLabel: 'Total estimado', totalHint: 'Stock, marca, medida y precio final se confirman antes de preparar.', ownerTitle: 'Pedidos de Ferretería San Lorenzo', ownerSubtitle: 'Panel del local · hoy', ribbonLabel: 'DEMO · productos y precios ilustrativos', pickupLabel: 'Retiro en el local', deliveryLabel: 'Envío a coordinar', pickupHint: 'Elegí retiro y dejá la medida o consulta en notas.', deliveryHint: 'Indicá zona y horario; el local confirma cobertura.', cashLabel: 'Efectivo al retirar', transferLabel: 'Transferencia al confirmar', submitLabel: 'Enviar pedido de prueba', reviewTitle: 'Revisá tu pedido de prueba', reviewBody: 'Todavía no se envió ningún mensaje ni pago.', addressPlaceholder: 'Zona / dirección (si corresponde)', successEyebrow: 'Pedido de prueba creado', transferAliasPending: 'El local informa el alias al confirmar', successTitle: 'Pedido de prueba creado', successBody: 'Es una simulación: no se envió ningún mensaje ni pago.', ownerLinkLabel: 'Ver cómo lo recibe el local', statusLinkLabel: 'Ver estado del pedido', continueLabel: 'Seguir comprando', revenueLabel: 'Pedidos estimados', notesPlaceholder: 'Medida · marca · zona · horario · consulta', chips: ['Retiro en local', 'Medidas a confirmar'], weightNotice: 'Muestra ilustrativa · no es un catálogo oficial.' },
+};

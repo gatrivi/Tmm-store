@@ -9,14 +9,11 @@ function packs(media: number, docena: number) {
   ];
 }
 
-// Fotos de salados sin asset local todavía. Son fotos específicas del producto,
-// no imágenes genéricas: Horacio Cambeiro / Wikimedia Commons.
-const SANGUCHE_MILANESA_IMAGE =
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Sandwiches_de_milanesa_%28estilo_argentino%29.jpg/960px-Sandwiches_de_milanesa_%28estilo_argentino%29.jpg';
-const TORTA_FRITA_IMAGE =
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Torta_frita_argentina_-_Plato_individual.jpg/960px-Torta_frita_argentina_-_Plato_individual.jpg';
-const TARTA_VERDURA_IMAGE =
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Pascualina_%28tarta_argentina_de_verduras%29.jpg/960px-Pascualina_%28tarta_argentina_de_verduras%29.jpg';
+// Fotos de salados: fotos específicas del producto, no imágenes genéricas.
+// Origen: Horacio Cambeiro / Wikimedia Commons — assets locales en public/demos/panaderia/.
+const SANGUCHE_MILANESA_IMAGE = '/demos/panaderia/sanguche-milanesa.jpg';
+const TORTA_FRITA_IMAGE = '/demos/panaderia/torta-frita.jpg';
+const TARTA_VERDURA_IMAGE = '/demos/panaderia/tarta-verdura.jpg';
 
 const MENU_ITEMS: MenuItemType[] = [
   {

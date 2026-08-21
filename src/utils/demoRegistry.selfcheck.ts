@@ -76,7 +76,11 @@ function main() {
   assert.ok(!pizza.menuItems.some(i => /chorip/i.test(i.name)));
   assert.ok(pizza.menuItems.some(i => i.id === 'muzza'));
   assert.ok(pizza.menuItems.some(i => i.id === 'empanada-carne'));
-  assert.equal(pizza.menuCategories.length, 3);
+  assert.equal(pizza.menuCategories.length, 4);
+  assert.ok(pizza.menuItems.some(i => i.id === 'combo-muzza'));
+  const comboMuzza = PIZZERIA_DEMO.menuItems.find(i => i.id === 'combo-muzza')!;
+  assert.ok(comboMuzza.options.length === 1 && comboMuzza.options[0].price < 12900 + 7200 + 2800);
+  assert.ok(pizza.menuItems.some(i => i.id === 'gaseosa' && i.options.length >= 3));
   assert.equal(pizza.seedOrders.length, 3);
   assert.equal(getDemoByTenantId('demo-pizzeria')?.id, 'pizzeria');
   assert.equal(isDemoTenant('demo-pizzeria'), true);
@@ -95,7 +99,7 @@ function main() {
   assert.equal(pan.siteSettings.whatsappNumber, '549116563860');
   assert.ok(pan.menuItems.some(i => i.id === 'medialunas'));
   assert.ok(pan.menuItems.some(i => i.id === 'facturas-surtidas'));
-  assert.equal(pan.menuCategories.length, 3);
+  assert.equal(pan.menuCategories.length, 4);
   assert.equal(pan.seedOrders.length, 3);
   assert.equal(getDemoByTenantId('demo-panaderia')?.id, 'panaderia');
   const med = PANADERIA_DEMO.menuItems.find(i => i.id === 'medialunas')!;

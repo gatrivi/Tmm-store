@@ -1,4 +1,4 @@
-﻿# Mamá Mabel — drop zone
+# Mamá Mabel — drop zone
 
 Paste course material, recipes, price lists, fonts and extra photos here.
 
