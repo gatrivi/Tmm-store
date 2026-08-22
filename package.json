@@ -16,7 +16,8 @@
     "check:env": "node scripts/check-env.mjs",
     "hash:admin": "node scripts/hash-admin.mjs",
     "leads:scan": "node scripts/leads-scan.mjs",
-    "deploy:rules": "npx firebase-tools@latest deploy --only firestore"
+    "deploy:rules": "npx firebase-tools@latest deploy --only firestore",
+    "promo": "node scripts/record-demo-promo.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

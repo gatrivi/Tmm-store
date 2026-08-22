@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gatrivi — Recorrida de hoy</title>
+<style>
+  :root{--ink:#1a1a1a;--paper:#faf6f0;--acc:#e8630a;--ok:#1c7c43}
+  *{box-sizing:border-box;margin:0}
+  body{font-family:system-ui,sans-serif;background:var(--paper);color:var(--ink);padding:14px;max-width:720px;margin:auto}
+  h1{font-size:1.25rem} .sub{opacity:.65;font-size:.85rem;margin-bottom:12px}
+  .shop{background:#fff;border:1px solid #eee;border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .fit{font-size:.68rem;font-weight:800;padding:2px 7px;border-radius:99px}
+  .fit.A{background:#ffe3cc;color:#b34700}.fit.B{background:#fff3cc;color:#8a6d00}.fit.C{background:#eee;color:#666}
+  b{font-size:1rem}
+  .meta{font-size:.78rem;opacity:.7;margin-top:2px}
+  .actions{display:flex;gap:8px;margin-top:8px}
+  a.btn{text-decoration:none;font-weight:700;font-size:.85rem;padding:7px 12px;border-radius:8px;background:var(--acc);color:#fff}
+  a.btn.call{background:#333}
+  .pitch{font-size:.85rem;background:#fff7ef;border-radius:8px;padding:8px;margin-top:8px;line-height:1.45}
+  details:not([open]) .pitch{display:none}
+  details summary{cursor:pointer;font-size:.8rem;color:var(--acc);font-weight:700;margin-top:6px}
+  .status{margin-left:auto;font-size:.75rem;padding:4px 8px;border-radius:6px;border:1px solid #ddd;background:#fff}
+  .done{opacity:.55}.done b::after{content:" ✓";color:var(--ok)}
+  .copy{background:none;border:1px solid var(--acc);color:var(--acc);border-radius:8px;font-size:.8rem;font-weight:700;padding:7px 10px}
+</style>
+</head>
+<body>
+<h1>Recorrida de hoy — Gatrivi.com</h1>
+<p class="sub">Orden de ataque por fit × volumen. Tocá el nombre → pitch listo para pegar en WhatsApp. Estado se guarda solo.</p>
+<div id="list"></div>
+<p class="sub">Demo links: pizzería → tmm.gatrivi.com/demo/pizzeria · galería → tmm.gatrivi.com/demos · oferta → gatrivi.com/oferta</p>
+<script>
+const P = t => `Hola! Te escribo de Gatrivi.com, de Olivos. Vi ${t} y armamos tiendas online para comercios del barrio: tus clientes ven el catálogo con fotos y precios desde el celular y te piden por WhatsApp, sin comisión por venta. Acá se ve en 20 segundos cómo quedaría: `;
+const SHOPS = [
+ {n:"Morelia Pizza",fit:"A",tel:"011 4799-7377",dir:"Av. del Libertador 3499 · Olivos",rev:"3.329 reseñas",demo:"https://tmm.gatrivi.com/demo/pizzeria",ctx:"que son un clásico de Olivos"},
+ {n:"Pizzería San Antonio",fit:"A",tel:"011 4794-5865",dir:"Gral. Pacheco 3499 · Olivos",rev:"201 reseñas",demo:"https://tmm.gatrivi.com/demo/pizzeria",ctx:"su pizzería"},
+ {n:"Dale Vicente",fit:"A",tel:"011 4797-9288",dir:"Laprida 1462 · Vicente López",rev:"102 reseñas",demo:"https://tmm.gatrivi.com/demo/pizzeria",ctx:"su negocio"},
+ {n:"Rincón del Bajo",fit:"A",tel:"011 4797-4369",dir:"Yrigoyen 698 · Vicente López",rev:"267 reseñas",demo:"https://tmm.gatrivi.com/demo/pizzeria",ctx:"su cocina"},
+ {n:"Croxi Pizzeria",fit:"A",tel:"011 4795-3368",dir:"Roca 836 · Vicente López",rev:"110 reseñas",demo:"https://tmm.gatrivi.com/demo/pizzeria",ctx:"su pizzería"},
+ {n:"Pizzería VÍCTOR",fit:"A",tel:"011 4796-9141",dir:"Av. Maipú 1798 · Florida",rev:"2.544 reseñas",demo:"https://tmm.gatrivi.com/demo/pizzeria",ctx:"que VÍCTOR es un clásico"},
+ {n:"La Nueva Cocinita",fit:"A",tel:"011 5195-4350",dir:"Laprida 2865 · Vicente López",rev:"293 reseñas",demo:"https://tmm.gatrivi.com/demo/pizzeria",ctx:"su cocina"},
+ {n:"Biblos Olivos",fit:"B",tel:"011 4834-0320",dir:"Av. Maipú 3001 · Olivos",rev:"2.026 reseñas",demo:"https://tmm.gatrivi.com/demos",ctx:"Biblos"},
+ {n:"La Nueva Esquina 7",fit:"B",tel:"011 4797-6516",dir:"Av. Maipú 7 · Vicente López",rev:"764 reseñas",demo:"https://tmm.gatrivi.com/demos",ctx:"Esquina 7"},
+ {n:"El Corcubión",fit:"B",tel:"011 2669-4444",dir:"J.C. Cruz 1871 · Vicente López",rev:"161 reseñas",demo:"https://tmm.gatrivi.com/demos",ctx:"El Corcubión"},
+ {n:"Parrilla Nelly",fit:"B",tel:"011 5969-7774",dir:"J.B. Alberdi 450 · Olivos",rev:"6.284 reseñas",demo:"https://tmm.gatrivi.com/demos",ctx:"la parrilla"},
+ {n:"La Farola",fit:"B",tel:"011 4790-0207",dir:"Av. Maipú 2700 · Olivos",rev:"7.421 reseñas",demo:"https://tmm.gatrivi.com/demos",ctx:"La Farola"},
+ {n:"La Malvada",fit:"B",tel:"011 3430-3565",dir:"Solís 1880 · Vicente López",rev:"3.207 reseñas",demo:"https://tmm.gatrivi.com/demos",ctx:"La Malvada"},
+ {n:"Bebotes",fit:"C",tel:"011 2498-0818",dir:"Caseros 1848 · Vicente López",rev:"238 reseñas",demo:"https://tmm.gatrivi.com/demos",ctx:"Bebotes"},
+];
+// wa.me only works for mobile numbers; most here are landlines -> tel: primary, WSP copy-paste fallback
+const list = document.getElementById('list');
+SHOPS.forEach((s,i)=>{
+  const key='gtrv-outreach-'+i;
+  const saved=localStorage.getItem(key)||'';
+  const d=document.createElement('div');d.className='shop'+(saved==='hecho'?' done':'');
+  const msg=P(s.ctx)+s.demo;
+  d.innerHTML=`<div class="top"><b>${s.n}</b><span class="fit ${s.fit}">fit ${s.fit}</span><span class="meta">${s.rev} · ${s.dir}</span>
+    <select class="status"><option value="">—</option><option${saved==='wsp'?' selected':''}>wsp</option><option${saved==='demo'?' selected':''}>demo</option><option${saved==='piloto'?' selected':''}>piloto</option><option${saved==='pago'?' selected':''}>pago</option><option${saved==='no'?' selected':''}>no</option></select></div>
+  <div class="actions">
+    <a class="btn call" href="tel:${s.tel.replace(/[^0-9]/g,'')}">📞 ${s.tel}</a>
+    <button class="copy">📋 copiar pitch</button>
+  </div>
+  <details><summary>pitch</summary><div class="pitch">${msg}<br><br><i>Si tienen WhatsApp móvil: pegar directo. Cierra con: “¿Le muestro cómo quedaría <b>${s.n}</b>? Muestra a medida en 24 h.”</i></div></details>`;
+  d.querySelector('.copy').onclick=()=>{navigator.clipboard.writeText(msg);this;};
+  const sel=d.querySelector('.status');
+  sel.onchange=()=>{localStorage.setItem(key,sel.value);d.classList.toggle('done',sel.value==='pago'||sel.value==='no');};
+  list.appendChild(d);
+});
+</script>
+</body>
+</html>
