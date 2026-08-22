@@ -7,12 +7,12 @@ import { fileURLToPath } from 'url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = join(root, 'public', 'print');
 const url =
-  'https://tmm.gatrivi.com/?utm_source=recorrida&utm_medium=qr&utm_campaign=zona_norte&utm_content=petshop';
+  'https://tmm.gatrivi.com/demos?utm_source=recorrida&utm_medium=qr&utm_campaign=zn-0822';
 
 mkdirSync(outDir, { recursive: true });
 const png = await QR.toBuffer(url, {
   type: 'png',
-  width: 512,
+  width: 1024,
   margin: 1,
   errorCorrectionLevel: 'M',
   color: { dark: '#000000', light: '#FFFFFF' },

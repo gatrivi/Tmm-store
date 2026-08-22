@@ -17,7 +17,8 @@
     "hash:admin": "node scripts/hash-admin.mjs",
     "leads:scan": "node scripts/leads-scan.mjs",
     "deploy:rules": "npx firebase-tools@latest deploy --only firestore",
-    "promo": "node scripts/record-demo-promo.mjs"
+    "promo": "node scripts/record-demo-promo.mjs",
+    "flyers": "npx tsx scripts/gen-flyer-qr.mjs && node scripts/gen-flyers-pdf.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
