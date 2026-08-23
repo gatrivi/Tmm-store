@@ -87,6 +87,9 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/demo/confiteria-parana` | **Confitería Paraná** (cliente) — warm lead |
 | `/demo/confiteria-parana/owner` | Panel confitería |
 | `/demo/confiteria-parana/order/:id` | Seguimiento |
+| `/demo/el-mirasol` | **El Mirasol de La Recova** parrilla Recoleta (cliente) — cold lead |
+| `/demo/el-mirasol/owner` | Panel El Mirasol |
+| `/demo/el-mirasol/order/:id` | Seguimiento |
 | `/demo/verduleria` | **La Inmaculada** verdulería (cliente) |
 | `/demo/verduleria/owner` | Panel Inmaculada |
 | `/demo/verduleria/order/:id` | Seguimiento |
@@ -95,7 +98,7 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/order/:orderId` | Seguimiento pedido real/tenant |
 | `/super-admin` | Provisioning tenants |
 
-Live sales URLs: `/` · `/demos` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/canavesi` · `/demo/verduleria` · `/demo/aguacats` · `/demo/confiteria-parana`.
+- Live sales URLs: `/` · `/demos` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/canavesi` · `/demo/verduleria` · `/demo/aguacats` · `/demo/confiteria-parana` · `/demo/el-mirasol`.
 
 ---
 
@@ -113,6 +116,7 @@ Live sales URLs: `/` · `/demos` · `/demo/mamabel` · `/demo/pizzeria` (+ owner
 - **Demo Express presets:** código vivo; **público OFF** (v1.22.0) — no linkear desde landing/`/demos`; flag `src/config/demoExpress.ts`
 - **Demo plan switch (v1.23.0):** barra "Vista demo" (Catálogo / Tienda WSP / Tienda MP) en demos con plan gating real: verticals Storefront (pizzería, Zimba Pet, Express), WeightedCatalog (carnicería/Canavesi/verdulería), Aguacats, Ferretería. Override en sessionStorage `trufi_demo_plan_override` (sticky por sesión, sólo demos). Pendiente switch en páginas bespoke: Mamabel, Panadería, MolinoFlorida, Heladería, CafeRoca.
 - **Demo Confitería Paraná (v1.24.0):** warm lead (amigos de familia), Paraná 3374 Olivos, **746 reseñas Google 4.6★ sin web propia**, vende por Rappi/PedidosYa. Storefront genérico + plan switch. Config `src/data/demos/confiteriaParana.ts` · doc [`roadmap/demo-confiteria-parana.md`](./roadmap/demo-confiteria-parana.md). Sin WSP del comercio hasta permiso; fotos reutilizadas (pendiente sesión propia).
+- **Demo El Mirasol de La Recova (v1.25.0):** cold lead parrilla clásica Recoleta (Posadas 1032), **web propia muerta** (`elmirasol.com.ar`, solo Wayback) — ángulo "tu URL era tu carta y murió". Storefront genérico + plan switch. Config `src/data/demos/elMirasol.ts` · doc [`roadmap/demo-el-mirasol.md`](./roadmap/demo-el-mirasol.md). Sin WSP ni cobro; fotos reutilizadas canavesi (pendiente sesión propia).
 - **Demo Mamá Mabel flagship (v1.11–1.13.4):** portada marca · portfolio likes · encargo WA · cursos honestos · hero/portfolio black-bg studio picks (EXIF/glare/tilt/center)
 - **Demo pizzería Fit A:** carta pizza/empanadas, tenant `demo-pizzeria`, storage aislado
 - **Demo panadería La Magdalena (v1.9.3):** tenant `demo-panaderia`, storage `trufi_demo_orders_v2:panaderia`

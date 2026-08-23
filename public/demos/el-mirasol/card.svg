@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">El Mirasol de La Recova</title>
+  <desc id="desc">Ilustración de braserito y brasas para la demo de la parrilla El Mirasol de La Recova.</desc>
+  <rect width="1200" height="900" fill="#5c181d"/>
+  <rect x="70" y="70" width="1060" height="760" rx="56" fill="#6E1F24" stroke="#F6EFE3" stroke-width="8"/>
+  <circle cx="930" cy="228" r="128" fill="#D9A441" opacity=".35"/>
+  <g transform="translate(600 400)">
+    <path d="M-150 -60a150 150 0 0 1 300 0v270h-300z" fill="#7E2A30" stroke="#F6EFE3" stroke-width="8"/>
+    <path d="M-210 210h420l-40 90H-170z" fill="#4A1216" stroke="#F6EFE3" stroke-width="8"/>
+    <path d="M-110 40h220M-110 100h220M-110 160h220" stroke="#D9A441" stroke-width="10" stroke-linecap="round"/>
+    <text y="-105" text-anchor="middle" font-family="Georgia,serif" font-size="96" font-weight="700" fill="#F6EFE3">EM</text>
+  </g>
+  <g fill="#E08A3C">
+    <circle cx="480" cy="742" r="13"/><circle cx="552" cy="758" r="9"/><circle cx="620" cy="738" r="15"/><circle cx="700" cy="756" r="10"/><circle cx="762" cy="740" r="12"/>
+  </g>
+  <text x="105" y="145" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="7" fill="#D9A441">PARRILLA · RECOLETA</text>
+</svg>

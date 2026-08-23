@@ -24,6 +24,7 @@ export const DEMO_SHORT_LINKS: DemoShortLink[] = [
   { id: 'aguacats', label: 'Frescos', shortPath: '/aguacats', legacyPath: '/demo/aguacats' },
   { id: 'verduleria', label: 'Verdulería', shortPath: '/verduleria', legacyPath: '/demo/verduleria' },
   { id: 'confiteria-parana', label: 'Confitería', shortPath: '/confiteria-parana', legacyPath: '/demo/confiteria-parana' },
+  { id: 'el-mirasol', label: 'El Mirasol', shortPath: '/el-mirasol', legacyPath: '/demo/el-mirasol' },
 ];
 
 function cleanPath(pathname: string): string {

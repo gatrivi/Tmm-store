@@ -132,6 +132,16 @@ const DEMOS: DemoItem[] = [
     tags: ['Compra habitual', 'Retiro / delivery', 'Pedidos'],
   },
   {
+    name: 'El Mirasol de La Recova',
+    rubro: 'Parrilla · Recoleta',
+    kind: 'Carta digital',
+    description: 'La carta clásica de La Recova, viva otra vez: picadas, parrilla y vinos con pedido directo por WhatsApp.',
+    samplePath: '/el-mirasol',
+    image: '/demos/el-mirasol/card.svg',
+    imageAlt: 'Ilustración de la carta de la parrilla El Mirasol de La Recova',
+    tags: ['Carta histórica', 'WhatsApp', 'Pedidos'],
+  },
+  {
     name: 'Canavesi',
     rubro: 'Carnicería · Olivos',
     kind: 'Catálogo',

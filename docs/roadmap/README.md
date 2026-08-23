@@ -19,6 +19,7 @@ Purpose: future Trufi work — competitive parity with PedidoDirecto, then Premi
 | **Demo pizzería Fit A (shipped)** | [demo-pizzeria.md](./demo-pizzeria.md) |
 | **Demo carnicería Gabriel (Hito 1 done)** | [demo-carniceria-gabriel.md](./demo-carniceria-gabriel.md) |
 | **Demo Canavesi Carnes (shipped)** | [demo-canavesi.md](./demo-canavesi.md) · gaps [../canavesi-content-gaps.md](../canavesi-content-gaps.md) |
+| **Demo El Mirasol de La Recova (cold lead)** | [demo-el-mirasol.md](./demo-el-mirasol.md) |
 | **Plan verticales (quién compra + demos)** | [vertical-demos-plan.md](./vertical-demos-plan.md) |
 | vs PedidoDirecto today | [competitive-parity.md](./competitive-parity.md) |
 | Delivery sequence | [phases.md](./phases.md) |
