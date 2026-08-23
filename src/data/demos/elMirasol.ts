@@ -220,10 +220,14 @@ export const EL_MIRASOL_DEMO: DemoDefinition = {
   orderPath: (orderId: string) => `/demo/el-mirasol/order/${orderId}`,
   plan: 'pedidos',
   locale: 'es',
-  monogram: 'EM',
-  heroImage: '/demos/canavesi/hero.jpg',
+  theme: {
+    hueso: '#F6EFE3',
+    bordo: '#6E1F24',
+    carbon: '#241310',
+    papel: '#EADCC6',
+    salvia: '#C29A54',
+  },
   siteSettings: {
-    showUsdToggle: false,
     whatsappNumber: '',
     bankAlias: '',
     brandName: 'El Mirasol de La Recova',
