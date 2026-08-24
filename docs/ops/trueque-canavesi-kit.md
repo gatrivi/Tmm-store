@@ -66,6 +66,18 @@ Fuente completa: [`../canavesi-content-gaps.md`](../canavesi-content-gaps.md). M
 - [ ] Admin credentials entregadas seguro + test end-to-end (cliente → WSP → admin)
 - [ ] QR impreso → `/s/canavesi`
 
+## Referentes (investigación 2026-08-24)
+
+Carnicerías ZN con catálogo online — para anclar el pitch "tu web, tu pedido, sin comisión":
+
+| Referente | Sitio | Qué hacen | Uso en conversación |
+|-----------|-------|-----------|---------------------|
+| **Amancay Carnes** | [amancaycarnes.com](https://amancaycarnes.com) | Landing Squarespace linda + botón "PEDIDO ONLINE" que manda a **pedidodirecto.net/amancay** · 6 sucursales (Polvorines, Don Torcuato ×2, Villa Adelina ×2, Boulogne) | "La cadena más prolija de ZN igual le entrega sus pedidos a PedidoDirecto y paga comisión por cada una. Ustedes pueden tener lo mismo sin ese recorte." |
+| **La Señalada Carnes** | [lasenaladacarnes.com](https://www.lasenaladacarnes.com) | Pyme familiar, Site123, carrito propio, delivery CABA/ZN desde 16:30, fileteado/termosellado, WSP pedidos | Es exactamente lo que Canavesi recibiría: carta + carrito + WSP estructurado. Modelo cercano, no premium. |
+| **El Origen** | [carniceriaelorigen.com](https://carniceriaelorigen.com) | San Isidro premium, catálogo online + "Cómo comprar", pedidos con 24 h de anticipación | Muestra que el pedido web anticipado funciona en carnicería ZN; nosotros lo hacemos sin costo fijo alto. |
+
+Secundarios: Don Julio (piezas enteras + vinos), Beef Club (premium CABA/GBA 24 h), Carnicerías del Barrio (precios públicos: aguja c/h $17.290, bondiola $9.990 — sanea nuestros precios ilustrativos).
+
 ## Objeciones probables
 
 | Objeción | Respuesta |
