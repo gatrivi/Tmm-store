@@ -15,7 +15,10 @@ const IMG = {
   matambre: '/demos/canavesi/matambre.jpg',
   polloRelleno: '/demos/canavesi/pollo-relleno.jpg',
   picada: '/demos/canavesi/picada.jpg',
-  comboParrillero: '/demos/canavesi/combo-parrillero.jpg',
+  empanadas: '/demos/pizzeria/empanadas-carne.png',
+  ensalada: '/demos/canavesi/nalga.jpg',
+  helado: '/demos/panaderia/products/tortitas.jpg',
+  provoleta: '/demos/canavesi/picada.jpg',
 };
 
 function porciones(unidad: number, paraDos: number) {
@@ -253,6 +256,7 @@ export const EL_MIRASOL_DEMO: DemoDefinition = {
     { id: 'ensaladas', name: 'Ensaladas', sortOrder: 3 },
     { id: 'postres', name: 'Postres', sortOrder: 4 },
   ],
+  seedOrders: SEED_ORDERS,
   copy: {
     heroTitle: 'La parrilla clásica de Recoleta, ahora con pedidos que sí llegan.',
     heroBody: 'Tu carta de siempre, lista para pedir por link. Elegí el corte, marcá retiro o delivery y listo: sin comisiones de apps ni cartas PDF desactualizadas. Tu URL era tu carta y murió; esto vuelve a nacer en un día.',
