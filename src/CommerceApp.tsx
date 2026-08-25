@@ -7,6 +7,7 @@ import FerreteriaDemoPage from './pages/FerreteriaDemoPage';
 import MamabelDemoPage from './pages/MamabelDemoPage';
 import MolinoFloridaDemoPage from './pages/MolinoFloridaDemoPage';
 import PanaderiaDemoPage from './pages/PanaderiaDemoPage';
+import ElMirasolDemoPage from './pages/ElMirasolDemoPage';
 import Storefront from './pages/Storefront';
 import SuperAdminPage from './pages/SuperAdminPage';
 import WeightedCatalogDemoPage from './pages/WeightedCatalogDemoPage';
@@ -86,10 +87,15 @@ export default function CommerceApp() {
               <Route path="/demo/confiteria-parana/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/zimba-pet" element={<CustomerDemo />} />
               <Route path="/demo/zimba-pet/order/:orderId" element={<OrderStatusPage />} />
-              <Route path="/el-mirasol" element={<CustomerDemo />} />
+              <Route path="/el-mirasol" element={<ElMirasolDemoPage />} />
               <Route path="/el-mirasol/order/:orderId" element={<OrderStatusPage />} />
-              <Route path="/demo/el-mirasol" element={<CustomerDemo />} />
+              <Route path="/demo/el-mirasol" element={<ElMirasolDemoPage />} />
               <Route path="/demo/el-mirasol/order/:orderId" element={<OrderStatusPage />} />
+
+              <Route path="/polleria" element={<CustomerDemo />} />
+              <Route path="/polleria/order/:orderId" element={<OrderStatusPage />} />
+              <Route path="/demo/polleria" element={<CustomerDemo />} />
+              <Route path="/demo/polleria/order/:orderId" element={<OrderStatusPage />} />
 
               <Route path="/aguacats" element={<AguacatsDemoPage />} />
               <Route path="/aguacats/order/:orderId" element={<OrderStatusPage />} />

@@ -211,6 +211,16 @@ const DEMOS: DemoItem[] = [
     imageAlt: 'Verduras y bolsón de la demo La Inmaculada',
     tags: ['Peso / unidad', 'Total', 'Pedido'],
   },
+  {
+    name: 'Pollería del barrio',
+    rubro: 'Pollería · rotisería',
+    kind: 'Tienda',
+    description: 'Spiedo, medio pollo y combos con papas: el pedido del domingo armado sin audios ni comisiones de apps.',
+    samplePath: '/polleria',
+    image: '/demos/polleria-del-barrio/card.svg',
+    imageAlt: 'Ilustración de pollo al spiedo y papas de la demo Pollería del barrio',
+    tags: ['Spiedo', 'Combos', 'Sin comisión'],
+  },
 ];
 
 export default function DemosGalleryPageV2() {

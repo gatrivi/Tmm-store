@@ -76,5 +76,6 @@ Catálogo vacío = demo mala. Presets: `/demos/presets/<rubro>/<itemId>.jpg`. Ve
 ## Decisión
 
 Verdulería shipped: `/demo/verduleria` · [`demo-verduleria.md`](./demo-verduleria.md).
+Pollería shipped (2026-08-24): `/polleria` · [`demo-polleria.md`](./demo-polleria.md) — genérico-pitch, dolores: fee Rappi (Clara Olivos), carta en dominio ajeno (Baires Chicken), cuenta obligatoria (Tío Alberto).
 
 See also: [`prospect-demo.md`](../ops/prospect-demo.md), [`demo-carniceria-gabriel.md`](./demo-carniceria-gabriel.md), [`sales-playbook-zn.md`](../ops/sales-playbook-zn.md)

@@ -14,6 +14,7 @@ Purpose: show the outcome, not a feature inventory.
 - **Canavesi Carnes (Olivos):** `/demo/canavesi` · `/demo/canavesi/owner` · `/demo/canavesi/order/:id`
 - **Vertical carnicería:** `/demo/carniceria` · `/demo/carniceria/owner` · `/demo/carniceria/order/:id`
 - **Verdulería La Inmaculada:** `/demo/verduleria` · `/demo/verduleria/owner` · `/demo/verduleria/order/:id`
+- **Pollería del barrio:** `/demo/polleria` · `/demo/polleria/owner` · `/demo/polleria/order/:id`
 
 Live: https://tmm.gatrivi.com/demo/mamabel
 
@@ -54,6 +55,12 @@ Tenant `demo-pizzeria` · storage `trufi_demo_orders_v2:pizzeria`. Brief: [demo-
 Separate tenant `demo-carniceria` (sessionStorage `trufi_demo_orders_v2:carniceria`). Totals labeled **estimado**. Brief: [demo-carniceria-gabriel.md](../roadmap/demo-carniceria-gabriel.md).
 
 60s pitch: open `/demo/carniceria` → add corte by weight + pack → Coordinar pedido → panel `/demo/carniceria/owner`.
+
+### Vertical pollería (genérico-pitch)
+
+Tenant `demo-polleria-del-barrio` · sin WSP real · precios ilustrativos escala referentes. Brief: [demo-polleria.md](../roadmap/demo-polleria.md).
+
+60s: `/polleria` → spiedo + papas grandes → pedido de prueba → `/polleria/owner`.
 
 ## Script (pizzería — default)
 

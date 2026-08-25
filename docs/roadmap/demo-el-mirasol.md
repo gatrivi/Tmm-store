@@ -28,9 +28,9 @@ Picadas y tablas, parrilla (asado, vacío, matambre, entraña), achuras, combos 
 ## Rutas / técnica
 
 - Tenant: `demo-el-mirasol` · storage `trufi_demo_orders_v2` (vía registry)
-- UI: Storefront genérico — plan `pedidos`, 3 pedidos semilla (M4R7 nueva, K8J2 preparando, T6W4 lista)
+- UI: página dedicada `src/pages/ElMirasolDemoPage.tsx` (dark, patrón Aguacats) — plan `pedidos`, 3 pedidos semilla (M4R7 nueva, K8J2 preparando, T6W4 lista)
 - Config: `src/data/demos/elMirasol.ts` · precios ilustrativos
-- Fotos: reuso assets canavesi ya en repo — pendiente sesión propia
+- Fotos: hero + cortes reutilizados de canavesi — pendiente sesión propia
 - Monograma propio: `public/demos/el-mirasol/monogram.svg`
 
 ## Guardrails

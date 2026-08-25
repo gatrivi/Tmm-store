@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Pollería del barrio</title>
+  <desc id="desc">Ilustración editorial de pollo al spiedo y papas para la demo Pollería del barrio.</desc>
+  <rect width="1200" height="900" fill="#FBF4E8"/>
+  <rect x="70" y="70" width="1060" height="760" rx="56" fill="#F6E6CE" stroke="#2B1A12" stroke-width="8"/>
+  <circle cx="920" cy="230" r="130" fill="#D98E3B" opacity=".4"/>
+  <!-- spiedo skewer -->
+  <line x1="330" y1="180" x2="330" y2="700" stroke="#2B1A12" stroke-width="16" stroke-linecap="round"/>
+  <path d="M330 700 L310 760 M330 700 L350 760" stroke="#2B1A12" stroke-width="14" stroke-linecap="round"/>
+  <!-- chicken body -->
+  <ellipse cx="330" cy="420" rx="150" ry="190" fill="#C96A2E" stroke="#2B1A12" stroke-width="10"/>
+  <ellipse cx="300" cy="360" rx="52" ry="90" fill="#E08A45" transform="rotate(-24 300 360)"/>
+  <ellipse cx="362" cy="360" rx="52" ry="90" fill="#B4531F" transform="rotate(24 362 360)"/>
+  <!-- drumsticks -->
+  <path d="M250 540c-30 60-18 110 22 132M410 540c30 60 18 110-22 132" stroke="#2B1A12" stroke-width="10" fill="none"/>
+  <circle cx="268" cy="686" r="26" fill="#F3E2CB" stroke="#2B1A12" stroke-width="9"/>
+  <circle cx="392" cy="686" r="26" fill="#F3E2CB" stroke="#2B1A12" stroke-width="9"/>
+  <!-- fries box -->
+  <g transform="translate(720 430)">
+    <rect x="-150" y="40" width="300" height="220" rx="28" fill="#B44A22" stroke="#2B1A12" stroke-width="10"/>
+    <rect x="-120" y="-70" width="34" height="150" rx="16" fill="#EFC257" stroke="#2B1A12" stroke-width="8" transform="rotate(-12 -103 5)"/>
+    <rect x="-58" y="-100" width="34" height="170" rx="16" fill="#F6D276" stroke="#2B1A12" stroke-width="8"/>
+    <rect x="8" y="-92" width="34" height="164" rx="16" fill="#EFC257" stroke="#2B1A12" stroke-width="8" transform="rotate(10 25 -10)"/>
+    <rect x="72" y="-64" width="34" height="146" rx="16" fill="#F6D276" stroke="#2B1A12" stroke-width="8" transform="rotate(20 89 9)"/>
+  </g>
+  <!-- steam -->
+  <g stroke="#2B1A12" stroke-width="10" stroke-linecap="round" fill="none" opacity=".55">
+    <path d="M600 190c-24 42 22 62-4 108"/>
+    <path d="M680 160c-26 48 26 66-2 116"/>
+    <path d="M760 196c-22 40 20 58-4 102"/>
+  </g>
+  <text x="600" y="856" fill="#2B1A12" font-family="Georgia, Times New Roman, serif" font-size="54" font-weight="700" text-anchor="middle">Pollería del barrio · spiedo y combos</text>
+</svg>

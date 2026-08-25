@@ -7,6 +7,7 @@ import { FERRETERIA_DEMO } from '../data/demos/ferreteria';
 import { MAMABEL_DEMO } from '../data/demos/mamabel';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
 import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
+import { POLLERIA_DEL_BARRIO_DEMO } from '../data/demos/polleriaDelBarrio';
 import { VERDULERIA_DEMO } from '../data/demos/verduleria';
 import { ZIMBA_PET_DEMO } from '../data/demos/zimbaPet';
 import type { DemoDefinition } from '../data/demos/types';
@@ -31,6 +32,7 @@ const DEMOS: DemoDefinition[] = [
   PANADERIA_DEMO,
   FERRETERIA_DEMO,
   MAMABEL_DEMO,
+  POLLERIA_DEL_BARRIO_DEMO,
   AGUACATS_DEMO,
   ZIMBA_PET_DEMO,
 ];
