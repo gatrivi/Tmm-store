@@ -68,6 +68,8 @@ Fuente completa: [`../canavesi-content-gaps.md`](../canavesi-content-gaps.md). M
 
 ## Referentes (investigación 2026-08-24)
 
+Referentes de **UI/producto** (Porter Road, Force of Nature, White Oak Pastures) y specs concretas para elevar el demo: [`referencias-premium-carniceria.md`](./referencias-premium-carniceria.md).
+
 Carnicerías ZN con catálogo online — para anclar el pitch "tu web, tu pedido, sin comisión":
 
 | Referente | Sitio | Qué hacen | Uso en conversación |
