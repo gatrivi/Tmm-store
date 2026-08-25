@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import CheckoutModal from '../components/CheckoutModal';
 import { DemoRibbon } from '../components/DemoRibbon';
-import { DemoPlanSwitch } from '../components/DemoPlanSwitch';
 import { AppVersionStamp } from '../components/AppVersionBadge';
 import { useMenu } from '../context/MenuContext';
 import { usePlan } from '../context/PlanContext';
@@ -123,7 +122,6 @@ export default function ElMirasolDemoPage() {
 
   return (
     <div className="min-h-screen bg-[#1a0d09] text-[#F6EFE3] selection:bg-[#6E1F24] selection:text-white">
-      <DemoPlanSwitch />
       <DemoRibbon />
 
       <header className="relative isolate flex min-h-[min(88vh,760px)] items-center overflow-hidden">

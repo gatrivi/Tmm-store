@@ -17,7 +17,6 @@ import {
 } from 'lucide-react';
 import CheckoutModal from '../components/CheckoutModal';
 import { DemoRibbon } from '../components/DemoRibbon';
-import { DemoPlanSwitch } from '../components/DemoPlanSwitch';
 import { useMenu } from '../context/MenuContext';
 import { usePlan } from '../context/PlanContext';
 import { useTheme } from '../context/ThemeContext';
@@ -170,7 +169,6 @@ export default function WeightedCatalogDemoPage() {
         style={{ backgroundColor: theme.hueso, color: theme.carbon }}
         data-demo-theme={demo.id}
       >
-        <DemoPlanSwitch />
         <DemoRibbon />
         <header className="border-b border-black/8 bg-[#fffdf9]/95">
           <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
@@ -228,7 +226,6 @@ export default function WeightedCatalogDemoPage() {
       style={{ backgroundColor: theme.hueso, color: theme.carbon }}
       data-demo-theme={demo.id}
     >
-      <DemoPlanSwitch />
       <DemoRibbon />
 
       <header className="sticky top-0 z-30 border-b border-black/8 bg-[#fffdf9]/95 backdrop-blur">

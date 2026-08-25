@@ -13,7 +13,6 @@ import SuperAdminPage from './pages/SuperAdminPage';
 import WeightedCatalogDemoPage from './pages/WeightedCatalogDemoPage';
 import { AppVersionStamp } from './components/AppVersionBadge';
 import { DemoRibbon } from './components/DemoRibbon';
-import { DemoPlanSwitch } from './components/DemoPlanSwitch';
 import { DEMO_EXPRESS_FALLBACK, DEMO_EXPRESS_PUBLIC } from './config/demoExpress';
 import { AdminProvider } from './context/AdminContext';
 import { LanguageProvider } from './context/LanguageContext';
@@ -28,7 +27,6 @@ function CustomerDemo() {
   }
   return (
     <>
-      <DemoPlanSwitch />
       <DemoRibbon />
       <Storefront />
     </>

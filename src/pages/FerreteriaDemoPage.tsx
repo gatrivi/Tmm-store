@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import CheckoutModal from '../components/CheckoutModal';
 import { DemoRibbon } from '../components/DemoRibbon';
-import { DemoPlanSwitch } from '../components/DemoPlanSwitch';
 import { useMenu } from '../context/MenuContext';
 import { usePlan } from '../context/PlanContext';
 import { useTheme } from '../context/ThemeContext';
@@ -128,7 +127,6 @@ export default function FerreteriaDemoPage() {
       }}
       data-demo-theme="ferreteria"
     >
-      <DemoPlanSwitch />
       <DemoRibbon />
       <header className="sticky top-0 z-30 border-b border-black/10 bg-[#f6f3ea]/95 backdrop-blur-xl">
         <div className="mx-auto flex min-h-18 max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">

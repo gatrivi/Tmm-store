@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import CheckoutModal from '../components/CheckoutModal';
 import { DemoRibbon } from '../components/DemoRibbon';
-import { DemoPlanSwitch } from '../components/DemoPlanSwitch';
 import { useMenu } from '../context/MenuContext';
 import { usePlan } from '../context/PlanContext';
 import { useTheme } from '../context/ThemeContext';
@@ -185,7 +184,6 @@ export default function AguacatsDemoPage() {
 
   return (
     <div className="ac-site min-h-screen bg-white text-[#1A2E14]" data-demo-page="aguacats-site">
-      <DemoPlanSwitch />
       <DemoRibbon />
       <header
         className={`sticky top-0 z-40 border-b transition ${scrolled ? 'border-black/8 bg-white/95 shadow-sm backdrop-blur-md' : 'border-transparent bg-white'}`}

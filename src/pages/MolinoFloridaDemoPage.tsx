@@ -22,7 +22,7 @@ const PRODUCTS: Product[] = [
     format: '1 kg · 10 kg',
     description: 'Molienda fina para panes, masas y cocina diaria.',
     featured: true,
-    image: `${ASSET_BASE}/product-integral.webp`,
+    image: `${ASSET_BASE}/prod-integral.jpg`,
   },
   {
     id: 'integral-fina',
@@ -30,6 +30,7 @@ const PRODUCTS: Product[] = [
     category: 'harinas',
     format: '1 kg · 10 kg',
     description: 'Una integral versátil para tener siempre a mano.',
+    image: `${ASSET_BASE}/prod-integral-fina.jpg`,
   },
   {
     id: 'centeno-fino',
@@ -37,6 +38,7 @@ const PRODUCTS: Product[] = [
     category: 'harinas',
     format: '1 kg · 10 kg · 20 kg',
     description: 'Para panes de centeno, blends y fermentaciones largas.',
+    image: `${ASSET_BASE}/prod-centeno.jpg`,
   },
   {
     id: 'garbanzo',
@@ -45,7 +47,7 @@ const PRODUCTS: Product[] = [
     format: '1 kg · 5 kg',
     description: 'Para fainá, rebozados, masas y cocina sin trigo.',
     featured: true,
-    image: `${ASSET_BASE}/product-garbanzo.webp`,
+    image: `${ASSET_BASE}/prod-garbanzo.jpg`,
   },
   {
     id: 'arroz-blanco',
@@ -53,6 +55,7 @@ const PRODUCTS: Product[] = [
     category: 'especiales',
     format: '1 kg · 5 kg',
     description: 'Textura liviana para mezclas, repostería y cocina.',
+    image: `${ASSET_BASE}/prod-arroz.jpg`,
   },
   {
     id: 'semolin',
@@ -61,7 +64,7 @@ const PRODUCTS: Product[] = [
     format: '1 kg · 5 kg · 25 kg',
     description: 'Formato hogar y bolsa para producción gastronómica.',
     featured: true,
-    image: `${ASSET_BASE}/product-semolin.webp`,
+    image: `${ASSET_BASE}/prod-semolin.jpg`,
   },
   {
     id: 'premezcla-3-cereales',
@@ -69,6 +72,7 @@ const PRODUCTS: Product[] = [
     category: 'panaderia',
     format: '1 kg · 25 kg',
     description: 'Una base práctica para panificación y producción.',
+    image: `${ASSET_BASE}/prod-correctora.jpg`,
   },
   {
     id: 'salvado',
@@ -76,6 +80,7 @@ const PRODUCTS: Product[] = [
     category: 'cereales',
     format: '500 g',
     description: 'Para panes, desayunos, granolas y preparaciones integrales.',
+    image: `${ASSET_BASE}/prod-salvado.jpg`,
   },
   {
     id: 'cebada',
@@ -83,6 +88,7 @@ const PRODUCTS: Product[] = [
     category: 'cereales',
     format: '1 kg · 5 kg · 25 kg',
     description: 'Para cocina, gastronomía y compras en volumen.',
+    image: `${ASSET_BASE}/prod-cebada.jpg`,
   },
   {
     id: 'almendras',
@@ -90,6 +96,7 @@ const PRODUCTS: Product[] = [
     category: 'especiales',
     format: '250 g · 1 kg',
     description: 'Para repostería, masas y recetas de alto valor agregado.',
+    image: `${ASSET_BASE}/prod-almendras.jpg`,
   },
   {
     id: 'paraguaya',
@@ -97,6 +104,7 @@ const PRODUCTS: Product[] = [
     category: 'panaderia',
     format: '5 kg · 25 kg',
     description: 'Presentaciones pensadas para cocina y producción.',
+    image: `${ASSET_BASE}/prod-paraguaya.jpg`,
   },
   {
     id: 'maiz',
@@ -104,6 +112,7 @@ const PRODUCTS: Product[] = [
     category: 'harinas',
     format: '5 kg',
     description: 'Un básico de despensa en formato rendidor.',
+    image: `${ASSET_BASE}/prod-maiz.jpg`,
   },
 ];
 
@@ -144,7 +153,7 @@ export default function MolinoFloridaDemoPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:px-6">
           <a href="#inicio" className="flex min-w-0 items-center gap-3" aria-label="Molino Florida, inicio">
             <img
-              src={`${ASSET_BASE}/logo.svg`}
+              src={`${ASSET_BASE}/logo-brand.jpg`}
               alt="Molino Florida"
               className="h-14 w-14 shrink-0 object-contain sm:h-16 sm:w-16"
             />
@@ -171,8 +180,8 @@ export default function MolinoFloridaDemoPage() {
             <div className="overflow-hidden rounded-[2rem] border border-[#243224]/10 bg-[#e5d4b2] shadow-[0_24px_70px_rgba(36,50,36,0.14)] lg:grid lg:grid-cols-[1.2fr_.8fr]">
               <div className="relative min-h-[320px] sm:min-h-[440px] lg:min-h-[520px]">
                 <img
-                  src={`${ASSET_BASE}/hero.svg`}
-                  alt="Selección conceptual de harinas Molino Florida"
+                  src={`${ASSET_BASE}/hero-flour.jpg`}
+                  alt="Harinas y materias primas Molino Florida"
                   className="absolute inset-0 h-full w-full object-cover object-left"
                   fetchPriority="high"
                 />
@@ -330,7 +339,7 @@ export default function MolinoFloridaDemoPage() {
       <footer className="border-t border-[#243224]/10 bg-[#fffdf7]">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-xs text-[#62695f] sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="flex items-center gap-3">
-            <img src={`${ASSET_BASE}/logo.svg`} alt="" className="h-12 w-12 object-contain" />
+            <img src={`${ASSET_BASE}/logo-brand.jpg`} alt="" className="h-12 w-12 rounded-full object-contain" />
             <div>
               <p className="font-serif text-lg font-bold text-[#243224]">Molino Florida</p>
               <p className="mt-1">Débito · efectivo · transferencia · envíos CABA y Zona Norte</p>
