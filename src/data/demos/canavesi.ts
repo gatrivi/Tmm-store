@@ -11,14 +11,18 @@ function kgOptions(pricePerKg: number): MenuOption[] {
   ];
 }
 
-/** Precios ilustrativos (orden mag. ZN). Reemplazar con lista Canavesi. */
+/**
+ * Precios ilustrativos (orden mag. ZN). Reemplazar con lista Canavesi.
+ * Voz: tomada del sitio histórico (Wayback 2017/2024): "empresa familiar",
+ * "novillito", cortes al vacío. Claims de campo genéricos hasta confirmar.
+ */
 const MENU_ITEMS: MenuItemType[] = [
   {
     id: 'combo-parrillero',
     name: 'Combo parrillero',
     category: 'parrilla',
     badge: 'Rinde 2–3',
-    description: 'Asado, vacío, chorizos y morcillas',
+    description: 'Asado, vacío, chorizos y morcillas: la parrilla completa en una caja.',
     images: [`${A}/combo-parrillero.jpg`],
     options: [{ id: 'pack', label: 'Pack 2–3 personas', price: 49900 }],
   },
@@ -27,7 +31,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Asado del medio',
     category: 'parrilla',
     badge: 'Más pedido',
-    description: 'Tira pareja para parrilla',
+    description: 'Tira de novillito pareja, con su grasa justa. Fuego medio y paciencia.',
     images: [`${A}/asado.jpg`],
     options: kgOptions(18900),
   },
@@ -35,7 +39,8 @@ const MENU_ITEMS: MenuItemType[] = [
     id: 'vacio',
     name: 'Vacío',
     category: 'parrilla',
-    description: 'Pieza sabrosa, cocción lenta',
+    badge: 'Cocción lenta',
+    description: 'La matría le da el jugo: capa de grasa que se derrite despacio.',
     images: [`${A}/vacio.jpg`],
     options: kgOptions(16900),
   },
@@ -43,7 +48,8 @@ const MENU_ITEMS: MenuItemType[] = [
     id: 'entrana',
     name: 'Entraña',
     category: 'parrilla',
-    description: 'Fina, lista para la parrilla',
+    badge: 'Fuego fuerte',
+    description: 'Fina y de sabor intenso. Pide término medio, no perdona.',
     images: [`${A}/entrana.jpg`],
     options: kgOptions(19800),
   },
@@ -51,7 +57,8 @@ const MENU_ITEMS: MenuItemType[] = [
     id: 'ojo-bife',
     name: 'Ojo de bife',
     category: 'parrilla',
-    description: 'Bife grueso, jugoso',
+    badge: 'Premium',
+    description: 'El corte del bife con su cobertura: marmoleado, jugoso, de bife grueso.',
     images: [`${A}/ojo-bife.jpg`],
     options: kgOptions(26800),
   },
@@ -59,7 +66,8 @@ const MENU_ITEMS: MenuItemType[] = [
     id: 'bife-ancho',
     name: 'Bife ancho',
     category: 'parrilla',
-    description: 'Cortado en bifes',
+    badge: 'Premium',
+    description: 'Con hueso o sin él; veteado parejo para parrilla o sartén bien caliente.',
     images: [`${A}/bife-ancho.jpg`],
     options: kgOptions(25200),
   },
@@ -67,7 +75,8 @@ const MENU_ITEMS: MenuItemType[] = [
     id: 'nalga',
     name: 'Nalga para milanesas',
     category: 'diario',
-    description: 'Feteada fina o mediana',
+    badge: 'Feteado al momento',
+    description: 'Feteada fina o mediana al pasar el mostrador. Tierna, sin nervios.',
     images: [`${A}/nalga.jpg`],
     options: kgOptions(32000),
   },
@@ -75,7 +84,8 @@ const MENU_ITEMS: MenuItemType[] = [
     id: 'picada',
     name: 'Picada especial',
     category: 'diario',
-    description: 'Para hamburguesas, salsa o relleno',
+    badge: '85/15',
+    description: 'Picada de novillito para hamburguesas, salsa o relleno. Magra y pareja.',
     images: [`${A}/picada.jpg`],
     options: kgOptions(14000),
   },
@@ -83,7 +93,8 @@ const MENU_ITEMS: MenuItemType[] = [
     id: 'matambre',
     name: 'Matambre de cerdo',
     category: 'diario',
-    description: 'Fino, ideal al horno o relleno',
+    badge: 'Al horno',
+    description: 'Fino, ideal al horno con limón o relleno a la criolla.',
     images: [`${A}/matambre.jpg`],
     options: kgOptions(17500),
   },
@@ -91,7 +102,8 @@ const MENU_ITEMS: MenuItemType[] = [
     id: 'chorizos',
     name: 'Chorizos y morcillas',
     category: 'listos',
-    description: 'Pack para la parrilla',
+    badge: 'De la casa',
+    description: 'Nuestro embutido, pack para la parrilla. El clásico del domingo.',
     images: [`${A}/chorizos.jpg`],
     options: [{ id: 'pack', label: 'Pack 6 unidades', price: 9900 }],
   },
@@ -99,7 +111,8 @@ const MENU_ITEMS: MenuItemType[] = [
     id: 'milanesas',
     name: 'Milanesas de carne',
     category: 'listos',
-    description: 'Empanadas y listas para cocinar',
+    badge: 'Listas',
+    description: 'Empanadas a mano con nuestro pan rallado, listas para la sartén.',
     images: [`${A}/milanesas.jpg`],
     options: [
       { id: 'half', label: 'Bandeja ½ kg aprox.', price: 17450 },
@@ -110,7 +123,8 @@ const MENU_ITEMS: MenuItemType[] = [
     id: 'hamburguesas',
     name: 'Hamburguesas caseras',
     category: 'listos',
-    description: 'Medallones frescos',
+    badge: 'Frescas',
+    description: 'Medallones de picada especial, sin congelar. Solo carne y punto.',
     images: [`${A}/hamburguesas.jpg`],
     options: [{ id: 'pack4', label: 'Pack de 4', price: 12900 }],
   },
@@ -118,7 +132,8 @@ const MENU_ITEMS: MenuItemType[] = [
     id: 'pollo-relleno',
     name: 'Pollo relleno',
     category: 'listos',
-    description: 'Listo para hornear',
+    badge: 'Listo para horno',
+    description: 'Relleno de la casa, directo al horno. Se arma acá todos los días.',
     images: [`${A}/pollo-relleno.jpg`],
     options: [{ id: 'unidad', label: 'Unidad', price: 15900 }],
   },
@@ -245,8 +260,8 @@ export const CANAVESI_DEMO: DemoDefinition = {
   ],
   seedOrders: SEED_ORDERS,
   copy: {
-    heroTitle: 'Carne de Canavesi, lista para tu cocina.',
-    heroBody: 'Pedí por peso en Olivos. Delivery o retiro en Borges. Confirmamos total antes de preparar.',
+    heroTitle: 'Del mostrador de Borges a tu casa.',
+    heroBody: 'Empresa familiar, carnes seleccionadas una por una. Armá tu pedido por peso y lo coordinamos con vos: sin apps, sin comisión.',
     checkoutCta: 'Coordinar pedido',
     cartCta: 'Coordinar pedido',
     totalLabel: 'Total estimado',
@@ -273,7 +288,69 @@ export const CANAVESI_DEMO: DemoDefinition = {
     continueLabel: 'Seguir comprando',
     revenueLabel: 'Pedidos estimados',
     notesPlaceholder: 'Cortar los bifes medianos',
-    chips: ['Delivery', 'Retiro en Borges'],
+    chips: ['De campo', 'Retiro en Borges'],
     weightNotice: 'El peso puede variar. Confirmamos el total antes de preparar.',
   },
+  contentPages: [
+    {
+      slug: 'como-cocinar',
+      navLabel: 'Cómo cocinar',
+      title: 'Cómo cocinar cada corte',
+      intro: 'Lo que te decimos en el mostrador, escrito. Fuego, tiempos y punto por corte — para que la carne salga como sale en casa de uno.',
+      sections: [
+        {
+          heading: 'Asado del medio — fuego medio, costilla arriba',
+          body: 'Empezá con la tira hacia el hueso sobre fuego medio, media hora por lado. El secreto está en no apurarla: cuando el hueso suelta solo, está. Sal gruesa al final, nunca antes.',
+        },
+        {
+          heading: 'Vacío — lento y con tapa',
+          body: 'El vacío tiene una capa de grasa que se derrite despacio: es lo que lo hace jugoso si le das tiempo. Una hora y cuarto a fuego suave, del lado de la grasa primero. Si lo cortás apenas lo sacás, se seca; dejalo reposar diez minutos.',
+        },
+        {
+          heading: 'Entraña — fuego fuerte y rápido',
+          body: 'La entraña va al fuego bien fuerte: dos o tres minutos por lado y término medio. Es fina, no perdona el fuego largo. Limpiá la membrana antes (si pedís que la limpiemos acá, ya llega lista).',
+        },
+        {
+          heading: 'Ojo de bife y bife ancho — sartén o parrilla, siempre caliente',
+          body: 'Bifes gruesos: sellás dos minutos por lado a fuego fuerte y terminás a fuego más suave. En sartén, manteca, ajo y romero para regar al final. Punto recomendado: jugoso — el veteado hace el trabajo.',
+        },
+        {
+          heading: 'Milanesas — sartén bien caliente',
+          body: 'Ya vienen empanadas a mano. Aceite bien caliente pero no humeante, un minuto y medio por lado. Sobre papel absorbente y directo a la mesa.',
+        },
+        {
+          heading: 'Chorizos y morcillas — fuego de costado',
+          body: 'Nunca encima de las brasas directas: ponelos al costado donde el calor es suave, veinte minutos girándolos de a poco. Se hinchan un poco; es normal, no los pinches.',
+        },
+      ],
+    },
+    {
+      slug: 'de-campo',
+      navLabel: 'De campo',
+      title: 'De qué hablamos cuando decimos carne',
+      intro: 'Seleccionamos la hacienda una por una, como se hizo siempre en la familia. Esto es lo que significa para nosotros — y qué te conviene preguntar cuando compres carne, acá o en otro lado.',
+      sections: [
+        {
+          heading: 'Novillito, no novillo viejo',
+          body: 'Trabajamos novillito: animal joven, carne rosada con grasa blanca. No es marketing: se ve y se prueba. La carne madura de animal grande es oscura, con grasa amarilla — la reconocés en cualquier vidriera.',
+        },
+        {
+          heading: 'Animal criado a pastura',
+          body: 'El ganado que crece comiendo pasto desarrolla otra textura y otro sabor que el engordado rápido a corral. Cuando comprás, preguntá de dónde viene el animal y cómo se crio: cualquier carnicero serio te lo responde sin dudar.',
+        },
+        {
+          heading: 'Cortes al vacío, frío controlado',
+          body: 'Porcionamos y envasamos al vacío para que la carne llegue a tu casa como salió de la cámara: frío parejo, sin pérdida de jugos. Por eso también aguantan mejor en tu freezer.',
+        },
+        {
+          heading: 'Gestión sustentable',
+          body: 'Desde el principio trabajamos el negocio de manera sustentable: comprar bien, vender fresco y tirar nada. Es la única forma en que esta oficio sigue teniendo sentido después de tantos años.',
+        },
+        {
+          heading: 'Empresa familiar desde el primer día',
+          body: 'Canavesi es una empresa familiar: atendemos, cortamos y entregamos los mismos que abrimos el local a la mañana. Borges 2376, Olivos — pasá por el mostrador y preguntanos lo que quieras.',
+        },
+      ],
+    },
+  ],
 };

@@ -118,14 +118,17 @@ export default function CommerceApp() {
               <Route path="/canavesi/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/canavesi" element={<WeightedCatalogDemoPage />} />
               <Route path="/demo/canavesi/order/:orderId" element={<OrderStatusPage />} />
-
+              <Route path="/canavesi/:page" element={<WeightedCatalogDemoPage />} />
+              <Route path="/demo/canavesi/:page" element={<WeightedCatalogDemoPage />} />
               <Route path="/verduleria" element={<WeightedCatalogDemoPage />} />
               <Route path="/verduleria/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/verduleria" element={<WeightedCatalogDemoPage />} />
               <Route path="/demo/verduleria/order/:orderId" element={<OrderStatusPage />} />
 
               <Route path="/molino-florida" element={<MolinoFloridaDemoPage />} />
+              <Route path="/molino-florida/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/molino-florida" element={<MolinoFloridaDemoPage />} />
+              <Route path="/demo/molino-florida/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/molino" element={<Navigate to="/molino-florida" replace />} />
 
               <Route path="/s/:slug" element={<Storefront />} />

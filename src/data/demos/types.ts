@@ -90,4 +90,16 @@ export interface DemoDefinition {
   hideAddress: boolean;
   hidePromos: boolean;
   forceOpen: boolean;
+  /** Editorial subpages rendered by storefronts that opt in (cómo cocinar, de campo…). */
+  contentPages?: DemoContentPage[];
+}
+
+/** Editorial subpage (cómo cocinar, de campo, etc.) rendered by demo storefronts that opt in. */
+export interface DemoContentPage {
+  /** URL slug under /demo/<id>/ */
+  slug: string;
+  navLabel: string;
+  title: string;
+  intro: string;
+  sections: { heading: string; body: string }[];
 }

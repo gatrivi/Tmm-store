@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="t d">
+  <title id="t">Textura Molino Florida</title>
+  <desc id="d">Textura sutil de granos para fondo.</desc>
+  <rect width="1600" height="900" fill="#efe6d2"/>
+  <g fill="#d8b45a" opacity=".25">
+    <circle cx="120" cy="120" r="14"/><circle cx="340" cy="260" r="10"/><circle cx="520" cy="140" r="16"/>
+    <circle cx="760" cy="300" r="12"/><circle cx="980" cy="160" r="15"/><circle cx="1220" cy="280" r="11"/>
+    <circle cx="1420" cy="140" r="13"/><circle cx="240" cy="480" r="12"/><circle cx="640" cy="560" r="14"/>
+    <circle cx="1060" cy="520" r="10"/><circle cx="1460" cy="600" r="12"/><circle cx="420" cy="720" r="15"/>
+    <circle cx="860" cy="760" r="11"/><circle cx="1280" cy="800" r="14"/>
+  </g>
+</svg>

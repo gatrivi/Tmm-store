@@ -5,6 +5,7 @@ import { CONFITERIA_PARANA_DEMO } from '../data/demos/confiteriaParana';
 import { EL_MIRASOL_DEMO } from '../data/demos/elMirasol';
 import { FERRETERIA_DEMO } from '../data/demos/ferreteria';
 import { MAMABEL_DEMO } from '../data/demos/mamabel';
+import { MOLINO_FLORIDA_DEMO } from '../data/demos/molinoFlorida';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
 import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
 import { POLLERIA_DEL_BARRIO_DEMO } from '../data/demos/polleriaDelBarrio';
@@ -32,6 +33,7 @@ const DEMOS: DemoDefinition[] = [
   PANADERIA_DEMO,
   FERRETERIA_DEMO,
   MAMABEL_DEMO,
+  MOLINO_FLORIDA_DEMO,
   POLLERIA_DEL_BARRIO_DEMO,
   AGUACATS_DEMO,
   ZIMBA_PET_DEMO,

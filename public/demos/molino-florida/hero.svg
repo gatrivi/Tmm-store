@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Molino Florida</title>
+  <desc id="desc">Textura editorial de trigo y sacos de harina para el fondo de Molino Florida.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#efe6d2"/>
+      <stop offset="1" stop-color="#e3d3b4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <g opacity=".35" fill="#c9972d">
+    <ellipse cx="220" cy="140" rx="60" ry="26" transform="rotate(-24 220 140)"/>
+    <ellipse cx="420" cy="90" rx="54" ry="22" transform="rotate(18 420 90)"/>
+    <ellipse cx="1330" cy="150" rx="62" ry="26" transform="rotate(-16 1330 150)"/>
+    <ellipse cx="1480" cy="80" rx="48" ry="20" transform="rotate(28 1480 80)"/>
+  </g>
+  <!-- sacks -->
+  <g stroke="#23301f" stroke-width="10" fill="#f8f2e5">
+    <path d="M180 640c-40-90-10-170 70-190 80 20 110 100 70 190z"/>
+    <path d="M380 660c-44-96-10-182 76-202 86 20 120 106 76 202z"/>
+    <path d="M600 645c-40-88-10-166 68-186 78 20 108 98 68 186z"/>
+  </g>
+  <g stroke="#23301f" stroke-width="8" fill="none" opacity=".8">
+    <path d="M215 520v95M415 530v105M635 525v95"/>
+  </g>
+  <text x="400" y="800" font-family="Georgia, Times New Roman, serif" font-size="52" font-weight="700" text-anchor="middle" fill="#23301f">Harinas Molino Florida</text>
+</svg>

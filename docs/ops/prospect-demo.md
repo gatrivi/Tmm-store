@@ -15,6 +15,7 @@ Purpose: show the outcome, not a feature inventory.
 - **Vertical carnicería:** `/demo/carniceria` · `/demo/carniceria/owner` · `/demo/carniceria/order/:id`
 - **Verdulería La Inmaculada:** `/demo/verduleria` · `/demo/verduleria/owner` · `/demo/verduleria/order/:id`
 - **Pollería del barrio:** `/demo/polleria` · `/demo/polleria/owner` · `/demo/polleria/order/:id`
+- **Molino Florida (prospect):** `/molino-florida` · `/molino-florida/owner` · `/molino-florida/order/:id`
 
 Live: https://tmm.gatrivi.com/demo/mamabel
 
@@ -61,6 +62,12 @@ Separate tenant `demo-carniceria` (sessionStorage `trufi_demo_orders_v2:carnicer
 Tenant `demo-polleria-del-barrio` · sin WSP real · precios ilustrativos escala referentes. Brief: [demo-polleria.md](../roadmap/demo-polleria.md).
 
 60s: `/polleria` → spiedo + papas grandes → pedido de prueba → `/polleria/owner`.
+
+### Prospect Molino Florida (cooperativa Munro)
+
+Tenant `demo-molino-florida` · sin WSP real · precios ilustrativos. Brief: [demo-molino-florida.md](../roadmap/demo-molino-florida.md).
+
+60s: `/molino-florida` → 4× harina 000 (25 kg) + levadura → pedido de prueba ($156.400) → `/molino-florida/owner`.
 
 ## Script (pizzería — default)
 

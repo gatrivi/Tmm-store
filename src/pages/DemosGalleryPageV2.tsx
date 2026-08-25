@@ -163,13 +163,13 @@ const DEMOS: DemoItem[] = [
   },
   {
     name: 'Molino Florida',
-    rubro: 'Molino · Florida',
-    kind: 'Catálogo',
-    description: 'Harinas, cereales y formatos mayoristas ordenados para hogar, gastronomía y producción.',
+    rubro: 'Molino · Munro, Vicente López',
+    kind: 'Tienda',
+    description: 'Harinas y granos por bolsa o bulto: la reposición semanal de tu panadería armada en minutos, con total estimado.',
     samplePath: '/molino-florida',
     image: '/demos/molino-florida/card.svg',
     imageAlt: 'Catálogo demo Molino Florida de harinas y cereales',
-    tags: ['Harinas', 'Formatos mayoristas', 'WhatsApp'],
+    tags: ['Bolsa / bulto', 'Reposición', 'Total estimado'],
   },
   {
     name: 'Ferretería Norte',

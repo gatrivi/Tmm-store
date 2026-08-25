@@ -3,6 +3,7 @@
  * Content from DemoDefinition (demoRegistry).
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import {
   ChevronDown,
   Clock3,
@@ -55,13 +56,22 @@ function isWeightItem(item: MenuItemType): boolean {
   return item.options.some(o => o.id === 'half' || o.id === 'kilo') && item.options.length >= 2;
 }
 
+/** Porter Road-style `~ $X el ½ kg` hint for weight items (estimated weight). */
+function halfKgHint(item: MenuItemType): string {
+  const half = item.options.find(o => o.id === 'half');
+  return half ? `~ ${formatArs(half.price)} el ½ kg aprox.` : '';
+}
+
 export default function WeightedCatalogDemoPage() {
   const { menuItems, menuCategories, siteSettings } = useMenu();
   const { tenantId, features } = usePlan();
   const { setTheme } = useTheme();
+  const params = useParams();
   const demo = getDemoByTenantId(tenantId);
   const theme = demo?.theme;
   const copy = demo?.copy;
+  const activePage =
+    (params.page ? demo?.contentPages?.find(p => p.slug === params.page) : undefined) ?? undefined;
   const canOrder = features.canOrder;
   const wspNumber = siteSettings.whatsappNumber || '';
   const consultHref = wspNumber
@@ -149,6 +159,60 @@ export default function WeightedCatalogDemoPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F4EFE7] text-[#1D1B18]">
         Demo no configurada.
+      </div>
+    );
+  }
+
+  if (activePage) {
+    return (
+      <div
+        className="min-h-screen"
+        style={{ backgroundColor: theme.hueso, color: theme.carbon }}
+        data-demo-theme={demo.id}
+      >
+        <DemoPlanSwitch />
+        <DemoRibbon />
+        <header className="border-b border-black/8 bg-[#fffdf9]/95">
+          <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+            <Link
+              to={demo.customerPath}
+              className="text-xl font-bold tracking-[-0.03em] sm:text-2xl"
+              style={{ fontFamily: siteSettings.brandFont, color: theme.bordo }}
+            >
+              {siteSettings.brandName}
+            </Link>
+            <Link
+              to={demo.customerPath}
+              className="text-xs font-bold text-black/50 underline decoration-black/20 underline-offset-4 transition hover:text-black/80"
+            >
+              ← Volver a la tienda
+            </Link>
+          </div>
+        </header>
+        <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
+          <h1
+            className="text-3xl font-bold leading-[1.1] tracking-[-0.03em] sm:text-4xl"
+            style={{ fontFamily: siteSettings.brandFont }}
+          >
+            {activePage.title}
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-black/60 sm:text-base">
+            {activePage.intro}
+          </p>
+          <div className="mt-10 space-y-8">
+            {activePage.sections.map(section => (
+              <section key={section.heading} className="border-l-2 pl-5" style={{ borderColor: `${theme.bordo}33` }}>
+                <h2 className="text-base font-black tracking-[-0.01em] sm:text-lg">{section.heading}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-black/65">{section.body}</p>
+              </section>
+            ))}
+          </div>
+        </main>
+        <footer className="border-t border-black/8 bg-[#fffdf9]">
+          <div className="mx-auto max-w-3xl px-4 py-8 text-center text-xs font-bold uppercase tracking-[0.12em] text-black/40">
+            {siteSettings.brandName} · {siteSettings.brandAddress} · demo Gatrivi.com
+          </div>
+        </footer>
       </div>
     );
   }
@@ -271,6 +335,18 @@ export default function WeightedCatalogDemoPage() {
           >
             Ver productos
           </button>
+          {demo.contentPages && demo.contentPages.length > 0 && (
+            <div className="flex flex-wrap gap-x-5 gap-y-1">
+              {demo.contentPages.map(p => (
+                <Link
+                  to={`${demo.customerPath}/${p.slug}`}
+                  className="text-xs font-bold text-white/75 underline decoration-white/30 underline-offset-4 transition hover:text-white"
+                >
+                  {p.navLabel}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -320,7 +396,7 @@ export default function WeightedCatalogDemoPage() {
             return (
               <article
                 key={item.id}
-                className="flex flex-col overflow-hidden rounded-2xl border border-black/8 bg-white shadow-sm"
+                className="flex flex-col overflow-hidden rounded-2xl border border-black/8 bg-[#fffdf9] shadow-sm"
               >
                 <div className="aspect-[4/3]" style={{ backgroundColor: theme.papel }}>
                   {img ? (
@@ -363,6 +439,11 @@ export default function WeightedCatalogDemoPage() {
                     <p className="mt-2 text-lg font-black" style={{ color: theme.bordo }}>
                       {priceLabel(item)}
                     </p>
+                    {halfKgHint(item) && (
+                      <p className="text-[11px] font-bold" style={{ color: `${theme.bordo}99` }}>
+                        {halfKgHint(item)}
+                      </p>
+                    )}
                   </div>
 
                   {weight || item.options.length > 1 ? (

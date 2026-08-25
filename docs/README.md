@@ -41,6 +41,7 @@ Agent manifest: read this first, then one targeted file.
 | **Demo Canavesi (live)** | [roadmap/demo-canavesi.md](./roadmap/demo-canavesi.md) · `/demo/canavesi` · gaps [canavesi-content-gaps.md](./canavesi-content-gaps.md) |
 | **Demo verdulería La Inmaculada** | [roadmap/demo-verduleria.md](./roadmap/demo-verduleria.md) · `/demo/verduleria` |
 | **Demo pollería del barrio** | [roadmap/demo-polleria.md](./roadmap/demo-polleria.md) · `/demo/polleria` |
+| **Demo Molino Florida (prospect)** | [roadmap/demo-molino-florida.md](./roadmap/demo-molino-florida.md) · `/molino-florida` |
 | **Plan verticales + demos** | [roadmap/vertical-demos-plan.md](./roadmap/vertical-demos-plan.md) |
 | **30-day sales audit + Demo Express decision** | [ops/audit-sales-30-days-2026-07-11.md](./ops/audit-sales-30-days-2026-07-11.md) |
 | **Monday ship (deploy → demo)** | [ops/monday-deploy-checklist.md](./ops/monday-deploy-checklist.md), [monday-smoke-runbook.md](./ops/monday-smoke-runbook.md), [monday-demo-script.md](./ops/monday-demo-script.md) |

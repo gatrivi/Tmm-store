@@ -144,7 +144,7 @@ export default function MolinoFloridaDemoPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:px-6">
           <a href="#inicio" className="flex min-w-0 items-center gap-3" aria-label="Molino Florida, inicio">
             <img
-              src={`${ASSET_BASE}/logo.webp`}
+              src={`${ASSET_BASE}/logo.svg`}
               alt="Molino Florida"
               className="h-14 w-14 shrink-0 object-contain sm:h-16 sm:w-16"
             />
@@ -171,7 +171,7 @@ export default function MolinoFloridaDemoPage() {
             <div className="overflow-hidden rounded-[2rem] border border-[#243224]/10 bg-[#e5d4b2] shadow-[0_24px_70px_rgba(36,50,36,0.14)] lg:grid lg:grid-cols-[1.2fr_.8fr]">
               <div className="relative min-h-[320px] sm:min-h-[440px] lg:min-h-[520px]">
                 <img
-                  src={`${ASSET_BASE}/hero.webp`}
+                  src={`${ASSET_BASE}/hero.svg`}
                   alt="Selección conceptual de harinas Molino Florida"
                   className="absolute inset-0 h-full w-full object-cover object-left"
                   fetchPriority="high"
@@ -221,7 +221,7 @@ export default function MolinoFloridaDemoPage() {
           id="productos"
           className="scroll-mt-24 border-b border-[#243224]/10 bg-cover bg-top"
           style={{
-            backgroundImage: `linear-gradient(rgba(244,239,228,.91), rgba(244,239,228,.97)), url('${ASSET_BASE}/background.webp')`,
+            backgroundImage: `linear-gradient(rgba(244,239,228,.91), rgba(244,239,228,.97)), url('${ASSET_BASE}/background.svg')`,
           }}
         >
           <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
@@ -330,7 +330,7 @@ export default function MolinoFloridaDemoPage() {
       <footer className="border-t border-[#243224]/10 bg-[#fffdf7]">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-xs text-[#62695f] sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="flex items-center gap-3">
-            <img src={`${ASSET_BASE}/logo.webp`} alt="" className="h-12 w-12 object-contain" />
+            <img src={`${ASSET_BASE}/logo.svg`} alt="" className="h-12 w-12 object-contain" />
             <div>
               <p className="font-serif text-lg font-bold text-[#243224]">Molino Florida</p>
               <p className="mt-1">Débito · efectivo · transferencia · envíos CABA y Zona Norte</p>
