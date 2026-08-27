@@ -1,7 +1,7 @@
 {
   "name": "trufi-tmm",
   "private": true,
-  "version": "1.27.1",
+  "version": "1.27.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -18,7 +18,8 @@
     "leads:scan": "node scripts/leads-scan.mjs",
     "deploy:rules": "npx firebase-tools@latest deploy --only firestore",
     "promo": "node scripts/record-demo-promo.mjs",
-    "flyers": "npx tsx scripts/gen-flyer-qr.mjs && node scripts/gen-flyers-pdf.mjs"
+    "flyers": "npx tsx scripts/gen-flyer-qr.mjs && node scripts/gen-flyers-pdf.mjs",
+    "briefs": "node scripts/gen-brief-qrs.mjs && node scripts/gen-briefs-pdf.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

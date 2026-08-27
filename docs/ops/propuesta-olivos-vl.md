@@ -53,6 +53,12 @@ Propuesta concreta para [LOCAL]:
 2) Si cierra: cargamos menú, logo y WhatsApp; link listo en 2–3 días
 3) Precio plan Pedidos: ~$15–18k/mes · 0% comisión
 
+
+## Propuesta por rubro (page)
+
+Ruta data-driven: `/propuesta/[rubro]` — una sola página (`src/pages/PropuestaPage.tsx`) + config (`src/data/propuestas.ts`). Rubros: `gastronomia`, `indumentaria`, `calzado`, `regalos-deco`. Rubro desconocido → listado de rubros.
+
+Cada propuesta: demo principal primero, bullets de valor, precio promo ($325.000 / seña $65.000, igual que `/precios`), otras demos, CTA WhatsApp fijo en móvil. Para QR/flyer: `gatrivi.com/propuesta/gastronomia` etc.
 Demo en vivo: https://tmm.gatrivi.com/demo/pizzeria
 (Owner: /demo/pizzeria/owner)
 
