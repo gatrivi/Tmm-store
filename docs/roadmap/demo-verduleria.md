@@ -48,4 +48,4 @@
 | Papel | `#D5E2D4` |
 | Salvia | `#5A8F62` |
 
-See also: [`vertical-demos-plan.md`](./vertical-demos-plan.md)
+See also: [`vertical-demos-plan.md`](./vertical-demos-plan.md) · benchmark competidores + plan de producción: [`inmaculada-site-plan.md`](./inmaculada-site-plan.md)

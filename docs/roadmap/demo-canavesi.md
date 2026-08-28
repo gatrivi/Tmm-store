@@ -2,6 +2,8 @@
 
 **Estado: shipped** (v1.21.0) · `/demo/canavesi`
 
+Premium pass shipped (mostrador-voice copy, dual price hint, chip "De campo", badges de corte/uso, subpáginas editoriales, trust strip firmable). Remaining gap: fotos/prices/logo reales → [`canavesi-content-gaps.md`](../canavesi-content-gaps.md).
+
 ## Prospect
 
 | Campo | Valor (público / no inventar) |

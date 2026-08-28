@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gatrivi.com — Kit de venta de hoy</title>
+<style>
+  :root{--ink:#24152f;--plum:#542653;--fuchsia:#c72f73;--orange:#f06a35;--sun:#f4c44e;--paper:#fff9ef;}
+  *{box-sizing:border-box;margin:0}
+  body{font-family:system-ui,sans-serif;background:var(--paper);color:var(--ink);max-width:860px;margin:auto;padding:18px}
+  h1{font-size:1.35rem;line-height:1.2}
+  h1 em{font-style:normal;color:var(--fuchsia)}
+  .sub{opacity:.7;font-size:.88rem;margin-top:4px}
+  .card{background:#fff;border:1px solid #eee2d0;border-radius:12px;padding:14px 16px;margin-top:14px}
+  .core{background:#fff;border-left:4px solid var(--sun)}
+  .core p{margin-top:8px;font-size:.95rem;line-height:1.5}
+  .grid{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .vert h2{font-size:1.05rem}
+  .btn{display:inline-block;text-decoration:none;font-weight:700;font-size:.85rem;padding:7px 12px;border-radius:8px;background:var(--orange);color:#fff;margin-right:6px}
+  .btn.alt{background:var(--ink)}
+  .pitchbox{display:flex;gap:8px;margin-top:10px;align-items:stretch}
+  textarea{flex:1;font:13px system-ui;color:var(--plum);border:1px solid #e5d9c5;border-radius:8px;padding:8px;background:#fffdf6;resize:vertical;min-height:64px}
+  button.copy{border:1px solid var(--orange);color:var(--orange);background:none;border-radius:8px;font-weight:700;font-size:.82rem;padding:6px 10px;cursor:pointer;align-self:flex-start}
+  .refs{margin-top:10px;font-size:.83rem;color:var(--plum);line-height:1.55}
+  .refs b{text-transform:uppercase;font-size:.72rem;letter-spacing:.05em;color:var(--ink)}
+  .refs a{color:var(--plum)}
+  .printlinks{margin-top:8px;font-size:.8rem}
+  .printlinks a{color:var(--fuchsia);font-weight:700;text-decoration:none;margin-right:10px}
+  .tip{margin-top:16px;background:#fffdf6;border:1px dashed var(--plum);border-radius:10px;padding:12px 14px;font-size:.84rem;color:var(--plum);line-height:1.55}
+  code{background:#f2e9da;border-radius:4px;padding:1px 5px;font-size:.8em}
+</style>
+</head>
+<body>
+<h1>Kit de venta de hoy — <em>Gatrivi.com</em></h1>
+<p class="sub">Para cada rubro clave: demo lista, referencias verificadas de los que ya venden así, pitch para pegar en WhatsApp y el brief A6 imprimible.</p>
+
+<div class="card core">
+  <h2>Preguntan siempre lo mismo: “¿qué productos tienen?”</h2>
+  <p><b>Antes:</b> una lista escrita en el chat — sin fotos, con precios viejos.<br/>
+  <b>Ahora:</b> mandás <b>un link con fotos</b>: su carta real, precios al día, carrito y el pedido llegando armado a su WhatsApp (qué pide, a dónde y el total). Y encima: sin comisión por venta, panel propio y QR para la caja.</p>
+</div>
+
+<div id="cards"></div>
+
+<div class="tip">
+  <b>Cómo usarlo hoy:</b> ① copiá el pitch del rubro y mandalo por WhatsApp o mostralo de visita ·
+  ② abrí la demo del rubro en tu celular antes de entrar al local ·
+  ③ si el dueño se interesa, ofrecé <b>muestra gratis con sus productos en 24 h</b> (armar a medida: <code>tmm.gatrivi.com/demo/armar</code>) ·
+  ④ si no cierra, dejale el brief impreso — lleva QR al demo.<br/>
+  <b>Briefs:</b> abrir cada <code>brief-{rubro}.html</code> y Ctrl+P en tamaño A6, o regenerar todo con <code>npm run briefs</code>.
+</div>
+
+<script>
+const V = [
+ {rubro:"Pizzería", slug:"pizzeria",
+  refs:[["www.guerrin.com.ar","https://www.guerrin.com.ar","90 años vendiendo con su carta web"],
+        ["elcuartito.com.ar","https://www.elcuartito.com.ar","clásico con menú online"]],
+  gancho:"de cada pedido por app, hasta un 28% se lo queda la app"},
+ {rubro:"Panadería", slug:"panaderia",
+  refs:[["havanna.com.ar","https://www.havanna.com.ar","encargos y tienda online"],
+        ["cotodigital3.com.ar","https://www.cotodigital3.com.ar","supermercado con panadería online"]],
+  gancho:"el encargo del fin de semana no se anota bien por audio"},
+ {rubro:"Carnicería", slug:"carniceria",
+  refs:[["arrebeef.com","https://arrebeef.com","frigorífico centenario, presencia digital"],
+        ["cotodigital3.com.ar","https://www.cotodigital3.com.ar","cortes online hace años"],
+        ["diaonline.supermercadosdia.com.ar","https://diaonline.supermercadosdia.com.ar","granja y fiambre online"]],
+  gancho:"cuántos kilos se pierden por semana en pedidos mal anotados"},
+ {rubro:"Verdulería", slug:"verduleria",
+  refs:[["diaonline.supermercadosdia.com.ar","https://diaonline.supermercadosdia.com.ar","verdulería online"],
+        ["cotodigital3.com.ar","https://www.cotodigital3.com.ar","frutas y verduras con foto y precio"]],
+  gancho:"el bolsón perfecto no se arma bien por audio"},
+ {rubro:"Ferretería", slug:"ferreteria",
+  refs:[["sodimac.com.ar","https://www.sodimac.com.ar","invierte millones en vender ferretería online"],
+        ["cotodigital3.com.ar","https://www.cotodigital3.com.ar","herramientas y materiales online"]],
+  gancho:"una medida que falla se devuelve: esa venta se pierde igual"},
+];
+const pitch = s => `Hola! Te escribo de Gatrivi.com, de Olivos. Armamos catálogos online para comercios del barrio: tus clientes ven fotos y precios desde el celular y te piden por WhatsApp como siempre — sin comisión por venta. En 20 segundos mirá cómo quedaría el tuyo: https://tmm.gatrivi.com/demo/${s}`;
+const root = document.getElementById('cards');
+V.forEach((v)=>{
+  const d = document.createElement('div');
+  d.className = 'card vert';
+  d.innerHTML = `
+    <h2>${v.rubro}</h2>
+    <p class="sub">Gancho: ${v.gancho}.</p>
+    <div class="grid">
+      <a class="btn" target="_blank" href="https://tmm.gatrivi.com/demo/${v.slug}">Ver demo cliente</a>
+      <a class="btn alt" target="_blank" href="https://tmm.gatrivi.com/demo/${v.slug}/owner">Panel del dueño</a>
+    </div>
+    <div class="pitchbox"><textarea readonly>${pitch(v.slug)}</textarea><button class="copy">copiar</button></div>
+    <p class="refs"><b>Referencias verificadas (${new Date().toLocaleDateString('es-AR')})</b> — “alcanza este nivel”:<br/>
+      ${v.refs.map(r => `<a href="${r[1]}" target="_blank">${r[0]}</a> · ${r[2]}`).join(' &nbsp;|&nbsp; ')}</p>
+    <p class="printlinks">
+      <a href="/print/briefs/brief-${v.slug}.html" target="_blank">Brief A6 imprimible</a>
+      <span style="opacity:.6">PDF: gatrivi_brief_${v.slug}_A6.pdf (raíz del repo)</span></p>`;
+  d.querySelector('.copy').onclick = (e) => {
+    navigator.clipboard.writeText(pitch(v.slug));
+    e.target.textContent = '¡copiado!';
+    setTimeout(() => { e.target.textContent = 'copiar'; }, 1500);
+  };
+  root.appendChild(d);
+});
+</script>
+</body>
+</html>

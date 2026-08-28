@@ -1,6 +1,6 @@
 {
   "redirects": [
-    { "source": "/demo/mamamabel", "destination": "/demo/mamabel", "permanent": false },
+    { "source": "/diez", "destination": "/diez-de-olivos.html" },
     { "source": "/demo/mamamabel/(.*)", "destination": "/demo/mamabel/$1", "permanent": false },
     { "source": "/pricing", "destination": "/precios", "permanent": true },
     { "source": "/planes", "destination": "/precios", "permanent": true }

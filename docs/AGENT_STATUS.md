@@ -294,3 +294,37 @@ Abrir:
 ---
 
 **Actualizar este archivo** cuando cambie versión mayor/menor, se shippee un hito, o cambie el foco de ventas.
+
+---
+
+## 13. Handoff sesión 2026-08-27 — foco ventas: kit + diez de Olivos
+
+Objetivo humano: *algo capaz de generar ingresos ya mismo*. Todo verificado localmente (playwright, sin errores).
+
+### Shipped
+
+- **Tablero de leads → `public/diez-de-olivos.html`** · ruta limpia `/diez` (vercel.json). 10 negocios Olivos/VL con 100+ reseñas y sin web propia; cada fila: demo cliente, panel dueño, proposal WSP personalizada copiable, estado persistente (localStorage `gtrv-diez-*`).
+  - 🔥 Prioridad 1–2 calientes: **La Inmaculada** (verdulería, lead amigos, demo `/verduleria`, propuesta completa en [`ops/propuesta-inmaculada.md`](./ops/propuesta-inmaculada.md)) y **Canavesi Carnes** (web caída HTTP500, móvil → wa.me).
+  - Gastro escaneo jul-26: Dale Vicente 102 · Croxi 110 · El Corcubión 161 · San Antonio 201 (ángulo Rappi) · Bebotes 238 *(rubro a confirmar)* · Rincón del Bajo 267 (ángulo Pedix) · La Nueva Cocinita 293 · Morelia 3.329.
+  - Fuente de verdad + plan semana: [`ops/diez-de-olivos.md`](./ops/diez-de-olivos.md).
+- **Kit de venta → `public/kit/index.html`**: pitch base ("¿qué productos tienen?" → link con fotos) + por rubro demo/panel/pitch copiable/referencias verificadas (fecha 2026-08-27): Güerrín, El Cuartito, Havanna, Arrebeef, Coto Digital, DIA Online, Sodimac.
+- **Briefs A6 imprimibles → `public/print/briefs/brief-{slug}.html`** ×5 (pizzeria, panaderia, carniceria, verduleria, ferreteria). Cuenta de costos (comisión apps 25–35% vs $0 propio), Antes→Ahora, referencias, QR al demo. Paleta takeshi.
+- **Pipeline**: `scripts/gen-brief-qrs.mjs` + `scripts/gen-briefs-pdf.mjs` → `npm run briefs`. Output: `gatrivi_brief_{slug}_A6.pdf` ×5 en raíz (~105 KB c/u).
+- Doc [`ops/sales-kit.md`](./ops/sales-kit.md): mapa kit/rubros/workflow.
+
+### Cierre estándar (replicar)
+
+Muestra gratis con productos del negocio en 24 h → `/demo/armar` a medida → go-live 48–72 hs → factura mes 1 (**$20.000/mes plan Pedidos · 0% comisión**, ref. propuesta Inmaculada). Sin cierre → brief A6 impreso con QR.
+
+### Pendientes
+
+1. Contar reseñas exactas de Inmaculada/Canavesi en Maps (5 min celular).
+2. Confirmar rubro de Bebotes en visita o reemplazar lead (regla: no se llama sin demo asignada).
+3. Alta `GOOGLE_PLACES_API_KEY` → correr `npm run leads:scan` para refrescar lista automática (hoy `.env` sin key).
+4. Bump de versión pendiente de decisión humana: solo se agregaron assets estáticos de venta, sin cambios de producto UI.
+
+### No romper
+
+- `public/` es lo servido en producción (tablero y briefs viven ahí); los PDFs A6 quedan en raíz del repo para imprimir/enviar.
+- Precios/comisiones citados como referencia ilustrativa, nunca contractual.
+

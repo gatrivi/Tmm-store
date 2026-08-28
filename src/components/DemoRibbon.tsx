@@ -3,7 +3,7 @@ import { ArrowLeft, Store, UserRound } from 'lucide-react';
 import { buildSalesContactHref, hasSalesWhatsApp } from '../utils/salesContact';
 import { resolveDemoFromPath, resolveDemoPaths } from '../utils/demoRegistry';
 import type { Plan } from '../config/plans';
-import { usePlan } from '../context/PlanContext';
+import { useOptionalPlan } from '../context/PlanContext';
 
 const PLAN_OPTIONS: Array<{ plan: Plan; label: string; hint: string }> = [
   { plan: 'menu', label: 'Catálogo', hint: 'Solo carta con consulta por WhatsApp' },
@@ -13,9 +13,10 @@ const PLAN_OPTIONS: Array<{ plan: Plan; label: string; hint: string }> = [
 
 /** Plan preview pills, rendered inside the ribbon row (nothing outside demos). */
 function PlanSwitchInline() {
-  const { plan, setDemoPlanOverride } = usePlan();
-  if (!setDemoPlanOverride) return null;
+  const ctx = useOptionalPlan();
+  if (!ctx?.setDemoPlanOverride) return null;
 
+  const { plan } = ctx;
   return (
     <div className="flex shrink-0 items-center gap-2">
       <span className="hidden text-[10px] font-black uppercase tracking-[0.14em] text-white/45 lg:inline">

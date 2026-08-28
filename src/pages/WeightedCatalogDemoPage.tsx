@@ -377,7 +377,7 @@ export default function WeightedCatalogDemoPage() {
             <ShieldCheck size={15} style={{ color: theme.salvia }} /> {copy.totalHint}
           </p>
           <p className="flex items-center gap-2">
-            <UserRound size={15} style={{ color: theme.salvia }} /> Pedido de prueba
+            <UserRound size={15} style={{ color: theme.salvia }} /> {copy.trustNote ?? 'Pedido de prueba'}
           </p>
         </div>
       </div>

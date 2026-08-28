@@ -77,3 +77,11 @@ export function usePlan(): PlanContextValue {
   if (!ctx) throw new Error('usePlan must be used within PlanProvider');
   return ctx;
 }
+
+/**
+ * Tolerant read for shells rendered outside PlanProvider (e.g. DemoOwnerPage
+ * routes mounted directly in App.tsx). Returns null instead of throwing.
+ */
+export function useOptionalPlan(): PlanContextValue | null {
+  return useContext(PlanContext) ?? null;
+}

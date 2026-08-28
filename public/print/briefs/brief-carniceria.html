@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Brief A6 — Carnicería · Gatrivi.com</title>
+<link rel="stylesheet" href="../takeshi-palette.css" />
+<style>
+  @page { size: A6; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, "Times New Roman", serif; color: var(--takeshi-night); background: var(--takeshi-paper); }
+  .sheet { width: 105mm; height: 148mm; padding: 7mm 7mm 5mm; display: flex; flex-direction: column; }
+  @media print { body { margin: 0 } .hint { display: none } -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hint { max-width: 105mm; padding: 10px; font: 12px system-ui; border: 1px solid var(--takeshi-plum); margin-bottom: 10px; }
+  .brandrow { display: flex; justify-content: space-between; align-items: baseline;
+    font-family: system-ui, sans-serif; font-size: 7pt; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+  .brandrow span:last-child { color: var(--takeshi-plum); font-weight: 600; text-transform: none; letter-spacing: 0; }
+  .tagline { margin-top: 1mm; font-family: system-ui, sans-serif; font-size: 7pt; color: var(--takeshi-orange);
+    font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+  h1 { margin-top: 2mm; font-size: 14pt; line-height: 1.15; letter-spacing: -.01em; }
+  h1 em { font-style: normal; color: var(--takeshi-fuchsia); }
+  .box { margin-top: 3.5mm; border-left: 1.8mm solid var(--takeshi-sun); background: #fffdf6;
+    padding: 2.5mm 3mm; font-size: 8.6pt; line-height: 1.38; color: var(--takeshi-plum); }
+  .box b { color: var(--takeshi-night); }
+  .switch { margin-top: 3.5mm; font-size: 8.6pt; line-height: 1.42; }
+  .switch .row { display: flex; gap: 2mm; margin-bottom: 1.6mm; }
+  .switch .k { flex: 0 0 12mm; font-family: system-ui, sans-serif; font-weight: 800; font-size: 7pt;
+    text-transform: uppercase; letter-spacing: .03em; padding-top: .3mm; }
+  .switch .k.now { color: var(--takeshi-fuchsia); }
+  .switch .k.before { color: var(--takeshi-plum); opacity: .75; }
+  .refs { margin-top: auto; padding-top: 2.5mm; border-top: .3mm dashed var(--takeshi-plum); font-size: 7.6pt; line-height: 1.45; color: var(--takeshi-plum); }
+  .refs b { font-family: system-ui, sans-serif; font-size: 7pt; text-transform: uppercase; letter-spacing: .04em; color: var(--takeshi-night); }
+  .refs a { color: inherit; }
+  .cta { display: flex; gap: 4mm; align-items: center; margin-top: 2.5mm; }
+  .cta img { width: 21mm; height: 21mm; border: 1.6mm solid var(--takeshi-sun); background: #fff; }
+  .cta .txt { font-family: system-ui, sans-serif; font-size: 8.5pt; line-height: 1.4; }
+  .cta .txt b { color: var(--takeshi-fuchsia); }
+  .foot { margin-top: 2.2mm; font-family: system-ui, sans-serif; font-size: 7pt; font-weight: 800;
+    letter-spacing: .05em; text-transform: uppercase; display: flex; justify-content: space-between; }
+  .note { margin-top: 1.2mm; font-size: 6.2pt; color: var(--takeshi-plum); opacity: .7; }
+</style>
+</head>
+<body>
+<p class="hint">Imprimí esta página (Ctrl+P) · tamaño A6 · sin márgenes · o usá <b>npm run briefs</b> para generar el PDF.</p>
+<div class="sheet">
+  <div class="brandrow"><span>Gatrivi.com</span><span>ZengaSoft · hecho en Olivos</span></div>
+  <p class="tagline">Catálogo online para carnicerías · sin comisión por venta</p>
+
+  <h1>¿Cuántos kilos perdés por semana en pedidos <em>mal anotados?</em></h1>
+
+  <div class="box">
+    <b>La cuenta:</b> pedidos por audio mientras se despacha = errores que después
+    se pagan con descuentos. Y por app de delivery, hasta <b>25–35%</b> del pedido.<br/>
+    Tu catálogo propio: <b>$0 de comisión</b>.
+  </div>
+
+  <div class="switch">
+    <div class="row"><span class="k before">Antes</span><span>“Un kilo de ese, dos de achuras… y manda al que escucha” — audio a medias, dirección incompleta.</span></div>
+    <div class="row"><span class="k now">Ahora</span><span>Cada corte con foto y precio, elegís medio kilo, kilo o especial. El pedido llega completo a tu WhatsApp: cortes, pesos, dirección y total. Listo para pesar.</span></div>
+  </div>
+
+  <div class="refs">
+    <b>Así venden los grandes</b> — y alcanza este nivel:<br/>
+    Arrebeef <a href="https://arrebeef.com">arrebeef.com</a> ·
+    Coto <a href="https://www.cotodigital3.com.ar">cotodigital3.com.ar</a> ·
+    DIA <a href="https://diaonline.supermercadosdia.com.ar">diaonline</a>.
+    Venden carne online hace años. Tu clientela es del barrio.
+  </div>
+
+  <div class="cta">
+    <img src="./qr-carniceria.png" alt="QR demo carnicería" />
+    <div class="txt">Escaneá y probá la demo ahora:<br/><b>tmm.gatrivi.com/demo/carniceria</b><br/>Muestra con tus productos, gratis, en 24 h. Encargo semanal repetido en un toque.</div>
+  </div>
+
+  <div class="foot"><span>Gatrivi.com · ZengaSoft</span><span>tmm.gatrivi.com</span></div>
+  <p class="note">*Porcentajes de referencia de las apps de delivery.</p>
+</div>
+</body>
+</html>

@@ -74,7 +74,19 @@ async function searchRing(apiKey, radiusM, pageToken) {
     locationRestriction: {
       circle: { center: { latitude: ORIGIN.lat, longitude: ORIGIN.lng }, radius: radiusM },
     },
-    includedPrimaryTypes: ['restaurant', 'meal_takeaway', 'bakery', 'cafe'],
+    // Nota: sumamos bar/nightlife e indumentaria (clothing/shoes) — antes el scan
+    // sólo cubría comida, así que nunca encontraba locales de ropa/tragos.
+    includedPrimaryTypes: [
+      'restaurant',
+      'meal_takeaway',
+      'bakery',
+      'cafe',
+      'bar',
+      'night_club',
+      'clothing_store',
+      'clothing_accessories_store',
+      'shoe_store',
+    ],
     maxResultCount: 20,
     rankPreference: 'POPULARITY',
   };

@@ -56,6 +56,7 @@ export interface DemoCopy {
   notesPlaceholder: string;
   chips: [string, string];
   weightNotice: string;
+  trustNote?: string;
 }
 
 export interface DemoTheme {

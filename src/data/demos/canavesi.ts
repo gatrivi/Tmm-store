@@ -290,6 +290,7 @@ export const CANAVESI_DEMO: DemoDefinition = {
     notesPlaceholder: 'Cortar los bifes medianos',
     chips: ['De campo', 'Retiro en Borges'],
     weightNotice: 'El peso puede variar. Confirmamos el total antes de preparar.',
+    trustNote: 'De campo, faena diaria',
   },
   contentPages: [
     {

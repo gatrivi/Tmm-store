@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gatrivi — Diez de Olivos</title>
+<style>
+  :root{--ink:#24152f;--plum:#542653;--fuchsia:#c72f73;--orange:#f06a35;--sun:#f4c44e;--paper:#fff9ef;--ok:#1c7c43}
+  *{box-sizing:border-box;margin:0}
+  body{font-family:system-ui,sans-serif;background:var(--paper);color:var(--ink);padding:14px;max-width:760px;margin:auto}
+  h1{font-size:1.25rem}
+  .sub{opacity:.65;font-size:.85rem;margin-bottom:12px;line-height:1.45}
+  .shop{background:#fff;border:1px solid #eee;border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .fit{font-size:.68rem;font-weight:800;padding:2px 7px;border-radius:99px}
+  .hot{background:#ffe0e0;color:#c22}.A{background:#ffe3cc;color:#b34700}.B{background:#fff3cc;color:#8a6d00}.C{background:#eee;color:#666}
+  b.n{font-size:1rem}
+  .meta{font-size:.78rem;opacity:.7;margin-top:2px;width:100%}
+  .actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+  a.btn{text-decoration:none;font-weight:700;font-size:.85rem;padding:7px 12px;border-radius:8px;background:var(--orange);color:#fff}
+  a.btn.call{background:#333}
+  button.copy{background:none;border:1px solid var(--orange);color:var(--orange);border-radius:8px;font-size:.82rem;font-weight:700;padding:7px 10px;cursor:pointer}
+  details summary{cursor:pointer;font-size:.8rem;color:var(--fuchsia);font-weight:700;margin-top:8px}
+  .pitch{font-size:.86rem;background:#fffdf6;border:1px dashed var(--plum);border-radius:8px;padding:9px;margin-top:6px;line-height:1.5;color:var(--plum)}
+  .links{margin-top:8px;font-size:.78rem;display:flex;gap:12px;flex-wrap:wrap}
+  .links a{color:var(--plum);font-weight:700;text-decoration:none}
+  select.status{margin-left:auto;font-size:.75rem;padding:4px 8px;border-radius:6px;border:1px solid #ddd;background:#fff}
+  .done{opacity:.55}.done b.n::after{content:" ✓";color:var(--ok)}
+  .src{font-size:.68rem;opacity:.55;font-style:italic}
+</style>
+</head>
+<body>
+<h1>Diez de Olivos — Gatrivi.com</h1>
+<p class="sub">Los 10 con 100+ reseñas Google <b>sin sitio propio</b> (+2 cálidos con demo ya hecha arriba de todo). Copiá el pitch → WhatsApp, o llamar antes del pico (11:30 / 19:00). Estado se guarda solo.<br>
+<span class="src">Reseñas: escaneo Places jul-2026 + investigación propia ago-2026 · refrescar con <code>npm run leads:scan</code> si hay API key.</span></p>
+<div id="list"></div>
+<script>
+const L = [
+ {n:"La Inmaculada",fit:"hot",res:"",dir:"Ugarte y España · verdulería · Vicente López",tel:"",demo:"https://tmm.gatrivi.com/verduleria",owner:"https://tmm.gatrivi.com/verduleria/owner",brief:"gatrivi_brief_verduleria_A6.pdf",
+  pitch:"Che! Te armé algo para la verdulería 😄 Entrá: https://tmm.gatrivi.com/verduleria\nEs una demo con precios de ejemplo, para que veas cómo queda el pedido online con el nombre de ustedes:\n• El cliente arma la lista sola (por peso o unidad) → te llega ordenada, no por audio\n• El total figura como ESTIMADO y vos confirmás antes de preparar → nadie discute el peso\n• El bolsón semanal arriba de todo, que es lo que más margen deja\nSi te gusta, lo levanto con tus precios reales y fotos del mostrador en 48–72 hs. Cero comisión por venta. ¿Te muestro completo esta semana?",
+  src:"propuesta completa: docs/ops/propuesta-inmaculada.md"},
+ {n:"Canavesi Carnes",fit:"hot",res:"",dir:"Fco. Borges 2376 · Olivos Borges · carnicería",tel:"15-3283-5667",wa:"5491132835667",demo:"https://tmm.gatrivi.com/demo/canavesi",owner:"https://tmm.gatrivi.com/demo/canavesi/owner",brief:"gatrivi_brief_carniceria_A6.pdf",
+  pitch:"Hola! Les dejé armada una carta online con la marca Canavesi: cortes con foto y precio por kilo, el cliente arma el pedido y les llega con pesos y total estimado — sin comisión, sin marketplace.\nDemo: https://tmm.gatrivi.com/demo/canavesi\nPanel del local (donde entran los pedidos): https://tmm.gatrivi.com/demo/canavesi/owner\nVi además que canavesicarnes.com.ar está caída — esto lo reemplaza directo. Lo levanto real con sus productos en 48–72 hs.",
+  src:"web caída HTTP500 · kit trueque listo: trueque-canavesi-kit.md"},
+ {n:"Dale Vicente",fit:"A",res:102,dir:"Laprida 1462 · Vicente López",tel:"011 4797-9288",demo:"https://tmm.gatrivi.com/demo/pizzeria",owner:"https://tmm.gatrivi.com/demo/pizzeria/owner",brief:"gatrivi_brief_pizzeria_A6.pdf",
+  pitch:"Hola! Te escribo de Gatrivi.com, de Olivos. Vi que Dale Vicente es un clásico de VL con más de 100 reseñas y todo entra por Facebook o chat a mano. Armamos cartas online para pizzerías: fotos y precios al día desde el celular y te piden por WhatsApp como siempre, sin comisión por venta. En 20 segundos mirás cómo quedaría la tuya: https://tmm.gatrivi.com/demo/pizzeria"},
+ {n:"Croxi Pizzería",fit:"A",res:110,dir:"Roca 836 · Vicente López",tel:"011 4795-3368",demo:"https://tmm.gatrivi.com/demo/pizzeria",owner:"https://tmm.gatrivi.com/demo/pizzeria/owner",brief:"gatrivi_brief_pizzeria_A6.pdf",
+  pitch:"Hola! Te escribo de Gatrivi.com, de Olivos. Vi a Croxi en Google con buena cola de reseñas y delivery propio. Con carta propia suman ventas más grandes (gaseosa, postre, extra) sin hacer fuerza al teléfono: fotos y precios al día, pedido armado a tu WhatsApp, sin comisión por venta. Demo: https://tmm.gatrivi.com/demo/pizzeria"},
+ {n:"El Corcubión",fit:"B",res:161,dir:"J.C. Cruz 1871 · Vicente López",tel:"011 2669-4444",demo:"https://tmm.gatrivi.com/demo",owner:"https://tmm.gatrivi.com/demo/owner",brief:"gatrivi_brief_pizzeria_A6.pdf",
+  pitch:"Hola! Te escribo de Gatrivi.com, de Olivos. Vi a El Corcubión con 160+ reseñas y todo el menú viviendo en Instagram. Armamos cartas online propias: fotos y precios al día desde el celular, pedidos armados a tu WhatsApp y bandeja para verlos. Sin comisión por venta. Demo: https://tmm.gatrivi.com/demo"},
+ {n:"Pizzería San Antonio",fit:"A",res:201,dir:"Gral. Pacheco 3499 · Olivos",tel:"011 4794-5865",demo:"https://tmm.gatrivi.com/demo/pizzeria",owner:"https://tmm.gatrivi.com/demo/pizzeria/owner",brief:"gatrivi_brief_pizzeria_A6.pdf",
+  pitch:"Hola! Te escribo de Gatrivi.com, de Olivos. Vi que San Antonio venden por Rappi: cada pedido se lleva hasta un 25–35% de comisión. Con carta propia el 100% queda en la caja: tus pizzas con foto y precio, pedido armado a tu WhatsApp, sin comisión ni exclusividad. Demo en 20 segundos: https://tmm.gatrivi.com/demo/pizzeria"},
+ {n:"Bebotes",fit:"C",res:238,dir:"Caseros 1848 · Vicente López · rubro a confirmar en visita",tel:"011 2498-0818",demo:"https://tmm.gatrivi.com/demo/zimba-pet",owner:"https://tmm.gatrivi.com/demo/zimba-pet/owner",brief:"gatrivi_brief_carniceria_A6.pdf",
+  pitch:"Hola! Te escribo de Gatrivi.com, de Olivos. Armamos catálogos online para comercios del barrio: sus clientes ven fotos y precios desde el celular y piden por WhatsApp como siempre, sin comisión por venta. Demo cómo quedaría un local como el suyo: https://tmm.gatrivi.com/demo/zimba-pet",
+  warn:"Confirmar rubro en la visita; si es pet/puericultura la demo pet ya sirve; si no, reemplazar por el siguiente lead."},
+ {n:"Rincón del Bajo",fit:"A",res:267,dir:"Yrigoyen 698 · Vicente López",tel:"011 4797-4369",demo:"https://tmm.gatrivi.com/demo/pizzeria",owner:"https://tmm.gatrivi.com/demo/pizzeria/owner",brief:"gatrivi_brief_pizzeria_A6.pdf",
+  pitch:"Hola! Te escribo de Gatrivi.com, de Olivos. Vi que Rincón del Bajo opera con Pedix. El ángulo directo: tu carta propia, con QR y panel propio, por menos de lo que se van los pedidos de terceros — 0% de comisión y el pedido a TU WhatsApp, no al de nadie más. Demo: https://tmm.gatrivi.com/demo/pizzeria"},
+ {n:"La Nueva Cocinita",fit:"A",res:293,dir:"Laprida 2865 · Vicente López",tel:"011 5195-4350",demo:"https://tmm.gatrivi.com/demo/pizzeria",owner:"https://tmm.gatrivi.com/demo/pizzeria/owner",brief:"gatrivi_brief_pizzeria_A6.pdf",
+  pitch:"Hola! Te escribo de Gatrivi.com, de Olivos. Vi a La Nueva Cocinita con casi 300 reseñas y sin web propia. Armamos cartas online para cocinas de barrio: fotos y precios al día desde el celular, y el pedido llega completo (qué pide, a dónde y el total) a tu WhatsApp. Sin comisión por venta. Demo: https://tmm.gatrivi.com/demo/pizzeria"},
+ {n:"Morelia Pizza",fit:"A",res:3329,dir:"Av. del Libertador 3499 · Olivos",tel:"011 4799-7377",demo:"https://tmm.gatrivi.com/demo/pizzeria",owner:"https://tmm.gatrivi.com/demo/pizzeria/owner",brief:"gatrivi_brief_pizzeria_A6.pdf",
+  pitch:"Hola! Te escribo de Gatrivi.com, de Olivos. Más de 3.300 reseñas: si algo sobra en Morelia es demanda — lo que falta es canal propio. Carta online con fotos y precios al día, carrito, y pedidos que llegan armados a su WhatsApp, sin comisión por pedido. Con ese ticket, cada punto de upsell pesa. Demo: https://tmm.gatrivi.com/demo/pizzeria"},
+];
+// wa.me solo con celulares; los fijos van por tel:
+const list = document.getElementById('list');
+L.forEach((s,i)=>{
+  const key='gtrv-diez-'+i;
+  const saved=localStorage.getItem(key)||'';
+  const d=document.createElement('div');
+  d.className='shop'+(saved==='pago'||saved==='no'?' done':'');
+  d.innerHTML=`<div class="top"><b class="n">${s.n}</b><span class="fit ${s.fit}">${s.fit==='hot'?'🔥 CÁLIDO':'fit '+s.fit+' · '+(s.res?s.res+' res.':'sin dato')}</span><span class="meta">${s.dir} ${s.tel?'· 📞 '+s.tel:''} <span class="src">· ${s.src||'escaneo Places jul-2026'} </span></span>
+    <select class="status"><option value="">—</option><option${saved==='wsp'?' selected':''}>wsp</option><option${saved==='demo'?' selected':''}>demo</option><option${saved==='piloto'?' selected':''}>piloto</option><option${saved==='pago'?' selected':''}>pago</option><option${saved==='no'?' selected':''}>no</option></select></div>
+  <div class="actions">
+    <button class="copy">📋 copiar proposal</button>
+    ${s.wa?`<a class="btn" target="_blank" href="https://wa.me/${s.wa}">💬 WhatsApp</a>`:''}
+    ${s.tel?`<a class="btn call" href="tel:${s.tel.replace(/[^0-9]/g,'')}">📞 llamar</a>`:''}
+    <a class="btn" target="_blank" href="${s.demo}">ver demo</a>
+    <a class="btn call" target="_blank" href="${s.owner}">panel dueño</a>
+  </div>
+  ${s.warn?`<p class="pitch" style="border-color:#e0b400;background:#fffbe8">${s.warn}</p>`:''}
+  <details open><summary>proposal personalizada</summary><div class="pitch">${s.pitch.replace(/\n/g,'<br>')}</div></details>
+  <div class="links"><a target="_blank" href="/print/briefs/${s.brief.replace('gatrivi_brief_','brief-').replace('_A6.pdf','.html')}">brief imprimible del rubro</a><span style="opacity:.55">${s.brief}</span></div>`;
+  d.querySelector('.copy').onclick=(e)=>{navigator.clipboard.writeText(s.pitch);e.target.textContent='¡copiado!';setTimeout(()=>{e.target.textContent='📋 copiar proposal';},1500);};
+  const sel=d.querySelector('.status');
+  sel.onchange=()=>{localStorage.setItem(key,sel.value);d.classList.toggle('done',sel.value==='pago'||sel.value==='no');};
+  list.appendChild(d);
+});
+</script>
+</body>
+</html>
