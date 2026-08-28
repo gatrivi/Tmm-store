@@ -24,7 +24,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'combos',
     badge: 'Mejor precio',
     description: 'Muzzarella grande + ½ docena de carne + gaseosa 1.5 L',
-    images: ['/demos/pizzeria/muzzarella.png'],
+    images: ['/demos/pizzeria/muzza.jpg'],
     options: [{ id: 'combo', label: 'Combo completo', price: 21900 }],
   },
   {
@@ -32,7 +32,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Combo Docena',
     category: 'combos',
     description: 'Docena de empanadas mixtas + gaseosa 1.5 L',
-    images: ['/demos/pizzeria/empanadas-carne.png'],
+    images: ['/demos/pizzeria/empanada-carne.jpg'],
     options: [{ id: 'combo', label: 'Combo completo', price: 15500 }],
   },
   {
@@ -41,7 +41,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'pizzas',
     badge: 'Más pedida',
     description: 'Salsa, muzzarella y orégano',
-    images: ['/demos/pizzeria/muzzarella.png'],
+    images: ['/demos/pizzeria/muzza.jpg'],
     options: pizzaSizes(8900, 12900),
   },
   {
@@ -49,7 +49,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Napolitana',
     category: 'pizzas',
     description: 'Muzzarella, tomate, ajo y albahaca',
-    images: ['/demos/pizzeria/napolitana.png'],
+    images: ['/demos/pizzeria/napo.jpg'],
     options: pizzaSizes(10900, 14900),
   },
   {
@@ -57,7 +57,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Fugazzeta',
     category: 'pizzas',
     description: 'Cebolla caramelizada y mucho queso',
-    images: ['/demos/pizzeria/fugazzeta.png'],
+    images: ['/demos/pizzeria/fugazzeta.jpg'],
     options: pizzaSizes(11900, 15900),
   },
   {
@@ -66,7 +66,7 @@ const MENU_ITEMS: MenuItemType[] = [
     category: 'empanadas',
     badge: 'Clásico',
     description: 'Carne cortada a cuchillo',
-    images: ['/demos/pizzeria/empanadas-carne.png'],
+    images: ['/demos/pizzeria/empanada-carne.jpg'],
     options: empanadaPacks(7200, 13500),
   },
   {
@@ -74,7 +74,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Empanadas jamón y queso',
     category: 'empanadas',
     description: 'Jamón cocido y muzzarella',
-    images: ['/demos/pizzeria/empanadas-jamon-queso.png'],
+    images: ['/demos/pizzeria/empanada-jyq.jpg'],
     options: empanadaPacks(7200, 13500),
   },
   {
@@ -82,7 +82,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Empanadas de humita',
     category: 'empanadas',
     description: 'Choclo cremoso',
-    images: ['/demos/pizzeria/empanadas-humita.png'],
+    images: ['/demos/pizzeria/empanada-humita.jpg'],
     options: empanadaPacks(6800, 12800),
   },
   {
@@ -90,7 +90,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Fainá',
     category: 'extras',
     description: 'Porción para compartir',
-    images: ['/demos/pizzeria/faina.png'],
+    images: ['/demos/pizzeria/faina.jpg'],
     options: [{ id: 'porcion', label: 'Porción', price: 3500 }],
   },
   {
@@ -98,7 +98,7 @@ const MENU_ITEMS: MenuItemType[] = [
     name: 'Gaseosa 1.5 L',
     category: 'extras',
     description: 'Elegí el sabor',
-    images: ['/demos/pizzeria/bouteille-coca-cola-1-5l.webp'],
+    images: ['/demos/pizzeria/gaseosa.jpg'],
     options: [
       { id: 'coca', label: 'Coca-Cola', price: 2800 },
       { id: 'sprite', label: 'Sprite', price: 2800 },
