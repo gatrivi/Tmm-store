@@ -55,7 +55,7 @@ const steps = [
   {
     n: '02',
     title: 'Armamos tu tienda',
-    copy: 'Catálogo, carrito y pedidos listos en 72 h con el material completo.',
+    copy: 'Catálogo, carrito y pedidos listos en 3 días con el material completo.',
   },
   {
     n: '03',
@@ -139,13 +139,21 @@ export default function LandingPage() {
           <Link to="/" className="font-black tracking-[-0.045em]">
             GATRIVI.COM
           </Link>
-          <a
-            href={buyHref}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-black px-5 text-sm font-black text-white transition hover:-translate-y-0.5"
-          >
-            Quiero el mío
-            <ArrowRight size={16} />
-          </a>
+          <nav className="flex items-center gap-4">
+            <Link
+              to="/para-duenos"
+              className="hidden text-sm font-black text-black/60 transition hover:text-black sm:inline"
+            >
+              Para tu negocio
+            </Link>
+            <a
+              href={buyHref}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-black px-5 text-sm font-black text-white transition hover:-translate-y-0.5"
+            >
+              Quiero el mío
+              <ArrowRight size={16} />
+            </a>
+          </nav>
         </div>
       </header>
 
@@ -154,7 +162,7 @@ export default function LandingPage() {
           <img
             src="/demos/pizzeria/muzza.jpg"
             alt="Ejemplo de tienda online para una pizzería"
-            className="absolute inset-0 h-full w-full object-cover opacity-45"
+            className="zs-hero-parallax absolute inset-0 h-full w-full object-cover opacity-45"
             loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-black/40" />
@@ -178,7 +186,7 @@ export default function LandingPage() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <a
                   href={buyHref}
-                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#ff6b35] px-7 text-base font-black text-white transition hover:-translate-y-0.5 hover:bg-[#ff7d4d]"
+                  className="zs-btn-shine inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#ff6b35] px-7 text-base font-black text-white transition hover:-translate-y-0.5 hover:bg-[#ff7d4d]"
                 >
                   Quiero el mío · {price}
                   <ArrowRight size={18} />
@@ -202,6 +210,27 @@ export default function LandingPage() {
             </div>
 
             <div className="hidden md:block">
+              {/* Fotos de productos reales flotando sobre la tarjeta de precio */}
+              <div className="relative">
+                <img
+                  src="/demos/panaderia/products/medialunas.jpg"
+                  alt=""
+                  aria-hidden="true"
+                  className="zs-float absolute -left-10 -top-8 h-28 w-28 rounded-2xl border-4 border-white/90 object-cover shadow-2xl"
+                  data-float="0"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <img
+                  src="/demos/pizzeria/fugazzeta.jpg"
+                  alt=""
+                  aria-hidden="true"
+                  className="zs-float absolute -bottom-10 -left-16 h-32 w-32 rounded-2xl border-4 border-white/90 object-cover shadow-2xl"
+                  data-float="1"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
               <div className="ml-auto max-w-sm rounded-[2rem] border border-white/15 bg-black/50 p-7 shadow-2xl backdrop-blur-xl">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-white/45">Promo 50% · hasta reunir 5 testimonios</p>
                 <p className="mt-5 text-sm font-bold text-white/45"><s>$650.000</s></p>
@@ -225,8 +254,8 @@ export default function LandingPage() {
         </section>
         <section className="border-b border-black/10 bg-white py-10">
           <div className="mx-auto grid max-w-6xl gap-6 px-4 sm:grid-cols-3 sm:px-6">
-            {steps.map(step => (
-              <div key={step.n} className="flex gap-4">
+            {steps.map((step, i) => (
+              <div key={step.n} data-reveal data-delay={i * 90} className="flex gap-4">
                 <span className="text-2xl font-black tracking-[-0.04em] text-[#d84d1d]">{step.n}</span>
                 <div>
                   <p className="font-black">{step.title}</p>
@@ -242,14 +271,14 @@ export default function LandingPage() {
             <div>
               <p className="text-xs font-black uppercase tracking-[0.16em] text-[#d84d1d]">La experiencia</p>
               <h2 className="mt-4 text-4xl font-black leading-[0.95] tracking-[-0.055em] sm:text-5xl">
-                Entra. Elige. Pide.
+                Entra. Elegí. Pedí.
               </h2>
               <p className="mt-5 text-lg leading-relaxed text-black/60">
                 Eso es todo lo que debería entender tu cliente.
               </p>
               <ol className="mt-8 space-y-4 text-sm font-bold">
                 <li className="flex gap-3"><span className="text-[#d84d1d]">01</span> Ve tus productos y precios.</li>
-                <li className="flex gap-3"><span className="text-[#d84d1d]">02</span> Agrega lo que quiere.</li>
+                <li className="flex gap-3"><span className="text-[#d84d1d]">02</span> Agregá lo que querés.</li>
                 <li className="flex gap-3"><span className="text-[#d84d1d]">03</span> Te llega el pedido ordenado.</li>
               </ol>
               <div className="mt-8 flex flex-col items-start gap-3">
@@ -278,7 +307,8 @@ export default function LandingPage() {
                 src="/demos/pizzeria/napo.jpg"
                 alt="Pizza napolitana en la tienda de demostración"
                 className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
-                loading="lazy"
+                loading="eager"
+                decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8">
@@ -313,18 +343,21 @@ export default function LandingPage() {
             </div>
 
             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {stores.map(store => (
+              {stores.map((store, i) => (
                 <Link
                   key={store.name}
                   to={withAttribution(store.href)}
-                  className="group overflow-hidden rounded-2xl border border-black/10 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                  data-reveal
+                  data-delay={i * 110}
+                  className="zs-btn-shine group overflow-hidden rounded-2xl border border-black/10 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
                 >
                   <div className="aspect-[4/3] overflow-hidden bg-black/5">
                     <img
                       src={store.img}
                       alt={`Tienda online de ${store.name}`}
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                      loading="lazy"
+                      loading="eager"
+                      decoding="async"
                     />
                   </div>
                   <div className="flex items-center justify-between gap-3 p-4">
@@ -413,7 +446,7 @@ export default function LandingPage() {
             <div className="mt-8 divide-y divide-black/10 border-y border-black/10">
               {faqs.map(faq => (
                 <details key={faq.q} className="group py-4">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-black [&::-webkit-details-marker]:hidden">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 font-black [&::-webkit-details-marker]:hidden">
                     {faq.q}
                     <span className="text-xl font-black text-[#d84d1d] transition group-open:rotate-45">+</span>
                   </summary>

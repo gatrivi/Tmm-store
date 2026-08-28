@@ -1,7 +1,50 @@
+/* Parallax: el héroe se mueve más lento que el scroll. */
 :root {
   --zs-scroll-progress: 0;
   --zs-pointer-x: 50vw;
   --zs-pointer-y: 35vh;
+  --zs-parallax-y: 0px;
+}
+
+/* Héroe con parallax — se desplaza con el scroll (translate individual para no pisar el scale/hero-breathe). */
+.zs-sales-motion main .zs-hero-parallax {
+  translate: 0 var(--zs-parallax-y, 0px);
+  will-change: translate;
+}
+
+/* Tarjeta/thumb flotante (fotos decorativas reales de las demos). */
+.zs-float {
+  animation: zs-float 6s ease-in-out infinite;
+  will-change: translate;
+}
+.zs-float[data-float="1"] { animation-delay: -2s; animation-duration: 7s; }
+.zs-float[data-float="2"] { animation-delay: -4s; animation-duration: 5.5s; }
+@keyframes zs-float {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  50% { translate: 0 -9px; rotate: 1.2deg; }
+}
+
+/* Brillo que barre al pasar por botones CTA principales. */
+.zs-sales-motion .zs-btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.zs-sales-motion .zs-btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  translate: -130% 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgb(255 255 255 / 28%) 50%,
+    transparent 70%
+  );
+  transition: translate 520ms ease;
+  pointer-events: none;
+}
+.zs-sales-motion .zs-btn-shine:hover::after {
+  translate: 130% 0;
 }
 
 .zs-motion-ui {
@@ -207,5 +250,15 @@
     translate: 0 0;
     scale: 1;
     transition-duration: 0.01ms !important;
+  }
+
+  .zs-float,
+  .zs-sales-motion main .zs-hero-parallax {
+    animation: none !important;
+    translate: 0 0 !important;
+  }
+
+  .zs-sales-motion .zs-btn-shine::after {
+    display: none;
   }
 }

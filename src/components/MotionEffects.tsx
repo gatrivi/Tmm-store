@@ -77,6 +77,17 @@ export default function MotionEffects() {
         else revealObserver.observe(section);
       });
 
+      // Reveal individual cards/blocks on scroll, not just whole sections.
+      main.querySelectorAll<HTMLElement>('[data-reveal]').forEach(el => {
+        if (el.classList.contains('zs-reveal')) return;
+        el.classList.add('zs-reveal');
+        const delay = Number(el.dataset.delay ?? 0);
+        el.style.setProperty('--zs-delay', `${delay}ms`);
+        touched.add(el);
+        if (reduceMotion.matches || !revealObserver) el.classList.add('zs-visible');
+        else revealObserver.observe(el);
+      });
+
       main.querySelectorAll<HTMLElement>('article, a.group, [data-motion-surface]').forEach(surface => {
         surface.classList.add('zs-interactive-surface');
         touched.add(surface);
@@ -104,6 +115,9 @@ export default function MotionEffects() {
       const max = root.scrollHeight - window.innerHeight;
       const progress = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
       root.style.setProperty('--zs-scroll-progress', String(progress));
+      // Parallax del héroe: se mueve a ~60% de la velocidad del scroll pero con límite suave.
+      const parallax = Math.min(window.scrollY * 0.18, 260);
+      root.style.setProperty('--zs-parallax-y', reduceMotion.matches ? '0px' : `${parallax}px`);
       root.classList.toggle('zs-scrolled', window.scrollY > 18);
     };
 
