@@ -6,13 +6,16 @@ import {
   onSnapshot,
   orderBy,
   query,
-  setDoc,
   updateDoc,
   type Unsubscribe,
 } from 'firebase/firestore';
 import type { OrderRecord, OrderStatus, PaymentStatus } from '../types/order';
 import { normalizeOrderRecord } from '../types/order';
 import { getFirestoreDb, isFirebaseConfigured } from '../lib/firebase';
+import {
+  addOrderAndEventToBatch,
+  enqueueOrderCreatedEventLocal,
+} from './commerceEventOutbox';
 
 const LS_ORDERS_PREFIX = 'trufi_orders_';
 
@@ -39,13 +42,17 @@ function saveLocalOrders(tenantId: string, orders: OrderRecord[]): void {
 export async function createOrder(order: OrderRecord): Promise<void> {
   const db = getFirestoreDb();
   if (db) {
-    await setDoc(doc(db, 'tenants', order.tenantId, 'orders', order.id), order);
+    // Persist the business record and integration event atomically. A later
+    // worker may publish eventOutbox without coupling TMM to BPM internals.
+    const batch = addOrderAndEventToBatch(db, order);
+    await batch.commit();
     return;
   }
 
-  const orders = loadLocalOrders(order.tenantId);
+  const orders = loadLocalOrders(order.tenantId).filter(existing => existing.id !== order.id);
   orders.unshift(order);
   saveLocalOrders(order.tenantId, orders);
+  enqueueOrderCreatedEventLocal(order);
 }
 
 export async function getOrder(tenantId: string, orderId: string): Promise<OrderRecord | null> {
