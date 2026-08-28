@@ -1,0 +1,46 @@
+Trabajá sobre el repo de Gatrivi/Zengasoft que contiene gatrivi.com y las demos comerciales.
+
+Objetivo: dejar listo HOY un flujo de outreach presencial para visitar ~12 negocios de Olivos y poder mostrarles desde el celular una demo relevante + dejarles un link/QR a una propuesta simple.
+
+Hacé lo siguiente:
+
+1. Inspeccioná el repo y entendé la estructura antes de tocar nada.
+2. Identificá las demos actuales reutilizables para:
+   - gastronomía/panadería
+   - indumentaria
+   - calzado
+   - regalos/deco
+3. Creá una ruta de propuesta reutilizable, por ejemplo:
+   /propuesta/[rubro]
+   evitando duplicar páginas si puede resolverse por data/config.
+4. Cada propuesta debe:
+   - cargar muy rápido en móvil
+   - mostrar una demo relevante inmediatamente
+   - explicar en pocas líneas qué obtiene el negocio
+   - mostrar precio/oferta actual si ya existe en el repo
+   - CTA fuerte a WhatsApp
+   - permitir volver fácilmente a demos
+5. Prepará URLs claras que pueda escribir o convertir en QR.
+6. Revisá que el funnel completo funcione en móvil:
+   propuesta -> demo -> contacto/compra.
+7. No rediseñes todo el sitio ni hagas refactors grandes.
+8. Reutilizá componentes y assets existentes.
+9. Corregí cualquier bug bloqueante que encuentres en este flujo.
+10. Ejecutá lint/build/tests relevantes.
+11. Dejá los cambios listos para producción y hacé commit con mensaje descriptivo.
+
+Prioridades:
+P0 = puedo salir hoy con el celular y vender.
+P1 = claridad y velocidad.
+P2 = estética.
+No gastes tiempo en features “nice to have”.
+
+Al terminar, reportame:
+- qué cambiaste
+- URLs exactas para usar
+- qué demos mostrar para cada rubro
+- bugs encontrados
+- commit/hash
+- cualquier cosa que todavía impida vender hoy
+
+Tomá decisiones razonables sin preguntarme salvo que exista riesgo real de romper producción.

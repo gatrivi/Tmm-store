@@ -12,6 +12,7 @@ import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
 import { POLLERIA_DEL_BARRIO_DEMO } from '../data/demos/polleriaDelBarrio';
 import { VERDULERIA_DEMO } from '../data/demos/verduleria';
 import { ZIMBA_PET_DEMO } from '../data/demos/zimbaPet';
+import { OLIVOS_DEMO } from '../data/demos/olivos';
 import type { DemoDefinition } from '../data/demos/types';
 import { getDemoShortPath } from '../config/demoShortLinks';
 
@@ -39,6 +40,7 @@ const DEMOS: DemoDefinition[] = [
   POLLERIA_DEL_BARRIO_DEMO,
   AGUACATS_DEMO,
   ZIMBA_PET_DEMO,
+  OLIVOS_DEMO,
 ];
 
 export function listVerticalDemos(): DemoDefinition[] {

@@ -131,6 +131,8 @@ export default function App() {
           <Route path="/aguacats/owner" element={<DemoOwnerPage />} />
           <Route path="/verduleria/owner" element={<DemoOwnerPage />} />
           <Route path="/zimba-pet/owner" element={<DemoOwnerPage />} />
+          <Route path="/olivos/owner" element={<DemoOwnerPage />} />
+          <Route path="/demo/olivos/owner" element={<DemoOwnerPage />} />
 
           <Route path="/demo/bar/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/carniceria/owner" element={<DemoOwnerPage />} />
@@ -142,6 +144,7 @@ export default function App() {
           <Route path="/demo/aguacats/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/verduleria/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/zimba-pet/owner" element={<DemoOwnerPage />} />
+          <Route path="/demo/olivos/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/confiteria-parana/owner" element={<DemoOwnerPage />} />
           <Route path="/confiteria-parana/owner" element={<DemoOwnerPage />} />
           <Route path="/demo/el-mirasol/owner" element={<DemoOwnerPage />} />

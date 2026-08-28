@@ -18,6 +18,7 @@ import { MAMABEL_DEMO } from '../data/demos/mamabel';
 import { PANADERIA_DEMO } from '../data/demos/panaderia';
 import { PIZZERIA_DEMO } from '../data/demos/pizzeria';
 import { VERDULERIA_DEMO } from '../data/demos/verduleria';
+import { OLIVOS_DEMO } from '../data/demos/olivos';
 
 function main() {
   assert.equal(resolveTenantIdFromPath('/demo'), 'demo');
@@ -188,6 +189,35 @@ function main() {
   const tomate = VERDULERIA_DEMO.menuItems.find(i => i.id === 'tomate')!;
   assert.equal(tomate.options.length, 2);
   assert.equal(tomate.options[0].price * 2, tomate.options[1].price);
+
+  // Boutique Olivos (indumentaria femenina, demo ficticia Manacar)
+  assert.equal(resolveTenantIdFromPath('/demo/olivos'), 'demo-olivos');
+  assert.equal(resolveTenantIdFromPath('/demo/olivos/owner'), 'demo-olivos');
+  assert.equal(resolveTenantIdFromPath('/demo/olivos/order/OL17'), 'demo-olivos');
+  assert.equal(resolveTenantIdFromPath('/olivos'), 'demo-olivos');
+  assert.equal(resolveTenantIdFromPath('/olivos/owner'), 'demo-olivos');
+  assert.equal(resolveDemoIdFromPath('/demo/olivos'), 'olivos');
+  assert.equal(resolveDemoStorageKey('olivos'), 'trufi_demo_orders_v2:olivos');
+  const olv = resolveDemoFromPath('/demo/olivos');
+  assert.ok(olv);
+  assert.equal(olv.tenantId, 'demo-olivos');
+  assert.equal(olv.plan, 'pedidos');
+  assert.equal(olv.siteSettings.brandName, 'Manacar Indumentaria');
+  assert.equal(olv.siteSettings.whatsappNumber, ''); // guardrail: demo sin WSP real
+  assert.ok(olv.menuItems.some(i => i.id === 'blazer-candela-ol'));
+  assert.ok(olv.menuItems.some(i => i.id === 'tapado-paris-ol'));
+  assert.ok(olv.menuItems.length >= 14);
+  assert.ok(olv.menuItems.every(i => i.options.length >= 2)); // talles/colores por opción
+  assert.equal(olv.menuCategories.length, 6);
+  assert.equal(olv.seedOrders.length, 3);
+  assert.equal(getDemoByTenantId('demo-olivos')?.id, 'olivos');
+  const blazer = OLIVOS_DEMO.menuItems.find(i => i.id === 'blazer-candela-ol')!;
+  assert.ok(blazer.images.length >= 2); // galería multi-foto
+  const coach = OLIVOS_DEMO.menuItems.find(i => i.id === 'blusa-coach-ol')!;
+  assert.ok(coach.options.some(o => o.available === false)); // sin stock por talle
+  assert.ok(olv.menuItems.some(i => i.badge === 'Últimos talles'));
+  assert.notEqual(resolveDemoStorageKey('olivos'), resolveDemoStorageKey('canavesi'));
+  assert.notEqual(resolveDemoStorageKey('olivos'), resolveDemoStorageKey('demo'));
   assert.notEqual(resolveDemoStorageKey('verduleria'), resolveDemoStorageKey('carniceria'));
 
   console.log('demoRegistry.selfcheck: ok');

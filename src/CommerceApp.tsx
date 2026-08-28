@@ -90,6 +90,11 @@ export default function CommerceApp() {
               <Route path="/demo/confiteria-parana/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/zimba-pet" element={<CustomerDemo />} />
               <Route path="/demo/zimba-pet/order/:orderId" element={<OrderStatusPage />} />
+
+              <Route path="/olivos" element={<CustomerDemo />} />
+              <Route path="/olivos/order/:orderId" element={<OrderStatusPage />} />
+              <Route path="/demo/olivos" element={<CustomerDemo />} />
+              <Route path="/demo/olivos/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/el-mirasol" element={<ElMirasolDemoPage />} />
               <Route path="/el-mirasol/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/el-mirasol" element={<ElMirasolDemoPage />} />
