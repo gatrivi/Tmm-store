@@ -1,4 +1,5 @@
 import { AGUACATS_DEMO } from '../data/demos/aguacats';
+import { BAR_DEMO } from '../data/demos/bar';
 import { CANAVESI_DEMO } from '../data/demos/canavesi';
 import { CARNICERIA_DEMO } from '../data/demos/carniceria';
 import { CONFITERIA_PARANA_DEMO } from '../data/demos/confiteriaParana';
@@ -24,6 +25,7 @@ const GASTRONOMY_DEMO: Pick<DemoDefinition, 'id' | 'tenantId' | 'customerPath' |
 };
 
 const DEMOS: DemoDefinition[] = [
+  BAR_DEMO,
   CANAVESI_DEMO,
   CONFITERIA_PARANA_DEMO,
   EL_MIRASOL_DEMO,

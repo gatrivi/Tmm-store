@@ -11,6 +11,7 @@ export type DemoShortLink = {
  * Public, memorable demo URLs. Legacy /demo/... routes stay valid for links already in circulation.
  */
 export const DEMO_SHORT_LINKS: DemoShortLink[] = [
+  { id: 'bar', label: 'Bar / bodegón', shortPath: '/bar', legacyPath: '/demo/bar' },
   { id: 'panaderia', label: 'Panadería', shortPath: '/panaderia', legacyPath: '/demo/panaderia' },
   { id: 'heladeria', label: 'Heladería', shortPath: '/heladeria', legacyPath: '/demo/heladeria' },
   { id: 'cafe-roca', label: 'Café / restaurante', shortPath: '/cafe-roca', legacyPath: '/demo/cafe-roca' },

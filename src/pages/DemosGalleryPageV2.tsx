@@ -212,6 +212,16 @@ const DEMOS: DemoItem[] = [
     tags: ['Peso / unidad', 'Total', 'Pedido'],
   },
   {
+    name: 'Bar La Esquina',
+    rubro: 'Bar / bodegón',
+    kind: 'Tienda',
+    description: 'Picadas, platitos, tragos y café: la ronda del bar armada por link con retiro y delivery, sin audios.',
+    samplePath: '/bar',
+    image: '/demos/canavesi/picada.jpg',
+    imageAlt: 'Picada de tabla de la demo de bar Bar La Esquina',
+    tags: ['Picadas', 'Tragos', 'Retiro / delivery'],
+  },
+  {
     name: 'Pollería del barrio',
     rubro: 'Pollería · rotisería',
     kind: 'Tienda',
