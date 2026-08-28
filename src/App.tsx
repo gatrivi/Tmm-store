@@ -19,6 +19,7 @@ const SalesDepositPage = lazy(() => import('./pages/SalesDepositPage'));
 const SupportPlansPage = lazy(() => import('./pages/SupportPlansPage'));
 const FlyerFunnelPage = lazy(() => import('./pages/FlyerFunnelPage'));
 const PropuestaPage = lazy(() => import('./pages/PropuestaPage'));
+const ParaDuenosPage = lazy(() => import('./pages/ParaDuenosPage'));
 
 const SALES_PATHS = ['/', '/oferta', '/empezar', '/web', '/sitio', '/tienda', '/catalogo', '/precios', '/demos'];
 
@@ -96,6 +97,8 @@ export default function App() {
           {/* Propuesta outreach por rubro: /propuesta/[rubro] (data-driven, una sola página). */}
           <Route path="/propuesta" element={<PropuestaPage />} />
           <Route path="/propuesta/:rubro" element={<PropuestaPage />} />
+          <Route path="/para-duenos" element={<ParaDuenosPage />} />
+          <Route path="/que-hacemos" element={<ParaDuenosPage />} />
 
           <Route path="/demos" element={<DemosGalleryPage />} />
 
