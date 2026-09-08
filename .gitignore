@@ -27,6 +27,14 @@ dist-ssr
 *.sw?
 .aider*
 .vercel
+.commandcode/
+.cursor/
+.playwright-mcp/
+.vite/
+.tmp*
+*.pdf.new
+desktop.ini
+shots/
 test-results/
 playwright-report/
 playwright/.cache/
