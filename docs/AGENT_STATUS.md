@@ -2,10 +2,12 @@
 
 **Léeme primero.** Snapshot preciso del producto para agentes cloud / Cursor.
 
+**Portfolio direction, 2026-09-07:** The owner is selling web development to pymes in Buenos Aires and Vicente López. For portfolio and demo work, follow [effective-demos.md](./ops/effective-demos.md); the store-only positioning below is historical product context.
+
 | Campo | Valor |
 |-------|--------|
-| **Fecha snapshot** | 2026-08-21 |
-| **Versión** | `1.24.0` (`package.json` → stamp UI) |
+| **Fecha snapshot** | 2026-08-28 |
+| **Versión** | `1.30.0` (`package.json` → stamp UI) |
 | **Rama** | `trabajo` (tracks `origin/trabajo`) |
 | **Cambio actual** | Demo Express público OFF — solo demos pulidas |
 | **Live** | https://tmm.gatrivi.com |
@@ -93,12 +95,15 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/demo/verduleria` | **La Inmaculada** verdulería (cliente) |
 | `/demo/verduleria/owner` | Panel Inmaculada |
 | `/demo/verduleria/order/:id` | Seguimiento |
+| `/demo/olivos` | **Manacar** boutique indumentaria Olivos (cliente) |
+| `/demo/olivos/owner` | Panel Manacar |
+| `/demo/olivos/order/:id` | Seguimiento boutique |
 | `/s/:slug` | Storefront tenant |
 | `/s/:slug/admin` · `/admin` | Admin dueño |
 | `/order/:orderId` | Seguimiento pedido real/tenant |
 | `/super-admin` | Provisioning tenants |
 
-- Live sales URLs: `/` · `/demos` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/canavesi` · `/demo/verduleria` · `/demo/aguacats` · `/demo/confiteria-parana` · `/demo/el-mirasol`.
+- Live sales URLs: `/` · `/demos` · `/demo/mamabel` · `/demo/pizzeria` (+ owner) · `/demo/panaderia` · `/demo/carniceria` · `/demo/canavesi` · `/demo/verduleria` · `/demo/aguacats` · `/demo/confiteria-parana` · `/demo/el-mirasol` · `/demo/olivos`.
 
 ---
 
@@ -116,7 +121,7 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 - **Demo Express presets:** código vivo; **público OFF** (v1.22.0) — no linkear desde landing/`/demos`; flag `src/config/demoExpress.ts`
 - **Demo plan switch (v1.23.0):** barra "Vista demo" (Catálogo / Tienda WSP / Tienda MP) en demos con plan gating real: verticals Storefront (pizzería, Zimba Pet, Express), WeightedCatalog (carnicería/Canavesi/verdulería), Aguacats, Ferretería. Override en sessionStorage `trufi_demo_plan_override` (sticky por sesión, sólo demos). Pendiente switch en páginas bespoke: Mamabel, Panadería, MolinoFlorida, Heladería, CafeRoca.
 - **Demo Confitería Paraná (v1.24.0):** warm lead (amigos de familia), Paraná 3374 Olivos, **746 reseñas Google 4.6★ sin web propia**, vende por Rappi/PedidosYa. Storefront genérico + plan switch. Config `src/data/demos/confiteriaParana.ts` · doc [`roadmap/demo-confiteria-parana.md`](./roadmap/demo-confiteria-parana.md). Sin WSP del comercio hasta permiso; fotos reutilizadas (pendiente sesión propia).
-- **Demo El Mirasol de La Recova (v1.25.0):** cold lead parrilla clásica Recoleta (Posadas 1032), **web propia muerta** (`elmirasol.com.ar`, solo Wayback) — ángulo "tu URL era tu carta y murió". Storefront genérico + plan switch. Config `src/data/demos/elMirasol.ts` · doc [`roadmap/demo-el-mirasol.md`](./roadmap/demo-el-mirasol.md). Sin WSP ni cobro; fotos reutilizadas canavesi (pendiente sesión propia).
+- **BoutiqueStore engine + Manacar boutique Olivos (v1.29–1.30):** indumentaria femenina IG/WSP (demo ficticia, sin comercio real). **Progressive disclosure** (ref: Ricardo Hombres): grid limpio foto+nombre+precio → product sheet full-screen mobile (galería swipe + talles) → CartBar fijo → checkout WSP-first. Engine data-driven reutilizable (`src/pages/BoutiqueStore.tsx`). **Diseño propio (v1.30, SKILL.md):** tokens Olivos (oliva #575D4E / cemento / etiqueta / alfiler), hero-collage de prendas reales como tesis, firma = talles como etiquetas de cartón colgadas (hilo SVG + ojo perforado + rotación -3° al elegir). Config `src/data/demos/olivos.ts` (16 productos, banda $8.999–66.399 ref Juvia) · doc [`roadmap/demo-olivos.md`](./roadmap/demo-olivos.md). Fotos Pexels locales (pendiente sesión propia). Plataforma: opciones `available:false` visibles en Storefront (chip "No disponible"); fix `setDemoPlanOverride` en DemoRibbon pills.
 - **Demo Mamá Mabel flagship (v1.11–1.13.4):** portada marca · portfolio likes · encargo WA · cursos honestos · hero/portfolio black-bg studio picks (EXIF/glare/tilt/center)
 - **Demo pizzería Fit A:** carta pizza/empanadas, tenant `demo-pizzeria`, storage aislado
 - **Demo panadería La Magdalena (v1.9.3):** tenant `demo-panaderia`, storage `trufi_demo_orders_v2:panaderia`
@@ -160,6 +165,7 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | Demo verdulería | `sessionStorage` `trufi_demo_orders_v2:verduleria` |
 | Demo carnicería | `sessionStorage` `trufi_demo_orders_v2:carniceria` |
 | Demo Canavesi | `sessionStorage` `trufi_demo_orders_v2:canavesi` |
+| Demo Manacar (olivos) | `sessionStorage` `trufi_demo_orders_v2:olivos` |
 
 Resolución path→tenant: `src/utils/demoRegistry.ts` (prefijos largos ganan).
 
@@ -245,7 +251,8 @@ Publicitar “busco pilotos” o vender Tienda online: **Gate A OK** (verificar 
 | Página peso (carnicería/Canavesi/verdulería) | `src/pages/WeightedCatalogDemoPage.tsx` |
 | Demo plan switch | `src/components/DemoPlanSwitch.tsx` + override en `src/context/PlanContext.tsx` |
 | Config confitería | `src/data/demos/confiteriaParana.ts` → Storefront genérico |
-| Página carnicería | re-export → WeightedCatalogDemoPage |
+| Config boutique Olivos | `src/data/demos/olivos.ts` → BoutiqueStore engine |
+| Boutique engine (ropa) | `src/pages/BoutiqueStore.tsx` ← config `src/data/demos/olivos.ts` |
 | Planes | `src/config/plans.ts` |
 | Versión inyectada | `src/config/version.ts` ← vite |
 | API MP | `api/create-preference.ts`, `api/mp-webhook.ts` |
@@ -288,9 +295,9 @@ Abrir:
 - https://tmm.gatrivi.com/demo/carniceria
 - https://tmm.gatrivi.com/demo/canavesi
 - https://tmm.gatrivi.com/demo/verduleria
+- https://tmm.gatrivi.com/demo/olivos
 - https://tmm.gatrivi.com/demo/aguacats
-- Stamp / `package.json` = **1.22.0**
-
+- Stamp / `package.json` = **1.30.0**
 ---
 
 **Actualizar este archivo** cuando cambie versión mayor/menor, se shippee un hito, o cambie el foco de ventas.

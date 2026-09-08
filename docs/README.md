@@ -2,6 +2,8 @@
 
 Agent manifest: read this first, then one targeted file.
 
+**Web-services portfolio/demo direction (2026-09-07):** [Effective demos playbook](./ops/effective-demos.md). Start here for new demos and portfolio improvements; includes an agent assignment and quality gate.
+
 | Need | Read |
 |------|------|
 | **Estado app (agentes cloud)** | [**AGENT_STATUS.md**](./AGENT_STATUS.md) ← empezar acá |
@@ -40,7 +42,9 @@ Agent manifest: read this first, then one targeted file.
 | **Demo carnicería (live)** | [roadmap/demo-carniceria-gabriel.md](./roadmap/demo-carniceria-gabriel.md) · `/demo/carniceria` |
 | **Demo Canavesi (live)** | [roadmap/demo-canavesi.md](./roadmap/demo-canavesi.md) · `/demo/canavesi` · gaps [canavesi-content-gaps.md](./canavesi-content-gaps.md) |
 | **Demo verdulería La Inmaculada** | [roadmap/demo-verduleria.md](./roadmap/demo-verduleria.md) · `/demo/verduleria` |
+| **Site MVP La Inmaculada (site propio)** | [roadmap/inmaculada-site-mvp.md](./roadmap/inmaculada-site-mvp.md) · `/inmaculada` |
 | **Demo pollería del barrio** | [roadmap/demo-polleria.md](./roadmap/demo-polleria.md) · `/demo/polleria` |
+| **Demo boutique Olivos (indumentaria)** | [roadmap/demo-olivos.md](./roadmap/demo-olivos.md) · `/demo/olivos` |
 | **Demo Molino Florida (prospect)** | [roadmap/demo-molino-florida.md](./roadmap/demo-molino-florida.md) · `/molino-florida` |
 | **Plan verticales + demos** | [roadmap/vertical-demos-plan.md](./roadmap/vertical-demos-plan.md) |
 | **30-day sales audit + Demo Express decision** | [ops/audit-sales-30-days-2026-07-11.md](./ops/audit-sales-30-days-2026-07-11.md) |
