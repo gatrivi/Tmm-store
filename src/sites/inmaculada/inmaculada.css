@@ -1,0 +1,442 @@
+/* La Inmaculada — estilos propios, aislados bajo .inm. Nada hereda del shell. */
+
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+
+.inm {
+  /* Cartel de verdulería: tiza verde, limón para el dinero, papel kraft, gis */
+  --inm-tiza: #1e4d2b;
+  --inm-limon: #e8f16a;
+  --inm-kraft: #ede6d6;
+  --inm-tinta: #141b14;
+  --inm-gis: #faf7f0;
+  --inm-tiza-clara: #2f6b40;
+  --inm-linea: rgba(20, 27, 20, 0.16);
+
+  min-height: 100vh;
+  background: var(--inm-kraft);
+  color: var(--inm-tinta);
+  font-family: 'Work Sans', system-ui, sans-serif;
+  line-height: 1.55;
+  font-size: 16px;
+}
+
+.inm *,
+.inm *::before,
+.inm *::after { box-sizing: border-box; }
+
+.inm-skip { position: absolute; left: -9999px; }
+.inm-skip:focus {
+  left: 16px;
+  top: 16px;
+  z-index: 60;
+  background: var(--inm-limon);
+  color: var(--inm-tinta);
+  padding: 8px 12px;
+}
+.inm-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* ---------- Hero ---------- */
+.inm-hero {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 20px 32px;
+}
+.inm-hero-eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--inm-tiza-clara);
+  margin: 0 0 12px;
+}
+.inm-hero-title {
+  font-family: 'Anton', 'Arial Narrow', sans-serif;
+  font-size: clamp(44px, 9vw, 76px);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin: 0 0 18px;
+  color: var(--inm-tinta);
+}
+.inm-hero-title em { font-style: normal; color: var(--inm-tiza); }
+.inm-hero-body {
+  max-width: 46ch;
+  font-size: 18px;
+  margin: 0 0 24px;
+}
+.inm-hero-cta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.inm-hero-photo { margin: 0; }
+.inm-hero-photo img {
+  width: 100%;
+  display: block;
+  border: 2px solid var(--inm-tinta);
+}
+.inm-hero-photo figcaption {
+  font-size: 13px;
+  margin-top: 8px;
+  color: var(--inm-tiza-clara);
+}
+
+/* ---------- Botones ---------- */
+.inm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 22px;
+  font: inherit;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  border: 2px solid var(--inm-tinta);
+  text-decoration: none;
+  transition: transform 120ms ease;
+}
+.inm-btn:active { transform: translateY(1px); }
+.inm-btn:focus-visible,
+.inm-pill:focus-visible,
+.inm-sticky:focus-visible,
+.inm-mode:focus-visible,
+.inm-close:focus-visible {
+  outline: 3px solid var(--inm-tiza-clara);
+  outline-offset: 2px;
+}
+.inm-btn-primary {
+  background: var(--inm-limon);
+  color: var(--inm-tinta);
+  border-color: var(--inm-tinta);
+}
+.inm-btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+.inm-btn-ghost { background: transparent; color: var(--inm-tinta); }
+.inm-btn-block { width: 100%; margin-top: 8px; }
+
+/* ---------- Pizarra (único lugar con textura de tiza) ---------- */
+.inm-pizarra {
+  max-width: 720px;
+  margin: 8px auto 0;
+  padding: 20px 24px;
+  background:
+    radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1.5px),
+    linear-gradient(160deg, #182a1c, #10211a);
+  background-size: 7px 7px, cover;
+  border: 2px solid var(--inm-tinta);
+  color: var(--inm-gis);
+}
+.inm-pizarra-title {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 22px;
+  margin: 0 0 10px;
+  color: var(--inm-limon);
+  text-shadow: 0 0 6px rgba(232, 241, 106, 0.25);
+}
+.inm-pizarra-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 3px rgba(250, 247, 240, 0.2);
+}
+.inm-pizarra-list li::before {
+  content: '·';
+  margin-right: 10px;
+  color: var(--inm-limon);
+}
+
+/* ---------- Carta / lista de mercado ---------- */
+.inm-carta {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+}
+.inm-cat { margin-bottom: 36px; }
+.inm-cat-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 30px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 0 0 6px;
+  color: var(--inm-tinta);
+}
+.inm-cat-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 2px solid var(--inm-tinta);
+}
+.inm-row {
+  padding: 16px 0 14px;
+  border-bottom: 1px solid var(--inm-linea);
+}
+.inm-row-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.inm-row-name { font-weight: 700; font-size: 18px; }
+.inm-row-note {
+  font-size: 14px;
+  color: var(--inm-tiza-clara);
+  font-style: italic;
+}
+.inm-badge {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--inm-tiza);
+  color: var(--inm-gis);
+  vertical-align: middle;
+}
+.inm-opts { display: flex; gap: 8px; flex-wrap: wrap; }
+.inm-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+  background: var(--inm-gis);
+  border: 1.5px solid var(--inm-tinta);
+}
+.inm-pill:hover { background: var(--inm-limon); }
+.inm-pill-label { font-weight: 500; color: var(--inm-tiza-clara); }
+.inm-pill-price { font-weight: 700; font-variant-numeric: tabular-nums; }
+.inm-pill-add { font-weight: 700; color: var(--inm-tiza); }
+
+/* ---------- Zona / horarios ---------- */
+.inm-zona {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8px 20px 40px;
+  display: grid;
+  gap: 24px;
+}
+.inm-zona-text { margin: 0 0 10px; max-width: 52ch; }
+.inm-hours { margin: 0; }
+.inm-hours-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--inm-linea);
+}
+.inm-hours-row dt { font-weight: 500; }
+.inm-hours-row dd { margin: 0; font-variant-numeric: tabular-nums; }
+.inm-link { color: var(--inm-tiza); font-weight: 700; }
+
+.inm-footer {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 96px;
+  border-top: 2px solid var(--inm-tinta);
+  font-size: 14px;
+}
+.inm-footer-demo { color: var(--inm-tiza-clara); margin-top: 4px; }
+
+/* ---------- Barra sticky ---------- */
+.inm-sticky {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 16px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  font: inherit;
+  cursor: pointer;
+  background: var(--inm-tinta);
+  color: var(--inm-gis);
+  border: 2px solid var(--inm-tinta);
+  box-shadow: 0 4px 0 rgba(20, 27, 20, 0.25);
+}
+.inm-sticky-count {
+  min-width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  background: var(--inm-limon);
+  color: var(--inm-tinta);
+  font-weight: 700;
+  border-radius: 50%;
+  font-size: 14px;
+}
+.inm-sticky-label { font-weight: 700; white-space: nowrap; }
+.inm-sticky-total {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--inm-limon);
+  white-space: nowrap;
+}
+.inm-sticky-total small {
+  font-weight: 400;
+  color: var(--inm-gis);
+  opacity: 0.7;
+}
+
+/* ---------- Drawer ---------- */
+.inm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(20, 27, 20, 0.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.inm-drawer {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  max-height: 86vh;
+  overflow-y: auto;
+  background: var(--inm-gis);
+  border: 2px solid var(--inm-tinta);
+  border-bottom: none;
+  padding: 24px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+}
+.inm-drawer-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 28px;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+}
+.inm-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  font-size: 22px;
+  line-height: 1;
+  font-family: inherit;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--inm-tinta);
+}
+.inm-cart-list { list-style: none; margin: 0 0 12px; padding: 0; }
+.inm-cart-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--inm-linea);
+}
+.inm-cart-name { flex: 1; font-weight: 500; }
+.inm-cart-name small { color: var(--inm-tiza-clara); }
+.inm-cart-price {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  min-width: 84px;
+  text-align: right;
+}
+.inm-qty { display: inline-flex; align-items: center; gap: 10px; }
+.inm-qty button {
+  width: 28px;
+  height: 28px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid var(--inm-tinta);
+  background: var(--inm-gis);
+}
+.inm-qty button:hover { background: var(--inm-limon); }
+.inm-total { font-size: 18px; margin: 12px 0 8px; }
+.inm-total strong { font-variant-numeric: tabular-nums; }
+.inm-total small {
+  display: block;
+  font-size: 13px;
+  color: var(--inm-tiza-clara);
+}
+
+/* ---------- Checkout ---------- */
+.inm-field { display: block; margin-bottom: 12px; }
+.inm-field span {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.inm-field input,
+.inm-field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font: inherit;
+  border: 1.5px solid var(--inm-tinta);
+  background: var(--inm-gis);
+  color: var(--inm-tinta);
+}
+.inm-field input:focus-visible,
+.inm-field textarea:focus-visible {
+  outline: 3px solid var(--inm-tiza-clara);
+  outline-offset: 1px;
+}
+.inm-modes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.inm-mode {
+  padding: 10px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid var(--inm-tinta);
+  background: var(--inm-gis);
+}
+.inm-mode.selected {
+  background: var(--inm-tiza);
+  color: var(--inm-gis);
+}
+
+/* ---------- Enviado ---------- */
+.inm-sent .inm-sent-eyebrow {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--inm-tiza-clara);
+}
+
+@media (min-width: 640px) {
+  .inm-overlay { align-items: center; }
+  .inm-drawer {
+    border-bottom: 2px solid var(--inm-tinta);
+    padding-bottom: 24px;
+  }
+  .inm-zona { grid-template-columns: 1fr 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inm * { transition: none !important; }
+}
+
+

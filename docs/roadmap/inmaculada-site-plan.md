@@ -60,7 +60,9 @@ Es **exactamente el mismo territorio**: entregan en San Isidro, Martínez, Vicen
 
 ## Plan de sitio (cuando el lead pague depósito)
 
-Plataforma: tenant Gatrivi plan `pedidos`, patrón `WeightedCatalogDemoPage`. Slug sugerido: `inmaculada` (`/s/inmaculada` + custom domain opcional).
+**Estado: MVP implementado (2026-08-28)** — ver [`inmaculada-site-mvp.md`](./inmaculada-site-mvp.md) para archivos, ruta, QA y pendientes. Lo que sigue es el plan original.
+
+Plataforma: site propio aislado en `src/sites/inmaculada/` (NO `WeightedCatalogDemoPage`). Ruta: `/inmaculada`.
 
 ### Estructura / IA
 
