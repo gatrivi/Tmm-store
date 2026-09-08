@@ -10,9 +10,11 @@ import { copyToClipboard } from '../utils/clipboard';
 
 export default function DemoShareFooter() {
   const location = useLocation();
+  // Sitios propios (no demos): nunca mostrar branding comercial de Gatrivi.
+  const ownSite = location.pathname.startsWith('/inmaculada');
   const demo = useMemo(
-    () => getDemoShortLinkForPath(location.pathname),
-    [location.pathname],
+    () => (ownSite ? null : getDemoShortLinkForPath(location.pathname)),
+    [location.pathname, ownSite],
   );
   const [qrDataUrl, setQrDataUrl] = useState('');
   const [copied, setCopied] = useState(false);

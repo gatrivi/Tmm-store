@@ -231,6 +231,16 @@ const DEMOS: DemoItem[] = [
     imageAlt: 'Ilustración de pollo al spiedo y papas de la demo Pollería del barrio',
     tags: ['Spiedo', 'Combos', 'Sin comisión'],
   },
+  {
+    name: 'Manacar Indumentaria',
+    rubro: 'Boutique femenina · Olivos',
+    kind: 'Tienda',
+    description: 'Ropa de mujer con talles claros y ficha por prenda: del feed de Instagram al pedido ordenado, sin "¿queda talle M?".',
+    samplePath: '/olivos',
+    image: '/demos/olivos/card.svg',
+    imageAlt: 'Ilustración de etiqueta de cartón con talles para la demo Manacar Indumentaria',
+    tags: ['Talles claros', 'Ficha por prenda', 'Sin comisión'],
+  },
 ];
 
 export default function DemosGalleryPageV2() {

@@ -17,9 +17,11 @@ export function AppVersionBadge({ className = '' }: AppVersionBadgeProps) {
 }
 
 function shouldShowPublicStamp(): boolean {
-  if (import.meta.env.DEV) return true;
   if (typeof window === 'undefined') return false;
   const path = window.location.pathname;
+  // Sitios propios (no demos): nunca mostrar stamp de Gatrivi, ni siquiera en dev.
+  if (path.startsWith('/inmaculada')) return false;
+  if (import.meta.env.DEV) return true;
   if (path.includes('/admin') || path.includes('/super-admin')) return true;
   return new URLSearchParams(window.location.search).has('debug');
 }

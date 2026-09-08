@@ -335,7 +335,7 @@ export const OLIVOS_DEMO: DemoDefinition = {
     continueLabel: 'Seguir mirando la tienda',
     revenueLabel: 'Pedidos sesión',
     notesPlaceholder: 'Retiro 18:00 · talle M si queda…',
-    chips: ['Indumentaria femenina', 'Talles claros', 'Retiro en Olivos'],
+    chips: ['Indumentaria femenina', 'Talles claros'],
     weightNotice: 'Talles S a L y 36 a 40 según prenda. Sin stock queda marcado en el talle.',
   },
 };

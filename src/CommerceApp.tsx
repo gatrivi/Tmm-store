@@ -5,12 +5,14 @@ import OrderStatusPage from './pages/OrderStatusPage';
 import AguacatsDemoPage from './pages/AguacatsDemoPage';
 import FerreteriaDemoPage from './pages/FerreteriaDemoPage';
 import MamabelDemoPage from './pages/MamabelDemoPage';
-import MolinoFloridaDemoPage from './pages/MolinoFloridaDemoPage';
-import PanaderiaDemoPage from './pages/PanaderiaDemoPage';
+import BoutiqueStore from './pages/BoutiqueStore';
 import ElMirasolDemoPage from './pages/ElMirasolDemoPage';
+import PanaderiaDemoPage from './pages/PanaderiaDemoPage';
+import MolinoFloridaDemoPage from './pages/MolinoFloridaDemoPage';
 import Storefront from './pages/Storefront';
 import SuperAdminPage from './pages/SuperAdminPage';
 import WeightedCatalogDemoPage from './pages/WeightedCatalogDemoPage';
+import InmaculadaSite from './sites/inmaculada/InmaculadaSite';
 import { AppVersionStamp } from './components/AppVersionBadge';
 import { DemoRibbon } from './components/DemoRibbon';
 import { DEMO_EXPRESS_FALLBACK, DEMO_EXPRESS_PUBLIC } from './config/demoExpress';
@@ -91,9 +93,9 @@ export default function CommerceApp() {
               <Route path="/demo/zimba-pet" element={<CustomerDemo />} />
               <Route path="/demo/zimba-pet/order/:orderId" element={<OrderStatusPage />} />
 
-              <Route path="/olivos" element={<CustomerDemo />} />
+              <Route path="/olivos" element={<BoutiqueStore />} />
               <Route path="/olivos/order/:orderId" element={<OrderStatusPage />} />
-              <Route path="/demo/olivos" element={<CustomerDemo />} />
+              <Route path="/demo/olivos" element={<BoutiqueStore />} />
               <Route path="/demo/olivos/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/el-mirasol" element={<ElMirasolDemoPage />} />
               <Route path="/el-mirasol/order/:orderId" element={<OrderStatusPage />} />
@@ -139,6 +141,7 @@ export default function CommerceApp() {
               <Route path="/demo/molino-florida/order/:orderId" element={<OrderStatusPage />} />
               <Route path="/demo/molino" element={<Navigate to="/molino-florida" replace />} />
 
+              <Route path="/inmaculada" element={<InmaculadaSite />} />
               <Route path="/s/:slug" element={<Storefront />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/s/:slug/admin" element={<AdminPage />} />

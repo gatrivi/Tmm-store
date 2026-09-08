@@ -285,7 +285,7 @@ export default function Storefront() {
       .filter(item => item.available !== false)
       .map(item => ({
         ...item,
-        options: (item.options ?? []).filter(opt => opt.available !== false)
+        options: (item.options ?? [])
       }))
       .filter(item => item.options.length > 0);
   }, [menuItems]);
@@ -403,14 +403,30 @@ export default function Storefront() {
     const titleClass = menuLayout === 'magazine' ? 'text-2xl' : 'text-xl';
 
     return (
-      <div key={item.id} className={`rounded-2xl overflow-hidden flex flex-col transition duration-300 hover:-translate-y-1 hover:shadow-xl ${isPizzeria ? 'bg-white border border-black/8 shadow-sm' : 'bg-surface-elevated shadow-sm border border-border'} ${isUnavailable ? 'opacity-60 grayscale' : ''}`}>
+      <div key={item.id} className={`group rounded-2xl overflow-hidden flex flex-col transition duration-300 hover:-translate-y-1 hover:shadow-xl ${isPizzeria ? 'bg-white border border-black/8 shadow-sm' : 'bg-surface-elevated shadow-sm border border-border'} ${isUnavailable ? 'opacity-60 grayscale' : ''}`}>
         {images.length > 0 ? (
-          <img
-            src={images[0]}
-            alt={getLocalizedName(item)}
-            loading="lazy"
-            className={`w-full ${imageHeight} object-cover bg-white/10`}
-          />
+          <div className="relative">
+            <img
+              src={images[0]}
+              alt={getLocalizedName(item)}
+              loading="lazy"
+              className={`w-full ${imageHeight} object-cover bg-white/10`}
+            />
+            {images.length > 1 && (
+              <>
+                <img
+                  src={images[1]}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  className={`absolute inset-0 w-full ${imageHeight} object-cover bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
+                />
+                <span className="absolute right-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold text-white">
+                  +{images.length - 1} fotos
+                </span>
+              </>
+            )}
+          </div>
         ) : menuLayout !== 'magazine' ? (
           <div className="w-full h-32 bg-surface-muted flex items-center justify-center text-text-muted text-xs font-bold uppercase tracking-wider">
             {getLocalizedName(item)}

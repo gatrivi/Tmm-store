@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Manacar Indumentaria</title>
+  <desc id="desc">Ilustración de etiqueta de cartón colgada con talles para la demo boutique Manacar Indumentaria de Olivos.</desc>
+  <rect width="1200" height="900" fill="#575D4E"/>
+  <rect x="70" y="70" width="1060" height="760" rx="56" fill="#616755" stroke="#F8F6F1" stroke-width="8"/>
+  <!-- hilo -->
+  <path d="M600 70 C 600 160, 560 200, 520 250" fill="none" stroke="#F8F6F1" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+  <circle cx="520" cy="258" r="14" fill="#575D4E" stroke="#F8F6F1" stroke-width="6"/>
+  <!-- etiqueta principal -->
+  <g transform="translate(520 270)">
+    <rect x="-170" y="0" width="340" height="200" rx="24" fill="#F8F6F1"/>
+    <circle cx="-130" cy="40" r="12" fill="#575D4E"/>
+    <text x="0" y="105" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" fill="#23261F">Manacar</text>
+    <text x="0" y="160" text-anchor="middle" font-family="system-ui, sans-serif" font-size="30" letter-spacing="6" fill="#575D4E">INDUMENTARIA</text>
+  </g>
+  <!-- mini tags de talles -->
+  <g font-family="system-ui, sans-serif" font-size="34" font-weight="700" text-anchor="middle">
+    <g transform="translate(330 620) rotate(-6)">
+      <rect x="-45" y="-35" width="90" height="70" rx="12" fill="#F8F6F1"/>
+      <circle cx="-27" cy="-17" r="7" fill="#23261F" opacity=".25"/>
+      <text x="0" y="12" fill="#23261F">S</text>
+    </g>
+    <g transform="translate(460 600) rotate(-3)">
+      <rect x="-45" y="-35" width="90" height="70" rx="12" fill="#575D4E"/>
+      <circle cx="-27" cy="-17" r="7" fill="#F8F6F1" opacity=".5"/>
+      <text x="0" y="12" fill="#F8F6F1">M</text>
+    </g>
+    <g transform="translate(590 600)">
+      <rect x="-45" y="-35" width="90" height="70" rx="12" fill="#F8F6F1"/>
+      <circle cx="-27" cy="-17" r="7" fill="#23261F" opacity=".25"/>
+      <text x="0" y="12" fill="#23261F">L</text>
+    </g>
+    <g transform="translate(720 610) rotate(4)">
+      <rect x="-52" y="-35" width="104" height="70" rx="12" fill="#F8F6F1"/>
+      <circle cx="-32" cy="-17" r="7" fill="#B5453C"/>
+      <text x="0" y="12" fill="#23261F" opacity=".35" text-decoration="line-through">38</text>
+    </g>
+  </g>
+  <!-- nombre tienda abajo -->
+  <text x="600" y="790" text-anchor="middle" font-family="Georgia, serif" font-size="40" fill="#F8F6F1" opacity=".85">Olivos · talles claros · pedido por WhatsApp</text>
+</svg>

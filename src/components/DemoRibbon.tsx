@@ -16,7 +16,7 @@ function PlanSwitchInline() {
   const ctx = useOptionalPlan();
   if (!ctx?.setDemoPlanOverride) return null;
 
-  const { plan } = ctx;
+  const { plan, setDemoPlanOverride } = ctx;
   return (
     <div className="flex shrink-0 items-center gap-2">
       <span className="hidden text-[10px] font-black uppercase tracking-[0.14em] text-white/45 lg:inline">
