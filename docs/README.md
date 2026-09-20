@@ -6,6 +6,7 @@ Agent manifest: read this first, then one targeted file.
 
 | Need | Read |
 |------|------|
+| **Reusable tools for new bespoke sites** | [**TOOLBOX.md**](./TOOLBOX.md) — catálogo de código/conocimiento reutilizable (WhatsApp, MP, stores, scripts) |
 | **Estado app (agentes cloud)** | [**AGENT_STATUS.md**](./AGENT_STATUS.md) ← empezar acá |
 | System overview | [architecture.md](./architecture.md) |
 | Product tiers | [features/plans-tiers.md](./features/plans-tiers.md) |
