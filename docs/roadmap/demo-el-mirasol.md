@@ -52,11 +52,14 @@ Sale esto (todo verificado en el repo):
 | Pitch 30s | sección de abajo | este doc |
 | Guion de demo (3 min) | — | [`docs/ops/prospect-demo.md`](../ops/prospect-demo.md) |
 | Flyer A6 genérico de recorrida (QR a `/demos`) | [`public/print/flyer-a6.html`](../../public/print/flyer-a6.html) → live `/print/flyer-a6.html` | [`docs/ops/flyer-a6.md`](../ops/flyer-a6.md) |
+| Brief A6 propio (QR a `/demo/el-mirasol`) | [`public/print/briefs/brief-el-mirasol.html`](../../public/print/briefs/brief-el-mirasol.html) · QR `qr-el-mirasol.png` · PDF `gatrivi_brief_el-mirasol_A6.pdf` | `scripts/gen-brief-qrs.mjs` · `scripts/gen-briefs-pdf.mjs` |
+| Pitch copiable en el kit | [`public/kit/index.html`](../../public/kit/index.html) — card "El Mirasol de La Recova" | `public/kit/index.html` |
+| Preview social propio | `social-el-mirasol.html` (Open Graph y canonical a `/el-mirasol`) | `social-pages.mjs` · rewrite en `vercel.json` · imagen `public/og/demo-el-mirasol.png` |
 
 Dos cosas para no prometer de más:
 
-- **No hay brief A6 de este rubro.** El kit trae briefs solo para pizzería, panadería, carnicería, verdulería y ferretería (`public/print/briefs/`). Si querés dejar algo impreso en el local, hoy es el flyer genérico de recorrida.
-- **El link no tiene preview social propio.** No hay `social-el-mirasol.html` (no está en `social-pages.mjs` ni en las rewrites de `vercel.json`), así que `/el-mirasol` cae al catch-all `/index.html` y renderiza client-side: abre bien en el celular, pero el preview de WhatsApp va a mostrar el shell genérico en vez de carta o foto — a diferencia de Molino Florida, que sí tiene shell propio.
+- **El brief no lleva referencias de competidores.** A diferencia de los briefs de rubro, acá no hay competidor documentado: en su lugar el bloque usa los datos públicos ya verificados del local (4.4★ con ~1.900 reseñas en Google, venta online por PedidosYa y Rappi). El QR del brief apunta al path legacy `/demo/el-mirasol`.
+- **El dato de la web caída es de la investigación 2026-08.** Antes de imprimir o de mandar el pitch conviene revalidar que `elmirasol.com.ar` siga caído, porque es la primera frase del brief.
 
 ## Gaps / qué pedirles en el primer contacto
 

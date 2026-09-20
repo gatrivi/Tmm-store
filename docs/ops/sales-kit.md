@@ -23,6 +23,15 @@ El pitch base (la pregunta que siempre aparece): *"¿qué productos tienen?"* �
 | Verdulería | [/demo/verduleria](https://tmm.gatrivi.com/demo/verduleria) | DIA Online, Coto Digital | [brief-verduleria.html](../../public/print/briefs/brief-verduleria.html) |
 | Ferretería | [/demo/ferreteria](https://tmm.gatrivi.com/demo/ferreteria) | Sodimac ([sodimac.com.ar](https://www.sodimac.com.ar)), Coto Digital | [brief-ferreteria.html](../../public/print/briefs/brief-ferreteria.html) |
 
+## Demos con nombre propio (prospect real)
+
+Mismo tratamiento que los rubros, pero con el pitch y las referencias que ya están documentados en el roadmap. El pitch sale de esos docs, no del template por rubro.
+
+| Prospect | Demo | Referencias | Brief |
+|----------|------|-------------|-------|
+| El Mirasol de La Recova (parrilla, Recoleta) | [/demo/el-mirasol](https://tmm.gatrivi.com/demo/el-mirasol) | **Sin referencias de rubro verificadas** — el brief usa los datos públicos del local (4.4★, ~1.900 reseñas) | [brief-el-mirasol.html](../../public/print/briefs/brief-el-mirasol.html) |
+| Molino Florida (molino mayorista, Munro) | [/demo/molino-florida](https://tmm.gatrivi.com/demo/molino-florida) | Nueces Mecohue, De Frutas Secas, Molino Harinero General Paz — **nombres y canal documentados, sin URL en `docs/`** | [brief-molino-florida.html](../../public/print/briefs/brief-molino-florida.html) |
+
 ## Archivos y scripts
 
 ```
@@ -34,6 +43,8 @@ scripts/gen-brief-qrs.mjs       ← genera los QR (paquete `qrcode`)
 scripts/gen-briefs-pdf.mjs      ← renderiza los briefs a PDF A6 (playwright-core)
 npm run briefs                  ← corre ambos y deja gatrivi_brief_{slug}_A6.pdf en la raíz
 ```
+
+Los `gatrivi_brief_*_A6.pdf` de la raíz están **gitignoreados**: Playwright les embebe timestamps, así que los bytes cambian en cada corrida. No se versionan; se regeneran con `npm run briefs`. Los QR sí van versionados en `public/print/briefs/`.
 
 ## Workflow de hoy
 

@@ -19,6 +19,8 @@ const BRIEFS = [
   { slug: 'carniceria', label: 'Carnicería' },
   { slug: 'verduleria', label: 'Verdulería' },
   { slug: 'ferreteria', label: 'Ferretería' },
+  { slug: 'el-mirasol', label: 'El Mirasol de La Recova' },
+  { slug: 'molino-florida', label: 'Molino Florida' },
 ];
 
 mkdirSync(outDir, { recursive: true });

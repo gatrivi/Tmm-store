@@ -32,7 +32,7 @@
 </head>
 <body>
 <h1>Kit de venta de hoy — <em>Gatrivi.com</em></h1>
-<p class="sub">Para cada rubro clave: demo lista, referencias verificadas de los que ya venden así, pitch para pegar en WhatsApp y el brief A6 imprimible.</p>
+<p class="sub">Para cada rubro clave y cada demo con nombre propio: demo lista, referencias verificadas de los que ya venden así (cuando existen), pitch para pegar en WhatsApp y el brief A6 imprimible.</p>
 
 <div class="card core">
   <h2>Preguntan siempre lo mismo: “¿qué productos tienen?”</h2>
@@ -73,9 +73,34 @@ const V = [
   refs:[["sodimac.com.ar","https://www.sodimac.com.ar","invierte millones en vender ferretería online"],
         ["cotodigital3.com.ar","https://www.cotodigital3.com.ar","herramientas y materiales online"]],
   gancho:"una medida que falla se devuelve: esa venta se pierde igual"},
+ // Demos con nombre propio (prospect real). El pitch sale del roadmap, no del template por rubro.
+ {rubro:"El Mirasol de La Recova — parrilla (Recoleta)", slug:"el-mirasol",
+  refs:null,
+  gancho:"tu URL era tu carta y hoy vive en las apps de otros",
+  pitch:"Hola! Te escribo de Gatrivi.com, de Olivos. Tu URL era tu carta y hoy la venta online pasa por las apps de otros. Armamos la carta de El Mirasol en un link propio —fotos, precios y pedido por WhatsApp—, sin comisión por venta. Mirá cómo quedaría: https://tmm.gatrivi.com/demo/el-mirasol"},
+ {rubro:"Molino Florida — molino mayorista (Munro)", slug:"molino-florida",
+  refsLabel:"Referentes mayoristas verificados (investigación 2026-08) · sin URL cargada",
+  refs:[["Nueces Mecohue",null,"San Martín · pedido por WhatsApp con precio por kg o caja"],
+        ["De Frutas Secas",null,"Colegiales · mínimo 25 kg mezclando productos, pago contra entrega"],
+        ["Molino Harinero General Paz",null,"fichas técnicas online, sin precios ni pedido propio"]],
+  gancho:"tus clientes B2B igual te llaman por teléfono",
+  pitch:"Hola! Te escribo de Gatrivi.com, de Olivos. Tu tienda online te obliga a calcular el envío por correo y tus clientes B2B igual te llaman por teléfono. En el link la reposición se arma con formatos reales (1/5/25 kg), con total estimado, y te llega ordenada a tu WhatsApp. Mirá cómo quedaría: https://tmm.gatrivi.com/demo/molino-florida"},
 ];
 const pitch = s => `Hola! Te escribo de Gatrivi.com, de Olivos. Armamos catálogos online para comercios del barrio: tus clientes ven fotos y precios desde el celular y te piden por WhatsApp como siempre — sin comisión por venta. En 20 segundos mirá cómo quedaría el tuyo: https://tmm.gatrivi.com/demo/${s}`;
+const pitchOf = v => v.pitch ?? pitch(v.slug);
 const root = document.getElementById('cards');
+// Prospect sin referencias de rubro verificadas: se dice, no se inventan links.
+const refsBlock = v => {
+  if (v.refs === null) return `<p class="refs"><b>Sin referencias de rubro verificadas</b><br/>
+      No hay competidor documentado para este prospect. El respaldo es suyo: 4.4★ con cerca de 1.900 reseñas en Google
+      y la venta online que hoy pasa por PedidosYa y Rappi.</p>`;
+  if (!v.refs.length) return '';
+  const label = v.refsLabel || `Referencias verificadas (${new Date().toLocaleDateString('es-AR')}) — “alcanza este nivel”`;
+  const items = v.refs.map(r => r[1]
+    ? `<a href="${r[1]}" target="_blank">${r[0]}</a> · ${r[2]}`
+    : `<span>${r[0]}</span> · ${r[2]}`).join(' &nbsp;|&nbsp; ');
+  return `<p class="refs"><b>${label}</b><br/>${items}</p>`;
+};
 V.forEach((v)=>{
   const d = document.createElement('div');
   d.className = 'card vert';
@@ -86,14 +111,13 @@ V.forEach((v)=>{
       <a class="btn" target="_blank" href="https://tmm.gatrivi.com/demo/${v.slug}">Ver demo cliente</a>
       <a class="btn alt" target="_blank" href="https://tmm.gatrivi.com/demo/${v.slug}/owner">Panel del dueño</a>
     </div>
-    <div class="pitchbox"><textarea readonly>${pitch(v.slug)}</textarea><button class="copy">copiar</button></div>
-    <p class="refs"><b>Referencias verificadas (${new Date().toLocaleDateString('es-AR')})</b> — “alcanza este nivel”:<br/>
-      ${v.refs.map(r => `<a href="${r[1]}" target="_blank">${r[0]}</a> · ${r[2]}`).join(' &nbsp;|&nbsp; ')}</p>
+    <div class="pitchbox"><textarea readonly>${pitchOf(v)}</textarea><button class="copy">copiar</button></div>
+    ${refsBlock(v)}
     <p class="printlinks">
       <a href="/print/briefs/brief-${v.slug}.html" target="_blank">Brief A6 imprimible</a>
-      <span style="opacity:.6">PDF: gatrivi_brief_${v.slug}_A6.pdf (raíz del repo)</span></p>`;
+      <span style="opacity:.6">PDF: gatrivi_brief_${v.slug}_A6.pdf (raíz del repo, regenerable con npm run briefs)</span></p>`;
   d.querySelector('.copy').onclick = (e) => {
-    navigator.clipboard.writeText(pitch(v.slug));
+    navigator.clipboard.writeText(pitchOf(v));
     e.target.textContent = '¡copiado!';
     setTimeout(() => { e.target.textContent = 'copiar'; }, 1500);
   };

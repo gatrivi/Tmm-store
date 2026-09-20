@@ -33,6 +33,10 @@ dist-ssr
 .vite/
 .tmp*
 *.pdf.new
+
+# Briefs A6 generados en la raíz por `npm run briefs` (playwright embebe
+# timestamps: los bytes cambian en cada corrida). Regenerables, no versionar.
+gatrivi_brief_*_A6.pdf
 desktop.ini
 shots/
 test-results/

@@ -44,13 +44,15 @@ Sale esto (todo verificado en el repo):
 |-------|-------------|-----------|
 | Demo cliente | `https://tmm.gatrivi.com/molino-florida` (legacy `/demo/molino-florida`) | `src/CommerceApp.tsx` · `src/config/demoShortLinks.ts` · rewrite a `social-molino-florida.html` en `vercel.json` |
 | Panel dueño | `https://tmm.gatrivi.com/molino-florida/owner` | `src/App.tsx` |
-| Pitch | cita de "3 referentes investigados" (arriba) | este doc |
+| Pitch | cita de "3 referentes investigados" (arriba), copiable en el kit | este doc · `public/kit/index.html` |
 | Guion de demo (60s) | sección de arriba | este doc |
+| Brief A6 propio (QR a `/demo/molino-florida`) | [`public/print/briefs/brief-molino-florida.html`](../../public/print/briefs/brief-molino-florida.html) · QR `qr-molino-florida.png` · PDF `gatrivi_brief_molino-florida_A6.pdf` | `scripts/gen-brief-qrs.mjs` · `scripts/gen-briefs-pdf.mjs` |
 
 Aclaraciones para no prometer de más:
 
-- **Preview social propio:** el link sí tiene shell (`social-molino-florida.html`, generado por `social-pages.mjs` + rewrite en `vercel.json`), así que el preview de WhatsApp muestra título propio — a diferencia de El Mirasol.
-- **No hay brief A6 ni pitch de kit para mayorista.** El kit (`public/kit/index.html`) y los briefs (`public/print/briefs/`) cubren solo pizzería, panadería, carnicería, verdulería y ferretería — rubros de barrio, no B2B. Para este envío el pitch es la cita de este doc, a mano.
+- **Preview social propio:** el link tiene shell (`social-molino-florida.html`, generado por `social-pages.mjs` + rewrite en `vercel.json`), así que el preview de WhatsApp muestra título propio. El Mirasol ya tiene el suyo (`social-el-mirasol.html`).
+- **El brief no usa la cuenta de comisiones de las apps.** Un molino B2B no vende por delivery: el brief reemplaza esa cuenta por el dolor documentado acá (catálogo de ~30 categorías con productos sin foto, envío calculado por correo, precios fuera del sitio) y no incluye ningún porcentaje.
+- **El brief lista los 3 referentes sin URL.** `docs/` no tiene URLs verificadas de Nueces Mecohue, De Frutas Secas ni Molino Harinero General Paz, así que el brief y el kit los nombran con el canal documentado y sin link — no se inventaron dominios.
 - **Fotos:** el demo usa `public/demos/molino-florida/` (hero, logo conceptual MF y `prod-*.jpg`), no material propio de la cooperativa.
 
 ## Gaps / qué pedirles en el primer contacto
