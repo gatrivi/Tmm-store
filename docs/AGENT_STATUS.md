@@ -89,7 +89,7 @@ Default local: `pedidos`. Plan por deploy hoy; tenant Firebase puede override.
 | `/demo/confiteria-parana` | **Confitería Paraná** (cliente) — warm lead |
 | `/demo/confiteria-parana/owner` | Panel confitería |
 | `/demo/confiteria-parana/order/:id` | Seguimiento |
-| `/demo/el-mirasol` | **El Mirasol de La Recova** parrilla Recoleta (cliente) — cold lead |
+| `/demo/el-mirasol` | **El Mirasol de La Recova** parrilla Recoleta (cliente) — demo lista para enviar, sin outreach iniciado |
 | `/demo/el-mirasol/owner` | Panel El Mirasol |
 | `/demo/el-mirasol/order/:id` | Seguimiento |
 | `/demo/verduleria` | **La Inmaculada** verdulería (cliente) |
