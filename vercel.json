@@ -34,6 +34,8 @@
     { "source": "/demo/carniceria", "destination": "/social-carniceria.html" },
     { "source": "/molino-florida", "destination": "/social-molino-florida.html" },
     { "source": "/demo/molino-florida", "destination": "/social-molino-florida.html" },
+    { "source": "/el-mirasol", "destination": "/social-el-mirasol.html" },
+    { "source": "/demo/el-mirasol", "destination": "/social-el-mirasol.html" },
     { "source": "/ferreteria", "destination": "/social-ferreteria.html" },
     { "source": "/demo/ferreteria", "destination": "/social-ferreteria.html" },
     { "source": "/mamabel", "destination": "/social-mamabel.html" },
