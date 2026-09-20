@@ -2,6 +2,8 @@
 
 Fecha: 2026-08-25 · Vertical: molino / mayorista insumos · prospect real (cooperativa Munro, Vicente López).
 
+**Estado: demo construida y lista para enviar** · `/molino-florida` (short `/molino-florida`, owner `/molino-florida/owner`) · **sin outreach iniciado** — no hay contacto, llamada ni mensaje registrado todavía.
+
 ## La marca hoy (investigación 2026-08)
 
 - **Cooperativa de Trabajo Molino Florida** — ex Molino Florida S.A. (fundado c. 1900, edificios de 1890, landmark en Munro). Cierre y quiebra 2017 → recuperada por sus trabajadores, cooperativa desde junio 2018; hoy +80 familias, 33 socios.
@@ -31,6 +33,35 @@ Pitch: **"Tu tienda online te obliga a calcular envío por correo y tus clientes
 2. Sumar 4× Harina 000 (25 kg) + levadura → total estimado al toque ($156.400 seed-like).
 3. Enviar pedido de prueba → pantalla éxito.
 4. `/molino-florida/owner` → bandeja: pedido Nuevo → Preparando → Listo ("Panadería Norte, reposición semanal").
+
+## Envío — qué sale
+
+**Nada enviado todavía.** El demo está construido y espera el primer toque; no hay contacto registrado con la cooperativa.
+
+Sale esto (todo verificado en el repo):
+
+| Asset | Link / ruta | Dónde vive |
+|-------|-------------|-----------|
+| Demo cliente | `https://tmm.gatrivi.com/molino-florida` (legacy `/demo/molino-florida`) | `src/CommerceApp.tsx` · `src/config/demoShortLinks.ts` · rewrite a `social-molino-florida.html` en `vercel.json` |
+| Panel dueño | `https://tmm.gatrivi.com/molino-florida/owner` | `src/App.tsx` |
+| Pitch | cita de "3 referentes investigados" (arriba) | este doc |
+| Guion de demo (60s) | sección de arriba | este doc |
+
+Aclaraciones para no prometer de más:
+
+- **Preview social propio:** el link sí tiene shell (`social-molino-florida.html`, generado por `social-pages.mjs` + rewrite en `vercel.json`), así que el preview de WhatsApp muestra título propio — a diferencia de El Mirasol.
+- **No hay brief A6 ni pitch de kit para mayorista.** El kit (`public/kit/index.html`) y los briefs (`public/print/briefs/`) cubren solo pizzería, panadería, carnicería, verdulería y ferretería — rubros de barrio, no B2B. Para este envío el pitch es la cita de este doc, a mano.
+- **Fotos:** el demo usa `public/demos/molino-florida/` (hero, logo conceptual MF y `prod-*.jpg`), no material propio de la cooperativa.
+
+## Gaps / qué pedirles en el primer contacto
+
+Del lado nuestro el demo ya está; falta insumo de la cooperativa:
+
+- [ ] Contacto comercial (teléfono / WhatsApp de quien maneja el canal mayorista)
+- [ ] Permiso de uso de marca y logo — la identidad del demo es **conceptual** (verde/grano, logo MF)
+- [ ] Lista de precios real y formatos vigentes (el demo usa precios ilustrativos; la investigación de arriba reporta venta por kg/caja)
+- [ ] Condiciones B2B: mínimo de compra, reparto vs retiro, plazos
+- [ ] Fotos propias — su TiendaNube tiene muchos productos sin foto y el demo no resuelve eso todavía
 
 ## Wiring
 
